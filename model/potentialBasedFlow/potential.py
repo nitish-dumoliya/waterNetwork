@@ -40,7 +40,7 @@ ampl.read("potential_based_flow.mod")
 # ampl.read("new_spi_tree.mod")
 # ampl.read("spi_tree_lp.mod")
 # input_data_file = f"/home/nitishdumoliya/minotaur/examples/water-network/Data/{sys.argv[1]}"
-input_data_file = "../data/data1.dat"
+input_data_file = "/home/nitishdumoliya/waterNetwork/data/d1_Sample_input_cycle_twoloop.dat"
 # input_data_file1 = f"/home/nitish/minotaur/examples/water-network/Data/Sample_input_cycle_hanoi.dat"
 
 ampl.read_data(input_data_file)
