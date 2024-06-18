@@ -1,0 +1,89 @@
+reset;
+model m1Basic.mod;
+# model m1_basic_loop.mod;
+# model m1_basic_code.mod;
+# model convex_single.mod;
+# model convex_single_tree.mod;
+# model m1_basic_loop.mod;
+# model m1_basic_single_tree.mod;
+# model m1_basic_single.mod;
+# model new_spi_tree.mod;
+# model parallel_flow.mod;
+# model pf_nlp.mod;
+
+# model NLP.mod;
+# data ../data/d1_Sample_input_cycle_twoloop.dat;
+# data ../data/shamir.dat;
+# data ../data/hanoi.dat;
+# data ../data/foss_poly_0.dat;
+# data ../data/d2_Sample_input_cycle_hanoi.dat;
+# data ../data/d7_HG_SP_2_3.dat;
+# data ../data/d9_HG_SP_4_2.dat;
+# data ../data/d14_NewYork.dat;
+# data ../data/d15_foss_poly_0.dat;
+# data ../data/d16_foss_iron.dat;
+# data ../data/d17_foss_poly_1.dat;
+# data ../data/d18_pescara.dat;
+data ../data/umbarpada_network.dat;
+
+# option solver "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart";
+# option mmultistart_options "--presolve 1,--log_level 6,--nlp_engine IPOPT,--eval_within_bnds 1, --threads 1 ";
+option solver cplex ;
+# option knitro_options "outlev =1 ";
+# option baron_options "outlev =3";
+
+# option presolve 1;
+option presolve_eps 1.71e-14;
+
+
+solve ;
+display total_cost ;
+# display Objective ;
+display total_cost ;
+# display l; 
+display q; 
+# display h; 
+# display z1 ; 
+# display z2 ; 
+
+
+# solve > "/home/20i190001/minotaur/examples/water-network/output/tree/d2.knitro_out";
+# display total_cost > "/home/20i190001/minotaur/examples/water-network/output/tree/d2.knitro_out";
+# display l> "/home/20i190001/minotaur/examples/water-network/output/tree/d2.knitro_out";
+# display q> "/home/20i190001/minotaur/examples/water-network/output/tree/d2.knitro_out";
+# display h> "/home/20i190001/minotaur/examples/water-network/output/tree/d2.knitro_out";
+# display x > "/home/20i190001/minotaur/examples/water-network/output/tree/d2.knitro_out";
+
+# display dia;
+
+for {(i,j) in arcs, k in pipes:l[i,j,k]!=0} {
+    # Perform some calculations
+    print "l[",i,",",j,",",k,"]= ", l[i,j,k];
+}
+
+# for {(i,j) in arcs} {
+#     # Perform some calculations
+#     print "q[",i,",",j,"]= ", q[i,j];
+# }
+
+# for {i in nodes} {
+#     # Perform some calculations
+#     print "h[",i,"]= ", h[i];
+# }
+
+# display X;
+# display z;
+
+# for {(i,j) in arcs, k in pipes:l_lp[i,j,k]!=0} {
+#     # Perform some calculations
+#     print "l[",i,",",j,",",k,"]= ", l_lp[i,j,k];
+# }
+# for {(i,j) in arcs} {
+#     # Perform some calculations
+#     print "q[",i,",",j,"]= ", q_lp[i,j];
+# }
+
+# for {i in nodes} {
+#     # Perform some calculations
+#     print "h[",i,"]= ", h_lp[i];
+# }
