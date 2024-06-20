@@ -25,15 +25,15 @@ var h_lp{nodes};					### Head
 minimize total_cost : sum{(i,j) in arcs } sum{k in pipes}l_lp[i,j,k]*C[k];	### Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
 
 ### CONSTRAINTS ###
-s.t. con3{(i,j) in arcs}: h_lp[i] - h_lp[j] = (q_lp[i,j] * abs(q_lp[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l_lp[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87);
+s.t. con1{(i,j) in arcs}: h_lp[i] - h_lp[j] = (q_lp[i,j] * abs(q_lp[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l_lp[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87);
 
-s.t. con4{(i,j) in arcs}: sum{k in pipes} l_lp[i,j,k] = L[i,j];
+s.t. con2{(i,j) in arcs}: sum{k in pipes} l_lp[i,j,k] = L[i,j];
 
-s.t. con5{i in Source}: h_lp[i] = E[i];
+s.t. con3{i in Source}: h_lp[i] = E[i];
 
-s.t. con2{i in nodes diff Source}: h_lp[i] >= E[i] + P[i];
+s.t. con4{i in nodes diff Source}: h_lp[i] >= E[i] + P[i];
 
-s.t. bound1{(i,j) in arcs, k in pipes}: l_lp[i,j,k] <= L[i,j];
+# s.t. con5{(i,j) in arcs, k in pipes}: l_lp[i,j,k] <= L[i,j];
 
 # for d.dat dataset 
 ########################### Iteration 1  #####################

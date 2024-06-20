@@ -35,7 +35,7 @@ print(" ")
 
 ampl = AMPL()
 ampl.reset()
-ampl.read("content_model.mod")
+ampl.read("nlp_model.mod")
 input_data_file = f"/home/nitishdumoliya//waterNetwork/data/{data_list[0]}.dat"
 
 ampl.read_data(input_data_file)
@@ -56,9 +56,6 @@ print(uwg.nodes())
 uwg.add_weighted_edges_from(edges_list)
 print(uwg.edges())
 
-
-# ampl.eval("minimize total_cost : sum{{(i,j) in arcs}} (sum{{k in pipes}}omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87) ) * (abs(q[i,j])^(2.852))/2.852;")
-
 ##################################################################################################
 ampl.eval("s.t. length{(i,j) in arcs}: l[i,j,14]=L[i,j] ;")
 
@@ -69,8 +66,8 @@ ampl.eval("s.t. length{(i,j) in arcs}: l[i,j,14]=L[i,j] ;")
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "ipopt"
-# ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mqg"
+ampl.option["solver"] = "knitro"
+# ampl.option["solver"] = "/home/nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
 # ampl.option["ipopt_options"] = " outlev = 0"
@@ -90,11 +87,14 @@ ampl.solve()
 # ampl.eval("display l;")
 # ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>1} l[i,j,k];")
 ampl.eval("display q;")
-# ampl.eval("display h;")
+ampl.eval("display h;")
 # ampl.eval("display {(i,j) in arcs} h[i]-h[j];")
 # ampl.eval("display z1;")
 # ampl.eval("display z2;")
 ampl.eval("display con1.dual;")
+ampl.eval("display con2.dual;")
+ampl.eval("display con3.dual;")
+ampl.eval("display con4.dual;")
 ampl.eval("display total_cost;")
 
 totalcost = ampl.get_objective("total_cost")
@@ -103,7 +103,7 @@ print("==========================================================")
 
 lp_ampl = AMPL()
 lp_ampl.reset()
-lp_ampl.read("../lpNlp/lp_model.mod")
+lp_ampl.read("lp_model.mod")
 input_data_file = f"/home/nitishdumoliya//waterNetwork/data/{data_list[0]}.dat"
 lp_ampl.read_data(input_data_file)
 
@@ -112,16 +112,18 @@ q_lp = ampl.getVariable("q").getValues().toDict()
 for (i, j), value in q_lp.items():
     lp_ampl.param['q_lp'][i, j] = value
 
-lp_ampl.eval("s.t. length{(i,j) in arcs}: l_lp[i,j,14]=L[i,j] ;")
 lp_ampl.option["presolve_eps"] = "6.82e-14"
 lp_ampl.option["solver"] = "cplex"
-# lp_ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mqg"
 lp_ampl.solve()
 lp_ampl.eval("display h_lp;")
-
+lp_ampl.eval("display con1.dual;")
+lp_ampl.eval("display con2.dual;")
+lp_ampl.eval("display con3.dual;")
+lp_ampl.eval("display con4.dual;")
+# lp_ampl.eval("display con5.dual;")
 ###################################################################
 
 end_time = time.time()
 elapsed_time = end_time - start_time
 print("elapsed_time : ", elapsed_time)
-print("#*********************************************************************************#")
+print("#*******************************************************************************#")

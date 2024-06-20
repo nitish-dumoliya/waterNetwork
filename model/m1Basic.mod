@@ -22,7 +22,7 @@ param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
-var q{arcs};	        # Flow variable
+var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
 
 #****************************************OBJECTIVE****************************************#

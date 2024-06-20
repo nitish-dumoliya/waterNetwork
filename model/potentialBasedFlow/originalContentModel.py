@@ -35,7 +35,7 @@ print(" ")
 
 ampl = AMPL()
 ampl.reset()
-ampl.read("content_model.mod")
+ampl.read("originalContentModel.mod")
 input_data_file = f"/home/nitishdumoliya//waterNetwork/data/{data_list[0]}.dat"
 
 ampl.read_data(input_data_file)
@@ -56,11 +56,10 @@ print(uwg.nodes())
 uwg.add_weighted_edges_from(edges_list)
 print(uwg.edges())
 
-
 # ampl.eval("minimize total_cost : sum{{(i,j) in arcs}} (sum{{k in pipes}}omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87) ) * (abs(q[i,j])^(2.852))/2.852;")
 
 ##################################################################################################
-ampl.eval("s.t. length{(i,j) in arcs}: l[i,j,14]=L[i,j] ;")
+# ampl.eval("s.t. length{(i,j) in arcs}: l[i,j,14]=L[i,j] ;")
 
 ########################## exhibit the model that has been built ###################################
 
@@ -69,13 +68,13 @@ ampl.eval("s.t. length{(i,j) in arcs}: l[i,j,14]=L[i,j] ;")
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "ipopt"
-# ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mqg"
+ampl.option["solver"] = "baron"
+# ampl.option["solver"] = "/home/nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
 # ampl.option["ipopt_options"] = " outlev = 0"
 # ampl.option["knitro_options"] = "outlev = 1 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 20 ms_maxtime_real = 50"
-ampl.option["knitro_options"] = "outlev =0 ms_enable 1  ms_maxsolves 10 mip_multistart 1 "
+ampl.option["knitro_options"] = "outlev =0 ms_enable 1  ms_maxsolves 20 mip_multistart 1 "
 # ampl.option["presolve_eps"]="  6.82e-14"
 # ampl.set_option("baron_options","maxtime = 200  outlev = 1 lsolver=knitro firstloc 1 barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
 ampl.set_option("baron_options","maxtime = -1  outlev = 1 ")
@@ -88,14 +87,15 @@ ampl.solve()
 # ampl.eval("expand;")
 
 # ampl.eval("display l;")
-# ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>1} l[i,j,k];")
+ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>1} l[i,j,k];")
 ampl.eval("display q;")
 # ampl.eval("display h;")
 # ampl.eval("display {(i,j) in arcs} h[i]-h[j];")
 # ampl.eval("display z1;")
 # ampl.eval("display z2;")
-ampl.eval("display con1.dual;")
+# ampl.eval("display con1.dual;")
 ampl.eval("display total_cost;")
+ampl.eval("display sum{(i,j) in arcs } sum{k in pipes}l[i,j,k]*C[k];")
 
 totalcost = ampl.get_objective("total_cost")
 print("Objective:", totalcost.value())
@@ -112,12 +112,12 @@ q_lp = ampl.getVariable("q").getValues().toDict()
 for (i, j), value in q_lp.items():
     lp_ampl.param['q_lp'][i, j] = value
 
-lp_ampl.eval("s.t. length{(i,j) in arcs}: l_lp[i,j,14]=L[i,j] ;")
+# lp_ampl.eval("s.t. length{(i,j) in arcs}: l_lp[i,j,14]=L[i,j] ;")
 lp_ampl.option["presolve_eps"] = "6.82e-14"
 lp_ampl.option["solver"] = "cplex"
-# lp_ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mqg"
 lp_ampl.solve()
 lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display {(i,j) in arcs, k in pipes:l_lp[i,j,k]>1} l_lp[i,j,k];")
 
 ###################################################################
 
