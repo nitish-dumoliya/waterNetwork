@@ -29,7 +29,9 @@ var x{arcs};                # Lagrangian Multipliers
 var v{arcs,pipes};          # Lagrangian Multipliers
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
-minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);	
+# minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);	
+minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);	
+
 # minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) ;	
 # minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs} x[i,j]*(h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));	
 # minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);	
@@ -58,9 +60,9 @@ subject to con4{(i,j) in arcs}:
 subject to con6{i in Source}: 
     h[i] = E[i]
 ;
-# subject to con7{i in nodes diff Source}: 
-#     h[i] >= E[i] + P[i]
-# ;
+subject to con7{i in nodes diff Source}: 
+    h[i] >= E[i] + P[i]
+;
 subject to con8{(i,j) in arcs}:
     -sum{k in nodes diff Source} D[k] <= q[i,j]
 ;
