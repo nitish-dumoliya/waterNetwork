@@ -103,7 +103,7 @@ print("==========================================================")
 
 lp_ampl = AMPL()
 lp_ampl.reset()
-lp_ampl.read("lp_model.mod")
+lp_ampl.read("updatedLp.mod")
 input_data_file = f"/home/nitishdumoliya//waterNetwork/data/{data_list[0]}.dat"
 lp_ampl.read_data(input_data_file)
 
@@ -113,7 +113,7 @@ for (i, j), value in q_lp.items():
     lp_ampl.param['q_lp'][i, j] = value
 
 lp_ampl.option["presolve_eps"] = "6.82e-14"
-lp_ampl.option["solver"] = "cplex"
+lp_ampl.option["solver"] = "knitro"
 lp_ampl.solve()
 lp_ampl.eval("display h_lp;")
 lp_ampl.eval("display con1.dual;")

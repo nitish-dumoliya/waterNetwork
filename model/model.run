@@ -12,7 +12,7 @@ model m1Basic.mod;
 # model pf_nlp.mod;
 
 # model NLP.mod;
-# data ../data/d1_Sample_input_cycle_twoloop.dat;
+data ../data/d1_Sample_input_cycle_twoloop.dat;
 # data ../data/shamir.dat;
 # data ../data/hanoi.dat;
 # data ../data/foss_poly_0.dat;
@@ -24,11 +24,11 @@ model m1Basic.mod;
 # data ../data/d16_foss_iron.dat;
 # data ../data/d17_foss_poly_1.dat;
 # data ../data/d18_pescara.dat;
-data ../data/umbarpada_network.dat;
+# data ../data/umbarpada_network.dat;
 
 # option solver "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart";
 # option mmultistart_options "--presolve 1,--log_level 6,--nlp_engine IPOPT,--eval_within_bnds 1, --threads 1 ";
-option solver cplex ;
+option solver baron ;
 # option knitro_options "outlev =1 ";
 # option baron_options "outlev =3";
 
@@ -40,9 +40,9 @@ solve ;
 display total_cost ;
 # display Objective ;
 display total_cost ;
-# display l; 
+display l; 
 display q; 
-# display h; 
+display h; 
 # display z1 ; 
 # display z2 ; 
 
@@ -56,10 +56,10 @@ display q;
 
 # display dia;
 
-for {(i,j) in arcs, k in pipes:l[i,j,k]!=0} {
+# for {(i,j) in arcs, k in pipes:l[i,j,k]!=0} {
     # Perform some calculations
-    print "l[",i,",",j,",",k,"]= ", l[i,j,k];
-}
+    # print "l[",i,",",j,",",k,"]= ", l[i,j,k];
+# }
 
 # for {(i,j) in arcs} {
 #     # Perform some calculations

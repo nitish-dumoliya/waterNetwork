@@ -1,8 +1,8 @@
 import time
 
 data_list=[
-        #    "d1_Sample_input_cycle_twoloop.dat",
-           "d2_Sample_input_cycle_hanoi.dat",
+           "d1_Sample_input_cycle_twoloop.dat",
+        #    "d2_Sample_input_cycle_hanoi.dat",
         #    "d3_Sample_input_double_hanoi.dat",
         #    "d4_Sample_input_triple_hanoi.dat",
         #    "d5_Taichung_input.dat",
@@ -83,10 +83,10 @@ for data in data_list:
                 break
             else:
                 continue
-        if break_outer:
-            cost=totalcost.value()
-            COST.append(cost)
-            break
+        # if break_outer:
+        #     cost=totalcost.value()
+        #     COST.append(cost)
+        #     break
         
         cost=totalcost.value()
         COST.append(cost)
@@ -128,7 +128,7 @@ for data in data_list:
    
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(cost)
+    # print(cost)
     print(COST)
     print(min(COST))
     TIME.append(elapsed_time)
