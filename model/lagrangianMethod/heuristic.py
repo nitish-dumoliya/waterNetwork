@@ -28,7 +28,7 @@ data_list = [
 ]
 
 start_time = time.time()
-n = 1
+n = 12
 print("  ") 
 print("****************************** Solver input ***********************************")
 print("Water Network File : ", data_list[n])
@@ -55,7 +55,7 @@ def contentModel(n):
     content_ampl.read_data(input_data_file)
     content_ampl.option["solver"] = "ipopt"
     content_ampl.option["ipopt_options"] = "outlev 1"
-    content_ampl.option["presolve_eps"] = "9.53e-08"
+    content_ampl.option["presolve_eps"] = "1.41e-07"
     return content_ampl
 
 
@@ -85,7 +85,7 @@ ampl.solve()
 ampl.eval("display l;")
 ampl.eval("display q;")
 ampl.eval("display h;")
-ampl.eval("display x;")
+ampl.eval("display u;")
 totalcost = ampl.get_objective("total_cost")
 print("Objective:", totalcost.value())
 
@@ -130,7 +130,7 @@ while upperBound-lowerBound >= 0.01:
     print(" ")
     print("==============Solve the Surrogate Lagrangian Relaxation Problem================")
     u = ampl.getVariable("u").getValues().toDict()
-    h = lp_ampl.getVariable("h_lp").getValues().toDict()
+    h = ampl.getVariable("h").getValues().toDict()
     d = ampl.getParameter("d").getValues().toDict()
     R = ampl.getParameter("R").getValues().toDict()
     E = ampl.getParameter("E").getValues().toDict()
@@ -141,14 +141,16 @@ while upperBound-lowerBound >= 0.01:
     set_nodes = ampl.getSet("nodes")
 
     ampl.eval("var g{nodes};")
-    #for j in h.keys():
-        #ampl.eval(f"s.t. fix_g_{j} : g[{j}] = {E[j]+P[j]-h[j]};")
-
-    ampl.eval("param theta{nodes}:=1;")
-
+    g1=0
     for j in u.keys():
-        ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]} + theta[{j}]*{E[j]+P[j]-h[j]};")
+        if j !=1:
+            g1=g1+(E[i]+P[j]-h[j])**2
+    theta = 0.2*(upperBound-lb)/g1
+    for j in u.keys():
+        ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j] + theta*(E[j]+P[j]-h[j])};")
     ampl.solve()
+    ampl.eval("display u;")
+    ampl.eval("display h;")
     lb = ampl.getObjective("total_cost").value()
     print(lb)
     print(" ")
@@ -170,10 +172,16 @@ while upperBound-lowerBound >= 0.01:
         lp_ampl.param['q_lp'][i, j] = value
 
     lp_ampl.solve()
+    lp_ampl.eval("display h_lp;")
 
     ub = lp_ampl.getObjective("total_cost").value()
     upperBound = min(ub, upperBound)
     lowerBound = max(lb, lowerBound)
 
-    print("Lower Bound: ", lowerBound)
-    print("Upper Bound: ", upperBound)
+    print("Best Lower Bound: ", lowerBound)
+    print("Best Upper Bound: ", upperBound)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print("elapsed_time : ", elapsed_time)
+
