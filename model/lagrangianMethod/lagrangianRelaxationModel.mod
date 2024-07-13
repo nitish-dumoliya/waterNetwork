@@ -24,7 +24,7 @@ param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
-var u{nodes};            # Lagrangian Multipliers
+var u{nodes}>=0;            # Lagrangian Multipliers
 var x{arcs};                # Lagrangian Multipliers
 var v{arcs,pipes};          # Lagrangian Multipliers
 #****************************************OBJECTIVE****************************************#

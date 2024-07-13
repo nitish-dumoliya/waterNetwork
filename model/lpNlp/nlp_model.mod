@@ -28,8 +28,8 @@ var h{nodes};	# Head variable
 
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
-# minimize total_cost : sum{(i,j) in arcs } sum{k in pipes}l[i,j,k]*C[k];	
-minimize total_cost : 0;	
+minimize total_cost : sum{(i,j) in arcs } sum{k in pipes}l[i,j,k]*C[k];	
+# minimize total_cost : 0;	
 
 #****************************************CONSTRAINTS**************************************#
 s.t. con1{j in nodes diff Source}: sum{i in nodes : (i,j) in arcs}q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j];
@@ -38,7 +38,7 @@ s.t. con2{(i,j) in arcs}: h[i] - h[j] = (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.
 
 s.t. con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];
 
-s.t. con4{i in Source}: h[i] = E[i];
+# s.t. con4{i in Source}: h[i] = E[i];
 
 # s.t. con5{i in nodes diff Source}: h[i] >= E[i] + P[i];
 

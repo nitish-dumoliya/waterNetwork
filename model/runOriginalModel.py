@@ -30,7 +30,7 @@ data_list=[
 
 start_time = time.time()
 
-datanumber = 0
+datanumber = 2
 
 print("  ")
 print("****************************** Solver input *************************************")    
@@ -52,13 +52,13 @@ ampl.read_data(input_data_file)
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "baron"
+ampl.option["solver"] = "knitro"
 # ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
 # ampl.option["ipopt_options"] = " outlev = 0"
 # ampl.option["knitro_options"] = "outlev = 1 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 20 ms_maxtime_real = 50"
-ampl.option["knitro_options"] = "outlev = 4 ms_enable 1  ms_maxsolves 1 mip_multistart 1 "
+ampl.option["knitro_options"] = "outlev = 4 ms_enable 1  ms_maxsolves 10 mip_multistart 1 "
 # ampl.option["presolve_eps"]="  6.82e-14"
 # ampl.set_option("baron_options","maxtime = 200  outlev = 1 lsolver=knitro firstloc 1 barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
 ampl.set_option("baron_options","maxtime = -1  outlev = 1 ")

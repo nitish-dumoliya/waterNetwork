@@ -28,7 +28,7 @@ data_list = [
 ]
 
 start_time = time.time()
-n = 12
+n = 3
 print("  ") 
 print("****************************** Solver input ***********************************")
 print("Water Network File : ", data_list[n])
@@ -42,7 +42,7 @@ def lagrangianRelaxationModel(n):
     input_data_file = f"../../data/{data_list[n]}.dat"
     ampl.read_data(input_data_file)
     ampl.option["solver"] = "ipopt"
-    ampl.option["ipopt_options"] = "outlev 1"
+    ampl.option["ipopt_options"] = "outlev 0"
     return ampl
 
 
@@ -54,7 +54,7 @@ def contentModel(n):
     input_data_file = f"../../data/{data_list[n]}.dat"
     content_ampl.read_data(input_data_file)
     content_ampl.option["solver"] = "ipopt"
-    content_ampl.option["ipopt_options"] = "outlev 1"
+    content_ampl.option["ipopt_options"] = "outlev 0"
     content_ampl.option["presolve_eps"] = "1.41e-07"
     return content_ampl
 
@@ -69,7 +69,8 @@ def lpModel(n):
     lp_ampl.option["presolve_eps"] = "1.08e-08"
     return lp_ampl
 
-
+iter = 1
+print("Iteration: ",iter)
 print("******************** Solve the Lagrangian Relaxation **************************")
 
 ampl = lagrangianRelaxationModel(n)
@@ -101,10 +102,10 @@ for (i, j, k) in l_content.keys():
                           k}: l[{i},{j},{k}]={l_content[i, j, k]};")
 
 content_ampl.solve()
-content_ampl.eval("display l;")
+#content_ampl.eval("display l;")
 content_ampl.eval(
     "display sum{(i,j) in arcs} (sum{ k in pipes} l[i,j,k]*C[k]);")
-content_ampl.eval("display q;")
+#content_ampl.eval("display q;")
 
 print("===========================Solve the LP Problem================================")
 
@@ -116,7 +117,7 @@ for (i, j), value in q_lp.items():
     lp_ampl.param['q_lp'][i, j] = value
 
 lp_ampl.solve()
-lp_ampl.eval("display h_lp;")
+#lp_ampl.eval("display h_lp;")
 lb = ampl.getObjective("total_cost").value()
 ub = lp_ampl.getObjective("total_cost").value()
 
@@ -126,8 +127,11 @@ print("Upper Bound: ", ub)
 lowerBound = lb
 upperBound = ub
 
-while upperBound-lowerBound >= 0.01:
+iter = iter +1
+
+while upperBound-lowerBound >= 0.001:
     print(" ")
+    print("Iteration: ",iter)
     print("==============Solve the Surrogate Lagrangian Relaxation Problem================")
     u = ampl.getVariable("u").getValues().toDict()
     h = ampl.getVariable("h").getValues().toDict()
@@ -145,12 +149,16 @@ while upperBound-lowerBound >= 0.01:
     for j in u.keys():
         if j !=1:
             g1=g1+(E[i]+P[j]-h[j])**2
-    theta = 0.2*(upperBound-lb)/g1
+    #steplength = 0.5*(upperBound-lb)/(g1)**0.5
+    steplength = 0.5*(upperBound-lb)/(g1)
     for j in u.keys():
-        ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j] + theta*(E[j]+P[j]-h[j])};")
+        u[j] = max(0,u[j] + steplength*(E[j]+P[j]-h[j]))
+        #ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j] + steplength*(E[j]+P[j]-h[j])};")
+        ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]};")
     ampl.solve()
-    ampl.eval("display u;")
-    ampl.eval("display h;")
+    #ampl.eval("display u;")
+    #ampl.eval("display h;")
+    #ampl.eval("display sum{(i,j) in arcs}(sum{k in pipes} l[i,j,k]*C[k]);")
     lb = ampl.getObjective("total_cost").value()
     print(lb)
     print(" ")
@@ -172,7 +180,7 @@ while upperBound-lowerBound >= 0.01:
         lp_ampl.param['q_lp'][i, j] = value
 
     lp_ampl.solve()
-    lp_ampl.eval("display h_lp;")
+    #lp_ampl.eval("display h_lp;")
 
     ub = lp_ampl.getObjective("total_cost").value()
     upperBound = min(ub, upperBound)
@@ -180,7 +188,8 @@ while upperBound-lowerBound >= 0.01:
 
     print("Best Lower Bound: ", lowerBound)
     print("Best Upper Bound: ", upperBound)
-
+    print("diff: ", upperBound-lowerBound)
+    iter = iter + 1
 end_time = time.time()
 elapsed_time = end_time - start_time
 print("elapsed_time : ", elapsed_time)
