@@ -33,7 +33,7 @@ var v{arcs,pipes};          # Lagrangian Multipliers
 # minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);	
 # 
 minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) ;	
-#minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs} x[i,j]*(h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));	
+# minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs} x[i,j]*(h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));	
 # minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs} v[i,j]*(sum{k in pipes}l[i,j,k]-L[i,j]);	
 
 #****************************************CONSTRAINTS**************************************#
