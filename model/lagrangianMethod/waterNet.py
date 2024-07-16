@@ -63,7 +63,7 @@ def contentModel(n):
     content_ampl = AMPL()
     content_ampl.reset()
     content_ampl.read(
-        "/home/nitishdumoliya/waterNetwork/model/potentialBasedFlow/content_model.mod")
+        "../potentialBasedFlow/content_model.mod")
     input_data_file = f"../../data/{data_list[n]}.dat"
     content_ampl.read_data(input_data_file)
     content_ampl.option["solver"] = "ipopt"
