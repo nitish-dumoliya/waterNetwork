@@ -90,7 +90,7 @@ def nlpModel(n):
     nlp_ampl.option["solver"] = "knitro"
     nlp_ampl.option["presolve_eps"] = "1.08e-08"
     #nlp_ampl.option["knitro_options"] = "outlev 0 "
-    nlp_ampl.option["knitro_options"] = "outlev = 0 ms_enable 1  ms_maxsolves 1  mip_multistart 1 "
+    nlp_ampl.option["knitro_options"] = "outlev = 0 ms_enable 1  ms_maxsolves 5 mip_multistart 1 "
     return nlp_ampl
 
 
@@ -137,13 +137,14 @@ upperBound = ub
 iter = iter +1
 bub = ub
 while upperBound-lowerBound >= 0.01:
-#while iter <= 3:
+#while iter <= 10:
     print(" ")
     print("Iteration: ",iter)
     print("==============Solve the Surrogate Lagrangian Relaxation Problem================")
     #u = ampl.getVariable("u").getValues().toDict()
     x = ampl.getVariable("x").getValues().toDict()
     l = ampl.getVariable("l").getValues().toDict()
+    g = ampl.getVariable("g").getValues().toDict()
     q = ampl.getVariable("q").getValues().toDict()
     h = ampl.getVariable("h").getValues().toDict()
     d = ampl.getParameter("d").getValues().toDict()
@@ -158,21 +159,21 @@ while upperBound-lowerBound >= 0.01:
    
     arc_sum=0
     for (i,j) in x.keys():
-        g = 0
+        G = 0
         for [k] in set_pipes.getValues():
-            g = g + 10.68*l[i,j,k]/((R[k]**1.852)*(d[k]/1000)**4.87)
-        arc_sum = arc_sum + (h[i]-h[j]-(0.001**1.852)*q[i,j]*(abs(q[i,j])**0.852)*g)**2    
-        
-    steplength = (upperBound-lb)/(arc_sum)
+            G = G + 10.68*l[i,j,k]/((R[k]**1.852)*(d[k]/1000)**4.87)
+        arc_sum = arc_sum + (g[i,j]-(0.001**1.852)*q[i,j]*(abs(q[i,j])**0.852)*G)**2    
+    #steplength = 1  
+    steplength = 0.5*(upperBound-lb)/(arc_sum)
     print("steplength: ", steplength)
 
     for (i,j) in x.keys():
-        g = 0
+        G = 0
         for [k] in set_pipes.getValues():
-             g = g + 10.68*l[i,j,k]/((R[k]**1.852)*(d[k]/1000)**4.87)
-        x[i,j] = x[i,j] + steplength*(h[i]-h[j]-(0.001**1.852)*q[i,j]*(abs(q[i,j])**0.852) * g)
+             G = G + 10.68*l[i,j,k]/((R[k]**1.852)*(d[k]/1000)**4.87)
+        x[i,j] = x[i,j] + steplength*(g[i,j]-(0.001**1.852)*q[i,j]*(abs(q[i,j])**0.852) * G)
         # x[i,j] = max(0,x[i,j])
-        print(f"g{i,j}:", h[i]-h[j]-(0.001**1.852)*q[i,j]*(abs(q[i,j])**0.852) * g)
+        print(f"g{i,j}:", g[i,j] - (0.001**1.852)*q[i,j]*(abs(q[i,j])**0.852) * G)
         ampl.eval(f"s.t. x_{i}_{j}: x[{i},{j}] = {x[i,j]};")
     
     ampl.solve()

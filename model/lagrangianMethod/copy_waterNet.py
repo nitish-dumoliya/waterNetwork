@@ -49,7 +49,7 @@ def m1BasicModel(n):
 
 def lagrangianRelaxationModel(n):
     ampl = AMPL()
-    ampl.reset()
+   # ampl.reset()
     ampl.read("lagrangianRelaxationModel.mod")
     input_data_file = f"../../data/{data_list[n]}.dat"
     ampl.read_data(input_data_file)
@@ -102,9 +102,7 @@ ampl = lagrangianRelaxationModel(n)
 
 my_set = ampl.getSet("nodes")
 for [j] in my_set.getValues():
-    if j !=1:
-        ampl.eval(f"s.t. u_{j}: u[{j}] = 0;")
-        #ampl.eval(f"s.t. fix_h_{j}: h[{j}] >= E[{j}]+P[{j}];")
+    ampl.eval(f"s.t. u_{j}: u[{j}] = 0;")
 
 
 # ampl.eval("show;")
@@ -119,6 +117,23 @@ totalcost = ampl.get_objective("total_cost")
 lb = ampl.getObjective("total_cost").value()
 print("lower bound:", lb)
 
+#print("========================Solve the Content Model================================")
+
+#content_ampl = contentModel(n)
+
+#l_content = ampl.getVariable("l").getValues().toDict()
+
+#for (i, j, k) in l_content.keys():
+#    if l_content[i, j, k] >= 1:
+#        content_ampl.eval(f"s.t. fix_length_{i}_{j}_{
+#                          k}: l[{i},{j},{k}]={l_content[i, j, k]};")
+
+#content_ampl.solve()
+#content_ampl.eval("display l;")
+#content_ampl.eval(
+#    "display sum{(i,j) in arcs} (sum{ k in pipes} l[i,j,k]*C[k]);")
+#content_ampl.eval("display q;")
+
 print("===========================Solve the LP Problem================================")
 
 lp_ampl = lpModel(n)
@@ -132,8 +147,35 @@ lp_ampl.solve()
 lp_ampl.eval("display h_lp;")
 ub = lp_ampl.getObjective("total_cost").value()
 print("upper bound:", ub)
+#print(" ")
+#print("=============================Solve the Nlp problem==============================")
+#nlp_ampl = m1BasicModel(n)
+#l_nlp = ampl.getVariable("l").getValues().toDict()
+#for (i,j,k) in l_nlp.keys():
+#    nlp_ampl.eval(f"s.t. fix_l_{i}_{j}_{k}: l[{i},{j},{k}] = {l_nlp[i,j,k]};")
+#
+#nlp_ampl.solve()
+#nlp_ampl.eval("display h;")
+#ub = nlp_ampl.getObjective("total_cost").value()
 
-print("==============================Update the bounds================================")
+
+#print(" ")
+#print("=============================Solve the Primal Problem==============================")
+#nlp_ampl = m1BasicModel(n)
+#
+#u = ampl.getVariable("u").getValues().toDict()
+#E = ampl.getParameter("E").getValues().toDict()
+#P = ampl.getParameter("P").getValues().toDict()
+#
+#for j in u.keys():
+#    if u[j]!=0:
+#        nlp_ampl.eval(f"s.t. fix_h_{j}: h[{j}] = {E[j]+P[j]};")
+#
+#nlp_ampl.solve()
+#nlp_ampl.eval("display h;")
+#ub = nlp_ampl.getObjective("total_cost").value()
+
+print("=================================Update the bounds=================================")
 print("Lower Bound: ", lb)
 print("Upper Bound: ", ub)
 
@@ -142,13 +184,11 @@ upperBound = ub
 if ub <= lb:
     optimalAmpl = lp_ampl
 iter = iter +1
-pub = ub
-plb=lb
-#while upperBound-lb >= 0.0001:
-while iter<=1000:
+bub = ub
+while upperBound-lowerBound >= 0.0001:
     print(" ")
     print("Iteration: ",iter)
-    print("================Solve the Lagrangian Relaxation Problem====================")
+    print("===================Solve the Lagrangian Relaxation Problem=====================")
     u = ampl.getVariable("u").getValues().toDict()
     h = ampl.getVariable("h").getValues().toDict()
     d = ampl.getParameter("d").getValues().toDict()
@@ -166,74 +206,92 @@ while iter<=1000:
             g1=g1+(E[j]+P[j]-h[j])**2
     #for j in u.keys():
     #     print(E[j]+P[j]-h[j])   
-    #steplength = 2*(upperBound-lb)/(g1)
-    #steplength = 1/(iter)
-    #print(steplength)
+    steplength = 0.5*(upperBound-lb)/(g1)
+    #steplength = 0.5
+    print(steplength)
     #steplength = 1000/(iter)**0.5
-
-    #for j in u.keys():
-    #    if j != 1:
-    #       u[j] = u[j] + steplength*(max(0,E[j]+P[j]-h[j]))
-    #       u[j] = max(0,u[j])
-    #       ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]};")
     for j in u.keys():
-        if j != 1:
-            #print(j, E[j]+P[j]-h[j])
-            if (E[j]+P[j]-h[j]>=0):
-                steplength = 0.4*(upperBound-lb)/(g1)
-                u[j] = u[j] + steplength*(E[j]+P[j]-h[j])
-            else:    
-                #steplength = 0.5*(upperBound-lb)/(g1)
-                #u[j] = u[j] - steplength*(E[j]+P[j]-h[j])
-                u[j] = 0
-            u[j] = max(0,u[j])
-            #ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j] + steplength*(E[j]+P[j]-h[j])};")
-            ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]};")
+        #print(u[j]+steplength*(E[j]+P[j]-h[j]))
+        u[j] = u[j] + steplength*(E[j]+P[j]-h[j])
+        u[j] = max(0,u[j])
+        #ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j] + steplength*(E[j]+P[j]-h[j])};")
+        ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]};")
     ampl.solve()
-    #ampl.eval("display l;")
-    ampl.eval("display u;")
-    ampl.eval("display h;")
-    ampl.eval("display q;")
-    #ampl.eval("display {(i,j) in arcs}: h[i]-h[j];")
+    #ampl.eval("display u;")
+    #ampl.eval("display h;")
+    #ampl.eval("display q;")
     #ampl.eval("display sum{(i,j) in arcs}(sum{k in pipes} l[i,j,k]*C[k]);")
     #ampl.eval("display total_cost;")
     lb = ampl.getObjective("total_cost").value()
     print("lower bound:",lb)
     
     print(" ")
-    print("===========================Solve the LP problem============================")
+    #print("==========================Solve the Content model==============================")
+    #content_ampl = contentModel(n)
+    #l_content = ampl.getVariable("l").getValues().toDict()
+    #for (i, j, k) in l_content.keys():
+    #    if l_content[i, j, k] >= 1:
+    #        content_ampl.eval(f"s.t. fix_length_{i}_{j}_{
+    #                          k}: l[{i},{j},{k}]={l_content[i, j, k]};")
+    #content_ampl.solve()
+    
+    print(" ")
+    print("=============================Solve the LP problem==============================")
     lp_ampl = lpModel(n)
     q_lp = ampl.getVariable("q").getValues().toDict()
     for (i, j), value in q_lp.items():
         lp_ampl.param['q_lp'][i, j] = value
+    
+    #for j in u.keys():
+    #    if u[j]!=0:
+    #        lp_ampl.eval(f"s.t. fix_h{j}: h_lp[{j}]={E[j]+P[j]};")
     
     lp_ampl.solve()
     lp_ampl.eval("display h_lp;")
     
     ub = lp_ampl.getObjective("total_cost").value()
     print("upper bound:",ub)
-    print("============================Update the bounds==============================")
+    #print(" ")
+    #print("=============================Solve the Nlp problem==============================")
+    #nlp_ampl = nlpModel(n)
+    #l_nlp = ampl.getVariable("l").getValues().toDict()
+    #for (i,j,k) in l_nlp.keys():
+    #    nlp_ampl.eval(f"s.t. fix_l_{i}_{j}_{k}: l[{i},{j},{k}] = {l_nlp[i,j,k]};")
+    #    #nlp_ampl.eval(f"s.t. fix_h{j}: h[{j}] = {h_nlp[j]};")
+
+    #nlp_ampl.solve()
+    #lp_ampl.eval("display h_lp;")
+
+    #ub = nlp_ampl.getObjective("total_cost").value()
+
+   # print(" ")
+   # print("=============================Solve the Primal Problem==============================")
+   # nlp_ampl = m1BasicModel(n)
+   # 
+   # u = ampl.getVariable("u").getValues().toDict()
+   # E = ampl.getParameter("E").getValues().toDict()
+   # P = ampl.getParameter("P").getValues().toDict()
+   # 
+   # for j in u.keys():
+   #     if u[j]!=0:
+   #         nlp_ampl.eval(f"s.t. fix_h_{j}: h[{j}] = {E[j]+P[j]};")
+   # 
+   # nlp_ampl.solve()
+   # nlp_ampl.eval("display h;")
+   # ub = nlp_ampl.getObjective("total_cost").value()
+
+    print("==============================Update the bounds================================")
 
     upperBound = min(ub, upperBound)
     lowerBound = max(lb, lowerBound)
     
-    if upperBound != pub:
+    if upperBound != bub:
         optimalAmpl = lp_ampl
-        optimalAmpl.eval("display con4.dual;")
-    pub = upperBound
+    bub = upperBound
 
-    #print("Lower Bound: ", lb)
     print("Best Lower Bound: ", lowerBound)
     print("Best Upper Bound: ", upperBound)
     print("Gap: ", upperBound-lowerBound)
-    #if lb<=upperBound:
-    #    if abs((upperBound-lb)/lb) < 0.01:
-    #        lp_ampl.eval("display con4.dual;")
-    #        break
-    if (upperBound-lowerBound)/lowerBound < 0.001:
-        break
-
-    plb = lb
 
     iter = iter + 1
 print(" ")
@@ -241,7 +299,6 @@ print("********************************Optimal Solution*************************
 optimalAmpl.eval("display l_lp;")
 optimalAmpl.eval("display q_lp;")
 optimalAmpl.eval("display h_lp;")
-optimalAmpl.eval("display con4.dual;")
 optimalAmpl.eval("display total_cost;")
 
 end_time = time.time()

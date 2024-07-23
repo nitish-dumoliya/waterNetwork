@@ -68,11 +68,11 @@ print(uwg.edges())
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "baron"
+ampl.option["solver"] = "ipopt"
 # ampl.option["solver"] = "/home/nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
-# ampl.option["ipopt_options"] = " outlev = 0"
+ampl.option["ipopt_options"] = " outlev = 0"
 # ampl.option["knitro_options"] = "outlev = 1 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 20 ms_maxtime_real = 50"
 ampl.option["knitro_options"] = "outlev =0 ms_enable 1  ms_maxsolves 20 mip_multistart 1 "
 # ampl.option["presolve_eps"]="  6.82e-14"
@@ -101,23 +101,23 @@ totalcost = ampl.get_objective("total_cost")
 print("Objective:", totalcost.value())
 print("==========================================================")
 
-lp_ampl = AMPL()
-lp_ampl.reset()
-lp_ampl.read("../lpNlp/lp_model.mod")
-input_data_file = f"/home/nitishdumoliya//waterNetwork/data/{data_list[0]}.dat"
-lp_ampl.read_data(input_data_file)
+#lp_ampl = AMPL()
+#lp_ampl.reset()
+#lp_ampl.read("../lpNlp/lp_model.mod")
+#input_data_file = f"/home/nitishdumoliya//waterNetwork/data/{data_list[0]}.dat"
+#lp_ampl.read_data(input_data_file)
 
-q_lp = ampl.getVariable("q").getValues().toDict()
+#q_lp = ampl.getVariable("q").getValues().toDict()
 
-for (i, j), value in q_lp.items():
-    lp_ampl.param['q_lp'][i, j] = value
+#for (i, j), value in q_lp.items():
+#    lp_ampl.param['q_lp'][i, j] = value
 
 # lp_ampl.eval("s.t. length{(i,j) in arcs}: l_lp[i,j,14]=L[i,j] ;")
-lp_ampl.option["presolve_eps"] = "6.82e-14"
-lp_ampl.option["solver"] = "cplex"
-lp_ampl.solve()
-lp_ampl.eval("display h_lp;")
-lp_ampl.eval("display {(i,j) in arcs, k in pipes:l_lp[i,j,k]>1} l_lp[i,j,k];")
+#lp_ampl.option["presolve_eps"] = "6.82e-14"
+#lp_ampl.option["solver"] = "cplex"
+#lp_ampl.solve()
+#lp_ampl.eval("display h_lp;")
+#lp_ampl.eval("display {(i,j) in arcs, k in pipes:l_lp[i,j,k]>1} l_lp[i,j,k];")
 
 ###################################################################
 
