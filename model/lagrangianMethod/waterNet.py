@@ -28,13 +28,9 @@ data_list = [
 ]
  
 start_time = time.time()
-n = 1
+
 print("  ") 
 print("*******************************************************************************")
-print("Water Network File : ", data_list[n])
-print(" ")
-
-
 def m1BasicModel(n):
     basicAmpl = AMPL()
     basicAmpl.reset()
@@ -93,6 +89,9 @@ def nlpModel(n):
     nlp_ampl.option["knitro_options"] = "outlev = 0 ms_enable 1  ms_maxsolves 5 mip_multistart 1 "
     return nlp_ampl
 
+n = 1
+print("Water Network File : ", data_list[n])
+print(" ")
 
 iter = 1
 print("Iteration: ",iter)
@@ -104,9 +103,13 @@ my_set = ampl.getSet("nodes")
 for [j] in my_set.getValues():
     if j !=1:
         ampl.eval(f"s.t. u_{j}: u[{j}] = 0;")
-        #ampl.eval(f"s.t. fix_h_{j}: h[{j}] >= E[{j}]+P[{j}];")
 
+ro_value = 1
+ro = ampl.getParameter('ro')
+ro.set(ro_value)
 
+#ro = ampl.eval("s.t. mu_param:mu=1;")
+ 
 # ampl.eval("show;")
 # ampl.eval("expand;")
 
@@ -139,11 +142,13 @@ print("Upper Bound: ", ub)
 
 lowerBound = lb
 upperBound = ub
-if ub <= lb:
-    optimalAmpl = lp_ampl
+
+optimalAmpl = lp_ampl
+
 iter = iter +1
 pub = ub
 plb=lb
+
 #while upperBound-lb >= 0.0001:
 while iter<=1000:
     print(" ")
@@ -155,11 +160,16 @@ while iter<=1000:
     R = ampl.getParameter("R").getValues().toDict()
     E = ampl.getParameter("E").getValues().toDict()
     P = ampl.getParameter("P").getValues().toDict()
-
+    #ro = ampl.getParameter("ro").getValues().toDict()
+    
     ampl = lagrangianRelaxationModel(n)
     set_pipes = ampl.getSet("pipes")
     set_nodes = ampl.getSet("nodes")
-    
+   
+    ro = ampl.getParameter('ro')
+    ro.set(ro_value)
+
+ 
     g1=0
     for j in u.keys():
         if j !=1:
@@ -179,13 +189,15 @@ while iter<=1000:
     for j in u.keys():
         if j != 1:
             #print(j, E[j]+P[j]-h[j])
-            if (E[j]+P[j]-h[j]>=0):
-                steplength = 0.4*(upperBound-lb)/(g1)
-                u[j] = u[j] + steplength*(E[j]+P[j]-h[j])
-            else:    
+            if (E[j]+P[j]-h[j]>0):
+                #steplength = 0.4*(upperBound-lb)/(g1)
+                #ro_value = iter
+                u[j] = u[j] + ro_value*(E[j]+P[j]-h[j])
+            else: 
                 #steplength = 0.5*(upperBound-lb)/(g1)
-                #u[j] = u[j] - steplength*(E[j]+P[j]-h[j])
-                u[j] = 0
+                #ro_value = iter
+                u[j] = u[j] + ro_value*(E[j]+P[j]-h[j])
+                #u[j] = 0
             u[j] = max(0,u[j])
             #ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j] + steplength*(E[j]+P[j]-h[j])};")
             ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]};")
@@ -217,7 +229,7 @@ while iter<=1000:
     upperBound = min(ub, upperBound)
     lowerBound = max(lb, lowerBound)
     
-    if upperBound != pub:
+    if upperBound < pub:
         optimalAmpl = lp_ampl
         optimalAmpl.eval("display con4.dual;")
     pub = upperBound
@@ -233,7 +245,7 @@ while iter<=1000:
     if (upperBound-lowerBound)/lowerBound < 0.001:
         break
 
-    plb = lb
+    plb = lowerBound
 
     iter = iter + 1
 print(" ")
@@ -241,7 +253,7 @@ print("********************************Optimal Solution*************************
 optimalAmpl.eval("display l_lp;")
 optimalAmpl.eval("display q_lp;")
 optimalAmpl.eval("display h_lp;")
-optimalAmpl.eval("display con4.dual;")
+optimalAmpl.eval("display con1.dual;")
 optimalAmpl.eval("display total_cost;")
 
 end_time = time.time()

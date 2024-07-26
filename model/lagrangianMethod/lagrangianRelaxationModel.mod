@@ -19,22 +19,17 @@ param p:= 1.852;
 param a := (15*(delta)^(p-1))/8 + ((p-1)*p*delta^(p-1))/8 - 7*p*(delta^(p-1))/8;
 param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4; 
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
-
+param ro;
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
 var u{nodes}>=0;            # Lagrangian Multipliers
 var x{arcs};                # Lagrangian Multipliers
-var v{arcs,pipes};          # Lagrangian Multipliers
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
-# minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);
-# minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs , k in pipes} v[i,j,k]*(l[i,j,k]-L[i,j]);	
-# 
-minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) ;	
-#minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs} x[i,j]*(h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));	
-# minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{(i,j) in arcs} v[i,j]*(sum{k in pipes}l[i,j,k]-L[i,j]);	
+#minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) ;	
+minimize total_cost : (sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k]) + sum{j in nodes diff Source} u[j]*(E[j]+P[j]-h[j]) + sum{j in nodes diff Source} (ro^2)*(max(0,E[j]+P[j]-h[j]))^2;	
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes}: 
