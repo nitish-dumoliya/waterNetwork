@@ -41,7 +41,7 @@ def m1BasicModel(n):
     basicAmpl.read("../m1Basic.mod")
     input_data_file = f"../../data/{data_list[n]}.dat"
     basicAmpl.read_data(input_data_file)
-    basicAmpl.option["solver"] = "ipopt"
+    basicAmpl.option["solver"] = "knitro"
     basicAmpl.option["ipopt_options"] = "outlev 0"
     basicAmpl.option["knitro_options"] = "outlev = 0 ms_enable 1  ms_maxsolves 1 mip_multistart 1 "
     basicAmpl.option["presolve_eps"] = "8.53e-15"
@@ -53,7 +53,7 @@ def lagrangianRelaxationModel(n):
     ampl.read("lagrangianRelaxationModel.mod")
     input_data_file = f"../../data/{data_list[n]}.dat"
     ampl.read_data(input_data_file)
-    ampl.option["solver"] = "ipopt"
+    ampl.option["solver"] = "knitro"
     ampl.option["ipopt_options"] = "outlev 0"
     ampl.option["knitro_options"] = "outlev = 0 ms_enable 1  ms_maxsolves 5 mip_multistart 1 "
     ampl.option["presolve_eps"] = "8.53e-15"
@@ -77,7 +77,7 @@ def lpModel(n):
     lp_ampl.read("../lpNlp/lp_model.mod")
     input_data_file = f"../../data/{data_list[n]}.dat"
     lp_ampl.read_data(input_data_file)
-    lp_ampl.option["solver"] = "cplex"
+    lp_ampl.option["solver"] = "cplexamp"
     lp_ampl.option["presolve_eps"] = "1.08e-08"
     return lp_ampl
 
