@@ -104,7 +104,7 @@ for [j] in my_set.getValues():
     if j !=1:
         ampl.eval(f"s.t. u_{j}: u[{j}] = 0;")
 
-ro_value = 1
+ro_value = 2
 ro = ampl.getParameter('ro')
 ro.set(ro_value)
 
@@ -147,7 +147,7 @@ optimalAmpl = lp_ampl
 
 iter = iter +1
 pub = ub
-plb=lb
+plb = lb
 
 #while upperBound-lb >= 0.0001:
 while iter<=1000:
@@ -188,7 +188,7 @@ while iter<=1000:
     #       ampl.eval(f"s.t. u_{j}: u[{j}] = {u[j]};")
     for j in u.keys():
         if j != 1:
-            #print(j, E[j]+P[j]-h[j])
+            print(j, E[j]+P[j]-h[j])
             if (E[j]+P[j]-h[j]>0):
                 #steplength = 0.4*(upperBound-lb)/(g1)
                 #ro_value = iter
