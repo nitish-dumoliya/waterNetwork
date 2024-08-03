@@ -25,6 +25,6 @@ minimize total_cost : sum{(i,j) in arcs} sum{k in pipes} (omega * l[i,j,k] / ( (
 #****************************************CONSTRAINTS**************************************#
 s.t. con1{j in nodes}: sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j];
 
-s.t. con4{(i,j) in arcs }: sum{k in pipes} l[i,j,k] = L[i,j];
+s.t. con2{(i,j) in arcs }: sum{k in pipes} l[i,j,k] = L[i,j];
 
 #******************************************************************************************
