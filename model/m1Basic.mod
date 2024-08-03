@@ -33,33 +33,33 @@ minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];
 subject to con1{j in nodes}: 
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
 ;
-#subject to con2{(i,j) in arcs}: 
-#    h[i] - h[j] = (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87))
+subject to con2{(i,j) in arcs}: 
+    h[i] - h[j] = (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87))
+;
+
+#subject to con2{(i,j) in arcs }: 
+#    (if -0.1<=q[i,j]<=0.1  then 
+#        (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) 
+#    else 
+#		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j] 
 #;
 
-subject to con3{(i,j) in arcs }: 
-    (if -0.1<=q[i,j]<=0.1  then 
-        (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) 
-    else 
-		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j] 
-;
-
-subject to con4{(i,j) in arcs}: 
+subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]
 ;
-subject to con5{(i,j) in arcs , k in pipes}: 
+subject to con4{(i,j) in arcs , k in pipes}: 
     l[i,j,k] <= L[i,j]
 ;
-subject to con6{i in Source}: 
+subject to con5{i in Source}: 
     h[i] = E[i]
 ;
-subject to con7{i in nodes diff Source}: 
+subject to con6{i in nodes diff Source}: 
     h[i] >= E[i] + P[i]
 ;
-subject to con8{(i,j) in arcs}:
+subject to con7{(i,j) in arcs}:
     -sum{k in nodes diff Source} D[k] <= q[i,j]
 ;
-subject to con9{(i,j) in arcs}:
+subject to con8{(i,j) in arcs}:
     q[i,j] <= sum{k in nodes diff Source} D[k]
 ;
 # subject to flow_bound_right{(i,j) in arcs}: 
@@ -69,6 +69,4 @@ subject to con9{(i,j) in arcs}:
 # subject to flow_bound_left{(i,j) in arcs}: 
 #    -vmax[i,j]*(3.14/4)*(L[i,j]/(sum{k in pipes} l[i,j,k]/(d[k])**4.87))**(2/4.87) <= q[i,j]
 #;
-
-
 #*******************************************************************************************#

@@ -95,7 +95,7 @@ lp_ampl.solve()
 #lp_ampl.eval("display l_lp;")
 lp_ampl.eval("display h_lp;")
 lp_ampl.eval("display con1.dual;")
-lp_ampl.eval("display con2.dual;")
+#lp_ampl.eval("display con2.dual;")
 lp_ampl.eval("display con3.dual;")
 lp_ampl.eval("display con4.dual;")
 
