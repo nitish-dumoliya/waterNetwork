@@ -49,6 +49,15 @@ def dual_lpModel(data):
     lp_ampl.option["solver"] = "cplexamp"
     return lp_ampl
 
+
+def flowModel(data):
+    flow_ampl = AMPL()
+    flow_ampl.reset()
+    flow_ampl.read("flowCon.mod")
+    flow_ampl.read_data(f"../../data/{data}.dat")
+    flow_ampl.option["solver"] = "cplex"
+    return flow_ampl
+
 data = data_list[0]
 
 nlp_ampl = nlpModel(data)
@@ -87,7 +96,6 @@ dual_lp_ampl.eval("display gamma;")
 lp_ampl = lpModel(data)
 
 q_lp = nlp_ampl.getVariable("q").getValues().toDict()
-
 for (i, j), value in q_lp.items():
     lp_ampl.param['q_lp'][i, j] = value
 
@@ -99,3 +107,24 @@ lp_ampl.eval("display con1.dual;")
 lp_ampl.eval("display con3.dual;")
 lp_ampl.eval("display con4.dual;")
 
+flow_ampl = flowModel(data)
+q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
+
+print(q_lp)
+
+for (i, j), value in q_lp.items():
+    flow_ampl.param['q_lp'][i, j] = value
+
+flow_ampl.eval("s.t. fix_q_del67: q_del[6,7]=45;")
+flow_ampl.solve()
+flow_ampl.eval("display q_del;")
+flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
+
+#flow_ampl.param['q_lp'][1,2] = q_lp[1,2]
+#flow_ampl.param['q_lp'][2,3] = q_lp[2,3]
+#flow_ampl.param['q_lp'][2,4] = q_lp[2,4]
+#flow_ampl.param['q_lp'][3,5] = q_lp[3,5]
+#flow_ampl.param['q_lp'][4,5] = q_lp[4,5]
+#flow_ampl.param['q_lp'][4,6] = q_lp[4,6]
+#flow_ampl.param['q_lp'][6,7] = q_lp[6,7]
+#flow_ampl.param['q_lp'][7,5] = q_lp[7,5]
