@@ -37,7 +37,7 @@ def lpModel(data):
     lp_ampl.reset()
     lp_ampl.read("../lpNlp/lp_model.mod")
     lp_ampl.read_data(f"../../data/{data}.dat")
-    lp_ampl.option["solver"] = "cplex"
+    lp_ampl.option["solver"] = "cplexamp"
     return lp_ampl
 
 
@@ -46,7 +46,7 @@ def dual_lpModel(data):
     lp_ampl.reset()
     lp_ampl.read("dual_lp.mod")
     lp_ampl.read_data(f"../../data/{data}.dat")
-    lp_ampl.option["solver"] = "cplex"
+    lp_ampl.option["solver"] = "cplexamp"
     return lp_ampl
 
 data = data_list[0]
