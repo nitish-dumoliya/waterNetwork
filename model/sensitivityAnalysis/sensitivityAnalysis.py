@@ -38,6 +38,7 @@ def lpModel(data):
     lp_ampl.read("../lpNlp/lp_model.mod")
     lp_ampl.read_data(f"../../data/{data}.dat")
     lp_ampl.option["solver"] = "cplexamp"
+    lp_ampl.option["cplexamp_options"] = "mipbasis 1"
     return lp_ampl
 
 
@@ -55,7 +56,7 @@ def flowModel(data):
     flow_ampl.reset()
     flow_ampl.read("flowCon.mod")
     flow_ampl.read_data(f"../../data/{data}.dat")
-    flow_ampl.option["solver"] = "cplex"
+    flow_ampl.option["solver"] = "cplexamp"
     return flow_ampl
 
 data = data_list[0]
@@ -102,6 +103,7 @@ for (i, j), value in q_lp.items():
 lp_ampl.solve()
 #lp_ampl.eval("display l_lp;")
 lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display q_lp;")
 lp_ampl.eval("display con1.dual;")
 #lp_ampl.eval("display con2.dual;")
 lp_ampl.eval("display con3.dual;")
@@ -110,12 +112,13 @@ lp_ampl.eval("display con4.dual;")
 flow_ampl = flowModel(data)
 q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
 
-print(q_lp)
+#print(q_lp)
 
 for (i, j), value in q_lp.items():
     flow_ampl.param['q_lp'][i, j] = value
 
-flow_ampl.eval("s.t. fix_q_del67: q_del[6,7]=45;")
+flow_ampl.eval(f"s.t. fix_q_del67: q_del[7,5]={50};")
+#flow_ampl.eval("s.t. fix_q_del45: q_del[4,5]=-66;")
 flow_ampl.solve()
 flow_ampl.eval("display q_del;")
 flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
@@ -128,3 +131,16 @@ flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
 #flow_ampl.param['q_lp'][4,6] = q_lp[4,6]
 #flow_ampl.param['q_lp'][6,7] = q_lp[6,7]
 #flow_ampl.param['q_lp'][7,5] = q_lp[7,5]
+
+lp_ampl = lpModel(data)
+
+q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
+q_del = flow_ampl.getVariable("q_del").getValues().toDict()
+for (i, j) in q_lp.keys():
+    lp_ampl.param['q_lp'][i, j] = q_lp[i,j] + q_del[i,j]
+
+lp_ampl.solve()
+#lp_ampl.eval("display l_lp;")
+lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display con1.dual;")
+

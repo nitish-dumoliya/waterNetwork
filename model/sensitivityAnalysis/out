@@ -1,0 +1,49 @@
+[?1006;1000h[?1002h[?1049h[22;0;0t[>4;2m[?1h=[?2004h[?1004h[1;51r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?25l[51;1H"sensitivityAnalysis.py" 143L, 3980B[1;1Hdual_lp_ampl.eval([31m"display gamma;"[m)
+
+lp_ampl = lpModel(data)
+
+q_lp = nlp_ampl.getVariable([31m"q"[m).getValues().toDict()
+[38;5;130mfor[m (i, j), value [38;5;130min[m q_lp.items():
+    lp_ampl.param[[31m'q_lp'[m][i, j] = value
+
+lp_ampl.solve()
+[34m#lp_ampl.eval("display l_lp;")[m
+lp_ampl.eval([31m"display h_lp;"[m)
+lp_ampl.eval([31m"display con1.dual;"[m)
+[34m#lp_ampl.eval("display con2.dual;")[m
+lp_ampl.eval([31m"display con3.dual;"[m)
+lp_ampl.eval([31m"display con4.dual;"[m)
+
+flow_ampl = flowModel(data)
+q_lp = lp_ampl.getParameter([31m'q_lp'[m).getValues().toDict()
+
+[34m#print(q_lp)[m
+
+[38;5;130mfor[m (i, j), value [38;5;130min[m q_lp.items():
+    flow_ampl.param[[31m'q_lp'[m][i, j] = value
+
+flow_ampl.eval([31m"s.t. fix_q_del67: q_del[4,5]=60;"[m)
+flow_ampl.solve()
+flow_ampl.eval([31m"display q_del;"[m)
+flow_ampl.eval([31m"display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];"[m)
+
+[34m#flow_ampl.param['q_lp'][1,2] = q_lp[1,2]
+#flow_ampl.param['q_lp'][2,3] = q_lp[2,3]
+#flow_ampl.param['q_lp'][2,4] = q_lp[2,4]
+#flow_ampl.param['q_lp'][3,5] = q_lp[3,5]
+#flow_ampl.param['q_lp'][4,5] = q_lp[4,5]
+#flow_ampl.param['q_lp'][4,6] = q_lp[4,6]
+#flow_ampl.param['q_lp'][6,7] = q_lp[6,7]
+#flow_ampl.param['q_lp'][7,5] = q_lp[7,5][m
+
+lp_ampl = lpModel(data)
+
+q_lp = flow_ampl.getParameter([31m"q_lp"[m).getValues().toDict()
+q_del = flow_ampl.getVariable([31m"q_del"[m).getValues().toDict()
+[38;5;130mfor[m (i, j) [38;5;130min[m q_lp.keys():
+    lp_ampl.param[[31m'q_lp'[m][i, j] = q_lp[i,j] + q_del[i,j]
+
+lp_ampl.solve()
+[34m#lp_ampl.eval("display l_lp;")[m
+lp_ampl.eval([31m"display h_lp;"[m)
+lp_ampl.eval([31m"display con1.dual;"[m)[51;74H118,47[8CBot[25;47H[?25h[?4m[51;1H[?1006;1000l[?1002l[?2004l[>4;m[23;2t[23;1t[51;1H[K[51;1H[?1004l[?2004l[?1l>[?1049l[23;0;0t[>4;m
