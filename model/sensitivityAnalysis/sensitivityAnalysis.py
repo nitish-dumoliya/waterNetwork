@@ -1,4 +1,5 @@
 from amplpy import AMPL
+import time
 
 data_list=[
         "d1_Sample_input_cycle_twoloop",
@@ -38,7 +39,8 @@ def lpModel(data):
     lp_ampl.read("../lpNlp/lp_model.mod")
     lp_ampl.read_data(f"../../data/{data}.dat")
     lp_ampl.option["solver"] = "cplexamp"
-    lp_ampl.option["cplexamp_options"] = "mipbasis 1"
+    #lp_ampl.option["cplex_options"] = "display = 2 mipbasis=1 basis_cond=1 logfile = cplex.out endbasis = foo sensitivity"
+    lp_ampl.option["presolve_eps"]= "1.28e-14"
     return lp_ampl
 
 
@@ -48,6 +50,7 @@ def dual_lpModel(data):
     lp_ampl.read("dual_lp.mod")
     lp_ampl.read_data(f"../../data/{data}.dat")
     lp_ampl.option["solver"] = "cplexamp"
+    lp_ampl.option["presolve_eps"]= "1.28e-14"
     return lp_ampl
 
 
@@ -57,8 +60,11 @@ def flowModel(data):
     flow_ampl.read("flowCon.mod")
     flow_ampl.read_data(f"../../data/{data}.dat")
     flow_ampl.option["solver"] = "cplexamp"
+    flow_ampl.option["presolve_eps"]= "1.44e-9"
     return flow_ampl
 
+
+start = time.time()
 data = data_list[0]
 
 nlp_ampl = nlpModel(data)
@@ -73,26 +79,28 @@ nlp_ampl.eval("display l;")
 # nlp_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>0.0001} l[i,j,k];")
 nlp_ampl.eval("display q;")
 nlp_ampl.eval("display h;")
+# nlp_ampl.eval("display _var.dual;")
 # nlp_ampl.eval("display total_cost;")
 totalcost = nlp_ampl.get_objective("total_cost")
 print("Objective is:", totalcost.value())
 
-dual_lp_ampl = dual_lpModel(data)
-
-q_lp = nlp_ampl.getVariable("q").getValues().toDict()
-
-for (i, j), value in q_lp.items():
-    dual_lp_ampl.param['q'][i, j] = value
-
-# lp_ampl.option["ipopt_options"]="outlev 1"
-dual_lp_ampl.solve()
-# lp_ampl.eval("display total_cost;"
-totalcost = dual_lp_ampl.get_objective("total_cost")
-print("Objective is:", totalcost.value())
-
-dual_lp_ampl.eval("display lambda;")
-dual_lp_ampl.eval("display beta;")
-dual_lp_ampl.eval("display gamma;")
+# dual_lp_ampl = dual_lpModel(data)
+#
+# q_lp = nlp_ampl.getVariable("q").getValues().toDict()
+#
+# for (i, j), value in q_lp.items():
+#     dual_lp_ampl.param['q'][i, j] = value
+#
+# # lp_ampl.option["ipopt_options"]="outlev 1"
+# dual_lp_ampl.solve()
+# # lp_ampl.eval("display total_cost;"
+# totalcost = dual_lp_ampl.get_objective("total_cost")
+# print("Objective is:", totalcost.value())
+#
+# dual_lp_ampl.eval("display lambda;")
+# dual_lp_ampl.eval("display beta;")
+# dual_lp_ampl.eval("display gamma;")
+# dual_lp_ampl.eval("display con1.dual;")
 
 lp_ampl = lpModel(data)
 
@@ -100,14 +108,62 @@ q_lp = nlp_ampl.getVariable("q").getValues().toDict()
 for (i, j), value in q_lp.items():
     lp_ampl.param['q_lp'][i, j] = value
 
+#lp_ampl.eval("s.t. l_238: l_lp[2,3,8]=1000;")
+#lp_ampl.eval("s.t. l_759: l_lp[7,5,9]=1000;")
+
 lp_ampl.solve()
 #lp_ampl.eval("display l_lp;")
-lp_ampl.eval("display h_lp;")
-lp_ampl.eval("display q_lp;")
+# lp_ampl.eval("display h_lp;")
+# lp_ampl.eval("display q_lp;")
 lp_ampl.eval("display con1.dual;")
 #lp_ampl.eval("display con2.dual;")
-lp_ampl.eval("display con3.dual;")
-lp_ampl.eval("display con4.dual;")
+# lp_ampl.eval("display con3.dual;")
+# lp_ampl.eval("display con4.dual;")
+# lp_ampl.eval("show;")
+# lp_ampl.eval("expand;")
+# lp_ampl.eval("display _var;")
+# lp_ampl.eval("display _con;")
+# lp_ampl.eval("display _obj;")
+# lp_ampl.eval("display {j in 1.._nvars} (_varname[j],_var[j],_var[j].ub,_var[j].rc);")
+# lp_ampl.eval("display {j in 1.._ncons} (_conname[j],_con[j],_con[j].lb, _con[j].ub);")
+
+print("Iteration 1")
+
+flow_ampl = flowModel(data)
+q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
+
+#**************************************************************************#
+# print(q_lp)
+
+for (i, j), value in q_lp.items():
+    flow_ampl.param['q_lp'][i, j] = value
+
+delta = 66
+
+#flow_ampl.eval(f"s.t. fix_q_del45: q_del[4,5]={-delta};")
+flow_ampl.eval(f"s.t. fix_q_del75: q_del[7,5]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del46: q_del[4,6]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del67: q_del[6,7]={delta};")
+
+flow_ampl.solve()
+flow_ampl.eval("display q_del;")
+flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
+
+lp_ampl = lpModel(data)
+
+q_del = flow_ampl.getVariable("q_del").getValues().toDict()
+q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
+for (i, j) in q_lp.keys():
+    lp_ampl.param['q_lp'][i, j] = q_lp[i,j]+q_del[i,j]
+
+lp_ampl.solve()
+lp_ampl.eval("display total_cost;")
+lp_ampl.eval("display q_lp;")
+lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display con1.dual;")
+
+#**************************************************************************#
+print("Iteration 2")
 
 flow_ampl = flowModel(data)
 q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
@@ -117,30 +173,106 @@ q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
 for (i, j), value in q_lp.items():
     flow_ampl.param['q_lp'][i, j] = value
 
-flow_ampl.eval(f"s.t. fix_q_del67: q_del[7,5]={50};")
-#flow_ampl.eval("s.t. fix_q_del45: q_del[4,5]=-66;")
+delta = -42.055
+
+#flow_ampl.eval(f"s.t. fix_q_del23: q_del[2,3]={-delta};")
+flow_ampl.eval(f"s.t. fix_q_del24: q_del[2,4]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del45: q_del[4,5]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del35: q_del[3,5]={-delta};")
+
 flow_ampl.solve()
 flow_ampl.eval("display q_del;")
 flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
 
-#flow_ampl.param['q_lp'][1,2] = q_lp[1,2]
-#flow_ampl.param['q_lp'][2,3] = q_lp[2,3]
-#flow_ampl.param['q_lp'][2,4] = q_lp[2,4]
-#flow_ampl.param['q_lp'][3,5] = q_lp[3,5]
-#flow_ampl.param['q_lp'][4,5] = q_lp[4,5]
-#flow_ampl.param['q_lp'][4,6] = q_lp[4,6]
-#flow_ampl.param['q_lp'][6,7] = q_lp[6,7]
-#flow_ampl.param['q_lp'][7,5] = q_lp[7,5]
 
 lp_ampl = lpModel(data)
 
-q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
 q_del = flow_ampl.getVariable("q_del").getValues().toDict()
+q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
 for (i, j) in q_lp.keys():
-    lp_ampl.param['q_lp'][i, j] = q_lp[i,j] + q_del[i,j]
+    lp_ampl.param['q_lp'][i, j] = q_lp[i,j]+q_del[i,j]
 
 lp_ampl.solve()
-#lp_ampl.eval("display l_lp;")
+lp_ampl.eval("display total_cost;")
+lp_ampl.eval("display q_lp;")
 lp_ampl.eval("display h_lp;")
 lp_ampl.eval("display con1.dual;")
+
+#**************************************************************************#
+print("Iteration 3")
+
+flow_ampl = flowModel(data)
+q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
+
+#print(q_lp)
+
+for (i, j), value in q_lp.items():
+    flow_ampl.param['q_lp'][i, j] = value
+
+# delta = 0.11001
+delta = 0.109 
+
+#flow_ampl.eval(f"s.t. fix_q_del45: q_del[4,5]={-delta};")
+#flow_ampl.eval(f"s.t. fix_q_del75: q_del[7,5]={delta};")
+flow_ampl.eval(f"s.t. fix_q_del46: q_del[4,6]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del67: q_del[6,7]={delta};")
+
+flow_ampl.solve()
+flow_ampl.eval("display q_del;")
+flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
+
+
+lp_ampl = lpModel(data)
+
+q_del = flow_ampl.getVariable("q_del").getValues().toDict()
+q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
+for (i, j) in q_lp.keys():
+    lp_ampl.param['q_lp'][i, j] = q_lp[i,j]+q_del[i,j]
+
+lp_ampl.solve()
+lp_ampl.eval("display total_cost;")
+lp_ampl.eval("display q_lp;")
+lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display con1.dual;")
+#**************************************************************************#
+print("Iteration 4")
+
+flow_ampl = flowModel(data)
+q_lp = lp_ampl.getParameter('q_lp').getValues().toDict()
+
+#print(q_lp)
+
+for (i, j), value in q_lp.items():
+    flow_ampl.param['q_lp'][i, j] = value
+
+# delta = -0.10
+delta = -0.109
+
+#flow_ampl.eval(f"s.t. fix_q_del23: q_del[2,3]={-delta};")
+flow_ampl.eval(f"s.t. fix_q_del24: q_del[2,4]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del45: q_del[4,5]={delta};")
+#flow_ampl.eval(f"s.t. fix_q_del35: q_del[3,5]={-delta};")
+
+flow_ampl.solve()
+flow_ampl.eval("display q_del;")
+flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
+
+
+lp_ampl = lpModel(data)
+
+q_del = flow_ampl.getVariable("q_del").getValues().toDict()
+q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
+for (i, j) in q_lp.keys():
+    lp_ampl.param['q_lp'][i, j] = q_lp[i,j]+q_del[i,j]
+
+lp_ampl.solve()
+lp_ampl.eval("display total_cost;")
+lp_ampl.eval("display q_lp;")
+lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display con1.dual;")
+
+#**************************************************************************#
+end = time.time()
+
+print("Total solve time :",end-start)
 

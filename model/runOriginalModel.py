@@ -70,7 +70,7 @@ ampl.solve()
 # ampl.eval("show;")
 # ampl.eval("expand;")
 
-# ampl.eval("display l;")
+ampl.eval("display l;")
 ampl.eval("display {(i,j) in arcs} sum{k in pipes} C[k]* l[i,j,k];")
 ampl.eval("display q;")
 ampl.eval("display h;")

@@ -132,4 +132,4 @@ for data in data_list:
     print(COST)
     print(min(COST))
     TIME.append(elapsed_time)
-    OBJ.append(min(COST))
+ 
