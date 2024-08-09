@@ -68,9 +68,8 @@ def nonLinearSensitivityModel(data):
     nlp_ampl.reset()
     nlp_ampl.read("nonLinearSensitivity.mod")
     nlp_ampl.read_data(f"../../data/{data}.dat")
-    nlp_ampl.option["solver"] = "ipopt"
-    #nlp_ampl.option["ipopt_options"] = "outlev 0"
-    #nlp_ampl.option["knitro_options"] = "outlev = 4 ms_enable 1  ms_maxsolves 10 mip_multistart 1 "
+    nlp_ampl.option["solver"] = "knitro"
+    nlp_ampl.option["ipopt_options"] = "outlev 0"
     nlp_ampl.option["presolve_eps"] = "3.41e-14"
     return nlp_ampl
 
