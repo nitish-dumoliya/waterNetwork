@@ -33,10 +33,7 @@ s.t. con4{j in nodes diff Source}: gamma[j] <=0;
 
 s.t. con5{j in nodes }: sum{i in nodes : (i,j) in arcs}q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j];
 
-subject to con8{(i,j) in arcs}:
-    -sum{k in nodes diff Source} D[k] <= q[i,j]
-;
-subject to con9{(i,j) in arcs}:
-    q[i,j] <= sum{k in nodes diff Source} D[k]
-;
+s.t. con8{(i,j) in arcs}: -sum{k in nodes diff Source} D[k] <= q[i,j];
+
+s.t. con9{(i,j) in arcs}: q[i,j] <= sum{k in nodes diff Source} D[k];
 ########################################################################################

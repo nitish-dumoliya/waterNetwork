@@ -79,7 +79,7 @@ data = data_list[0]
 
 nlp_ampl = nlpModel(data)
 
-max_dia=int(nlp_ampl.getSet('pipes').getValues().to_list()[-1])
+max_dia = int(nlp_ampl.getSet('pipes').getValues().to_list()[-1])
 print(max_dia)
 nlp_ampl.eval("s.t. fix_length{(i,j) in arcs}:"f" l[i,j,{max_dia}]=L[i,j];")
 # nlp_ampl.eval("s.t. fix_length1{(i,j) in arcs, k in 1...5}: l[i,j,k]=0;")
@@ -94,93 +94,26 @@ nlp_ampl.eval("display h;")
 totalcost = nlp_ampl.get_objective("total_cost")
 print("Objective is:", totalcost.value())
 
-nonLinear_ampl = nonLinearSensitivityModel(data)
-# nonLinear_ampl = lpModel(data)
+lp_ampl = lpModel(data)
 
 q_nlp = nlp_ampl.getVariable('q').getValues().toDict()
 
 for (i, j), value in q_nlp.items():
-    nonLinear_ampl.param['q_lp'][i, j] = value
+    lp_ampl.param['q_lp'][i, j] = value
 
-nonLinear_ampl.solve()
+lp_ampl.solve()
 
-nonLinear_ampl.eval("display total_cost;")
-nonLinear_ampl.eval("display q_lp;")
-nonLinear_ampl.eval("display h_lp;")
-nonLinear_ampl.eval("display con1.dual;")
+lp_ampl.eval("display total_cost;")
+lp_ampl.eval("display l_lp;")
+lp_ampl.eval("display q_lp;")
+lp_ampl.eval("display h_lp;")
+lp_ampl.eval("display con1.dual;")
 
 print("Iteration 1")
-
 flow_ampl = flowModel(data)
-q_lp = nonLinear_ampl.getParameter('q_lp').getValues().toDict()
+l_lp = lp_ampl.getVariable('l_lp').getValues().toDict()
 
 #**************************************************************************#
-# print(q_lp)
-
-for (i, j), value in q_lp.items():
-    flow_ampl.param['q_lp'][i, j] = value
-
-# delta = 42
-delta = 66.1095
-#delta = 66
-
-# flow_ampl.eval(f"s.t. fix_q_del45: q_del[4,5]={-delta};")
-#flow_ampl.eval(f"s.t. fix_q_del75: q_del[7,5]={delta};")
-#flow_ampl.eval(f"s.t. fix_q_del46: q_del[4,6]={delta};")
-flow_ampl.eval(f"s.t. fix_q_del67: q_del[6,7]={delta};")
-
-flow_ampl.solve()
-flow_ampl.eval("display q_del;")
-flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
-
-nlp_ampl = nonLinearSensitivityModel(data)
-
-q_del = flow_ampl.getVariable("q_del").getValues().toDict()
-q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
-for (i, j) in q_lp.keys():
-    nonLinear_ampl.param['q_lp'][i, j] = q_lp[i,j]+q_del[i,j]
-
-nonLinear_ampl.solve()
-nonLinear_ampl.eval("display total_cost;")
-nonLinear_ampl.eval("display l_lp;")
-nonLinear_ampl.eval("display q_lp;")
-nonLinear_ampl.eval("display h_lp;")
-nonLinear_ampl.eval("display con1.dual;")
-
-#**************************************************************************#
-print("Iteration 2")
-flow_ampl = flowModel(data)
-q_lp = nonLinear_ampl.getParameter('q_lp').getValues().toDict()
-
-#**************************************************************************#
-# print(q_lp)
-
-for (i, j), value in q_lp.items():
-    flow_ampl.param['q_lp'][i, j] = value
-
-delta = 0.1
-
-#flow_ampl.eval(f"s.t. fix_q_del45: q_del[2,4]={delta};")
-flow_ampl.eval(f"s.t. fix_q_del75: q_del[7,5]={delta};")
-# flow_ampl.eval(f"s.t. fix_q_del46: q_del[3,5]={-delta};")
-# flow_ampl.eval(f"s.t. fix_q_del67: q_del[2,3]={-delta};")
-
-flow_ampl.solve()
-flow_ampl.eval("display q_del;")
-flow_ampl.eval("display {(i,j) in arcs} q_lp[i,j]+q_del[i,j];")
-
-nlp_ampl = nonLinearSensitivityModel(data)
-
-q_del = flow_ampl.getVariable("q_del").getValues().toDict()
-q_lp = flow_ampl.getParameter("q_lp").getValues().toDict()
-for (i, j) in q_lp.keys():
-    nonLinear_ampl.param['q_lp'][i, j] = q_lp[i,j]+q_del[i,j]
-
-nonLinear_ampl.solve()
-nonLinear_ampl.eval("display total_cost;")
-nonLinear_ampl.eval("display q_lp;")
-nonLinear_ampl.eval("display h_lp;")
-nonLinear_ampl.eval("display con1.dual;")
 
 #**************************************************************************#
 
