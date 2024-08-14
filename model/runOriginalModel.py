@@ -30,7 +30,7 @@ data_list=[
 
 start_time = time.time()
 
-datanumber = 2
+datanumber = 3
 
 print("  ")
 print("****************************** Solver input *************************************")    

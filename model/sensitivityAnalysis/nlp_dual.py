@@ -66,7 +66,7 @@ def nlpDualModel(data):
     nlp_dual_ampl.read("nlp_dual.mod")
     nlp_dual_ampl.read_data(f"../../data/{data}.dat")
     nlp_dual_ampl.option["solver"] = "knitro"
-    nlp_dual_ampl.option["knitro_options"] = "outlev = 1 ms_enable = 1 ms_maxsolves = 10"
+    nlp_dual_ampl.option["knitro_options"] = "outlev = 1 ms_enable = 1 ms_maxsolves = 1"
     nlp_dual_ampl.option["baron_options"] = "outlev = 1 "
     return nlp_dual_ampl
 
@@ -78,10 +78,22 @@ nlp_ampl.solve()
 #nlp_ampl.eval("display l;")
 #nlp_ampl.eval("display sum{(i,j) in arcs}(sum{k in nodes} con1.dual[i,j,k]*C[k]);")
 nlp_ampl.eval("display q;")
+nlp_ampl.eval("display gamma;")
 nlp_ampl.eval("display con1.dual;")
 nlp_ampl.eval("display con2.dual;")
 nlp_ampl.eval("display con3.dual;")
 nlp_ampl.eval("display total_cost;")
 totalcost = nlp_ampl.get_objective("total_cost")
 print("Objective is:", totalcost.value())
+
+lp_ampl = lpModel(data)
+
+qlp = nlp_ampl.getVariable('q').getValues().toDict()
+
+for (i,j), value in qlp.items():
+    lp_ampl.param['q_lp'][i,j] = value
+
+lp_ampl.solve()
+
+lp_ampl.eval('display total_cost;')
 
