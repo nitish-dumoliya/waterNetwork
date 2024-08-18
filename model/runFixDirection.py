@@ -2,7 +2,7 @@ import networkx as nx
 import time
 import sys
 
-from amplpy import AMPL,Environment
+from amplpy import AMPL
 
 data_list=[
         "data1",
@@ -39,11 +39,21 @@ print(" ")
 
 ampl = AMPL()
 ampl.reset()
-ampl.read("m1Basic.mod")
+ampl.read("fixDirectionModel.mod")
 # ampl.read("new_spi_tree.mod")
 # ampl.read("spi_tree_lp.mod")
 input_data_file = f"../data/{data_list[datanumber]}.dat"
 ampl.read_data(input_data_file)
+
+ampl.eval("s.t. fix_x12: x[1,2] = 1;")
+ampl.eval("s.t. fix_x23: x[2,3] = 1;")
+ampl.eval("s.t. fix_x24: x[2,4] = 1;")
+ampl.eval("s.t. fix_x35: x[3,5] = 1;")
+ampl.eval("s.t. fix_x45: x[4,5] = 1;")
+ampl.eval("s.t. fix_x46: x[4,6] = 1;")
+ampl.eval("s.t. fix_x67: x[6,7] = 1;")
+ampl.eval("s.t. fix_x75: x[7,5] = 1;")
+
 
 ########################## exhibit the model that has been built ###################################
 
@@ -52,7 +62,7 @@ ampl.read_data(input_data_file)
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "knitro"
+ampl.option["solver"] = "ipopt"
 # ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "

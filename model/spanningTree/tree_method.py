@@ -37,7 +37,7 @@ for data in data_list:
     tree_ampl.reset()
     tree_ampl.read("new_tree_model.mod")
     # tree_ampl.read("spi_tree_lp.mod")
-    input_data_file = f"/home/nitishdumoliya/Nitish/minotaur/examples/water-network/Data/{data}.dat"
+    input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data}.dat"
     # input_data_file1 = f"/home/nitishdumoliya/Nitish/minotaur/examples/water-network/Data/d13_copy.dat"
     tree_ampl.read_data(input_data_file)
     nodes_list = []
@@ -78,8 +78,8 @@ for data in data_list:
     tree_ampl.eval("s.t. fix_x_12: x[1,2] = 1;")
     tree_ampl.eval("s.t. fix_x_23: x[2,3] = 1;")
     tree_ampl.eval("s.t. fix_x_24: x[2,4] = 1;")
-    tree_ampl.eval("s.t. fix_x_35: x[3,5] = 1;")
-    tree_ampl.eval("s.t. fix_x_45: x[4,5] = 0;")
+    tree_ampl.eval("s.t. fix_x_35: x[3,5] = 0;")
+    tree_ampl.eval("s.t. fix_x_45: x[4,5] = 1;")
     tree_ampl.eval("s.t. fix_x_46: x[4,6] = 1;")
     tree_ampl.eval("s.t. fix_x_67: x[6,7] = 1;")
     tree_ampl.eval("s.t. fix_x_75: x[7,5] = 0;")
@@ -105,7 +105,7 @@ for data in data_list:
         
     ####################################################################################################
     print("======================Solver Results====================")
-    tree_ampl.option["solver"] = "knitro"
+    tree_ampl.option["solver"] = "cplexamp"
     # tree_ampl.option["solver"] = "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
     # tree_ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
     # tree_ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
@@ -120,7 +120,7 @@ for data in data_list:
     # tree_ampl.eval("show;")
     # tree_ampl.eval("expand;")
 
-    # tree_ampl.eval("display l;")
+    tree_ampl.eval("display l;")
     # tree_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>1} l[i,j,k];")
     tree_ampl.eval("display q;")
     tree_ampl.eval("display h;")
@@ -130,7 +130,7 @@ for data in data_list:
     print("Objective for minimum spanning tree is:", totalcost.value())
     TREE_COST.append(totalcost.value())
     print("==========================================================")
-    # break
+    break
 
     print(" ")
     print("#************************** Results for Loop Network ****************************#")

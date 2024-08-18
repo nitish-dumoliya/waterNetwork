@@ -46,7 +46,7 @@ comments multiple line:
                          shift-i
                          type #
                          Esc
-
+  42b7a8e80d805daa03022ed3fde4321d4c3bf2c990a144165d01eeecd6f699c6
 Uncomments multiple line
 
 Tmux Commands  
@@ -71,9 +71,22 @@ list all tmux sessions currently open in tmux- (ctrl + b) + s
 
 go to tmux session- tmux a -t (n)
 
-tmux list-sessions
+tmux list-sessions   or   tmux ls
+
+tmux kill-session 
+
+tmux kill-session -t <number>
+
+tmux kill-server
+
+tmux kill-server -a #The kill-session command can be used to kill all sessions except the current one
 
 
+find command 
+	find . -type f -name <file name>
+	find . -type f -name *.mod       #find the file has suffix .mod
+	find . -type f -name \*mod\*     #find the file has word mod
+	find . -type f -name \*mod\* -exec rm -i {} \;
 
 ideas : 1. find the optimal search directions :w
 
