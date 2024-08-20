@@ -52,7 +52,7 @@ ampl.eval("s.t. fix_x35: x[3,5] = 1;")
 ampl.eval("s.t. fix_x45: x[4,5] = 1;")
 ampl.eval("s.t. fix_x46: x[4,6] = 1;")
 ampl.eval("s.t. fix_x67: x[6,7] = 1;")
-ampl.eval("s.t. fix_x75: x[7,5] = 1;")
+ampl.eval("s.t. fix_x75: x[7,5] = 0;")
 
 
 ########################## exhibit the model that has been built ###################################
@@ -62,7 +62,7 @@ ampl.eval("s.t. fix_x75: x[7,5] = 1;")
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "ipopt"
+ampl.option["solver"] = "knitro"
 # ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
