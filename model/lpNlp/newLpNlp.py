@@ -1,3 +1,5 @@
+import networkx as nx
+
 import time
 
 data_list=[
@@ -93,38 +95,82 @@ for data in data_list:
         lp_ampl.eval("display {(i,j) in arcs, k in pipes:l_lp[i,j,k]>0} l_lp[i,j,k];")
         lp_ampl.eval("display q_lp;")
         lp_ampl.eval("display h_lp;")
+        tree_ampl = AMPL()
+        tree_ampl.reset()
+        # tree_ampl.read("spanningTreeMultiple.mod")
+        tree_ampl.read("../spanningTree/spanningTreeSingle.mod")
+        input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data}"
+        tree_ampl.read_data(input_data_file)
+        nodes_list = []
+        
+        for i in tree_ampl.getSet('nodes'):
+            nodes_list.append(i)
+        # print("Nodes :",nodes_list)
+        edge_set = tree_ampl.getSet('arcs')
+        pipes = tree_ampl.getSet('pipes').to_list()
+        edges_list = tree_ampl.getParameter('L')
+        C = tree_ampl.getParameter('C').getValues().toDict()
+        # print(edges_list)
+        L = tree_ampl.getParameter('L').getValues()
+        l_values = lp_ampl.getVariable('l_lp').getValues().toDict()
+        
+        edges_list = {}
+        
+        uwg = nx.Graph()
+        uwg.add_nodes_from(nodes_list)
+        # print(uwg.nodes())
+        uwg.add_edges_from((i,j) for (i,j) in L.toDict().keys())
+        
+        for (i,j) in L.toDict().keys():
+            sum = 0
+            for k in pipes:
+                sum = sum + l_values[i,j,k] * C[k]
+            uwg[i][j]['weight'] = sum
+        
+        print(uwg.edges())
 
-        nlp_ampl = AMPL()
-        nlp_ampl.reset()
-        nlp_ampl.read("/home/nitishdumoliya/waterNetwork/model/lpNlp/NLP.mod")
-        nlp_ampl.read_data(f"/home/nitishdumoliya/waterNetwork/data/{data}")
-        nlp_ampl.option["solver"] = "knitro"
-        nlp_ampl.option["ipopt_options"]="outlev 0"
+        ##################################################################################################
 
-        l_nlp = lp_ampl.getVariable("l_lp").getValues().toDict()
+        # Calculate a minimum spanning tree of an undirected weighted graph with the kruskal algorithm
+        mst = nx.minimum_spanning_tree(uwg, algorithm='kruskal')
+        print(mst)
+        print("Minimum spanning tree is",mst.edges() )
+        print(" ")
 
-        my_set = lp_ampl.getSet('arcs')
 
-        for (i,j) in my_set.getValues():
-            i = int(i)
-            j = int(j)
-            # print((i,j))
-            K = []
-            for k in nlp_ampl.getSet('pipes').getValues().to_list():
-                k = int(k)
-                if (i,j,k) in list(l_nlp.keys()):
-                    #print(l_nlp.get((i,j,k)))
-                    if l_nlp.get((i,j,k))>0:
-                        K.append(k)
-            k = max(K)
-            # print(k)
-            nlp_ampl.eval(f"s.t. fix_length_{i}_{j}_{k}: l[{i},{j},{k}]=L[{i},{j}];")
 
-        nlp_ampl.solve()
-        nlp_ampl.eval("display l;")
-        # nlp_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>0.0001} l[i,j,k];")
-        nlp_ampl.eval("display q;")
-        nlp_ampl.eval("display h;")
+        break
+        # nlp_ampl = AMPL()
+        # nlp_ampl.reset()
+        # nlp_ampl.read("/home/nitishdumoliya/waterNetwork/model/lpNlp/NLP.mod")
+        # nlp_ampl.read_data(f"/home/nitishdumoliya/waterNetwork/data/{data}")
+        # nlp_ampl.option["solver"] = "knitro"
+        # nlp_ampl.option["ipopt_options"]="outlev 0"
+        #
+        # l_nlp = lp_ampl.getVariable("l_lp").getValues().toDict()
+        #
+        # my_set = lp_ampl.getSet('arcs')
+        #
+        # for (i,j) in my_set.getValues():
+        #     i = int(i)
+        #     j = int(j)
+        #     # print((i,j))
+        #     K = []
+        #     for k in nlp_ampl.getSet('pipes').getValues().to_list():
+        #         k = int(k)
+        #         if (i,j,k) in list(l_nlp.keys()):
+        #             #print(l_nlp.get((i,j,k)))
+        #             if l_nlp.get((i,j,k))>0:
+        #                 K.append(k)
+        #     k = max(K)
+        #     # print(k)
+        #     nlp_ampl.eval(f"s.t. fix_length_{i}_{j}_{k}: l[{i},{j},{k}]=L[{i},{j}];")
+        #
+        # nlp_ampl.solve()
+        # nlp_ampl.eval("display l;")
+        # # nlp_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>0.0001} l[i,j,k];")
+        # nlp_ampl.eval("display q;")
+        # nlp_ampl.eval("display h;")
    
     end_time = time.time()
     elapsed_time = end_time - start_time

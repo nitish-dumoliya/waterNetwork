@@ -35,7 +35,7 @@ for data in data_list:
 
     tree_ampl = AMPL()
     tree_ampl.reset()
-    tree_ampl.read("new_tree_model.mod")
+    tree_ampl.read("contDiaTree.mod")
     # tree_ampl.read("spi_tree_lp.mod")
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data}.dat"
     # input_data_file1 = f"/home/nitishdumoliya/Nitish/minotaur/examples/water-network/Data/d13_copy.dat"
@@ -61,28 +61,28 @@ for data in data_list:
 
     # Calculate a minimum spanning tree of an undirected weighted graph with the kruskal algorithm
     
-    # mst = nx.minimum_spanning_tree(uwg, algorithm='kruskal')
-    # # print(sorted(mst.edges(data=True)))
-    # print("Minimum spanning tree is",mst.edges() )
-    # print(" ")
-    # for (i,j) in edge_set:
-    #     if (i,j) in mst.edges():
-    #         tree_ampl.eval(f"s.t. fixed_binary_{i}_{j}: x[{i},{j}]= 1;")
-    #     elif (j,i) in mst.edges():
-    #         tree_ampl.eval(f"s.t. fixed_binary_{i}_{j}: x[{i},{j}]= 1;")
-    #     else:
-    #         print((i,j))
-    #         tree_ampl.eval(f"s.t. fixed_binary_{i}_{j}: x[{i},{j}]= 0;")
+    mst = nx.minimum_spanning_tree(uwg, algorithm='kruskal')
+    # print(sorted(mst.edges(data=True)))
+    print("Minimum spanning tree is",mst.edges() )
+    print(" ")
+    for (i,j) in edge_set:
+        if (i,j) in mst.edges():
+            tree_ampl.eval(f"s.t. fixed_binary_{i}_{j}: x[{i},{j}]= 1;")
+        elif (j,i) in mst.edges():
+            tree_ampl.eval(f"s.t. fixed_binary_{i}_{j}: x[{i},{j}]= 1;")
+        else:
+            print((i,j))
+            tree_ampl.eval(f"s.t. fixed_binary_{i}_{j}: x[{i},{j}]= 0;")
 
     
-    tree_ampl.eval("s.t. fix_x_12: x[1,2] = 1;")
-    tree_ampl.eval("s.t. fix_x_23: x[2,3] = 1;")
-    tree_ampl.eval("s.t. fix_x_24: x[2,4] = 1;")
-    tree_ampl.eval("s.t. fix_x_35: x[3,5] = 0;")
-    tree_ampl.eval("s.t. fix_x_45: x[4,5] = 1;")
-    tree_ampl.eval("s.t. fix_x_46: x[4,6] = 1;")
-    tree_ampl.eval("s.t. fix_x_67: x[6,7] = 1;")
-    tree_ampl.eval("s.t. fix_x_75: x[7,5] = 0;")
+    # tree_ampl.eval("s.t. fix_x_12: x[1,2] = 1;")
+    # tree_ampl.eval("s.t. fix_x_23: x[2,3] = 1;")
+    # tree_ampl.eval("s.t. fix_x_24: x[2,4] = 1;")
+    # tree_ampl.eval("s.t. fix_x_35: x[3,5] = 1;")
+    # tree_ampl.eval("s.t. fix_x_45: x[4,5] = 0;")
+    # tree_ampl.eval("s.t. fix_x_46: x[4,6] = 1;")
+    # tree_ampl.eval("s.t. fix_x_67: x[6,7] = 1;")
+    # tree_ampl.eval("s.t. fix_x_75: x[7,5] = 0;")
 
     ##################################################################################################
     
@@ -102,10 +102,10 @@ for data in data_list:
     #     # print(f"s.t. cycle_basis{count}: sum{{(i,j) in arcs : i in cycle{count} and j in cycle{count}}} x[i,j] <= {len(cycle)-1};" )  
     #     tree_ampl.eval(f"s.t. cycle_basis{count}: sum{{(i,j) in arcs : i in cycle{count} and j in cycle{count}}} x[i,j] <= {len(cycle)-1};" ) 
     #     count = count +1 
-        
+
     ####################################################################################################
     print("======================Solver Results====================")
-    tree_ampl.option["solver"] = "cplexamp"
+    tree_ampl.option["solver"] = "knitro"
     # tree_ampl.option["solver"] = "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
     # tree_ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
     # tree_ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
@@ -120,18 +120,19 @@ for data in data_list:
     # tree_ampl.eval("show;")
     # tree_ampl.eval("expand;")
 
-    tree_ampl.eval("display l;")
+    # tree_ampl.eval("display l;")
     # tree_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>1} l[i,j,k];")
     tree_ampl.eval("display q;")
     tree_ampl.eval("display h;")
-    # tree_ampl.eval("display x;")
+    tree_ampl.eval("display {(i,j) in arcs} dia[i,j]*1000;")
+
     # tree_ampl.eval("display total_cost;")
     totalcost = tree_ampl.get_objective("total_cost")
     print("Objective for minimum spanning tree is:", totalcost.value())
     TREE_COST.append(totalcost.value())
     print("==========================================================")
     break
-
+    
     print(" ")
     print("#************************** Results for Loop Network ****************************#")
     print(" ")
@@ -149,35 +150,18 @@ for data in data_list:
 
     set_pipe = loop_ampl.getSet('pipes')
     print(set_pipe)
-    max_k = []
-    for k in set_pipe:
-        max_k.append(k)
-    max_K = max(max_k)
-    print(max_K)
-    min_k = min(max_k)
 
     for (i,j), value in x_tree.items():
-        # print((i,j), value)
+        print((i,j), value)
         if value ==1:
-            PipeNo=[]
             for k in tree_ampl.getSet('pipes'):
                 if l_tree[(i,j,k)]>1:
-                    PipeNo.append(k)
+                    loop_ampl.eval(f"s.t. fixed_len_{i}_{j}_{k}: l[{i},{j},{k}] = {l_tree[i,j,k]};")
                 else:
                     continue
-            # print(PipeNo)
-            loop_ampl.eval(f'set Pipeset_{i}_{j};')
-            loop_ampl.set[f'Pipeset_{i}_{j}'] = PipeNo
-            # print(loop_ampl.getSet(f'Pipeset_{i}_{j}'))  
-            loop_ampl.eval(f"s.t. fixed_len{i}_{j}: sum {{s in Pipeset_{i}_{j}}} l[{i},{j},s] = L[{i},{j}];")
-        
-            # print(PipeNo)
-            # K = max(PipeNo)
-            # loop_ampl.eval(f"s.t. fixed_len{i}_{j}: l[{i},{j},{K}] = L[{i},{j}];")
-        # else:
-        #     print((i,j))
-        #     loop_ampl.eval(f"s.t. fixed_len{i}_{j}: l[{i},{j},{max_k[2]}] = L[{i},{j}];")
-                    
+        else:
+            loop_ampl.eval(f"s.t. fixed_len_{i}_{j}:sum{{k in pipes}} l[{i},{j},k] = L[{i},{j}];")
+
     ##################################################################################################
 
     # loop_ampl.option["solver"] = "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
@@ -188,25 +172,36 @@ for data in data_list:
     loop_ampl.option["solver"] = "knitro"
     # loop_ampl.option["solver"] = "baron"
     # loop_ampl.option["ipopt_options"] = "outlev 3"
-    loop_ampl.set_option("knitro_options","outlev = 0 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 200 ms_maxtime_real = 60 mip_multistart=1 maxtime_real =60")
+    # loop_ampl.set_option("knitro_options","outlev = 0 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 200 ms_maxtime_real = 60 mip_multistart=1 maxtime_real =60")
     # loop_ampl.set_option("baron_options","maxtime = -1  outlev = 1 lsolver=conopt  barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
 
     loop_ampl.option["presolve_eps"]=" 6e-06 "
     loop_ampl.option["presolve"]="1"
     loop_ampl.solve()
     # loop_ampl.eval("display l;")
-    loop_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>0} l[i,j,k];")
-    # loop_ampl.eval("display q;")
-    # loop_ampl.eval("display h;")
+    loop_ampl.eval("display {(i,j) in arcs, k in pipes:l[i,j,k]>1} l[i,j,k];")
+    loop_ampl.eval("display q;")
+    loop_ampl.eval("display h;")
     loop_ampl.eval("display total_cost;")
     totalcost = loop_ampl.get_objective("total_cost")
     print("Objective for loop network is:", totalcost.value())
     # loop_ampl.display("_varname", "_var")
+    # loop_ampl.display("_conname", "_con")
     LOOP_COST.append(totalcost.value())
     
+    # Get the total number of constraints
+
+    all_constraints = loop_ampl.getConstraints()
+    all_constraints = list(all_constraints)
+
+    # Print all constraints
+    for constraint_name in all_constraints:
+        constraint_expr = loop_ampl.getConstraint(constraint_name[0])
+        print(constraint_name[0], ':', constraint_expr)  
 
 print("==========================================================")
 
 print("Tree Objective Value list :", TREE_COST)
 print(" ")
 print("Loop Objective Value list :", LOOP_COST)
+

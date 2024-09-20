@@ -2,12 +2,12 @@ import networkx as nx
 import time
 import sys
 
-from amplpy import AMPL,Environment
+from amplpy import AMPL
 
 data_list=[
+        "d0",
         "data1",
         "data2",
-        "twoloop",
         "d1_Sample_input_cycle_twoloop",
         "d2_Sample_input_cycle_hanoi",
         "d3_Sample_input_double_hanoi",
@@ -31,7 +31,7 @@ data_list=[
 
 start_time = time.time()
 
-datanumber = 3
+datanumber = 0
 
 print("  ")
 print("****************************** Solver input *************************************")    
@@ -40,7 +40,7 @@ print(" ")
 
 ampl = AMPL()
 ampl.reset()
-ampl.read("m1Basic.mod")
+ampl.read("continuousDiameter.mod")
 # ampl.read("new_spi_tree.mod")
 # ampl.read("spi_tree_lp.mod")
 input_data_file = f"../data/{data_list[datanumber]}.dat"
@@ -53,13 +53,13 @@ ampl.read_data(input_data_file)
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "knitro"
-# ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
+ampl.option["solver"] = "baron"
+# ampl.option["solver"] = "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
 # ampl.option["ipopt_options"] = " outlev = 0"
 # ampl.option["knitro_options"] = "outlev = 1 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 20 ms_maxtime_real = 50"
-ampl.option["knitro_options"] = "outlev = 4 ms_enable 1  ms_maxsolves 10 mip_multistart 1 "
+ampl.option["knitro_options"] = "outlev = 4 ms_enable 1  ms_maxsolves 5 mip_multistart 1 "
 # ampl.option["presolve_eps"]="  6.82e-14"
 # ampl.set_option("baron_options","maxtime = 200  outlev = 1 lsolver=knitro firstloc 1 barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
 ampl.set_option("baron_options","maxtime = -1  outlev = 1 ")
@@ -71,22 +71,20 @@ ampl.solve()
 # ampl.eval("show;")
 # ampl.eval("expand;")
 
-ampl.eval("display l;")
-ampl.eval("display {(i,j) in arcs} sum{k in pipes} C[k]* l[i,j,k];")
+ampl.eval("display d;")
 ampl.eval("display q;")
 ampl.eval("display h;")
-ampl.eval("display {(i,j) in arcs} h[i]-h[j];")
+# ampl.eval("display {(i,j) in arcs} h[i]-h[j];")
 # ampl.eval("display total_cost;")
-ampl.eval("display con1.dual;")
-ampl.eval("display con2.dual;")
-ampl.eval("display con5.dual;")
-ampl.eval("display con6.dual;")
+# ampl.eval("display con1.dual;")
+# ampl.eval("display con2.dual;")
+# ampl.eval("display con5.dual;")
+# ampl.eval("display con6.dual;")
 totalcost = ampl.get_objective("total_cost")
 print("Objective:", totalcost.value())
-# break
+
 
 end_time = time.time()
 elapsed_time = end_time - start_time
 print("elapsed_time : ", elapsed_time)
 print("==========================================================")
-

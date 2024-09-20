@@ -28,7 +28,7 @@ data ../data/d1_Sample_input_cycle_twoloop.dat;
 
 # option solver "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart";
 # option mmultistart_options "--presolve 1,--log_level 6,--nlp_engine IPOPT,--eval_within_bnds 1, --threads 1 ";
-option solver baron ;
+option solver knitro ;
 # option knitro_options "outlev =1 ";
 # option baron_options "outlev =3";
 

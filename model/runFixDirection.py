@@ -49,9 +49,9 @@ ampl.eval("s.t. fix_x12: x[1,2] = 1;")
 ampl.eval("s.t. fix_x23: x[2,3] = 1;")
 ampl.eval("s.t. fix_x24: x[2,4] = 1;")
 ampl.eval("s.t. fix_x35: x[3,5] = 1;")
-ampl.eval("s.t. fix_x45: x[4,5] = 1;")
+ampl.eval("s.t. fix_x45: x[4,5] = 0;")
 ampl.eval("s.t. fix_x46: x[4,6] = 1;")
-ampl.eval("s.t. fix_x67: x[6,7] = 1;")
+ampl.eval("s.t. fix_x67: x[6,7] = 0;")
 ampl.eval("s.t. fix_x75: x[7,5] = 0;")
 
 
@@ -62,7 +62,7 @@ ampl.eval("s.t. fix_x75: x[7,5] = 0;")
 
 ####################################################################################################
 print("======================Solver Results====================")
-ampl.option["solver"] = "knitro"
+ampl.option["solver"] = "ipopt"
 # ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
 # ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_bnds 1")
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
@@ -84,6 +84,7 @@ ampl.eval("display l;")
 ampl.eval("display {(i,j) in arcs} sum{k in pipes} C[k]* l[i,j,k];")
 ampl.eval("display q;")
 ampl.eval("display h;")
+ampl.eval("display {j in nodes} h[j]-E[j]-P[j];")
 # ampl.eval("display {(i,j) in arcs} h[i]-h[j];")
 # ampl.eval("display total_cost;")
 ampl.eval("display con1.dual;")
