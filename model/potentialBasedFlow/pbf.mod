@@ -17,7 +17,7 @@ param vmax{arcs} default (sum {k in nodes diff Source} D[k]/1000)/((3.14/4)*(d[1
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;    # Length of each commercial pipe for each arc/link
-var q{arcs} ;	            # Flow variable
+var q{arcs}>=0;	            # Flow variable
 var h{nodes};			    # Head
 var z1{arcs} binary;
 var z2{arcs} binary;
@@ -27,7 +27,7 @@ var z2{arcs} binary;
 minimize total_cost : sum{(i,j) in arcs} sum{k in pipes} l[i,j,k]*C[k];	
 
 #****************************************CONSTRAINTS**************************************#
-s.t. con1{j in nodes diff Source }: sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j];
+s.t. con1{j in nodes diff Source }: sum{i in nodes : (i,j) in arcs }q[i,j]*(z1[i,j]-z2[i,j]) -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j];
 
 s.t. con2{(i,j) in arcs}: h[i] - h[j] = q[i,j]*(abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes } omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87);
 
