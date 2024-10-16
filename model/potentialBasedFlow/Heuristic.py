@@ -1,13 +1,11 @@
 import networkx as nx
 from amplpy import AMPL
-
 import matplotlib.pyplot as plt
 import time
 import copy
 import sys
 import os
 import contextlib
-
 
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number):
@@ -202,6 +200,59 @@ class WaterNetworkOptimizer:
                 return False
         # print("All nodes except the root have at least one incoming arc.")
         return True
+    
+    def is_cycle(self, graph, start_node, end_node, visited_copy, parent):
+        visited_copy[start_node] = True
+        # print(f"Is node {end_node} in cycle?")
+        for neighbor in graph.neighbors(start_node):
+            # print("visited",neighbor,visited_copy[neighbor])
+            if not visited_copy[neighbor]:
+                # print("neighbor of node", start_node, "is", neighbor)
+                isCycle = self.is_cycle(graph, neighbor, end_node, visited_copy, start_node)
+                if isCycle:
+                    return True
+            else:
+                # print("parent:", parent)
+                if parent != neighbor:
+                    if end_node == neighbor:
+                        # print(f"Node {end_node} is in cycle")
+                        return True
+        return False
+
+    def presolve(self, graph, node, visited, parent, set_arc):
+        visited_copy = visited.copy()
+        # print(visited_copy)
+        isCycle = self.is_cycle(graph, node, node, visited_copy, parent)
+        print(f"Is node {node} in cycle?",isCycle)
+        visited[node] = True
+        if isCycle:
+            for neighbor in graph.neighbors(node):
+                if parent!=neighbor:
+                    set_arc.append((node,neighbor))
+                    print("Fix the arc", (node, neighbor))
+            return set_arc
+        else:
+            for neighbor in graph.neighbors(node):
+                if parent != neighbor:
+                    set_arc.append((node,neighbor))
+                    # print(set_arc)
+                    print("Fix the arc", (node, neighbor))
+                    # print("neighbor:", neighbor)
+                    self.presolve(graph, neighbor, visited, node, set_arc)
+        return set_arc
+
+    def fix_arc_set(self):
+        graph = nx.Graph()
+        self.load_model()
+        arc_set = self.ampl.getSet('arcs').to_list()
+        graph.add_edges_from(arc_set)
+        visited = {node: False for node in graph.nodes()}
+        source = self.ampl.getSet('Source').to_list()[0]
+        set_arc = []
+        print("\nPresolve the model for fixing the arc direction")
+        set_ = self.presolve(graph, source, visited, -1, set_arc)
+        print("fixed arc direction:",set_, "\n") 
+        return set_
 
     def fix_arc(self, data_number):
         fix_arc_list = [[(1,2), (2,3), (2,4)],
@@ -232,7 +283,7 @@ class WaterNetworkOptimizer:
         # self.plot_graph()
         arc_no = 1
         for u, v in list(self.network_graph.edges()):  # Use a list to avoid modifying the graph during iteration
-            print(super_source_out_arc)
+            # print(super_source_out_arc)
             if (u,v) not in super_source_out_arc:
                 # Attempt to reverse the direction of the arc (u, v) to (v, u)
                 self.network_graph.remove_edge(u, v)
@@ -249,7 +300,7 @@ class WaterNetworkOptimizer:
                     # Load the model and update flow directions in AMPL
                     self.load_model()
                     # self.plot_graph()
-                    self.update_model()                    
+                    self.update_model()
                     # Solve the updated flow model and compare the total cost
                     self.solve()  # Solves the updated acyclic water network optimization problem                    
                     if self.solve_result == "solved":
@@ -305,7 +356,9 @@ class WaterNetworkOptimizer:
         acyclicity_time = 0
         iteration = 1
         best_arc = None
-        super_source_out_arc = self.fix_arc(self.data_number)
+        super_source_out_arc = self.fix_arc_set()
+        # print("super_source_out_arc:",super_source_out_arc)
+        # super_source_out_arc = self.fix_arc(self.data_number)
 
         while improved:
             print("Iteration :",iteration)
@@ -362,9 +415,10 @@ class WaterNetworkOptimizer:
     def solve(self):
         with self.suppress_output():
             """Solve the optimization problem."""
-            self.ampl.option["solver"] = "ipopt"
+            self.ampl.option["solver"] = "baron"
             self.ampl.set_option("ipopt_options", "outlev = 0  print_user_options = no  sb = yes ")
             self.ampl.set_option("knitro_options", "outlev = 0 ms_enable = 1 ms_maxsolves = 20 mip_multistart=1")
+            self.ampl.set_option("baron_options","maxtime = 20  outlev = 1 lsolver=knitro firstloc 1 barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
             self.ampl.option["presolve_eps"] = " 8.53e-15"
             self.ampl.option['presolve'] = 1
             # self.ampl.option['solver_msg'] = 0
@@ -432,7 +486,7 @@ if __name__ == "__main__":
     ]
 
     # Select the data number here (0 to 18)
-    data_number = 10
+    data_number = 0
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[data_number]}.dat"
     print("Water Network:", data_list[data_number],"\n")
     optimizer = WaterNetworkOptimizer("../m1Basic.mod", input_data_file, data_number)
