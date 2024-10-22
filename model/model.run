@@ -12,11 +12,11 @@ model m1Basic.mod;
 # model pf_nlp.mod;
 
 # model NLP.mod;
-data ../data/d1_Sample_input_cycle_twoloop.dat;
+# data ../data/d1_Sample_input_cycle_twoloop.dat;
 # data ../data/shamir.dat;
 # data ../data/hanoi.dat;
 # data ../data/foss_poly_0.dat;
-# data ../data/d2_Sample_input_cycle_hanoi.dat;
+data ../data/d2_Sample_input_cycle_hanoi.dat;
 # data ../data/d7_HG_SP_2_3.dat;
 # data ../data/d9_HG_SP_4_2.dat;
 # data ../data/d14_NewYork.dat;
@@ -28,7 +28,7 @@ data ../data/d1_Sample_input_cycle_twoloop.dat;
 
 # option solver "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart";
 # option mmultistart_options "--presolve 1,--log_level 6,--nlp_engine IPOPT,--eval_within_bnds 1, --threads 1 ";
-option solver knitro ;
+option solver bonmin ;
 # option knitro_options "outlev =1 ";
 # option baron_options "outlev =3";
 
@@ -40,9 +40,9 @@ solve ;
 display total_cost ;
 # display Objective ;
 display total_cost ;
-display l; 
-display q; 
-display h; 
+#display l; 
+#display q; 
+#display h; 
 # display z1 ; 
 # display z2 ; 
 

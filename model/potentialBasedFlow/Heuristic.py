@@ -177,8 +177,12 @@ class WaterNetworkOptimizer:
             i, j = edge
             if edge in edges_list:
                 self.ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i},{j}] >=0;")
+                # self.ampl.eval(f"s.t. head_bound_left{i}_{j}: E[{j}]+P[{j}] <= h[{j}];")
+                self.ampl.eval(f"s.t. head_bound_right{i}_{j}: E[{j}] + P[{j}] <= h[{i}];")
             else:
                 self.ampl.eval(f"s.t. flow_direction{i}_{j}: q[{j},{i}] <=0;")
+                # self.ampl.eval(f"s.t. head_bound_left{i}_{j}: E[{i}]+P[{i}] <= h[{i}];")
+                self.ampl.eval(f"s.t. head_bound_right{i}_{j}: E[{i}] + P[{i}] <= h[{j}];")
 
     def is_valid_edge(self, source, target):
         """Check if adding the directed edge (source -> target) maintains acyclicity."""
@@ -325,6 +329,9 @@ class WaterNetworkOptimizer:
                             self.network_graph.add_edge(u, v)  # Restore the original arc direction
                     elif self.solve_result == "infeasible":
                         print(arc_no, " Arc", (u,v),"Acyclic: Yes Best optimal: ", current_cost, "New optimal: ", self.total_cost, "solve_result: ", self.solve_result)
+                        self.network_graph.remove_edge(v, u)
+                        self.network_graph.add_edge(u, v)  # Restore the original arc direction
+
                 else:
                     # print(f"Reversed edge ({u}, {v}) dosen't create acyclic network. Restoring original direction\n")
                     print(arc_no, " Arc", (u,v),"Acyclic: No")
@@ -346,7 +353,7 @@ class WaterNetworkOptimizer:
             l = self.ampl.getVariable('l').getValues().to_list()
             q = self.ampl.getVariable('q').getValues().to_list()
             h = self.ampl.getVariable('h').getValues().to_list()
-            
+
         elif self.solve_result != "solved":
             current_cost = 10e+14
             l = None
@@ -415,9 +422,9 @@ class WaterNetworkOptimizer:
     def solve(self):
         with self.suppress_output():
             """Solve the optimization problem."""
-            self.ampl.option["solver"] = "baron"
+            self.ampl.option["solver"] = "ipopt"
             self.ampl.set_option("ipopt_options", "outlev = 0  print_user_options = no  sb = yes ")
-            self.ampl.set_option("knitro_options", "outlev = 0 ms_enable = 1 ms_maxsolves = 20 mip_multistart=1")
+            self.ampl.set_option("knitro_options", "outlev = 0 ms_enable = 1 ms_maxsolves = 30 mip_multistart=1")
             self.ampl.set_option("baron_options","maxtime = 20  outlev = 1 lsolver=knitro firstloc 1 barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
             self.ampl.option["presolve_eps"] = " 8.53e-15"
             self.ampl.option['presolve'] = 1
@@ -486,7 +493,7 @@ if __name__ == "__main__":
     ]
 
     # Select the data number here (0 to 18)
-    data_number = 0
+    data_number = 15
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[data_number]}.dat"
     print("Water Network:", data_list[data_number],"\n")
     optimizer = WaterNetworkOptimizer("../m1Basic.mod", input_data_file, data_number)

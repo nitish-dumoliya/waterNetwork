@@ -64,11 +64,11 @@ print(uwg.edges())
 
 ampl.eval("s.t. v1: z[1,2] = 1;")
 ampl.eval("s.t. v2: z[2,3] = 1;")
-ampl.eval("s.t. v3: z[3,5] = 0;")
+ampl.eval("s.t. v3: z[3,5] = 1;")
 ampl.eval("s.t. v4: z[4,5] = 1;")
 ampl.eval("s.t. v5: z[4,6] = 1;")
-ampl.eval("s.t. v6: z[6,7] = 0;")
-ampl.eval("s.t. v7: z[7,5] = 0;")
+ampl.eval("s.t. v6: z[6,7] = 1;")
+ampl.eval("s.t. v7: z[7,5] = 1;")
 
 ########################## exhibit the model that has been built ###################################
 
@@ -83,7 +83,7 @@ ampl.set_option("mmultistart_options","--presolve 1,--log_level 6,--eval_within_
 # ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
 # ampl.option["ipopt_options"] = " outlev = 0"
 # ampl.option["knitro_options"] = "outlev = 1 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 20 ms_maxtime_real = 50"
-ampl.option["knitro_options"] = "outlev = 1 ms_enable 1  ms_maxsolves 1 mip_multistart 1 "
+ampl.option["knitro_options"] = "outlev = 1 ms_enable 1  ms_maxsolves 10 mip_multistart 1 "
 # ampl.option["presolve_eps"]="  6.82e-14"
 # ampl.set_option("baron_options","maxtime = 200  outlev = 1 lsolver=knitro firstloc 1 barstats deltaterm 1 objbound    threads = 12  prloc = 1 prfreq=1000 prtime 10")
 ampl.set_option("baron_options","maxtime = -1  outlev = 1 ")
