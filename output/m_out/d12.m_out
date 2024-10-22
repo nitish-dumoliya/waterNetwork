@@ -1,0 +1,1852 @@
+Environment: User provided options:
+  problem_file = /tmp/at494148
+  ampl = 1
+Environment: End of user provided options.
+
+MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-84-gfb5cee3
+MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
+Environment: User provided options:
+  presolve = 1
+  log_level = 3
+  eval_within_bnds = 1
+Environment: End of user provided options.
+
+AMPLInterface: problem type is NLP
+Solver: time used in reading instance = 0.00
+-----------------------------------------------------
+|                 Problem Size                      |
+|---------------------------------------------------|
+| # variables                               1369    |
+| # binary variables                           0    |
+| # general integer variables                  0    |
+| # continuous variables                    1369    |
+| # fixed variables                            0    |
+| # constraints                              259    |
+| # linear constraints                       174    |
+| # SOS1 constraints                           0    |
+| # SOS2 constraints                           0    |
+| # quadratic constraints                      0    |
+| # nonlinear constraints                     85    |
+| # constraints with linear terms            259    |
+| # constraints with bilinear terms            0    |
+| # constraints with quadratic terms           0    |
+| # linear terms in constraints             1762    |
+| # bilinear terms in constraints              0    |
+| # square terms in constraints                0    |
+| # quadratic terms in constraints             0    |
+| # objectives                                 1    |
+| # linear terms in objective               1212    |
+| # quadratic terms in objective               0    |
+| Type of objective:                      linear    |
+-----------------------------------------------------
+MultiStart: Starting constraint classification
+--------------------------------------------
+|            Constraints Size              |
+|------------------------------------------|
+|Aggregation constraint       |     17     |
+|Precedence constraint        |      0     |
+|Variable Bound constraint    |      0     |
+|Partitioning constraint      |      0     |
+|Set Packing constraint       |      0     |
+|Set Covering constraint      |      0     |
+|Cardinality constraint       |      0     |
+|Invariant Knapsack constraint|      0     |
+|Equation Knapsack constraint |      0     |
+|Bin Packing constraint       |      0     |
+|Knapsack constraint          |      0     |
+|Integer Knapsack constraint  |      0     |
+|Mixed Binary constraint      |      0     |
+|No specific structure        |    157     |
+--------------------------------------------
+MultiStart: Finished constraint classification
+MultiStart: objective sense: minimize
+MultiStart: handlers used in presolve:
+MultiStart: LinearHandler (Handling linear constraints)
+MultiStart: NlPresHandler (presolving nonlinear constraints).
+Presolver: Presolving ... 
+Presolver: Finished presolving.
+LinearHandler: Statistics for presolve by Linear Handler:
+LinearHandler: Number of iterations           = 4
+LinearHandler: Time taken in initial presolve = 0.00
+LinearHandler: Time taken in node presolves   = 0.00
+LinearHandler: Number of variables deleted    = 0
+LinearHandler: Number of constraints deleted  = 0
+LinearHandler: Number of vars set to binary   = 0
+LinearHandler: Number of vars set to integer  = 0
+LinearHandler: Times variables tightened      = 66
+LinearHandler: Times constraints tightened    = 0
+LinearHandler: Times coefficients improved    = 0
+LinearHandler: Times binary variable relaxed  = 0
+LinearHandler: Changes in nodes               = 0
+NlPresHandler: Statistics for presolve by NlPresHandler:
+NlPresHandler: Number of iterations           = 1
+NlPresHandler: Time taken in initial presolve = 0.00
+NlPresHandler: Time taken in node presolves   = 0.00
+NlPresHandler: Number of variables deleted    = 0
+NlPresHandler: Number of constraints deleted  = 0
+NlPresHandler: Number of constraints relaxed  = 0
+NlPresHandler: Number of perspective reform.  = 0
+NlPresHandler: Times variables tightened      = 0
+NlPresHandler: Times constraints tightened    = 0
+NlPresHandler: Times coefficients improved    = 0
+NlPresHandler: Times quad. changed to conic   = 0
+NlPresHandler: Changes in nodes               = 0
+LinearHandler: Statistics for presolve by Linear Handler:
+LinearHandler: Number of iterations           = 4
+LinearHandler: Time taken in initial presolve = 0.00
+LinearHandler: Time taken in node presolves   = 0.00
+LinearHandler: Number of variables deleted    = 0
+LinearHandler: Number of constraints deleted  = 0
+LinearHandler: Number of vars set to binary   = 0
+LinearHandler: Number of vars set to integer  = 0
+LinearHandler: Times variables tightened      = 66
+LinearHandler: Times constraints tightened    = 0
+LinearHandler: Times coefficients improved    = 0
+LinearHandler: Times binary variable relaxed  = 0
+LinearHandler: Changes in nodes               = 0
+NlPresHandler: Statistics for presolve by NlPresHandler:
+NlPresHandler: Number of iterations           = 1
+NlPresHandler: Time taken in initial presolve = 0.00
+NlPresHandler: Time taken in node presolves   = 0.00
+NlPresHandler: Number of variables deleted    = 0
+NlPresHandler: Number of constraints deleted  = 0
+NlPresHandler: Number of constraints relaxed  = 0
+NlPresHandler: Number of perspective reform.  = 0
+NlPresHandler: Times variables tightened      = 0
+NlPresHandler: Times constraints tightened    = 0
+NlPresHandler: Times coefficients improved    = 0
+NlPresHandler: Times quad. changed to conic   = 0
+NlPresHandler: Changes in nodes               = 0
+MultiStart: engine used = IPOPT
+MultiStart: brancher used = MaxVioBrancher
+BranchAndBound: starting branch-and-bound
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+----------------------------------------------------------------------------------------------
+ Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
+----------------------------------------------------------------------------------------------
+     0         0             -inf          inf         inf              0             0      0
+    33        32              inf   3.3958e+06    0.00e+00              1             0      1
+    33        32              inf   3.3958e+06    0.00e+00              1             0      1
+----------------------------------------------------------------------------------------------
+ 
+BranchAndBound: stopping branch-and-bound
+BranchAndBound: nodes processed = 1
+BranchAndBound: nodes created   = 1
+BranchAndBound: time taken      = 32.79
+BranchAndBound: nodes processed = 1
+BranchAndBound: nodes created   = 1
+MsProcessor: nodes processed     = 1
+MsProcessor: nodes branched      = 0
+MsProcessor: nodes infeasible    = 0
+MsProcessor: nodes optimal       = 1
+MsProcessor: nodes hit ub        = 0
+MsProcessor: nodes with problems = 0
+MaxVio brancher: times called = 0
+MaxVio brancher: time in brancher = 0.00
+SolutionPool: Number of solutions found = 1
+SolutionPool: Time first solution found = 32.79
+SolutionPool: Time best solution found  = 32.79
+Ipopt: total calls            = 0
+Ipopt: calls to Optimize      = 0
+Ipopt: calls to ReOptimize    = 0
+Ipopt: strong branching calls = 0
+Ipopt: total time in solving  = 0.00
+Ipopt: total time in presolve = 0.00
+Ipopt: time in str branching  = 0.00
+Ipopt: total iterations       = 0
+Ipopt: strong br iterations   = 0
+LinearHandler: Statistics for presolve by Linear Handler:
+LinearHandler: Number of iterations           = 0
+LinearHandler: Time taken in initial presolve = 0.00
+LinearHandler: Time taken in node presolves   = 0.00
+LinearHandler: Number of variables deleted    = 0
+LinearHandler: Number of constraints deleted  = 0
+LinearHandler: Number of vars set to binary   = 0
+LinearHandler: Number of vars set to integer  = 0
+LinearHandler: Times variables tightened      = 0
+LinearHandler: Times constraints tightened    = 0
+LinearHandler: Times coefficients improved    = 0
+LinearHandler: Times binary variable relaxed  = 0
+LinearHandler: Changes in nodes               = 0
+NlPresHandler: Statistics for presolve by NlPresHandler:
+NlPresHandler: Number of iterations           = 0
+NlPresHandler: Time taken in initial presolve = 0.00
+NlPresHandler: Time taken in node presolves   = 0.00
+NlPresHandler: Number of variables deleted    = 0
+NlPresHandler: Number of constraints deleted  = 0
+NlPresHandler: Number of constraints relaxed  = 0
+NlPresHandler: Number of perspective reform.  = 0
+NlPresHandler: Times variables tightened      = 0
+NlPresHandler: Times constraints tightened    = 0
+NlPresHandler: Times coefficients improved    = 0
+NlPresHandler: Times quad. changed to conic   = 0
+NlPresHandler: Changes in nodes               = 0
+ 
+MultiStart: best solution value = 3395779.5164
+MultiStart: best bound estimate from remaining nodes = inf
+MultiStart: gap = 0.0000
+MultiStart: gap percentage = 0.0000
+MultiStart: time used (s) = 32.81
+MultiStart: status of branch-and-bound: Optimal solution found
+MultiStart: wall clock time used (s) = 32.47
+l [*,*,0]
+:      2          3          4         5         6        7        9      10 :=
+11     .       .              .          .     -1e-08     .        .       .
+13     .       .              .          .       .        .        .     14.05
+17     .       .              .          .       .      -1e-08     .       .
+21     .       .              .          .       .        .      15.87     .
+33     .       .            59.9         .       .        .        .       .
+47     .       .              .          .       .        .        .     20.08
+53     .       .              .          .     -1e-08     .        .       .
+54     .     -9.99982e-09     .          .       .        .        .       .
+59     .       .              .        78.61     .        .        .       .
+66   40.83     .              .          .       .        .        .       .
+71     .       .              .    -1e-08        .        .        .       .
+
+:       11        12      13      14      15      16       17       18      :=
+3          .       .       .       .       .        .      .      -1e-08
+12         .       .       .       .       .     106.6     .        .
+15       34.66     .       .       .       .        .      .        .
+19         .       .       .     23.72     .        .      .        .
+29         .       .       .       .       .        .    -1e-08     .
+30         .       .     61.81     .       .        .      .        .
+32         .       .       .       .       .     105.5     .        .
+35   -1e-08        .       .       .     66.01      .      .        .
+40       34.95     .       .       .       .        .      .        .
+47         .       .     21.29     .       .        .      .        .
+48         .       .     15.46     .       .        .      .        .
+51         .       .       .     19.19     .        .      .        .
+56         .     51.55     .       .       .        .      .        .
+
+:         19          20       21     23      25      26      27        28   :=
+6      .               .        .      .      .       .      35.81         .
+10     .               .        .      .      .       .        .     -1e-08
+16     .             58.67      .      .      .       .        .           .
+20     .               .      26.87    .      .       .        .           .
+27   28.31             .        .      .      .       .        .           .
+31     .               .        .      .      .       .        .     -1e-08
+32     .            164.1    165.5     .      .       .        .           .
+34     .               .        .      .      .      8.927     .           .
+44   -9.99931e-09      .        .      .      .       .        .           .
+49     .               .        .      .      .       .        .         32.31
+53   42.63             .        .      .      .       .        .           .
+61     .               .        .     160     .       .        .           .
+69     .               .        .      .    -1e-08    .        .           .
+
+:      29       30       31      32        33       34        35        36   :=
+1      .        .      -1e-08     .           .      .           .      .
+8      .        .        .        .           .      .           .    -1e-08
+12     .        .        .      93.68         .      .           .      .
+24     .        .        .        .           .    15.75         .      .
+30     .        .        .        .           .      .           .    -1e-08
+38     .      -1e-08   -1e-08     .           .      .           .      .
+40     .        .        .        .           .      .        110.1     .
+48     .        .        .        .           .    36.45         .      .
+57     .        .        .        .        106.4     .           .      .
+68     .        .        .        .           .      .     -1e-08       .
+72     .        .        .        .     -1e-08       .           .      .
+73   -1e-08     .        .        .           .      .           .      .
+
+:     37       38       39      40       41      42      43        44       :=
+3     .        .      -1e-08     .       .         .       .          .
+6     .        .        .      41.94     .         .       .          .
+18    .        .        .        .     -1e-08      .       .          .
+25    .        .      -1e-08     .       .         .       .          .
+26    .        .        .        .       .         .       .        11.9
+42    .        .        .      29        .         .       .          .
+52    .        .        .        .       .         .       .    -1e-08
+58    .        .        .        .       .         .    109.4         .
+62   9.624     .        .        .       .         .       .          .
+64    .      -1e-08     .        .       .         .       .          .
+68    .        .        .        .       .      184.9      .          .
+
+:       45        47      48      49       50      51        52         53   :=
+2          .       .       .       .       .      10.91         .       .
+7          .       .       .       .     -1e-08     .           .       .
+8          .       .       .       .       .        .           .     -1e-08
+9          .       .       .     49.58     .        .           .       .
+10   -1e-08        .       .       .       .        .           .       .
+14         .       .       .       .       .        .         31.32     .
+22         .       .       .     25.45     .        .           .       .
+28         .       .       .       .     -1e-08     .           .       .
+36         .       .     21.77     .       .        .           .       .
+44   -1e-08        .       .       .       .        .           .       .
+45         .     19.76     .       .       .        .           .       .
+50       57.89     .       .       .       .        .         79.08     .
+66         .       .       .       .       .        .     -1e-08        .
+
+:         54             55         56      57      58      59      60      :=
+16     .               .           123.4     .        .      .        .
+23     .               .           357.8     .        .      .        .
+25     .            140.6             .      .        .      .        .
+37     .               .              .    87.8       .      .        .
+39   20.83             .              .      .        .      .        .
+55   -9.99948e-09      .              .      .        .      .        .
+60     .             -9.9987e-09      .      .        .      .        .
+62     .               .              .    96.67      .      .        .
+67     .               .              .      .     337.4     .        .
+69     .               .              .      .        .      .     323.9
+71     .               .              .      .        .    18.03      .
+
+:     61       62        64         66         68          69           71   :=
+4      .        .        129.1         .       .         .              .
+5      .        .           .          .     -1e-08      .              .
+14     .        .           .        60.52     .         .              .
+23     .     146            .          .       .         .              .
+33     .        .     -1e-08           .       .         .              .
+39     .        .           .          .       .      143.5             .
+41     .        .           .    -1e-08        .         .              .
+46   81.33      .           .          .       .         .              .
+60     .        .           .          .       .         .            30.6389
+63     .      37.61         .          .       .         .              .
+70     .        .           .          .       .       -9.99998e-09     .
+
+:     72      73      :=
+43   245.3      .
+65      .    668.4
+
+ [*,*,1]
+:         2              3              4                5             6     :=
+11     .              .              .                  .            -1e-08
+33     .              .            -9.99411e-09         .              .
+53     .              .              .                  .            -1e-08
+54     .            -9.99946e-09     .                  .              .
+59     .              .              .                -9.99151e-09     .
+66   -9.99374e-09     .              .                  .              .
+71     .              .              .            -1e-08               .
+
+:      7           9              10               11               12       :=
+13     .        .            -9.99415e-09         .              .
+15     .        .              .                -9.99249e-09     .
+17   -1e-08     .              .                  .              .
+21     .      -9.99484e-09     .                  .              .
+35     .        .              .            -1e-08               .
+40     .        .              .                -9.9944e-09      .
+47     .        .            -9.99452e-09         .              .
+56     .        .              .                  .            -9.99498e-09
+
+:         13             14             15             16          17      :=
+12     .              .              .            -9.99501e-09     .
+19     .            -9.99484e-09     .              .              .
+29     .              .              .              .            -1e-08
+30   -9.9949e-09      .              .              .              .
+32     .              .              .            -9.99501e-09     .
+35     .              .            -9.99252e-09     .              .
+47   -9.99501e-09     .              .              .              .
+48   -9.99206e-09     .              .              .              .
+51     .            -9.99373e-09     .              .              .
+
+:     18          19             20             21             23          25 :=
+3   -1e-08     .              .              .              .              .
+16
+      .        .            -9.99499e-09     .              .              .
+20
+      .        .              .            -9.99496e-09     .              .
+27
+      .      -9.9908e-09      .              .              .              .
+32
+      .        .            -9.99501e-09   -9.995e-09       .              .
+44
+      .      -9.9972e-09      .              .              .              .
+53
+      .      -9.98808e-09     .              .              .              .
+61
+      .        .              .              .            -9.99501e-09     .
+69
+      .        .              .              .              .            -1e-08
+
+:         26             27               28            29       30       31 :=
+1      .              .                  .              .        .      -1e-08
+6      .            -9.99084e-09         .              .        .        .
+10     .              .            -1e-08               .        .        .
+31     .              .            -1e-08               .        .        .
+34   -9.99495e-09     .                  .              .        .        .
+38     .              .                  .              .      -1e-08   -1e-08
+49     .              .                -9.99484e-09     .        .        .
+73     .              .                  .            -1e-08     .        .
+
+:        32            33             34               35            36      :=
+8      .            .              .                  .            -1e-08
+12   -9.995e-09     .              .                  .              .
+24     .            .            -9.99501e-09         .              .
+30     .            .              .                  .            -1e-08
+40     .            .              .                -9.99361e-09     .
+48     .            .            -9.99495e-09         .              .
+57     .          -9.99495e-09     .                  .              .
+68     .            .              .            -1e-08               .
+72     .          -9.99999e-09     .                  .              .
+
+:        37            38          39          40          41          42    :=
+3      .            .            -1e-08     .              .        .
+6      .            .              .      -9.98889e-09     .        .
+18     .            .              .        .            -1e-08     .
+25     .            .            -1e-08     .              .        .
+42     .            .              .      -9.99255e-09     .        .
+62   -9.995e-09     .              .        .              .        .
+64     .          -9.99999e-09     .        .              .        .
+68     .            .              .        .              .      -9.99261e-09
+
+:         43               44                 45               47         :=
+10     .                  .            -1e-08               .
+26     .                -9.99495e-09         .              .
+44     .                  .            -1e-08               .
+45     .                  .                  .            -9.99422e-09
+50     .                  .                -9.99484e-09     .
+52     .            -1e-08                   .              .
+58   -9.99479e-09         .                  .              .
+
+:         48             49          50          51               52         :=
+2      .              .              .      -9.99373e-09         .
+7      .              .            -1e-08     .                  .
+9      .            -9.99484e-09     .        .                  .
+14     .              .              .        .                -9.98369e-09
+22     .            -9.99501e-09     .        .                  .
+28     .              .            -1e-08     .                  .
+36   -9.99423e-09     .              .        .                  .
+50     .              .              .        .                -9.99461e-09
+66     .              .              .        .            -1e-08
+
+:      53          54             55             56            57        :=
+8    -1e-08     .              .              .              .
+16     .        .              .            -9.995e-09       .
+23     .        .              .            -9.99488e-09     .
+25     .        .            -9.99484e-09     .              .
+37     .        .              .              .            -9.995e-09
+39     .      -9.99248e-09     .              .              .
+55     .      -9.99801e-09     .              .              .
+60     .        .            -9.99333e-09     .              .
+62     .        .              .              .            -9.995e-09
+
+:        58             59             60             61             62      :=
+23     .             .              .              .            -9.99491e-09
+46     .             .              .            -9.99501e-09     .
+63     .             .              .              .            -9.99501e-09
+67   -9.9949e-09     .              .              .              .
+69     .             .            -9.99499e-09     .              .
+71     .           -9.99185e-09     .              .              .
+
+:         64               66            68          69          71       :=
+4    -9.9941e-09          .              .        .             .
+5      .                  .            -1e-08     .             .
+14     .                -9.99326e-09     .        .             .
+33   -9.99999e-09         .              .        .             .
+39     .                  .              .      -9.99142e-09    .
+41     .            -1e-08               .        .             .
+60     .                  .              .        .            8.78112
+70     .                  .              .      -9.99996e-09    .
+
+:         72             73         :=
+43   -9.99473e-09     .
+65     .            -9.98617e-09
+
+ [*,*,2]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.99999e-09
+33     .              .            -9.99728e-09     .              .
+53     .              .              .              .            -9.99999e-09
+54     .            -9.99715e-09     .              .              .
+59     .              .              .            -9.99658e-09     .
+66   -9.99717e-09     .              .              .              .
+71     .              .              .            -9.99999e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99729e-09     .              .
+15     .              .              .            -9.99682e-09     .
+17   -9.99999e-09     .              .              .              .
+21     .            -9.99751e-09     .              .              .
+35     .              .              .            -9.99999e-09     .
+40     .              .              .            -9.99737e-09     .
+47     .              .            -9.99741e-09     .              .
+56     .              .              .              .            -9.99756e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99757e-09     .
+19     .            -9.99751e-09     .              .              .
+29     .              .              .              .            -9.99999e-09
+30   -9.99753e-09     .              .              .              .
+32     .              .              .            -9.99757e-09     .
+35     .              .            -9.99683e-09     .              .
+47   -9.99757e-09     .              .              .              .
+48   -9.99671e-09     .              .              .              .
+51     .            -9.99716e-09     .              .              .
+
+:      18          19             20             21             23         :=
+3    -1e-08     .              .              .              .
+16     .        .            -9.99756e-09     .              .
+20     .        .              .            -9.99755e-09     .
+27     .      -9.99642e-09     .              .              .
+32     .        .            -9.99757e-09   -9.99757e-09     .
+44     .      41.25            .              .              .
+53     .      -9.9959e-09      .              .              .
+61     .        .              .              .            -9.99757e-09
+
+:         25             26             27               28           :=
+6      .              .            -9.99643e-09         .
+10     .              .              .            -1e-08
+31     .              .              .            -1e-08
+34     .            -9.99755e-09     .                  .
+49     .              .              .                -9.99751e-09
+69   -9.99999e-09     .              .                  .
+
+:         29             30          31          32             33         :=
+1      .              .            -1e-08     .              .
+12     .              .              .      -9.99757e-09     .
+38     .            -9.99999e-09   -1e-08     .              .
+57     .              .              .        .            -9.99755e-09
+72     .              .              .        .            -9.99998e-09
+73   -9.99999e-09     .              .        .              .
+
+:         34             35             36             37             38     :=
+8      .              .            -9.99999e-09     .              .
+24   -9.99757e-09     .              .              .              .
+30     .              .            -9.99999e-09     .              .
+40     .            -9.99713e-09     .              .              .
+48   -9.99755e-09     .              .              .              .
+62     .              .              .            -9.99757e-09     .
+64     .              .              .              .            -9.99998e-09
+68     .            -9.99999e-09     .              .              .
+
+:         39             40          41          42            43         :=
+3    -9.99999e-09     .              .        .              .
+6      .            -9.99604e-09     .        .              .
+18     .              .            -1e-08     .              .
+25   -9.99999e-09     .              .        .              .
+42     .            -9.99684e-09     .        .              .
+58     .              .              .        .            -9.9975e-09
+68     .              .              .      -9.99685e-09     .
+
+:         44               45               47             48         :=
+10     .            -1e-08               .              .
+26   -9.99755e-09         .              .              .
+36     .                  .              .            -9.99732e-09
+44     .            -1e-08               .              .
+45     .                  .            -9.99731e-09     .
+50     .                -9.99751e-09     .              .
+52   -9.99999e-09         .              .              .
+
+:         49             50             51             52             53     :=
+2      .              .            -9.99716e-09     .              .
+7      .            -9.99999e-09     .              .              .
+8      .              .              .              .            -9.99999e-09
+9    -9.99751e-09     .              .              .              .
+14     .              .              .            -9.99527e-09     .
+22   -9.99757e-09     .              .              .              .
+28     .            -9.99999e-09     .              .              .
+50     .              .              .            -9.99744e-09     .
+66     .              .              .            -9.99999e-09     .
+
+:         54             55              56             57             58    :=
+16     .               .            -9.99757e-09     .              .
+23     .               .            -9.99753e-09     .              .
+25     .             -9.99751e-09     .              .              .
+37     .               .              .            -9.99757e-09     .
+39   -9.99682e-09      .              .              .              .
+55   67.89             .              .              .              .
+60     .            243.8             .              .              .
+62     .               .              .            -9.99757e-09     .
+67     .               .              .              .            -9.99753e-09
+
+:         59             60             61             62             64     :=
+4      .              .              .              .            -9.99727e-09
+23     .              .              .            -9.99753e-09     .
+33     .              .              .              .            -9.99997e-09
+46     .              .            -9.99757e-09     .              .
+63     .              .              .            -9.99757e-09     .
+69     .            -9.99756e-09     .              .              .
+71   -9.99666e-09     .              .              .              .
+
+:           66               68             69             71         :=
+5          .            -9.99999e-09     .              .
+14       -9.99703e-09     .              .              .
+39         .              .            -9.99656e-09     .
+41   -1e-08               .              .              .
+60         .              .              .            -9.99187e-09
+70         .              .            -9.99988e-09     .
+
+:         72            73         :=
+43   -9.99748e-09     .
+65     .            -9.9956e-09
+
+ [*,*,3]
+:         2           3          4              5              6          :=
+11     .              .       .              .            -9.99998e-09
+33     .              .     -9.99867e-09     .              .
+53     .              .       .              .            -9.99998e-09
+54     .            44.83     .              .              .
+59     .              .       .            -9.9985e-09      .
+66   -9.99864e-09     .       .              .              .
+71     .              .       .            -9.99998e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99867e-09     .              .
+15     .              .              .            -9.99855e-09     .
+17   -9.99998e-09     .              .              .              .
+21     .            -9.99874e-09     .              .              .
+35     .              .              .            -9.99997e-09     .
+40     .              .              .            -9.99869e-09     .
+47     .              .            -9.99871e-09     .              .
+56     .              .              .              .            -9.99875e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99875e-09     .
+19     .            -9.99874e-09     .              .              .
+29     .              .              .              .            -9.99998e-09
+30   -9.99874e-09     .              .              .              .
+32     .              .              .            -9.99875e-09     .
+35     .              .            -9.99856e-09     .              .
+47   -9.99875e-09     .              .              .              .
+48   -9.99853e-09     .              .              .              .
+51     .            -9.99864e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99999e-09     .              .              .              .
+16     .              .            -9.99875e-09     .              .
+20     .              .              .            -9.99875e-09     .
+27     .            -9.99847e-09     .              .              .
+32     .              .            -9.99875e-09   -9.99875e-09     .
+44     .            -9.99297e-09     .              .              .
+53     .            -9.99836e-09     .              .              .
+61     .              .              .              .            -9.99875e-09
+
+:         25             26             27               28           :=
+6      .              .            -9.99847e-09         .
+10     .              .              .                -9.99999e-09
+31     .              .              .            -1e-08
+34     .            -9.99875e-09     .                  .
+49     .              .              .                -9.99874e-09
+69   -9.99998e-09     .              .                  .
+
+:         29             30          31          32             33         :=
+1      .              .            -1e-08     .              .
+12     .              .              .      -9.99875e-09     .
+38     .            -9.99998e-09   -1e-08     .              .
+57     .              .              .        .            -9.99875e-09
+72     .              .              .        .            -9.99994e-09
+73   -9.99998e-09     .              .        .              .
+
+:         34             35             36             37             38     :=
+8      .              .            -9.99998e-09     .              .
+24   -9.99875e-09     .              .              .              .
+30     .              .            -9.99997e-09     .              .
+40     .            -9.99863e-09     .              .              .
+48   -9.99875e-09     .              .              .              .
+62     .              .              .            -9.99875e-09     .
+64     .              .              .              .            -9.99994e-09
+68     .            -9.99998e-09     .              .              .
+
+:         39             40             41             42             43     :=
+3    -9.99998e-09     .              .              .              .
+6      .            -9.99839e-09     .              .              .
+18     .              .            -9.99999e-09     .              .
+25   -9.99998e-09     .              .              .              .
+42     .            -9.99856e-09     .              .              .
+58     .              .              .              .            -9.99873e-09
+68     .              .              .            -9.99856e-09     .
+
+:         44             45             47             48             49     :=
+9      .              .              .              .            -9.99874e-09
+10     .            -9.99999e-09     .              .              .
+22     .              .              .              .            -9.99875e-09
+26   -9.99875e-09     .              .              .              .
+36     .              .              .            -9.99868e-09     .
+44     .            -9.99999e-09     .              .              .
+45     .              .            -9.99868e-09     .              .
+50     .            -9.99874e-09     .              .              .
+52   -9.99998e-09     .              .              .              .
+
+:         50             51             52             53             54     :=
+2      .            -9.99864e-09     .              .              .
+7    -9.99998e-09     .              .              .              .
+8      .              .              .            -9.99998e-09     .
+14     .              .            -9.99826e-09     .              .
+28   -9.99998e-09     .              .              .              .
+39     .              .              .              .            -9.99855e-09
+50     .              .            -9.99871e-09     .              .
+55     .              .              .              .            -9.98738e-09
+66     .              .            -9.99998e-09     .              .
+
+:         55             56             57             58             59     :=
+16     .            -9.99875e-09     .              .              .
+23     .            -9.99874e-09     .              .              .
+25   -9.99874e-09     .              .              .              .
+37     .              .            -9.99875e-09     .              .
+60   -9.9957e-09      .              .              .              .
+62     .              .            -9.99875e-09     .              .
+67     .              .              .            -9.99874e-09     .
+71     .              .              .              .            -9.99852e-09
+
+:         60             61             62             64             66     :=
+4      .              .              .            -9.99867e-09     .
+14     .              .              .              .            -9.9986e-09
+23     .              .            -9.99874e-09     .              .
+33     .              .              .            -9.99992e-09     .
+41     .              .              .              .            -9.99999e-09
+46     .            -9.99875e-09     .              .              .
+63     .              .            -9.99875e-09     .              .
+69   -9.99875e-09     .              .              .              .
+
+:         68             69             71             72             73     :=
+5    -9.99998e-09     .              .              .              .
+39     .            -9.9985e-09      .              .              .
+43     .              .              .            -9.99873e-09     .
+60     .              .            -9.99789e-09     .              .
+65     .              .              .              .            -9.99831e-09
+70     .            -9.99952e-09     .              .              .
+
+ [*,*,4]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.99996e-09
+33     .              .            -9.99915e-09     .              .
+53     .              .              .              .            -9.99996e-09
+54     .            -9.99557e-09     .              .              .
+59     .              .              .            -9.99909e-09     .
+66   -9.99914e-09     .              .              .              .
+71     .              .              .            -9.99996e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99916e-09     .              .
+15     .              .              .            -9.99911e-09     .
+17   -9.99997e-09     .              .              .              .
+21     .            -9.99918e-09     .              .              .
+35     .              .              .            -9.99995e-09     .
+40     .              .              .            -9.99917e-09     .
+47     .              .            -9.99917e-09     .              .
+56     .              .              .              .            -9.99919e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99919e-09     .
+19     .            -9.99918e-09     .              .              .
+29     .              .              .              .            -9.99997e-09
+30   -9.99919e-09     .              .              .              .
+32     .              .              .            -9.99919e-09     .
+35     .              .            -9.99911e-09     .              .
+47   -9.99919e-09     .              .              .              .
+48   -9.9991e-09      .              .              .              .
+51     .            -9.99914e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99997e-09     .              .              .              .
+16     .              .            -9.99919e-09     .              .
+20     .              .              .            -9.99919e-09     .
+27     .            -9.99907e-09     .              .              .
+32     .              .            -9.99919e-09   -9.99919e-09     .
+44     .            -9.99802e-09     .              .              .
+53     .            -9.99904e-09     .              .              .
+61     .              .              .              .            -9.99919e-09
+
+:         25             26             27               28           :=
+6      .              .            -9.99907e-09         .
+10     .              .              .                -9.99998e-09
+31     .              .              .            -1e-08
+34     .            -9.99919e-09     .                  .
+49     .              .              .                -9.99918e-09
+69   -9.99995e-09     .              .                  .
+
+:         29             30               31               32         :=
+1      .              .            -1e-08               .
+12     .              .                  .            -9.99919e-09
+38     .            -9.99995e-09       -9.99999e-09     .
+73   -9.99997e-09     .                  .              .
+
+:         33             34             35             36             37     :=
+8      .              .              .            -9.99995e-09     .
+24     .            -9.99919e-09     .              .              .
+30     .              .              .            -9.99995e-09     .
+40     .              .            -9.99914e-09     .              .
+48     .            -9.99919e-09     .              .              .
+57   -9.99919e-09     .              .              .              .
+62     .              .              .              .            -9.99919e-09
+68     .              .            -9.99996e-09     .              .
+72   -9.99986e-09     .              .              .              .
+
+:         38             39             40             41             42     :=
+3      .            -9.99995e-09     .              .              .
+6      .              .            -9.99905e-09     .              .
+18     .              .              .            -9.99997e-09     .
+25     .            -9.99995e-09     .              .              .
+42     .              .            -9.99911e-09     .              .
+64   -9.99986e-09     .              .              .              .
+68     .              .              .              .            -9.99911e-09
+
+:         43             44             45             47             48     :=
+10     .              .            -9.99997e-09     .              .
+26     .            -9.99919e-09     .              .              .
+36     .              .              .              .            -9.99916e-09
+44     .              .            -9.99998e-09     .              .
+45     .              .              .            -9.99916e-09     .
+50     .              .            -9.99918e-09     .              .
+52     .            -9.99997e-09     .              .              .
+58   -9.99918e-09     .              .              .              .
+
+:         49             50             51             52             53     :=
+2      .              .            -9.99914e-09     .              .
+7      .            -9.99997e-09     .              .              .
+8      .              .              .              .            -9.99995e-09
+9    -9.99918e-09     .              .              .              .
+14     .              .              .            -9.999e-09       .
+22   -9.99919e-09     .              .              .              .
+28     .            -9.99997e-09     .              .              .
+50     .              .              .            -9.99917e-09     .
+66     .              .              .            -9.99997e-09     .
+
+:         54             55             56             57             58     :=
+16     .              .            -9.99919e-09     .              .
+23     .              .            -9.99918e-09     .              .
+25     .            -9.99918e-09     .              .              .
+37     .              .              .            -9.99919e-09     .
+39   -9.99911e-09     .              .              .              .
+55   -9.99765e-09     .              .              .              .
+60     .            -9.99839e-09     .              .              .
+62     .              .              .            -9.99919e-09     .
+67     .              .              .              .            -9.99919e-09
+
+:         59             60             61             62             64     :=
+4      .              .              .              .            -9.99915e-09
+23     .              .              .            -9.99919e-09     .
+33     .              .              .              .            -9.99982e-09
+46     .              .            -9.99919e-09     .              .
+63     .              .              .            -9.99919e-09     .
+69     .            -9.99919e-09     .              .              .
+71   -9.99909e-09     .              .              .              .
+
+:         66             68             69             71             72     :=
+5      .            -9.99997e-09     .              .              .
+14   -9.99913e-09     .              .              .              .
+39     .              .            -9.99909e-09     .              .
+41   -9.99997e-09     .              .              .              .
+43     .              .              .              .            -9.99918e-09
+60     .              .              .            -9.99889e-09     .
+70     .              .            -9.99817e-09     .              .
+
+:         73         :=
+65   -9.99902e-09
+
+ [*,*,5]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.99992e-09
+33     .              .            -9.99937e-09     .              .
+53     .              .              .              .            -9.99992e-09
+54     .            -9.99813e-09     .              .              .
+59     .              .              .            -9.99934e-09     .
+66   -9.99937e-09     .              .              .              .
+71     .              .              .            -9.99992e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99937e-09     .              .
+15     .              .              .            -9.99935e-09     .
+17   -9.99993e-09     .              .              .              .
+21     .            -9.99939e-09     .              .              .
+35     .              .              .            -9.9999e-09      .
+40     .              .              .            -9.99938e-09     .
+47     .              .            -9.99938e-09     .              .
+56     .              .              .              .            -9.99939e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99939e-09     .
+19     .            -9.99939e-09     .              .              .
+29     .              .              .              .            -9.99993e-09
+30   -9.99939e-09     .              .              .              .
+32     .              .              .            -9.99939e-09     .
+35     .              .            -9.99935e-09     .              .
+47   -9.99939e-09     .              .              .              .
+48   -9.99934e-09     .              .              .              .
+51     .            -9.99937e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99995e-09     .              .              .              .
+16     .              .            -9.99939e-09     .              .
+20     .              .              .            -9.99939e-09     .
+27     .            -9.99933e-09     .              .              .
+32     .              .            -9.99939e-09   -9.99939e-09     .
+44     .            -9.99887e-09     .              .              .
+53     .            -9.99931e-09     .              .              .
+61     .              .              .              .            -9.99939e-09
+
+:         25             26             27             28             29     :=
+6      .              .            -9.99933e-09     .              .
+10     .              .              .            -9.99996e-09     .
+31     .              .              .            -9.99999e-09     .
+34     .            -9.99939e-09     .              .              .
+49     .              .              .            -9.99939e-09     .
+69   -9.99991e-09     .              .              .              .
+73     .              .              .              .            -9.99993e-09
+
+:        30               31               32             33         :=
+1      .           -1e-08               .              .
+12     .                 .            -9.99939e-09     .
+38   -9.9999e-09       -9.99999e-09     .              .
+57     .                 .              .            -9.99939e-09
+72     .                 .              .            -9.99969e-09
+
+:         34             35             36             37             38     :=
+8      .              .            -9.9999e-09      .              .
+24   -9.99939e-09     .              .              .              .
+30     .              .            -9.99989e-09     .              .
+40     .            -9.99936e-09     .              .              .
+48   -9.99939e-09     .              .              .              .
+62     .              .              .            -9.99939e-09     .
+64     .              .              .              .            -9.99966e-09
+68     .            -9.99992e-09     .              .              .
+
+:        39             40             41             42             43      :=
+3    -9.9999e-09     .              .              .              .
+6      .           -9.99931e-09     .              .              .
+18     .             .            -9.99995e-09     .              .
+25   -9.9999e-09     .              .              .              .
+42     .           -9.99935e-09     .              .              .
+58     .             .              .              .            -9.99939e-09
+68     .             .              .            -9.99935e-09     .
+
+:         44             45             47             48             49     :=
+9      .              .              .              .            -9.99939e-09
+10     .            -9.99995e-09     .              .              .
+22     .              .              .              .            -9.99939e-09
+26   -9.99939e-09     .              .              .              .
+36     .              .              .            -9.99938e-09     .
+44     .            -9.99996e-09     .              .              .
+45     .              .            -9.99937e-09     .              .
+50     .            -9.99939e-09     .              .              .
+52   -9.99994e-09     .              .              .              .
+
+:         50             51             52            53             54      :=
+2      .            -9.99937e-09     .              .             .
+7    -9.99993e-09     .              .              .             .
+8      .              .              .            -9.9999e-09     .
+14     .              .            -9.99929e-09     .             .
+28   -9.99994e-09     .              .              .             .
+39     .              .              .              .           -9.99935e-09
+50     .              .            -9.99938e-09     .             .
+55     .              .              .              .           -9.99874e-09
+66     .              .            -9.99993e-09     .             .
+
+:         55             56             57             58             59     :=
+16     .            -9.99939e-09     .              .              .
+23     .            -9.99939e-09     .              .              .
+25   -9.99939e-09     .              .              .              .
+37     .              .            -9.99939e-09     .              .
+60   -9.99901e-09     .              .              .              .
+62     .              .            -9.99939e-09     .              .
+67     .              .              .            -9.99939e-09     .
+71     .              .              .              .            -9.99934e-09
+
+:         60             61             62             64             66     :=
+4      .              .              .            -9.99937e-09     .
+14     .              .              .              .            -9.99936e-09
+23     .              .            -9.99939e-09     .              .
+33     .              .              .            -9.99956e-09     .
+41     .              .              .              .            -9.99995e-09
+46     .            -9.99939e-09     .              .              .
+63     .              .            -9.99939e-09     .              .
+69   -9.99939e-09     .              .              .              .
+
+:         68             69             71             72            73      :=
+5    -9.99993e-09     .              .              .              .
+39     .            -9.99933e-09     .              .              .
+43     .              .              .            -9.99939e-09     .
+60     .              .            -9.99923e-09     .              .
+65     .              .              .              .            -9.9993e-09
+70     .             0.340956        .              .              .
+
+ [*,*,6]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.99979e-09
+33     .              .            -9.99955e-09     .              .
+53     .              .              .              .            -9.99979e-09
+54     .            -9.99908e-09     .              .              .
+59     .              .              .            -9.99953e-09     .
+66   -9.99955e-09     .              .              .              .
+71     .              .              .            -9.99979e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99955e-09     .              .
+15     .              .              .            -9.99954e-09     .
+17   -9.99982e-09     .              .              .              .
+21     .            -9.99956e-09     .              .              .
+35     .              .              .            -9.99972e-09     .
+40     .              .              .            -9.99955e-09     .
+47     .              .            -9.99955e-09     .              .
+56     .              .              .              .            -9.99956e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99956e-09     .
+19     .            -9.99956e-09     .              .              .
+29     .              .              .              .            -9.99982e-09
+30   -9.99956e-09     .              .              .              .
+32     .              .              .            -9.99956e-09     .
+35     .              .            -9.99954e-09     .              .
+47   -9.99956e-09     .              .              .              .
+48   -9.99953e-09     .              .              .              .
+51     .            -9.99955e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99987e-09     .              .              .              .
+16     .              .            -9.99956e-09     .              .
+20     .              .              .            -9.99956e-09     .
+27     .            -9.99953e-09     .              .              .
+32     .              .            -9.99956e-09   -9.99956e-09     .
+44     .            -9.99933e-09     .              .              .
+53     .            -9.99952e-09     .              .              .
+61     .              .              .              .            -9.99956e-09
+
+:         25             26             27             28             29     :=
+6      .              .            -9.99953e-09     .              .
+10     .              .              .            -9.9999e-09      .
+31     .              .              .            -9.99999e-09     .
+34     .            -9.99956e-09     .              .              .
+49     .              .              .            -9.99956e-09     .
+69   -9.99975e-09     .              .              .              .
+73     .              .              .              .            -9.99982e-09
+
+:         30               31               32             33         :=
+1      .            -1e-08               .              .
+12     .                  .            -9.99956e-09     .
+38   -9.99973e-09       -9.99997e-09     .              .
+57     .                  .              .            -9.99956e-09
+72     .                  .              .            -9.99883e-09
+
+:         34             35             36             37             38     :=
+8      .              .            -9.99974e-09     .              .
+24   -9.99956e-09     .              .              .              .
+30     .              .            -9.99971e-09     .              .
+40     .            -9.99954e-09     .              .              .
+48   -9.99956e-09     .              .              .              .
+62     .              .              .            -9.99956e-09     .
+64     .              .              .              .            -9.99868e-09
+68     .            -9.99979e-09     .              .              .
+
+:         39             40             41             42             43     :=
+3    -9.99973e-09     .              .              .              .
+6      .            -9.99952e-09     .              .              .
+18     .              .            -9.99987e-09     .              .
+25   -9.99973e-09     .              .              .              .
+42     .            -9.99954e-09     .              .              .
+58     .              .              .              .            -9.99956e-09
+68     .              .              .            -9.99954e-09     .
+
+:         44             45             47             48             49     :=
+9      .              .              .              .            -9.99956e-09
+10     .            -9.99988e-09     .              .              .
+22     .              .              .              .            -9.99956e-09
+26   -9.99956e-09     .              .              .              .
+36     .              .              .            -9.99955e-09     .
+44     .            -9.9999e-09      .              .              .
+45     .              .            -9.99955e-09     .              .
+50     .            -9.99956e-09     .              .              .
+52   -9.99984e-09     .              .              .              .
+
+:         50             51             52             53             54     :=
+2      .            -9.99955e-09     .              .              .
+7    -9.99982e-09     .              .              .              .
+8      .              .              .            -9.99974e-09     .
+14     .              .            -9.99951e-09     .              .
+28   -9.99985e-09     .              .              .              .
+39     .              .              .              .            -9.99954e-09
+50     .              .            -9.99955e-09     .              .
+55     .              .              .              .            -9.99928e-09
+66     .              .            -9.99982e-09     .              .
+
+:         55             56             57             58             59     :=
+16     .            -9.99956e-09     .              .              .
+23     .            -9.99956e-09     .              .              .
+25   -9.99956e-09     .              .              .              .
+37     .              .            -9.99956e-09     .              .
+60   -9.99938e-09     .              .              .              .
+62     .              .            -9.99956e-09     .              .
+67     .              .              .            -9.99956e-09     .
+71     .              .              .              .            -9.99953e-09
+
+:         60             61             62             64             66     :=
+4      .              .              .            -9.99955e-09     .
+14     .              .              .              .            -9.99954e-09
+23     .              .            -9.99956e-09     .              .
+33     .              .              .            -9.99784e-09     .
+41     .              .              .              .            -9.99987e-09
+46     .            -9.99956e-09     .              .              .
+63     .              .            -9.99956e-09     .              .
+69   -9.99956e-09     .              .              .              .
+
+:         68             69             71             72             73     :=
+5    -9.99982e-09     .              .              .              .
+39     .            -9.99953e-09     .              .              .
+43     .              .              .            -9.99956e-09     .
+60     .              .            -9.99948e-09     .              .
+65     .              .              .              .            -9.99951e-09
+70     .            10.969           .              .              .
+
+ [*,*,7]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.99931e-09
+33     .              .            -9.99966e-09     .              .
+53     .              .              .              .            -9.99932e-09
+54     .            -9.99943e-09     .              .              .
+59     .              .              .            -9.99965e-09     .
+66   -9.99965e-09     .              .              .              .
+71     .              .              .            -9.99931e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99966e-09     .              .
+15     .              .              .            -9.99965e-09     .
+17   -9.99943e-09     .              .              .              .
+21     .            -9.99966e-09     .              .              .
+35     .              .              .            -9.99904e-09     .
+40     .              .              .            -9.99966e-09     .
+47     .              .            -9.99966e-09     .              .
+56     .              .              .              .            -9.99966e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99966e-09     .
+19     .            -9.99966e-09     .              .              .
+29     .              .              .              .            -9.99943e-09
+30   -9.99966e-09     .              .              .              .
+32     .              .              .            -9.99966e-09     .
+35     .              .            -9.99965e-09     .              .
+47   -9.99966e-09     .              .              .              .
+48   -9.99965e-09     .              .              .              .
+51     .            -9.99965e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99964e-09     .              .              .              .
+16     .              .            -9.99966e-09     .              .
+20     .              .              .            -9.99966e-09     .
+27     .            -9.99964e-09     .              .              .
+32     .              .            -9.99966e-09   -9.99966e-09     .
+44     .            -9.99954e-09     .              .              .
+53     .            -9.99964e-09     .              .              .
+61     .              .              .              .            -9.99966e-09
+
+:         25             26             27             28             29     :=
+6      .              .            -9.99964e-09     .              .
+10     .              .              .            -9.99975e-09     .
+31     .              .              .            -9.99998e-09     .
+34     .            -9.99966e-09     .              .              .
+49     .              .              .            -9.99966e-09     .
+69   -9.99919e-09     .              .              .              .
+73     .              .              .              .            -9.99943e-09
+
+:         30               31               32             33         :=
+1      .            -1e-08               .              .
+12     .                  .            -9.99966e-09     .
+38   -9.99909e-09       -9.99994e-09     .              .
+57     .                  .              .            -9.99966e-09
+72     .                  .              .            -9.99254e-09
+
+:         34             35             36             37             38     :=
+8      .              .            -9.99915e-09     .              .
+24   -9.99966e-09     .              .              .              .
+30     .              .            -9.99901e-09     .              .
+40     .            -9.99965e-09     .              .              .
+48   -9.99966e-09     .              .              .              .
+62     .              .              .            -9.99966e-09     .
+64     .              .              .              .            -9.99009e-09
+68     .            -9.99933e-09     .              .              .
+
+:         39             40             41             42             43     :=
+3    -9.99911e-09     .              .              .              .
+6      .            -9.99964e-09     .              .              .
+18     .              .            -9.99964e-09     .              .
+25   -9.99909e-09     .              .              .              .
+42     .            -9.99965e-09     .              .              .
+58     .              .              .              .            -9.99966e-09
+68     .              .              .            -9.99965e-09     .
+
+:         44             45             47             48             49     :=
+9      .              .              .              .            -9.99966e-09
+10     .            -9.99967e-09     .              .              .
+22     .              .              .              .            -9.99966e-09
+26   -9.99966e-09     .              .              .              .
+36     .              .              .            -9.99966e-09     .
+44     .            -9.99974e-09     .              .              .
+45     .              .            -9.99966e-09     .              .
+50     .            -9.99966e-09     .              .              .
+52   -9.99954e-09     .              .              .              .
+
+:         50             51             52             53             54     :=
+2      .            -9.99965e-09     .              .              .
+7    -9.99943e-09     .              .              .              .
+8      .              .              .            -9.99915e-09     .
+14     .              .            -9.99963e-09     .              .
+28   -9.99958e-09     .              .              .              .
+39     .              .              .              .            -9.99965e-09
+50     .              .            -9.99966e-09     .              .
+55     .              .              .              .            -9.99952e-09
+66     .              .            -9.99943e-09     .              .
+
+:         55             56             57             58             59     :=
+16     .            -9.99966e-09     .              .              .
+23     .            -9.99966e-09     .              .              .
+25   -9.99966e-09     .              .              .              .
+37     .              .            -9.99966e-09     .              .
+60   -9.99957e-09     .              .              .              .
+62     .              .            -9.99966e-09     .              .
+67     .              .              .            -9.99966e-09     .
+71     .              .              .              .            -9.99965e-09
+
+:         60             61             62             64             66     :=
+4      .              .              .            -9.99966e-09     .
+14     .              .              .              .            -9.99965e-09
+23     .              .            -9.99966e-09     .              .
+33     .              .              .            64.6685          .
+41     .              .              .              .            -9.99964e-09
+46     .            -9.99966e-09     .              .              .
+63     .              .            -9.99966e-09     .              .
+69   -9.99966e-09     .              .              .              .
+
+:         68             69             71             72             73     :=
+5    -9.99943e-09     .              .              .              .
+39     .            -9.99965e-09     .              .              .
+43     .              .              .            -9.99966e-09     .
+60     .              .            -9.99962e-09     .              .
+65     .              .              .              .            -9.99964e-09
+70     .            -9.99751e-09     .              .              .
+
+ [*,*,8]
+:         2              3              4              5           6      :=
+11     .              .              .              .            35.55
+33     .              .            -9.99972e-09     .              .
+53     .              .              .              .            14.94
+54     .            -9.99957e-09     .              .              .
+59     .              .              .            -9.99971e-09     .
+66   -9.99971e-09     .              .              .              .
+71     .              .              .            94.82            .
+
+:       7           9              10             11              12         :=
+13     .         .            -9.99972e-09      .              .
+15     .         .              .             -9.99971e-09     .
+17   32.2977     .              .               .              .
+21     .       -9.99972e-09     .               .              .
+35     .         .              .            100.3             .
+40     .         .              .             -9.99972e-09     .
+47     .         .            -9.99972e-09      .              .
+56     .         .              .               .            -9.99972e-09
+
+:         13             14             15             16         17      :=
+12     .              .              .            -9.99972e-09     .
+19     .            -9.99972e-09     .              .              .
+29     .              .              .              .            73.16
+30   -9.99972e-09     .              .              .              .
+32     .              .              .            -9.99972e-09     .
+35     .              .            -9.99971e-09     .              .
+47   -9.99972e-09     .              .              .              .
+48   -9.99971e-09     .              .              .              .
+51     .            -9.99971e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99806e-09     .              .              .              .
+16     .              .            -9.99972e-09     .              .
+20     .              .              .            -9.99972e-09     .
+27     .            -9.99971e-09     .              .              .
+32     .              .            -9.99972e-09   -9.99972e-09     .
+44     .            -9.99964e-09     .              .              .
+53     .            -9.9997e-09      .              .              .
+61     .              .              .              .            -9.99972e-09
+
+:     25          26             27             28        29     30      :=
+6      .       .            -9.99971e-09     .             .      .
+10     .       .              .            -9.99909e-09    .      .
+31     .       .              .            -9.99996e-09    .      .
+34     .     -9.99972e-09     .              .             .      .
+38     .       .              .              .             .    13.23
+49     .       .              .            -9.99972e-09    .      .
+69   46.88     .              .              .             .      .
+73     .       .              .              .            132     .
+
+:         31             32             33              34             35    :=
+1    -9.99999e-09     .               .              .               .
+12     .            -9.99972e-09      .              .               .
+24     .              .               .            -9.99972e-09      .
+38   -9.99987e-09     .               .              .               .
+40     .              .               .              .             -9.99971e-09
+48     .              .               .            -9.99972e-09      .
+57     .              .             -9.99972e-09     .               .
+68     .              .               .              .            107.7
+72     .              .            129               .               .
+
+:     36          37         38      39          40             41         :=
+3      .       .              .      61.2     .              .
+6      .       .              .        .    -9.9997e-09      .
+8    57.41     .              .        .      .              .
+18     .       .              .        .      .            -9.99806e-09
+25     .       .              .     112.7     .              .
+30   39.49     .              .        .      .              .
+42     .       .              .        .    -9.99971e-09     .
+62     .     -9.99972e-09     .        .      .              .
+64     .       .            37.47      .      .              .
+
+:         42             43             44             45             47     :=
+10     .              .              .            -9.9984e-09      .
+26     .              .            -9.99972e-09     .              .
+44     .              .              .            -9.99902e-09     .
+45     .              .              .              .            -9.99972e-09
+50     .              .              .            -9.99972e-09     .
+52     .              .            -9.99509e-09     .              .
+58     .            -9.99972e-09     .              .              .
+68   -9.99971e-09     .              .              .              .
+
+:         48             49             50             51             52     :=
+2      .              .              .            -9.99971e-09     .
+7      .              .            -9.0456e-09      .              .
+9      .            -9.99972e-09     .              .              .
+14     .              .              .              .            -9.9997e-09
+22     .            -9.99972e-09     .              .              .
+28     .              .            -9.99673e-09     .              .
+36   -9.99972e-09     .              .              .              .
+50     .              .              .              .            -9.99972e-09
+66     .              .              .              .            77.7501
+
+:     53          54             55             56             57         :=
+8    42.45     .              .              .              .
+16     .       .              .            -9.99972e-09     .
+23     .       .              .            -9.99972e-09     .
+25     .       .            -9.99972e-09     .              .
+37     .       .              .              .            -9.99972e-09
+39     .     -9.99971e-09     .              .              .
+55     .     -9.99963e-09     .              .              .
+60     .       .            -9.99966e-09     .              .
+62     .       .              .              .            -9.99972e-09
+
+:         58             59             60             61             62     :=
+23     .              .              .              .            -9.99972e-09
+46     .              .              .            -9.99972e-09     .
+63     .              .              .              .            -9.99972e-09
+67   -9.99972e-09     .              .              .              .
+69     .              .            -9.99972e-09     .              .
+71     .            -9.99971e-09     .              .              .
+
+:         64              66          68           69             71         :=
+4     -9.99972e-09     .              .         .              .
+5       .              .            70.0287     .              .
+14      .            -9.99971e-09     .         .              .
+33   111.332           .              .         .              .
+39      .              .              .       -9.99971e-09     .
+41      .            -9.99806e-09     .         .              .
+60      .              .              .         .            -9.99969e-09
+70      .              .              .       -9.99882e-09     .
+
+:         72            73         :=
+43   -9.99972e-09     .
+65     .            -9.9997e-09
+
+ [*,*,9]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.9966e-09
+33     .              .            -9.99983e-09     .              .
+53     .              .              .              .            -9.99635e-09
+54     .            -9.99978e-09     .              .              .
+59     .              .              .            -9.99983e-09     .
+66   -9.99983e-09     .              .              .              .
+71     .              .              .            -9.99656e-09     .
+
+:       7           9              10             11             12         :=
+13     .         .            -9.99983e-09     .              .
+15     .         .              .            -9.99983e-09     .
+17   41.0023     .              .              .              .
+21     .       -9.99983e-09     .              .              .
+35     .         .              .            -9.99856e-09     .
+40     .         .              .            -9.99983e-09     .
+47     .         .            -9.99983e-09     .              .
+56     .         .              .              .            -9.99983e-09
+
+:         13             14             15             16            17      :=
+12     .              .              .            -9.99983e-09     .
+19     .            -9.99983e-09     .              .              .
+29     .              .              .              .            -9.088e-09
+30   -9.99983e-09     .              .              .              .
+32     .              .              .            -9.99983e-09     .
+35     .              .            -9.99983e-09     .              .
+47   -9.99983e-09     .              .              .              .
+48   -9.99983e-09     .              .              .              .
+51     .            -9.99983e-09     .              .              .
+
+:     18          19             20             21             23         :=
+3    43.56     .              .              .              .
+16     .       .            -9.99983e-09     .              .
+20     .       .              .            -9.99983e-09     .
+27     .     -9.99983e-09     .              .              .
+32     .       .            -9.99983e-09   -9.99983e-09     .
+44     .     -9.9998e-09      .              .              .
+53     .     -9.99982e-09     .              .              .
+61     .       .              .              .            -9.99983e-09
+
+:         25             26             27             28             29     :=
+6      .              .            -9.99983e-09     .              .
+10     .              .              .            38.01            .
+31     .              .              .            -9.99975e-09     .
+34     .            -9.99983e-09     .              .              .
+49     .              .              .            -9.99983e-09     .
+69   -9.99806e-09     .              .              .              .
+73     .              .              .              .            -9.62031e-09
+
+:         30             31             32             33             34     :=
+1      .            -9.99997e-09     .              .              .
+12     .              .            -9.99983e-09     .              .
+24     .              .              .              .            -9.99983e-09
+38   -9.99846e-09   -9.99761e-09     .              .              .
+48     .              .              .              .            -9.99983e-09
+57     .              .              .            -9.99983e-09     .
+72     .              .              .            -9.99937e-09     .
+
+:         35             36             37             38             39     :=
+3      .              .              .              .            -9.9984e-09
+8      .            -9.99825e-09     .              .              .
+25     .              .              .              .            -9.99843e-09
+30     .            -9.99864e-09     .              .              .
+40   -9.99983e-09     .              .              .              .
+62     .              .            -9.99983e-09     .              .
+64     .              .              .            -9.99939e-09     .
+68   -9.99602e-09     .              .              .              .
+
+:         40         41          42             43             44         :=
+6    -9.99982e-09     .       .              .              .
+18     .            38.87     .              .              .
+26     .              .       .              .            -9.99983e-09
+42   -9.99983e-09     .       .              .              .
+52     .              .       .              .            11.22
+58     .              .       .            -9.99983e-09     .
+68     .              .     -9.99983e-09     .              .
+
+:         45             47             48             49         50      :=
+7      .              .              .              .            66.65
+9      .              .              .            -9.99983e-09     .
+10   39.36            .              .              .              .
+22     .              .              .            -9.99983e-09     .
+28     .              .              .              .            59.14
+36     .              .            -9.99983e-09     .              .
+44   21.47            .              .              .              .
+45     .            -9.99983e-09     .              .              .
+50   -9.99983e-09     .              .              .              .
+
+:         51             52             53             54             55     :=
+2    -9.99983e-09     .              .              .              .
+8      .              .            -9.99825e-09     .              .
+14     .            -9.99982e-09     .              .              .
+25     .              .              .              .            -9.99983e-09
+39     .              .              .            -9.99983e-09     .
+50     .            -9.99983e-09     .              .              .
+55     .              .              .            -9.9998e-09      .
+60     .              .              .              .            -9.99981e-09
+66     .             8.25988         .              .              .
+
+:         56             57             58             59             60     :=
+16   -9.99983e-09     .              .              .              .
+23   -9.99983e-09     .              .              .              .
+37     .            -9.99983e-09     .              .              .
+62     .            -9.99983e-09     .              .              .
+67     .              .            -9.99983e-09     .              .
+69     .              .              .              .            -9.99983e-09
+71     .              .              .            -9.99983e-09     .
+
+:         61             62             64             66           68       :=
+4      .              .            -9.99983e-09     .             .
+5      .              .              .              .            0.261255
+14     .              .              .            -9.99983e-09    .
+23     .            -9.99983e-09     .              .             .
+33     .              .            -9.99942e-09     .             .
+41     .              .              .            18.94           .
+46   -9.99983e-09     .              .              .             .
+63     .            -9.99983e-09     .              .             .
+
+:         69             71             72             73         :=
+39   -9.99983e-09     .              .              .
+43     .              .            -9.99983e-09     .
+60     .            -9.99982e-09     .              .
+65     .              .              .            -9.99982e-09
+70   -9.99967e-09     .              .              .
+
+ [*,*,10]
+:         2              3              4              5              6      :=
+11     .              .              .              .            -9.99932e-09
+33     .              .            -9.99987e-09     .              .
+53     .              .              .              .            -9.9993e-09
+54     .            -9.99984e-09     .              .              .
+59     .              .              .            -9.99986e-09     .
+66   -9.99987e-09     .              .              .              .
+71     .              .              .            -9.99931e-09     .
+
+:         7              9              10             11             12     :=
+13     .              .            -9.99987e-09     .              .
+15     .              .              .            -9.99986e-09     .
+17   -9.99909e-09     .              .              .              .
+21     .            -9.99987e-09     .              .              .
+35     .              .              .            -9.99949e-09     .
+40     .              .              .            -9.99987e-09     .
+47     .              .            -9.99987e-09     .              .
+56     .              .              .              .            -9.99987e-09
+
+:         13             14             15             16             17     :=
+12     .              .              .            -9.99987e-09     .
+19     .            -9.99987e-09     .              .              .
+29     .              .              .              .            -9.99909e-09
+30   -9.99987e-09     .              .              .              .
+32     .              .              .            -9.99987e-09     .
+35     .              .            -9.99986e-09     .              .
+47   -9.99987e-09     .              .              .              .
+48   -9.99986e-09     .              .              .              .
+51     .            -9.99987e-09     .              .              .
+
+:         18             19             20             21             23     :=
+3    -9.99899e-09     .              .              .              .
+16     .              .            -9.99987e-09     .              .
+20     .              .              .            -9.99987e-09     .
+27     .            -9.99986e-09     .              .              .
+32     .              .            -9.99987e-09   -9.99987e-09     .
+44     .            -9.99985e-09     .              .              .
+53     .            -9.99986e-09     .              .              .
+61     .              .              .              .            -9.99987e-09
+
+:         25             26             27             28            29      :=
+6      .              .            -9.99986e-09     .              .
+10     .              .              .            -9.99884e-09     .
+31     .              .              .            -9.9987e-09      .
+34     .            -9.99987e-09     .              .              .
+49     .              .              .            -9.99987e-09     .
+69   -9.99942e-09     .              .              .              .
+73     .              .              .              .            -9.9991e-09
+
+:         30             31             32             33             34     :=
+1      .            -9.99992e-09     .              .              .
+12     .              .            -9.99987e-09     .              .
+24     .              .              .              .            -9.99987e-09
+38   -9.99947e-09   50.6             .              .              .
+48     .              .              .              .            -9.99987e-09
+57     .              .              .            -9.99987e-09     .
+72     .              .              .            -9.99967e-09     .
+
+:         35             36             37             38             39     :=
+3      .              .              .              .            -9.99946e-09
+8      .            -9.99944e-09     .              .              .
+25     .              .              .              .            -9.99947e-09
+30     .            -9.9995e-09      .              .              .
+40   -9.99987e-09     .              .              .              .
+62     .              .            -9.99987e-09     .              .
+64     .              .              .            -9.99968e-09     .
+68   -9.99929e-09     .              .              .              .
+
+:         40             41             42             43             44     :=
+6    -9.99986e-09     .              .              .              .
+18     .            -9.99899e-09     .              .              .
+26     .              .              .              .            -9.99987e-09
+42   -9.99986e-09     .              .              .              .
+52     .              .              .              .            -9.99905e-09
+58     .              .              .            -9.99987e-09     .
+68     .              .            -9.99986e-09     .              .
+
+:         45             47             48             49             50     :=
+7      .              .              .              .            -9.99909e-09
+9      .              .              .            -9.99987e-09     .
+10   -9.99897e-09     .              .              .              .
+22     .              .              .            -9.99987e-09     .
+28     .              .              .              .            -9.99903e-09
+36     .              .            -9.99987e-09     .              .
+44   -9.99886e-09     .              .              .              .
+45     .            -9.99987e-09     .              .              .
+50   -9.99987e-09     .              .              .              .
+
+:         51             52             53             54             55     :=
+2    -9.99987e-09     .              .              .              .
+8      .              .            -9.99944e-09     .              .
+14     .            -9.99986e-09     .              .              .
+25     .              .              .              .            -9.99987e-09
+39     .              .              .            -9.99986e-09     .
+50     .            -9.99987e-09     .              .              .
+55     .              .              .            -9.99985e-09     .
+60     .              .              .              .            -9.99985e-09
+66     .            -9.99909e-09     .              .              .
+
+:         56             57             58             59             60     :=
+16   -9.99987e-09     .              .              .              .
+23   -9.99987e-09     .              .              .              .
+37     .            -9.99987e-09     .              .              .
+62     .            -9.99987e-09     .              .              .
+67     .              .            -9.99987e-09     .              .
+69     .              .              .              .            -9.99987e-09
+71     .              .              .            -9.99986e-09     .
+
+:         61             62             64             66             68     :=
+4      .              .            -9.99987e-09     .              .
+5      .              .              .              .            -9.99909e-09
+14     .              .              .            -9.99986e-09     .
+23     .            -9.99987e-09     .              .              .
+33     .              .            -9.99969e-09     .              .
+41     .              .              .            -9.99899e-09     .
+46   -9.99987e-09     .              .              .              .
+63     .            -9.99987e-09     .              .              .
+
+:         69             71             72             73         :=
+39   -9.99986e-09     .              .              .
+43     .              .            -9.99987e-09     .
+60     .            -9.99986e-09     .              .
+65     .              .              .            -9.99986e-09
+70   -9.99978e-09     .              .              .
+
+ [*,*,11]
+:         2              3              4             5              6       :=
+11     .              .              .             .            -9.9997e-09
+33     .              .            -9.9999e-09     .              .
+53     .              .              .             .            -9.99969e-09
+54     .            -9.99988e-09     .             .              .
+59     .              .              .           -9.99989e-09     .
+66   -9.99989e-09     .              .             .              .
+71     .              .              .           -9.9997e-09      .
+
+:         7              9            10             11            12        :=
+13     .              .           -9.9999e-09     .              .
+15     .              .             .           -9.99989e-09     .
+17   -9.99965e-09     .             .             .              .
+21     .            -9.9999e-09     .             .              .
+35     .              .             .           -9.99974e-09     .
+40     .              .             .           -9.9999e-09      .
+47     .              .           -9.9999e-09     .              .
+56     .              .             .             .            -9.9999e-09
+
+:         13             14             15            16             17      :=
+12     .              .              .            -9.9999e-09     .
+19     .            -9.9999e-09      .              .             .
+29     .              .              .              .           -9.99965e-09
+30   -9.9999e-09      .              .              .             .
+32     .              .              .            -9.9999e-09     .
+35     .              .            -9.99989e-09     .             .
+47   -9.9999e-09      .              .              .             .
+48   -9.99989e-09     .              .              .             .
+51     .            -9.99989e-09     .              .             .
+
+:         18             19            20            21            23        :=
+3    -9.99963e-09     .              .             .             .
+16     .              .            -9.9999e-09     .             .
+20     .              .              .           -9.9999e-09     .
+27     .            -9.99989e-09     .             .             .
+32     .              .            -9.9999e-09   -9.9999e-09     .
+44     .            -9.99989e-09     .             .             .
+53     .            -9.99989e-09     .             .             .
+61     .              .              .             .           -9.9999e-09
+
+:         25            26             27            28             29       :=
+6      .              .           -9.99989e-09     .             .
+10     .              .             .            -9.9996e-09     .
+31     .              .             .            43.36           .
+34     .            -9.9999e-09     .              .             .
+49     .              .             .            -9.9999e-09     .
+69   -9.99972e-09     .             .              .             .
+73     .              .             .              .           -9.99965e-09
+
+:         30             31            32            33            34        :=
+1      .            42.49            .             .             .
+12     .              .            -9.9999e-09     .             .
+24     .              .              .             .           -9.9999e-09
+38   -9.99973e-09   -9.99888e-09     .             .             .
+48     .              .              .             .           -9.9999e-09
+57     .              .              .           -9.9999e-09     .
+72     .              .              .           -9.9998e-09     .
+
+:         35             36            37            38             39       :=
+3      .              .              .             .           -9.99973e-09
+8      .            -9.99973e-09     .             .             .
+25     .              .              .             .           -9.99973e-09
+30     .            -9.99974e-09     .             .             .
+40   -9.99989e-09     .              .             .             .
+62     .              .            -9.9999e-09     .             .
+64     .              .              .           -9.9998e-09     .
+68   -9.99969e-09     .              .             .             .
+
+:         40             41             42            43             44      :=
+6    -9.99989e-09     .              .              .             .
+18     .            -9.99963e-09     .              .             .
+26     .              .              .              .           -9.9999e-09
+42   -9.99989e-09     .              .              .             .
+52     .              .              .              .           -9.99965e-09
+58     .              .              .            -9.9999e-09     .
+68     .              .            -9.99989e-09     .             .
+
+:         45            47            48            49             50        :=
+7      .              .             .             .           -9.99965e-09
+9      .              .             .           -9.9999e-09     .
+10   -9.99963e-09     .             .             .             .
+22     .              .             .           -9.9999e-09     .
+28     .              .             .             .           -9.99964e-09
+36     .              .           -9.9999e-09     .             .
+44   -9.99961e-09     .             .             .             .
+45     .            -9.9999e-09     .             .             .
+50   -9.9999e-09      .             .             .             .
+
+:         51             52             53             54             55     :=
+2    -9.99989e-09     .              .              .              .
+8      .              .            -9.99973e-09     .              .
+14     .            -9.99989e-09     .              .              .
+25     .              .              .              .            -9.9999e-09
+39     .              .              .            -9.99989e-09     .
+50     .            -9.9999e-09      .              .              .
+55     .              .              .            -9.99988e-09     .
+60     .              .              .              .            -9.99989e-09
+66     .            -9.99965e-09     .              .              .
+
+:        56            57            58             59            60         :=
+16   -9.9999e-09     .             .             .              .
+23   -9.9999e-09     .             .             .              .
+37     .           -9.9999e-09     .             .              .
+62     .           -9.9999e-09     .             .              .
+67     .             .           -9.9999e-09     .              .
+69     .             .             .             .            -9.9999e-09
+71     .             .             .           -9.99989e-09     .
+
+:        61            62             64             66             68       :=
+4      .             .           -9.9999e-09      .              .
+5      .             .             .              .            -9.99965e-09
+14     .             .             .            -9.99989e-09     .
+23     .           -9.9999e-09     .              .              .
+33     .             .           -9.99981e-09     .              .
+41     .             .             .            -9.99963e-09     .
+46   -9.9999e-09     .             .              .              .
+63     .           -9.9999e-09     .              .              .
+
+:         69             71            72             73         :=
+39   -9.99989e-09     .              .             .
+43     .              .            -9.9999e-09     .
+60     .            -9.99989e-09     .             .
+65     .              .              .           -9.99989e-09
+70   -9.99985e-09     .              .             .
+;
+
+q [*,*]
+:       2         3          4           5           6          7        :=
+11     .          .         .            .        -107.634       .
+17     .          .         .            .            .      -123.416
+33     .          .       -5.92808       .            .          .
+53     .          .         .            .         108.146       .
+54     .       -19.9501     .            .            .          .
+59     .          .         .          -5.13117       .          .
+66   -4.5138      .         .            .            .          .
+71     .          .         .        -107.461         .          .
+
+:       9          10         11          12         13          14       :=
+13     .        -4.00542      .          .          .           .
+15     .          .         -4.77939     .          .           .
+19     .          .           .          .          .          2.95567
+21   -3.68003     .           .          .          .           .
+30     .          .           .          .         1.62081      .
+35     .          .        -99.583       .          .           .
+40     .          .         -3.2276      .          .           .
+47     .        -3.33914      .          .        -0.390843     .
+48     .          .           .          .        -5.21119      .
+51     .          .           .          .          .         -4.53137
+56     .          .           .        -1.89847     .           .
+
+:       15         16          17         18         19         20        :=
+3      .          .             .      -132.674     .          .
+12     .        -0.799496       .          .        .          .
+16     .          .             .          .        .        -1.63534
+27     .          .             .          .      -5.21711     .
+29     .          .         -123.384       .        .          .
+32     .         0.679114       .          .        .        -0.741732
+35   -4.75779     .             .          .        .          .
+44     .          .             .          .      13.8372      .
+53     .          .             .          .      -5.63526     .
+
+:       21        23         25        26         27         28         29   :=
+6      .          .           .       .        -5.20331       .           .
+10     .          .           .       .          .        -140.655        .
+20   -2.43077     .           .       .          .            .           .
+31     .          .           .       .          .         273.259        .
+32   -1.20445     .           .       .          .            .           .
+34     .          .           .      1.63249     .            .           .
+49     .          .           .       .          .          -3.7227       .
+61     .        -0.1875       .       .          .            .           .
+69     .          .       -116.927    .          .            .           .
+73     .          .           .       .          .            .       -123.34
+
+:      30         31         32          33          34          35        :=
+1       .       495.259     .            .          .            .
+12      .          .      -1.15307       .          .            .
+24      .          .        .            .        -0.00339       .
+38   100.678   -221.97      .            .          .            .
+40      .          .        .            .          .           4.10916
+48      .          .        .            .         1.64898       .
+57      .          .        .           2.20713     .            .
+68      .          .        .            .          .        -108.367
+72      .          .        .        -122.651       .            .
+
+:       36         37         38         39         40         41        42  :=
+3        .        .            .       112.692     .            .        .
+6        .        .            .          .       5.68706       .        .
+8    -102.553     .            .          .        .            .        .
+18       .        .            .          .        .        -132.692     .
+25       .        .            .      -113.135     .            .        .
+30     99.0324    .            .          .        .            .        .
+42       .        .            .          .      -4.7591        .        .
+62       .       1.12111       .          .        .            .        .
+64       .        .        -121.271       .        .            .        .
+68       .        .            .          .        .            .      -4.7131
+
+:      43         44           45          47         48         49       :=
+9      .          .            .          .          .        -3.69413
+10     .          .         133.286       .          .          .
+22     .          .            .          .          .        -0.00547
+26     .         1.62801       .          .          .          .
+36     .          .            .          .        -3.54641     .
+44     .          .        -139.271       .          .          .
+45     .          .            .        -3.71688     .          .
+50     .          .           2.29776     .          .          .
+52     .      -127.044         .          .          .          .
+58   -0.575       .            .          .          .          .
+
+:       50        51          52         53         54          55       :=
+2        .      -4.5249       .           .         .          .
+7    -123.446     .           .           .         .          .
+8        .        .           .        102.532      .          .
+14       .        .         -6.52944      .         .          .
+25       .        .           .           .         .        -3.85587
+28    128.844     .           .           .         .          .
+39       .        .           .           .       -6.31784     .
+50       .        .          3.04425      .         .          .
+55       .        .           .           .      -13.6036      .
+60       .        .           .           .         .        -9.65053
+66       .        .       -123.514        .         .          .
+
+:       56        57        58        59         60         61         62    :=
+16    1.43026    .          .        .         .            .         .
+23   -3.21373    .          .        .         .            .        2.88323
+37     .        1.10021     .        .         .            .         .
+46     .         .          .        .         .          -0.0175     .
+62     .        1.10692     .        .         .            .         .
+63     .         .          .        .         .            .       -0.0752
+67     .         .        -0.405     .         .            .         .
+69     .         .          .        .        0.0974051     .         .
+71     .         .          .      -4.96117    .            .         .
+
+:        64           66          68          69         71        72       :=
+4      -5.96868       .            .          .         .          .
+5        .            .        -112.644       .         .          .
+14       .           4.92474       .          .         .          .
+33   -114.617         .            .          .         .          .
+39       .            .            .         5.80181    .          .
+41       .        -132.704         .          .         .          .
+43       .            .            .          .         .        -0.6513
+60       .            .            .          .        9.57793     .
+70       .            .            .      -122          .          .
+
+:     73      :=
+65   -1.34
+;
+
+h [*] :=
+ 1 45        14 35.2316   27 34.2864   40 30.2831   53 33.3019   66 32.665
+ 2 34.1385   15 29.5702   28 40.1343   41 32.2296   54 28.6546   67 18
+ 3 30.335    16 37.0602   29 30.4008   42 29.1287   55 25.3271   68 21.9001
+ 4 29.6522   17 34.7581   30 39.0893   43 18.227    56 36.5302   69 19.0096
+ 5 18.3722   18 31.3361   31 41.3668   44 37.7089   57 27.0917   70 17
+ 6 32.6049   19 35.6223   32 37.1743   45 38.2487   58 18.1401   71 14
+ 7 37.5067   20 37.3832   33 26.0711   46 29.6312   59 14.7751   72 18.4724
+ 8 35.0963   21 37.6914   34 37.8228   47 38.7463   60 19        73 22.5444
+ 9 38.0837   22 39.3182   35 26.9441   48 38.0266   61 29.6313
+10 39.161    23 29.6472   36 37.524    49 39.3183   62 27.35
+11 30.9608   24 37.8228   37 27.3237   50 38.847    63 27.3493
+12 36.9043   25 21.5371   38 39.6299   51 34.534    64 37.4686
+13 38.7546   26 37.7739   39 27.2534   52 37.4709   65 20
+;
+
+total_cost: 3395779.507786451

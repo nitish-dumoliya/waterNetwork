@@ -1,0 +1,223 @@
+Artelys Knitro 14.0.0: maxtime_real = 3600
+outlev = 4
+threads=12
+feastol = 1.0e-7
+feastol_abs = 1.0e-7
+ms_enable = 1
+ms_maxsolves = 12
+
+=======================================
+          Commercial License
+         Artelys Knitro 14.0.0
+=======================================
+
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+concurrent_evals:        0
+datacheck:               0
+feastol:                 1e-07
+feastol_abs:             1e-07
+hessian_no_f:            1
+maxtime_real:            3600
+ms_enable:               1
+ms_maxsolves:            12
+numthreads:             12
+outlev:                  4
+
+Problem Characteristics                                 (   Presolved)
+-----------------------
+Objective goal:  Minimize
+Objective type:  linear
+Number of variables:                                125 (         125)
+    bounded below only:                               6 (          16)
+    bounded above only:                               0 (           3)
+    bounded below and above:                        119 (         105)
+    fixed:                                            0 (           0)
+    free:                                             0 (           1)
+Number of constraints:                               22 (          22)
+    linear equalities:                               15 (          15)
+    quadratic equalities:                             0 (           0)
+    gen. nonlinear equalities:                        7 (           7)
+    linear one-sided inequalities:                    0 (           0)
+    quadratic one-sided inequalities:                 0 (           0)
+    gen. nonlinear one-sided inequalities:            0 (           0)
+    linear two-sided inequalities:                    0 (           0)
+    quadratic two-sided inequalities:                 0 (           0)
+    gen. nonlinear two-sided inequalities:            0 (           0)
+Number of nonzeros in Jacobian:                     260 (         260)
+Number of nonzeros in Hessian:                      105 (         105)
+
+Multistart will generate 12 start points as follows:
+    119 variables will vary within their upper and lower bounds
+      6 variables will vary over a range of 1000
+
+Knitro parallel multistart will run with 12 threads.
+
+ Solve #  ThreadID  Status     Objective     FeasError   OptError   Real Time 
+--------  --------  ------  --------------  ----------  ---------- ----------
+       6         9       0    4.339281e+05   1.646e-09   6.276e-06      2.728
+      10         5       0    7.871341e+05   1.947e-11   8.910e-10      3.544
+      11         0       0    4.173661e+05   5.405e-08   4.903e-05      3.858
+       8         8       0    6.612450e+05   1.704e-10   6.727e-09      3.899
+       3         1       0    7.528366e+05   6.742e-08   6.578e-05      4.086
+       1        10       0    4.173658e+05   4.832e-12   1.088e-08      5.337
+       5         4       0    4.173658e+05   1.842e-11   1.499e-09      6.020
+       4         3       0    6.968342e+05   1.194e-12   2.788e-11      7.882
+       2        11       0    4.036068e+05   3.789e-11   1.792e-09      7.937
+      12         2       0    4.735341e+05   6.811e-08   1.721e-06     11.478
+       9         6       0    6.884732e+05   8.591e-10   1.674e-07     15.037
+       7         7       0    7.544003e+05   1.355e-08   3.833e-07     15.491
+Multistart stopping, reached ms_maxsolves limit.
+
+MULTISTART: Best locally optimal solution is returned.
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   4.03606787382782e+05
+Final feasibility error (abs / rel) =   3.79e-11 / 1.31e-17
+Final optimality error  (abs / rel) =   1.79e-09 / 1.79e-11
+# of iterations                     =       3661 
+# of CG iterations                  =       1828 
+# of function evaluations           =       8681
+# of gradient evaluations           =       3674
+# of Hessian evaluations            =       3685
+Total program time (secs)           =      15.54475 (    36.575 CPU time)
+
+===============================================================================
+
+Knitro 14.0.0: Locally optimal or satisfactory solution.
+objective 403606.7874; feasibility error 3.79e-11
+3661 iterations; 8681 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+l [1,*,*] (tr)
+:          2           :=
+1      -1.03826e-15
+2       8.53509e-16
+3       6.42719e-15
+4       2.6088e-14
+5       1.88891e-13
+6       7.92218e-13
+7       2.55688e-12
+8       7.43494e-12
+9       2.43015e-11
+10      1.26082e-10
+11   1000
+12      1.83151e-09
+13      4.11424e-11
+14      1.25684e-11
+
+ [2,*,*] (tr)
+:          3               4           :=
+1      9.99202e-16     -1.60207e-16
+2      3.06517e-14      3.0107e-15
+3      2.27835e-13      2.17172e-14
+4      9.36799e-13      8.77907e-14
+5      7.25436e-12      6.43655e-13
+6      4.11302e-11      2.79438e-12
+7    793.066            9.90326e-12
+8    206.934            3.52356e-11
+9      1.01234e-09      5.07926e-10
+10     1.21992e-10   1000
+11     5.35212e-11      2.06575e-10
+12     4.71399e-11      9.53519e-11
+13     2.05419e-11      2.63066e-11
+14     9.38048e-12      1.02701e-11
+
+ [3,*,*] (tr)
+:          5          :=
+1      1.42312e-14
+2      4.0902e-13
+3      2.80094e-12
+4      1.19904e-11
+5      1.33597e-10
+6     97.8521
+7    902.148
+8      1.63579e-10
+9      1.16379e-10
+10     6.01767e-11
+11     3.62156e-11
+12     3.42481e-11
+13     1.78848e-11
+14     9.20571e-12
+
+ [4,*,*] (tr)
+:          5                6          :=
+1    1000              -2.54451e-17
+2       2.14814e-09     4.42468e-15
+3       7.43293e-10     3.18277e-14
+4       4.49253e-10     1.28355e-13
+5       2.72794e-10     9.46138e-13
+6       1.77013e-10     4.17012e-12
+7       1.22266e-10     1.54197e-11
+8       7.5617e-11      5.94935e-11
+9       6.23889e-11   304.73
+10      4.08998e-11   695.27
+11      3.96701e-11     1.31533e-10
+12      3.01805e-11     7.81033e-11
+13      1.69027e-11     2.3588e-11
+14      9.00638e-12     9.76635e-12
+
+ [6,*,*] (tr)
+:          7          :=
+1      1.70887e-14
+2      4.96111e-13
+3      3.40295e-12
+4      1.45876e-11
+5      1.68557e-10
+6     10.6054
+7    989.395
+8      1.95808e-10
+9      4.86018e-11
+10     4.19602e-11
+11     3.05337e-11
+12     2.9252e-11
+13     1.66494e-11
+14     8.83031e-12
+
+ [7,*,*] (tr)
+:          5           :=
+1    1000
+2       2.11836e-09
+3       7.41799e-10
+4       4.49103e-10
+5       2.72846e-10
+6       1.7705e-10
+7       1.22281e-10
+8       7.56182e-11
+9       6.23882e-11
+10      4.08979e-11
+11      3.9683e-11
+12      3.01902e-11
+13      1.69078e-11
+14      9.00857e-12
+;
+
+q :=
+1 2   311.109
+2 3   102.314
+2 4   181.017
+3 5    74.5369
+4 5     0.270781
+4 6   147.413
+6 7    55.7473
+7 5     0.192315
+;
+
+h [*] :=
+1  210
+2  203.244
+3  190
+4  198.846
+5  180
+6  195
+7  190
+;
+
+total_cost: 403606.7873827825

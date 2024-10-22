@@ -1,0 +1,519 @@
+Environment: User provided options:
+  problem_file = /tmp/at493594
+  ampl = 1
+Environment: End of user provided options.
+
+MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-84-gfb5cee3
+MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
+Environment: User provided options:
+  presolve = 1
+  log_level = 3
+  eval_within_bnds = 1
+Environment: End of user provided options.
+
+AMPLInterface: problem type is NLP
+Solver: time used in reading instance = 0.00
+-----------------------------------------------------
+|                 Problem Size                      |
+|---------------------------------------------------|
+| # variables                                262    |
+| # binary variables                           0    |
+| # general integer variables                  0    |
+| # continuous variables                     262    |
+| # fixed variables                            0    |
+| # constraints                               93    |
+| # linear constraints                        66    |
+| # SOS1 constraints                           0    |
+| # SOS2 constraints                           0    |
+| # quadratic constraints                      0    |
+| # nonlinear constraints                     27    |
+| # constraints with linear terms             93    |
+| # constraints with bilinear terms            0    |
+| # constraints with quadratic terms           0    |
+| # linear terms in constraints              367    |
+| # bilinear terms in constraints              0    |
+| # square terms in constraints                0    |
+| # quadratic terms in constraints             0    |
+| # objectives                                 1    |
+| # linear terms in objective                204    |
+| # quadratic terms in objective               0    |
+| Type of objective:                      linear    |
+-----------------------------------------------------
+MultiStart: Starting constraint classification
+--------------------------------------------
+|            Constraints Size              |
+|------------------------------------------|
+|Aggregation constraint       |     21     |
+|Precedence constraint        |      0     |
+|Variable Bound constraint    |      0     |
+|Partitioning constraint      |      0     |
+|Set Packing constraint       |      0     |
+|Set Covering constraint      |      0     |
+|Cardinality constraint       |      0     |
+|Invariant Knapsack constraint|      0     |
+|Equation Knapsack constraint |      0     |
+|Bin Packing constraint       |      0     |
+|Knapsack constraint          |      0     |
+|Integer Knapsack constraint  |      0     |
+|Mixed Binary constraint      |      0     |
+|No specific structure        |     45     |
+--------------------------------------------
+MultiStart: Finished constraint classification
+MultiStart: objective sense: minimize
+MultiStart: handlers used in presolve:
+MultiStart: LinearHandler (Handling linear constraints)
+MultiStart: NlPresHandler (presolving nonlinear constraints).
+Presolver: Presolving ... 
+Presolver: Finished presolving.
+LinearHandler: Statistics for presolve by Linear Handler:
+LinearHandler: Number of iterations           = 15
+LinearHandler: Time taken in initial presolve = 0.00
+LinearHandler: Time taken in node presolves   = 0.00
+LinearHandler: Number of variables deleted    = 0
+LinearHandler: Number of constraints deleted  = 0
+LinearHandler: Number of vars set to binary   = 0
+LinearHandler: Number of vars set to integer  = 0
+LinearHandler: Times variables tightened      = 254
+LinearHandler: Times constraints tightened    = 0
+LinearHandler: Times coefficients improved    = 0
+LinearHandler: Times binary variable relaxed  = 0
+LinearHandler: Changes in nodes               = 0
+NlPresHandler: Statistics for presolve by NlPresHandler:
+NlPresHandler: Number of iterations           = 1
+NlPresHandler: Time taken in initial presolve = 0.00
+NlPresHandler: Time taken in node presolves   = 0.00
+NlPresHandler: Number of variables deleted    = 0
+NlPresHandler: Number of constraints deleted  = 0
+NlPresHandler: Number of constraints relaxed  = 0
+NlPresHandler: Number of perspective reform.  = 0
+NlPresHandler: Times variables tightened      = 0
+NlPresHandler: Times constraints tightened    = 0
+NlPresHandler: Times coefficients improved    = 0
+NlPresHandler: Times quad. changed to conic   = 0
+NlPresHandler: Changes in nodes               = 0
+LinearHandler: Statistics for presolve by Linear Handler:
+LinearHandler: Number of iterations           = 15
+LinearHandler: Time taken in initial presolve = 0.00
+LinearHandler: Time taken in node presolves   = 0.00
+LinearHandler: Number of variables deleted    = 0
+LinearHandler: Number of constraints deleted  = 0
+LinearHandler: Number of vars set to binary   = 0
+LinearHandler: Number of vars set to integer  = 0
+LinearHandler: Times variables tightened      = 254
+LinearHandler: Times constraints tightened    = 0
+LinearHandler: Times coefficients improved    = 0
+LinearHandler: Times binary variable relaxed  = 0
+LinearHandler: Changes in nodes               = 0
+NlPresHandler: Statistics for presolve by NlPresHandler:
+NlPresHandler: Number of iterations           = 1
+NlPresHandler: Time taken in initial presolve = 0.00
+NlPresHandler: Time taken in node presolves   = 0.00
+NlPresHandler: Number of variables deleted    = 0
+NlPresHandler: Number of constraints deleted  = 0
+NlPresHandler: Number of constraints relaxed  = 0
+NlPresHandler: Number of perspective reform.  = 0
+NlPresHandler: Times variables tightened      = 0
+NlPresHandler: Times constraints tightened    = 0
+NlPresHandler: Times coefficients improved    = 0
+NlPresHandler: Times quad. changed to conic   = 0
+NlPresHandler: Changes in nodes               = 0
+MultiStart: engine used = IPOPT
+MultiStart: brancher used = MaxVioBrancher
+BranchAndBound: starting branch-and-bound
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+----------------------------------------------------------------------------------------------
+ Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
+----------------------------------------------------------------------------------------------
+     0         0             -inf          inf         inf              0             0      0
+     4         3              inf   6.0649e+06    0.00e+00              1             0      1
+----------------------------------------------------------------------------------------------
+ 
+BranchAndBound: stopping branch-and-bound
+BranchAndBound: nodes processed = 1
+BranchAndBound: nodes created   = 1
+BranchAndBound: time taken      = 3.54
+BranchAndBound: nodes processed = 1
+BranchAndBound: nodes created   = 1
+MsProcessor: nodes processed     = 1
+MsProcessor: nodes branched      = 0
+MsProcessor: nodes infeasible    = 0
+MsProcessor: nodes optimal       = 1
+MsProcessor: nodes hit ub        = 0
+MsProcessor: nodes with problems = 0
+MaxVio brancher: times called = 0
+MaxVio brancher: time in brancher = 0.00
+SolutionPool: Number of solutions found = 1
+SolutionPool: Time first solution found = 3.55
+SolutionPool: Time best solution found  = 3.55
+Ipopt: total calls            = 0
+Ipopt: calls to Optimize      = 0
+Ipopt: calls to ReOptimize    = 0
+Ipopt: strong branching calls = 0
+Ipopt: total time in solving  = 0.00
+Ipopt: total time in presolve = 0.00
+Ipopt: time in str branching  = 0.00
+Ipopt: total iterations       = 0
+Ipopt: strong br iterations   = 0
+LinearHandler: Statistics for presolve by Linear Handler:
+LinearHandler: Number of iterations           = 0
+LinearHandler: Time taken in initial presolve = 0.00
+LinearHandler: Time taken in node presolves   = 0.00
+LinearHandler: Number of variables deleted    = 0
+LinearHandler: Number of constraints deleted  = 0
+LinearHandler: Number of vars set to binary   = 0
+LinearHandler: Number of vars set to integer  = 0
+LinearHandler: Times variables tightened      = 0
+LinearHandler: Times constraints tightened    = 0
+LinearHandler: Times coefficients improved    = 0
+LinearHandler: Times binary variable relaxed  = 0
+LinearHandler: Changes in nodes               = 0
+NlPresHandler: Statistics for presolve by NlPresHandler:
+NlPresHandler: Number of iterations           = 0
+NlPresHandler: Time taken in initial presolve = 0.00
+NlPresHandler: Time taken in node presolves   = 0.00
+NlPresHandler: Number of variables deleted    = 0
+NlPresHandler: Number of constraints deleted  = 0
+NlPresHandler: Number of constraints relaxed  = 0
+NlPresHandler: Number of perspective reform.  = 0
+NlPresHandler: Times variables tightened      = 0
+NlPresHandler: Times constraints tightened    = 0
+NlPresHandler: Times coefficients improved    = 0
+NlPresHandler: Times quad. changed to conic   = 0
+NlPresHandler: Changes in nodes               = 0
+ 
+MultiStart: best solution value = 6064901.0669
+MultiStart: best bound estimate from remaining nodes = inf
+MultiStart: gap = 0.0000
+MultiStart: gap percentage = 0.0000
+MultiStart: time used (s) = 3.55
+MultiStart: status of branch-and-bound: Optimal solution found
+MultiStart: wall clock time used (s) = 3.30
+l [*,*,1] (tr)
+:      1        2             3             4        5        6        7     :=
+2    -1e-08     .            .              .        .        .        .
+3      .      -1e-08         .              .        .        .        .
+4      .        .      -1e-08               .        .        .        .
+5      .        .            .            -1e-08     .        .        .
+6      .        .            .              .      -1e-08     .        .
+7      .        .            .              .        .      -1e-08     .
+8      .        .            .              .        .        .      -1e-08
+19     .        .          -9.99996e-09     .        .        .        .
+20     .        .      -1e-08               .        .        .        .
+
+:      8        9           10             11             12        14    15 :=
+9    -1e-08     .        .              .              .             .     .
+10     .      -1e-08     .              .              .             .     .
+11     .        .      -9.99999e-09     .              .             .     .
+12     .        .        .            -9.99998e-09     .             .     .
+13     .        .        .              .            -9.99996e-09    .     .
+14     .        .      -9.99973e-09     .              .             .     .
+15     .        .        .              .              .            500    .
+16     .        .        .              .              .             .    550
+
+:    16     17         18             19               20          21     :=
+16    .    2730     .              .                  .             .
+17    .     .     -9.99971e-09     .                  .             .
+18    .     .       .            -9.99996e-09         .             .
+21    .     .       .              .                -9.99973e-09    .
+22    .     .       .              .                  .            500
+23    .     .       .              .            -1e-08              .
+27   750    .       .              .                  .             .
+
+:           23               24             25             26         :=
+24   -1e-08               .              .              .
+25         .            -9.99999e-09     .            -9.99994e-09
+28       -9.99952e-09     .              .              .
+32         .              .            -9.99995e-09     .
+
+:         27             28         29         30             32         :=
+26   -9.99835e-09     .             .       .              .
+29     .            -9.99678e-09    .       .              .
+30     .              .            1600     .              .
+31     .              .             .     -9.99475e-09   -9.99911e-09
+
+ [*,*,2] (tr)
+:      1        2             3             4        5        6       :=
+2    -1e-08     .            .              .        .        .
+3      .      -1e-08         .              .        .        .
+4      .        .      -1e-08               .        .        .
+5      .        .            .            -1e-08     .        .
+6      .        .            .              .      -1e-08     .
+7      .        .            .              .        .      -1e-08
+19     .        .          -9.99974e-09     .        .        .
+20     .        .      -1e-08               .        .        .
+
+:         7              8              9              10              11    :=
+8    -9.99999e-09     .              .               .              .
+9      .            -9.99999e-09     .               .              .
+10     .              .            -9.99999e-09      .              .
+11     .              .              .             -9.99996e-09     .
+12     .              .              .               .            -9.99992e-09
+14     .              .              .            369.273           .
+
+:         12             14             15             16            17      :=
+13   -9.99976e-09     .              .              .              .
+15     .            -9.98273e-09     .              .              .
+16     .              .            -9.99875e-09     .            -9.9986e-09
+27     .              .              .            -9.99887e-09     .
+
+:     18         19             20              21              23          :=
+17   1750     .               .              .                .
+18    .     -9.99972e-09      .              .                .
+21    .       .            466.383           .                .
+22    .       .               .            -9.99596e-09       .
+23    .       .             -9.99999e-09     .                .
+24    .       .               .              .              -9.99998e-09
+28    .       .               .              .            1500
+
+:         24             25             26        27     28         29       :=
+25   -9.99997e-09     .            -9.99953e-09    .     .       .
+26     .              .              .            300    .       .
+29     .              .              .             .    2000     .
+30     .              .              .             .     .     -9.99878e-09
+32     .            -9.99963e-09     .             .     .       .
+
+:    30    32     :=
+31   150   860
+
+ [*,*,3] (tr)
+:     1        2           3              4              5              6    :=
+2   -1e-08     .        .              .              .              .
+3     .      -1e-08     .              .              .              .
+4     .        .      -9.99999e-09     .              .              .
+5     .        .        .            -9.99999e-09     .              .
+6     .        .        .              .            -9.99999e-09     .
+7     .        .        .              .              .            -9.99999e-09
+19
+      .        .      -9.99602e-09     .              .              .
+20
+      .        .      -9.99999e-09     .              .              .
+
+:         7              8              9              10              11    :=
+8    -9.99998e-09     .              .               .              .
+9      .            -9.99997e-09     .               .              .
+10     .              .            -9.99996e-09      .              .
+11     .              .              .             -9.99982e-09     .
+12     .              .              .               .            -9.99956e-09
+14     .              .              .            430.727           .
+
+:         12             14             15             16            17      :=
+13   -9.99686e-09     .              .              .              .
+15     .            -9.99887e-09     .              .              .
+16     .              .            -9.99944e-09     .            -9.9994e-09
+27     .              .              .            -9.99947e-09     .
+
+:         18             19              20             21             23    :=
+17   -9.98394e-09     .                .              .             .
+18     .            -9.99473e-09       .              .             .
+21     .              .            1033.62            .             .
+22     .              .                .            -9.9991e-09     .
+23     .              .              -9.99998e-09     .             .
+24     .              .                .              .           -9.99994e-09
+28     .              .                .              .           -9.99723e-09
+
+:         24          25      26         27             28             29    :=
+25   -9.99989e-09      .      850     .              .              .
+26     .               .       .    -9.99853e-09     .              .
+29     .               .       .      .            -9.99866e-09     .
+30     .               .       .      .              .            -9.99945e-09
+32     .            647.912    .      .              .              .
+
+:         30             32         :=
+31   -9.99871e-09   -9.99825e-09
+
+ [*,*,4] (tr)
+:      1        2            3              4              5          :=
+2    -1e-08     .         .              .              .
+3      .      -1e-08      .              .              .
+4      .        .       -9.99998e-09     .              .
+5      .        .         .            -9.99998e-09     .
+6      .        .         .              .            -9.99997e-09
+19     .        .      400               .              .
+20     .        .       -9.99998e-09     .              .
+
+:         6              7              8              9              10     :=
+7    -9.99996e-09     .              .              .              .
+8      .            -9.99993e-09     .              .              .
+9      .              .            -9.99991e-09     .              .
+10     .              .              .            -9.99986e-09     .
+11     .              .              .              .            -9.9988e-09
+14     .              .              .              .            -9.99877e-09
+
+:     11     12         14             15             16             17      :=
+12   1200    .       .              .              .              .
+13    .     3500     .              .              .              .
+15    .      .     -9.99949e-09     .              .              .
+16    .      .       .            -9.99965e-09     .            -9.99964e-09
+27    .      .       .              .            -9.99967e-09     .
+
+:         18        19         20             21             23         :=
+17   -9.99888e-09    .      .              .              .
+18     .            800     .              .              .
+21     .             .    -9.99877e-09     .              .
+22     .             .      .            -9.99954e-09     .
+23     .             .    -9.99995e-09     .              .
+24     .             .      .              .            -9.99978e-09
+28     .             .      .              .            -9.99922e-09
+
+:         24          25           26             27             28         :=
+25   -9.99952e-09      .      -9.99432e-09     .              .
+26     .               .        .            -9.99941e-09     .
+29     .               .        .              .            -9.99944e-09
+32     .            302.088     .              .              .
+
+:         29             30             32         :=
+30   -9.99966e-09     .              .
+31     .            -9.99945e-09   -9.99936e-09
+
+ [*,*,5] (tr)
+:         1              2              3              4              5      :=
+2    -9.99999e-09     .              .              .              .
+3      .            -9.99999e-09     .              .              .
+4      .              .            -9.99991e-09     .              .
+5      .              .              .            -9.99991e-09     .
+6      .              .              .              .            -9.99989e-09
+19     .              .            -9.99918e-09     .              .
+20     .              .            -9.99992e-09     .              .
+
+:         6              7              8           9           10         :=
+7    -9.99982e-09     .              .               .        .
+8      .            -9.99955e-09     .               .        .
+9      .              .            -9.99902e-09      .        .
+10     .              .              .            303.02      .
+11     .              .              .               .     950
+14     .              .              .               .      -9.9996e-09
+
+:         11             12             14             15             16     :=
+12   -9.99634e-09     .              .              .              .
+13     .            -9.99916e-09     .              .              .
+15     .              .            -9.99973e-09     .              .
+16     .              .              .            -9.99979e-09     .
+27     .              .              .              .            -9.99979e-09
+
+:         17             18            19             20             21      :=
+16   -9.99978e-09     .              .             .              .
+17     .            -9.99962e-09     .             .              .
+18     .              .            -9.9992e-09     .              .
+21     .              .              .           -9.9996e-09      .
+22     .              .              .             .            -9.99975e-09
+23     .              .              .           -9.99969e-09     .
+
+:          23          24         25             26             27         :=
+24   1230              .       .              .              .
+25       .            1300     .            -9.99937e-09     .
+26       .             .       .              .            -9.99971e-09
+28     -9.99967e-09    .       .              .              .
+32       .             .     -9.99925e-09     .              .
+
+:         28             29             30            32         :=
+29   -9.99972e-09     .              .              .
+30     .            -9.99979e-09     .              .
+31     .              .            -9.99972e-09   -9.9997e-09
+
+ [*,*,6] (tr)
+:     1     2           3           4      5      6     7     8      9       :=
+2    100    .         .             .      .      .     .     .       .
+3     .    1350       .             .      .      .     .     .       .
+4     .     .      900              .      .      .     .     .       .
+5     .     .         .            1150    .      .     .     .       .
+6     .     .         .             .     1450    .     .     .       .
+7     .     .         .             .      .     450    .     .       .
+8     .     .         .             .      .      .    850    .       .
+9     .     .         .             .      .      .     .    850      .
+10    .     .         .             .      .      .     .     .    496.98
+19    .     .       -9.99978e-09    .      .      .     .     .       .
+20    .     .     2200              .      .      .     .     .       .
+
+:         10             11             12             14             15     :=
+11   -9.9996e-09      .              .              .              .
+12     .            -9.99968e-09     .              .              .
+13     .              .            -9.99977e-09     .              .
+14   -9.99983e-09     .              .              .              .
+15     .              .              .            -9.99986e-09     .
+16     .              .              .              .            -9.99988e-09
+
+:         16             17             18             19              20    :=
+16     .            -9.99988e-09     .              .                .
+17     .              .            -9.99984e-09     .                .
+18     .              .              .            -9.99978e-09       .
+21     .              .              .              .              -9.99983e-09
+23     .              .              .              .            2650
+27   -9.99988e-09     .              .              .                .
+
+:         21             23            24             25            26       :=
+22   -9.99987e-09     .              .             .              .
+24     .            -9.99901e-09     .             .              .
+25     .              .            -9.9995e-09     .            -9.9998e-09
+28     .            -9.99985e-09     .             .              .
+32     .              .              .           -9.99978e-09     .
+
+:         27             28             29             30             32     :=
+26   -9.99986e-09     .              .              .              .
+29     .            -9.99986e-09     .              .              .
+30     .              .            -9.99988e-09     .              .
+31     .              .              .            -9.99986e-09   -9.99985e-09
+;
+
+q [*,*] (tr)
+:       1         2         3          4         5         6         7       :=
+2    5538.87       .         .          .         .         .         .
+3        .     5291.64       .          .         .         .         .
+4        .         .     2173.75        .         .         .         .
+5        .         .         .      2137.64       .         .         .
+6        .         .         .          .     1936.25       .         .
+7        .         .         .          .         .     1657.09       .
+8        .         .         .          .         .         .     1282.09
+19       .         .      681.889       .         .         .         .
+20       .         .     2199.89        .         .         .         .
+
+:       8         9        10        11       12       14        15       :=
+9    1129.31      .         .         .        .        .        .
+10       .     983.475      .         .        .        .        .
+11       .        .      555.54       .        .        .        .
+12       .        .         .      416.66      .        .        .
+13       .        .         .         .     261.11      .        .
+14       .        .      282.102      .        .        .        .
+15       .        .         .         .        .     111.269     .
+16       .        .         .         .        .        .      33.4924
+
+:       16        17        18        19         20        21        23      :=
+16     .        51.3348      .         .          .         .         .
+17     .          .       291.612      .          .         .         .
+18     .          .          .      665.223       .         .         .
+21     .          .          .         .       393.055      .         .
+22     .          .          .         .          .      134.722      .
+23     .          .          .         .      1452.67       .         .
+24     .          .          .         .          .         .      954.998
+27   -1.28383     .          .         .          .         .         .
+28     .          .          .         .          .         .      207.395
+
+:      24        25         26         27        28       29         30      :=
+25   727.221      .      -354.061       .         .       .          .
+26      .         .          .      -104.061      .       .          .
+29      .         .          .          .      126.84     .          .
+30      .         .          .          .         .     26.8396      .
+31      .         .          .          .         .       .       -73.1604
+32      .      325.938       .          .         .       .          .
+
+:      32       :=
+31   102.327
+;
+
+h [*] :=
+ 1 100         8  42.496    15  30.4315   22  30        29  30.8329
+ 2  97.1372    9  41.216    16  30        23  43.8717   30  30
+ 3  61.6232   10  39.2029   17  34.7232   24  38.3599   31  30.1232
+ 4  57.0657   11  37.642    18  53.3356   25  34.8428   32  31.4383
+ 5  51.42     12  34.2112   19  58.7756   26  30.4746
+ 6  45.4935   13  30        20  50.2332   27  30.0014
+ 7  44.115    14  34.056    21  35.1652   28  35.3849
+;
+
+total_cost: 6064901.0668332
