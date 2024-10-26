@@ -22,21 +22,22 @@ ampl = AMPL()
 ampl.reset()
 # ampl.read("non_convex_multiple1.mod")
 ampl.read(sys.argv[1])
-ampl.read_data(sys.argv[2])
+ampl.read_data(sys.argv[3])
 # ampl.read_data(f"/home/nitishdumoliya/minotaur/examples/water-network/Data/{data}")
 
 # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build-d/bin/mqg"
 # ampl.set_option("mqg_options","--presolve 1,--log_level 6, --nlp_engine IPOPT, --eval_within_bnds 1")
-# ampl.option["solver"]= "baron"
-ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
+ampl.option["solver"]= sys.argv[2]
+# ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
 ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1"
 # ampl.option["presolve_eps"] = "1.09e-12"
 
 # ampl.option["solver"] = "knitro"
 # ampl.option["solver"] = "/home/nitishdumoliya/dist/bin/ipopt"
 ampl.option["ipopt_options"] = "print_level 3"
-ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 lsolver=conopt barstats  objbound  prloc =0 prtime = 100"
-ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 12 "
+ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 "
+ampl.option["baron_options"]= "maxtime = 3600  outlev = 1"
+ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
 ampl.option["presolve"] = "1"
 # ampl.option["presolve_eps"] = "1.09e-12"
 ampl.solve()
@@ -94,6 +95,7 @@ ampl.solve()
 
 ampl.eval("display l;")
 ampl.eval("display q;")
+# ampl.eval("display {(i,j) in arcs}: q1[i,j]+q2[i,j];")
 ampl.eval("display h;")
 # ampl.eval("display total_cost;")
 total_cost = ampl.getObjective("total_cost").value()
