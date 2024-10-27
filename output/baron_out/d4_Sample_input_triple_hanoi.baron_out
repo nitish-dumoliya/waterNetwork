@@ -1,10 +1,6 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver=conopt
-barstats  
-objbound  
-prloc =0
-prtime = 100
+lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -38,7 +34,7 @@ Surprise errno 4 ==> Interrupted system call
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             1             5.97     0.544054E+07     0.183973E+08             
+          1             1             5.96     0.544054E+07     0.183973E+08             
 
 /opt/ampl/conopt: bad bound triple 140 in bounds file "boundsfile.11":
 	L = 0
@@ -59,6 +55,8 @@ objective _sobj[1]: Initial function value too large = 3.1E+11
 	U = 850
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 3.1E+11
+         10             6            67.64     0.544054E+07     0.183973E+08             
+         10             6           103.51     0.544054E+07     0.183973E+08             
 
 /opt/ampl/conopt: bad bound triple 122 in bounds file "boundsfile.17":
 	L = 0
@@ -66,7 +64,6 @@ objective _sobj[1]: Initial function value too large = 3.1E+11
 	U = 300
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 3.1E+11
-         14             8           106.31     0.544054E+07     0.183973E+08             
 
 /opt/ampl/conopt: bad bound triple 14 in bounds file "boundsfile.19":
 	L = 0
@@ -103,6 +100,7 @@ Surprise errno 4 ==> Interrupted system call
 	x = 24141896133.22662
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+         38            14           133.63     0.544054E+07     0.183973E+08             
 
 /opt/ampl/conopt: bad bound triple 14 in bounds file "boundsfile.25":
 	L = 0
@@ -115,9 +113,9 @@ Surprise errno 4 ==> Interrupted system call
 	x = 24141896131.827805
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-         62            23           930.84     0.544054E+07     0.183973E+08             
-         63            23          1340.07     0.544054E+07     0.183973E+08             
-         65            24          2023.78     0.544054E+07     0.183973E+08             
+         62            23          1211.96     0.544054E+07     0.183973E+08             
+         63            23          1820.28     0.544054E+07     0.183973E+08             
+         65            24          2834.30     0.544054E+07     0.183973E+08             
 
 /opt/ampl/conopt: bad bound triple 14 in bounds file "boundsfile.27":
 	L = 0
@@ -130,30 +128,21 @@ Surprise errno 4 ==> Interrupted system call
 	x = 24141896129.6959
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-         80            27          2668.71     0.544054E+07     0.183973E+08             
-        102            30          3601.15     0.544054E+07     0.183973E+08             
+         79            26          3601.79     0.544054E+07     0.183973E+08             
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3601.63
- Total CPU time used:              3601.15
+ Wall clock time:                  4633.30
+ Total CPU time used:              3601.79
 
- Total no. of BaR iterations:     102
+ Total no. of BaR iterations:      79
  Best solution found at node:      -1
- Max. no. of nodes in memory:      30
+ Max. no. of nodes in memory:      28
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 102 iterations, CPU time limit reached.
+BARON 24.5.8 (2024.05.08): 79 iterations, CPU time limit reached.
 Objective 18397339.21
-Objective lower bound = 5440540.1026843665, upper bound = 18397339.21333495
-barstatus = 4, modelstatus = 4
-max nodes in memory = 30
-optimum found at node -1
-Baron run time (excluding setup) = 3601.14 seconds
-
-suffix obj_ub OUT;
-suffix obj_lb OUT;
 l [*,*,1] (tr)
 :    1   2   3   4   5   6   7   8   9  10  11  12   14    15    16     17   18 :=
 2    0   .   .   .   .   .   .   .   .   .   .   .    .     .     .     .     .

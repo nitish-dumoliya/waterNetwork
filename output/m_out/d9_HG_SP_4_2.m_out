@@ -1,9 +1,9 @@
 Environment: User provided options:
-  problem_file = /tmp/at493590
+  problem_file = /tmp/at712633
   ampl = 1
 Environment: End of user provided options.
 
-MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-84-gfb5cee3
+MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-103-ga3bd53de
 MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
 Environment: User provided options:
   presolve = 1
@@ -11,53 +11,54 @@ Environment: User provided options:
   eval_within_bnds = 1
 Environment: End of user provided options.
 
+AMPLInterface: reading file /tmp/at712633
 AMPLInterface: problem type is NLP
 Solver: time used in reading instance = 0.01
------------------------------------------------------
-|                 Problem Size                      |
-|---------------------------------------------------|
-| # variables                               2704    |
-| # binary variables                           0    |
-| # general integer variables                  0    |
-| # continuous variables                    2704    |
-| # fixed variables                            0    |
-| # constraints                              516    |
-| # linear constraints                       342    |
-| # SOS1 constraints                           0    |
-| # SOS2 constraints                           0    |
-| # quadratic constraints                      0    |
-| # nonlinear constraints                    174    |
-| # constraints with linear terms            516    |
-| # constraints with bilinear terms            0    |
-| # constraints with quadratic terms           0    |
-| # linear terms in constraints             3403    |
-| # bilinear terms in constraints              0    |
-| # square terms in constraints                0    |
-| # quadratic terms in constraints             0    |
-| # objectives                                 1    |
-| # linear terms in objective               2388    |
-| # quadratic terms in objective               0    |
-| Type of objective:                      linear    |
------------------------------------------------------
+---------------------------------------------------
+|Model Statistics                                 |
+|-------------------------------------------------|
+| # variables                                2704 |
+| # binary variables                            0 |
+| # general integer variables                   0 |
+| # continuous variables                     2704 |
+| # fixed variables                             0 |
+| # constraints                               516 |
+| # linear constraints                        342 |
+| # SOS1 constraints                            0 |
+| # SOS2 constraints                            0 |
+| # quadratic constraints                       0 |
+| # nonlinear constraints                     174 |
+| # constraints with linear terms             516 |
+| # constraints with bilinear terms             0 |
+| # constraints with quadratic terms            0 |
+| # linear terms in constraints              3403 |
+| # bilinear terms in constraints               0 |
+| # square terms in constraints                 0 |
+| # quadratic terms in constraints              0 |
+| # objectives                                  1 |
+| # linear terms in objective                2388 |
+| # quadratic terms in objective                0 |
+| Type of objective:                       linear |
+---------------------------------------------------
 MultiStart: Starting constraint classification
---------------------------------------------
-|            Constraints Size              |
-|------------------------------------------|
-|Aggregation constraint       |     39     |
-|Precedence constraint        |      0     |
-|Variable Bound constraint    |      0     |
-|Partitioning constraint      |      0     |
-|Set Packing constraint       |      0     |
-|Set Covering constraint      |      0     |
-|Cardinality constraint       |      0     |
-|Invariant Knapsack constraint|      0     |
-|Equation Knapsack constraint |      0     |
-|Bin Packing constraint       |      0     |
-|Knapsack constraint          |      0     |
-|Integer Knapsack constraint  |      0     |
-|Mixed Binary constraint      |      0     |
-|No specific structure        |    303     |
---------------------------------------------
+-----------------------------------------
+|Constraint Statistics                  |
+|---------------------------------------|
+|Aggregation constraint       |      39 |
+|Precedence constraint        |       0 |
+|Variable Bound constraint    |       0 |
+|Partitioning constraint      |       0 |
+|Set Packing constraint       |       0 |
+|Set Covering constraint      |       0 |
+|Cardinality constraint       |       0 |
+|Invariant Knapsack constraint|       0 |
+|Equation Knapsack constraint |       0 |
+|Bin Packing constraint       |       0 |
+|Knapsack constraint          |       0 |
+|Integer Knapsack constraint  |       0 |
+|Mixed Binary constraint      |       0 |
+|No specific structure        |     303 |
+-----------------------------------------
 MultiStart: Finished constraint classification
 MultiStart: objective sense: minimize
 MultiStart: handlers used in presolve:
@@ -91,6 +92,50 @@ NlPresHandler: Times constraints tightened    = 0
 NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
+---------------------------------------------------
+|Model Statistics                                 |
+|-------------------------------------------------|
+| # variables                                2704 |
+| # binary variables                            0 |
+| # general integer variables                   0 |
+| # continuous variables                     2704 |
+| # fixed variables                             0 |
+| # constraints                               516 |
+| # linear constraints                        342 |
+| # SOS1 constraints                            0 |
+| # SOS2 constraints                            0 |
+| # quadratic constraints                       0 |
+| # nonlinear constraints                     174 |
+| # constraints with linear terms             516 |
+| # constraints with bilinear terms             0 |
+| # constraints with quadratic terms            0 |
+| # linear terms in constraints              3403 |
+| # bilinear terms in constraints               0 |
+| # square terms in constraints                 0 |
+| # quadratic terms in constraints              0 |
+| # objectives                                  1 |
+| # linear terms in objective                2388 |
+| # quadratic terms in objective                0 |
+| Type of objective:                       linear |
+---------------------------------------------------
+-----------------------------------------
+|Constraint Statistics                  |
+|---------------------------------------|
+|Aggregation constraint       |      39 |
+|Precedence constraint        |       0 |
+|Variable Bound constraint    |       0 |
+|Partitioning constraint      |       0 |
+|Set Packing constraint       |       0 |
+|Set Covering constraint      |       0 |
+|Cardinality constraint       |       0 |
+|Invariant Knapsack constraint|       0 |
+|Equation Knapsack constraint |       0 |
+|Bin Packing constraint       |       0 |
+|Knapsack constraint          |       0 |
+|Integer Knapsack constraint  |       0 |
+|Mixed Binary constraint      |       0 |
+|No specific structure        |     303 |
+-----------------------------------------
 LinearHandler: Statistics for presolve by Linear Handler:
 LinearHandler: Number of iterations           = 4
 LinearHandler: Time taken in initial presolve = 0.00
@@ -117,9 +162,14 @@ NlPresHandler: Times constraints tightened    = 0
 NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
-MultiStart: engine used = IPOPT
+MultiStart: engine used = ipopt
 MultiStart: brancher used = MaxVioBrancher
 BranchAndBound: starting branch-and-bound
+ 
+----------------------------------------------------------------------------------------------
+ Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
+----------------------------------------------------------------------------------------------
+     0         0             -inf          inf         inf              0             0      0
 
 ******************************************************************************
 This program contains Ipopt, a library for large-scale nonlinear optimization.
@@ -128,7 +178,7 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
 ******************************************************************************
 
 MsProcessor: engine hit iteration limit, continuing in node 0
-error running /home/nitishdumoliya/minotaur/build/bin/mmultistart:
+error running mmultistart:
 	termination code 11
 <BREAK>
 l [*,*,1]

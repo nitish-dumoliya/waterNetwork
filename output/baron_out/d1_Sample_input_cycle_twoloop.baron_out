@@ -1,10 +1,6 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver=conopt
-barstats  
-objbound  
-prloc =0
-prtime = 100
+lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -94,25 +90,29 @@ Surprise errno 4 ==> Interrupted system call
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 2.0E+11
+       6902           210            30.56      298356.          403607.                 
 
 /opt/ampl/conopt: bad bound triple 118 in bounds file "boundsfile.43":
 	L = 190
 	x = 189.99999999999997
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+      15113           519            60.55      322892.          403607.                 
 
 /opt/ampl/conopt: bad bound triple 45 in bounds file "boundsfile.45":
 	L = 0
 	x = 1000.0000000000001
 	U = 1000
 Surprise errno 4 ==> Interrupted system call
-      26048           574           100.74      343185.          403607.                 
+      24003           601            90.55      343175.          403607.                 
 
 /opt/ampl/conopt: bad bound triple 9 in bounds file "boundsfile.49":
 	L = 0
 	x = -1.1368683772161603e-13
 	U = 1000
 Surprise errno 4 ==> Interrupted system call
+      31989           697           120.54      343555.          403607.                 
+      41814           809           150.54      343800.          403607.                 
 
 /opt/ampl/conopt: bad bound triple 49 in bounds file "boundsfile.53":
 	L = 0
@@ -125,13 +125,15 @@ Surprise errno 4 ==> Interrupted system call
 	x = -1.1368683772161603e-13
 	U = 1000
 Surprise errno 4 ==> Interrupted system call
-      59235          1102           200.42      344057.          403607.                 
+      51637          1008           180.53      343981.          403607.                 
+      61378          1100           210.53      344088.          403607.                 
 
 /opt/ampl/conopt: bad bound triple 10 in bounds file "boundsfile.59":
 	L = 0
 	x = 1000.0000000000001
 	U = 1000
 Surprise errno 4 ==> Interrupted system call
+      68558          1050           240.53      344257.          403607.                 
 
 /opt/ampl/conopt: bad bound triple 21 in bounds file "boundsfile.61":
 	L = 0
@@ -144,13 +146,16 @@ Surprise errno 4 ==> Interrupted system call
 	x = 194.99999999999997
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-      87487+          969           300.41      344473.          403607.                 
-      89337             0           360.48      403607.          403607.                 
+      78101          1155           270.52      344378.          403607.                 
+      87351+         1032           300.52      344473.          403607.                 
+      88067+          679           330.52      344481.          403607.                 
+      88907+          246           360.53      344489.          403607.                 
+      89337             0           372.50      403607.          403607.                 
 
                          *** Normal completion ***            
 
- Wall clock time:                   360.92
- Total CPU time used:               360.48
+ Wall clock time:                   372.85
+ Total CPU time used:               372.50
 
  Total no. of BaR iterations:   89337
  Best solution found at node:       5
@@ -160,14 +165,6 @@ Surprise errno 4 ==> Interrupted system call
 ===========================================================================
 BARON 24.5.8 (2024.05.08): 89337 iterations, optimal within tolerances.
 Objective 403606.7689
-Objective lower bound = 403606.76890521834, upper bound = 403606.76890521834
-barstatus = 1, modelstatus = 1
-max nodes in memory = 1168
-optimum found at node 5
-Baron run time (excluding setup) = 360.48 seconds
-
-suffix obj_ub OUT;
-suffix obj_lb OUT;
 l [1,*,*] (tr)
 :     2      :=
 1       0
@@ -283,6 +280,16 @@ q :=
 ;
 
 h [*] :=
+1  210
+2  203.244
+3  190
+4  198.846
+5  180
+6  195
+7  190
+;
+
+total_cost: 403606.7689052183
 1  210
 2  203.244
 3  190

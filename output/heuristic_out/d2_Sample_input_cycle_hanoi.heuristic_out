@@ -1,0 +1,46 @@
+Water Network: d18_pescara 
+
+Objective:  6059621.984257775
+solve_result:  solved
+Generate the acyclic network using ipopt solution
+Acyclic network: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (10, 14), (11, 12), (12, 13), (14, 15), (15, 16), (16, 27), (17, 16), (18, 17), (19, 18), (20, 21), (20, 23), (21, 22), (23, 24), (23, 28), (24, 25), (25, 26), (25, 32), (26, 27), (28, 29), (30, 29), (31, 30), (32, 31)] 
+
+Objective:  6059621.984257777
+solve_result:  solved
+
+Presolve the model for fixing the arc direction
+Is node 1 in cycle? False
+Fix the arc (1, 2)
+Is node 2 in cycle? False
+Fix the arc (2, 3)
+Is node 3 in cycle? True
+Fix the arc (3, 4)
+Fix the arc (3, 19)
+Fix the arc (3, 20)
+fixed arc direction: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20)] 
+
+Iteration : 1
+Acyclic network arcs direction:  [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (10, 14), (11, 12), (12, 13), (14, 15), (15, 16), (16, 27), (17, 16), (18, 17), (19, 18), (20, 21), (20, 23), (21, 22), (23, 24), (23, 28), (24, 25), (25, 26), (25, 32), (26, 27), (28, 29), (30, 29), (31, 30), (32, 31)]
+Fixed arc set: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20)]
+Node: 16 in_degree: 2
+Arc (15, 16) Acyclic: True Best optimal:  6059621.984257777 New optimal:  6065031.929487657 solve_result:  solved Improved: No
+Arc (17, 16) Acyclic: True Best optimal:  6059621.984257777 New optimal:  6073222.579271531 solve_result:  solved Improved: No
+ 
+Node: 27 in_degree: 2
+Arc (16, 27) Acyclic: True Best optimal:  6059621.984257777 New optimal:  6064525.183202549 solve_result:  solved Improved: No
+Arc (26, 27) Acyclic: True Best optimal:  6059621.984257777 New optimal:  6112078.623179118 solve_result:  solved Improved: No
+ 
+Node: 29 in_degree: 2
+Arc (28, 29) Acyclic: True Best optimal:  6059621.984257777 New optimal:  6341990.745617217 solve_result:  solved Improved: No
+Arc (30, 29) Acyclic: True Best optimal:  6059621.984257777 New optimal:  6065211.36307888 solve_result:  solved Improved: No
+ 
+*********************************************************Final best results***************************************************************
+Final best objective: 6059621.984257777
+6059621.98425783
+6059621.984257767
+6062283.43566342
+6062283.435663452
+6059621.9842578415
+Final best solution after multistart: 6059621.984257767
+Solver_time: 5.357004
+Heuristic elapsed time: 5.495452642440796

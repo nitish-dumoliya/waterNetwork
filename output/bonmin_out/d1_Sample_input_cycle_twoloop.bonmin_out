@@ -1,0 +1,156 @@
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 5
+bonmin.nlp_log_level 1
+bonmin.num_resolve_at_root 10
+
+Cbc3007W No integer variables - nothing to do
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1         OPT 425821.77       59 0.098482
+NLP0014I *           1         OPT 417364.45      155 0.195457         resolve cost
+NLP0014I *           2         OPT 403604.94      185 0.346784         resolve cost
+NLP0014I             3         OPT 424175.56      139 0.188968         resolve cost
+NLP0014I             4         OPT 661238.82      139 0.215001         resolve cost
+NLP0014I             5         OPT 696827.16      147 0.234523         resolve cost
+NLP0014I             6         OPT 472014.87      115 0.154542         resolve cost
+NLP0014I             7         OPT 437457.45      259 0.488234         resolve cost
+NLP0014I             8         OPT 502475.72      120 0.184113         resolve cost
+NLP0014I             9         OPT 472014.87      144 0.2249         resolve cost
+NLP0014I            10         OPT 787185.43      155 0.232946         resolve cost
+Cbc3007W No integer variables - nothing to do
+
+ 	"Finished"
+
+bonmin: Optimal
+l [1,*,*] (tr)
+:     2      :=
+1       0
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8       0
+9       0
+10      0
+11   1000
+12      0
+13      0
+14      0
+
+ [2,*,*] (tr)
+:       3       4      :=
+1      0          0
+2      0          0
+3      0          0
+4      0          0
+5      0          0
+6      0          0
+7    793.078      0
+8    206.922      0
+9      0          0
+10     0       1000
+11     0          0
+12     0          0
+13     0          0
+14     0          0
+
+ [3,*,*] (tr)
+:       5        :=
+1      0
+2      0
+3      0
+4      0
+5      0
+6     97.8525
+7    902.147
+8      0
+9      0
+10     0
+11     0
+12     0
+13     0
+14     0
+
+ [4,*,*] (tr)
+:     5        6       :=
+1    1000     0
+2       0     0
+3       0     0
+4       0     0
+5       0     0
+6       0     0
+7       0     0
+8       0     0
+9       0   304.784
+10      0   695.216
+11      0     0
+12      0     0
+13      0     0
+14      0     0
+
+ [6,*,*] (tr)
+:       7        :=
+1      0
+2      0
+3      0
+4      0
+5      0
+6     10.6058
+7    989.394
+8      0
+9      0
+10     0
+11     0
+12     0
+13     0
+14     0
+
+ [7,*,*] (tr)
+:     5      :=
+1    1000
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8       0
+9       0
+10      0
+11      0
+12      0
+13      0
+14      0
+;
+
+q :=
+1 2   311.109
+2 3   102.314
+2 4   181.017
+3 5    74.5369
+4 5     0.270782
+4 6   147.413
+6 7    55.7473
+7 5     0.192315
+;
+
+h [*] :=
+1  210
+2  203.244
+3  190
+4  198.846
+5  180
+6  195
+7  190
+;
+
+total_cost: 403604.939654707

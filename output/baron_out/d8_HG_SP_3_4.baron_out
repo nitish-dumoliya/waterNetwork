@@ -1,10 +1,6 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver=conopt
-barstats  
-objbound  
-prloc =0
-prtime = 100
+lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -43,7 +39,7 @@ Surprise errno 4 ==> Interrupted system call
 	x = 57.55000000000001
 	U = 57.55
 Surprise errno 4 ==> Interrupted system call
-*         1             1             9.28      925509.         0.692035E+07             
+*         1             1             9.39      925509.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 2 in bounds file "boundsfile.10":
 	L = 0
@@ -56,7 +52,7 @@ Surprise errno 4 ==> Interrupted system call
 	x = 116.50000000000001
 	U = 116.5
 Surprise errno 4 ==> Interrupted system call
-          1             1            15.58      925958.         0.692035E+07             
+          1             1            15.71      925958.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 26 in bounds file "boundsfile.13":
 	L = 0
@@ -87,71 +83,58 @@ Surprise errno 4 ==> Interrupted system call
 	x = 116.50000000000001
 	U = 116.5
 Surprise errno 4 ==> Interrupted system call
+         52            25            45.54      986223.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 37 in bounds file "boundsfile.21":
 	L = 0
 	x = 57.550000000000004
 	U = 57.55
 Surprise errno 4 ==> Interrupted system call
+        105            25            80.46      986223.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 3 in bounds file "boundsfile.22":
 	L = 0
 	x = 116.50000000000004
 	U = 116.5
 Surprise errno 4 ==> Interrupted system call
+        211            57           110.45      986475.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 73 in bounds file "boundsfile.24":
 	L = 0
 	x = 27.200000000000003
 	U = 27.2
 Surprise errno 4 ==> Interrupted system call
-        237            66           115.66      986475.         0.692035E+07             
+        325           104           140.57      986839.         0.692035E+07             
+        438           133           170.70      987025.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 2 in bounds file "boundsfile.25":
 	L = 0
 	x = -4.136684588490656e-15
 	U = 116.5
 Surprise errno 4 ==> Interrupted system call
+        574           162           200.69      987285.         0.692035E+07             
 
 /opt/ampl/conopt: bad bound triple 94 in bounds file "boundsfile.27":
 	L = 0
 	x = 23.380000000000003
 	U = 23.38
 Surprise errno 4 ==> Interrupted system call
-        644           183           215.39      987285.         0.692035E+07             
-        686           186          2498.88      987285.         0.692035E+07             
-        687           186          3361.15      987285.         0.692035E+07             
-       1096           277          3461.39      987319.         0.692035E+07             
-
-/opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.28":
-	L = 0
-	x = 116.50000000000126
-	U = 116.5
-Surprise errno 4 ==> Interrupted system call
-       1438           364          3561.49      987377.         0.692035E+07             
-       1482           373          3600.06      987377.         0.692035E+07             
+        686           186          2886.62      987285.         0.692035E+07             
+        686           186          3601.29      987285.         0.692035E+07             
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3600.49
- Total CPU time used:              3600.06
+ Wall clock time:                  4626.02
+ Total CPU time used:              3601.29
 
- Total no. of BaR iterations:    1482
+ Total no. of BaR iterations:     686
  Best solution found at node:       1
- Max. no. of nodes in memory:     373
+ Max. no. of nodes in memory:     186
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 1482 iterations, CPU time limit reached.
+BARON 24.5.8 (2024.05.08): 686 iterations, CPU time limit reached.
 Objective 6920354.988
-Objective lower bound = 987377.1438664796, upper bound = 6920354.987906261
-barstatus = 4, modelstatus = 4
-max nodes in memory = 373
-optimum found at node 1
-Baron run time (excluding setup) = 3600.05 seconds
-
-suffix obj_ub OUT;
-suffix obj_lb OUT;
 l [*,*,1]
 :    2     3     4     5       7      11    12  13    14   16  17  18    19  :=
 3    0      .    .     .       .       .     .   .    .     .   .   .     .

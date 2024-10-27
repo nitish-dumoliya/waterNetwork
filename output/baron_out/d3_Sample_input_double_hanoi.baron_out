@@ -1,10 +1,6 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver=conopt
-barstats  
-objbound  
-prloc =0
-prtime = 100
+lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -36,9 +32,9 @@ Surprise errno 4 ==> Interrupted system call
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-*         1             1             1.43     0.359900E+07     0.120831E+08             
+*         1             1             1.45     0.359900E+07     0.120831E+08             
           1             1             2.20     0.359900E+07     0.120831E+08             
-*         2             2             3.00     0.359900E+07     0.120718E+08             
+*         2             2             2.97     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.7":
 	L = 0
@@ -112,19 +108,24 @@ objective _sobj[1]: Initial function value too large = 2.3E+10
 	x = 1150.0000000000002
 	U = 1150
 Surprise errno 4 ==> Interrupted system call
-        131            30           893.12     0.359900E+07     0.120718E+08             
+        131            30           996.05     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.33":
 	L = 0
 	x = -6.4377058966512896e-15
 	U = 1350
 Surprise errno 4 ==> Interrupted system call
+        168            34          1000.77     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 73 in bounds file "boundsfile.35":
 	L = 0
 	x = 1750.0000000000002
 	U = 1750
 Surprise errno 4 ==> Interrupted system call
+        197            43          1005.45     0.359900E+07     0.120718E+08             
+        223            51          1010.12     0.359900E+07     0.120718E+08             
+        241            59          1014.82     0.359900E+07     0.120718E+08             
+        244            59          1058.31     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 31 in bounds file "boundsfile.37":
 	L = 0
@@ -132,18 +133,23 @@ Surprise errno 4 ==> Interrupted system call
 	U = 850
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 1.1E+11
+        288            65          1065.92     0.359900E+07     0.120718E+08             
+        345            85          1075.37     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 4 in bounds file "boundsfile.39":
 	L = 0
 	x = -3.671484368617934e-15
 	U = 1350
 Surprise errno 4 ==> Interrupted system call
+        384            93          1085.18     0.359900E+07     0.120718E+08             
+        429           107          1095.63     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 6 in bounds file "boundsfile.41":
 	L = 0
 	x = 1350.0000000000002
 	U = 1350
 Surprise errno 4 ==> Interrupted system call
+        503           127          1110.59     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 73 in bounds file "boundsfile.43":
 	L = 0
@@ -151,44 +157,40 @@ Surprise errno 4 ==> Interrupted system call
 	U = 1750
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 2.2E+11
-        798           175          2003.80     0.359900E+07     0.120718E+08             
-        804           178          2555.95     0.359900E+07     0.120718E+08             
+        749           169          1138.26     0.359900E+07     0.120718E+08             
+        798           175          2271.90     0.359900E+07     0.120718E+08             
+        804           178          2905.38     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 56 in bounds file "boundsfile.45":
 	L = 0
 	x = 500.00000000000017
 	U = 500
 Surprise errno 4 ==> Interrupted system call
+       1052           221          2935.41     0.359900E+07     0.120718E+08             
+       1320           276          2965.41     0.359900E+07     0.120718E+08             
 
 /opt/ampl/conopt: bad bound triple 8 in bounds file "boundsfile.47":
 	L = 0
 	x = -1.7881937526869827e-13
 	U = 900
 Surprise errno 4 ==> Interrupted system call
-       1764           340          3156.22     0.359900E+07     0.120718E+08             
-       1827           353          3601.10     0.359900E+07     0.120718E+08             
+       1640           314          2995.43     0.359900E+07     0.120718E+08             
+       1764           340          3591.95     0.359900E+07     0.120718E+08             
+       1794           344          3600.01     0.359900E+07     0.120718E+08             
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3601.55
- Total CPU time used:              3601.10
+ Wall clock time:                  4624.21
+ Total CPU time used:              3600.01
 
- Total no. of BaR iterations:    1827
+ Total no. of BaR iterations:    1794
  Best solution found at node:       2
- Max. no. of nodes in memory:     354
+ Max. no. of nodes in memory:     346
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 1827 iterations, CPU time limit reached.
+BARON 24.5.8 (2024.05.08): 1794 iterations, CPU time limit reached.
 Objective 12071816.86
-Objective lower bound = 3598999.1999243894, upper bound = 12071816.855727848
-barstatus = 4, modelstatus = 4
-max nodes in memory = 354
-optimum found at node 2
-Baron run time (excluding setup) = 3601.09 seconds
-
-suffix obj_ub OUT;
-suffix obj_lb OUT;
 l [*,*,1] (tr)
 :    1   2   3   4   5   6   7   8   9  10  11  12      14       15    16    :=
 2    0   .   .   .   .   .   .   .   .   .   .   .    .           .     .

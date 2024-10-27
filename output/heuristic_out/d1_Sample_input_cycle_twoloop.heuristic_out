@@ -1,0 +1,55 @@
+Water Network: d18_pescara 
+
+Objective:  424175.56005609053
+solve_result:  solved
+Generate the acyclic network using ipopt solution
+Acyclic network: [(1, 2), (2, 4), (2, 3), (3, 5), (4, 5), (4, 6), (6, 7), (7, 5)] 
+
+Objective:  424175.56009344297
+solve_result:  solved
+
+Presolve the model for fixing the arc direction
+Is node 1 in cycle? False
+Fix the arc (1, 2)
+Is node 2 in cycle? True
+Fix the arc (2, 4)
+Fix the arc (2, 3)
+fixed arc direction: [(1, 2), (2, 4), (2, 3)] 
+
+Iteration : 1
+Acyclic network arcs direction:  [(1, 2), (2, 4), (2, 3), (3, 5), (4, 5), (4, 6), (6, 7), (7, 5)]
+Fixed arc set: [(1, 2), (2, 4), (2, 3)]
+Node: 5 in_degree: 3
+Arc (3, 5) Acyclic: True Best optimal:  424175.56009344297 New optimal:  429525.95631172205 solve_result:  solved Improved: No
+Arc (4, 5) Acyclic: False
+Arc (7, 5) Acyclic: True Best optimal:  424175.56009344297 New optimal:  421702.6547646026 Solve_result:  solved Improved: Yes
+ 
+Iteration : 2
+Acyclic network arcs direction:  [(1, 2), (2, 4), (2, 3), (3, 5), (4, 6), (4, 5), (5, 7), (6, 7)]
+Fixed arc set: [(1, 2), (2, 4), (2, 3)]
+Node: 5 in_degree: 2
+Arc (3, 5) Acyclic: True Best optimal:  421702.6547646026 New optimal:  474284.211010525 solve_result:  solved Improved: No
+Arc (4, 5) Acyclic: True Best optimal:  421702.6547646026 New optimal:  455820.5529110834 solve_result:  solved Improved: No
+ 
+Node: 7 in_degree: 2
+Arc (5, 7) Acyclic: True Best optimal:  421702.6547646026 New optimal:  408817.95690932235 Solve_result:  solved Improved: Yes
+Arc (6, 7) Acyclic: True Best optimal:  408817.95690932235 New optimal:  468421.46471693076 solve_result:  solved Improved: No
+ 
+Iteration : 3
+Acyclic network arcs direction:  [(1, 2), (2, 4), (2, 3), (3, 5), (4, 6), (4, 5), (6, 7), (7, 5)]
+Fixed arc set: [(1, 2), (2, 4), (2, 3)]
+Node: 5 in_degree: 3
+Arc (3, 5) Acyclic: True Best optimal:  408817.95690932235 New optimal:  429525.95631172205 solve_result:  solved Improved: No
+Arc (4, 5) Acyclic: False
+Arc (7, 5) Acyclic: True Best optimal:  408817.95690932235 New optimal:  421702.6547646026 solve_result:  solved Improved: No
+ 
+*********************************************************Final best results***************************************************************
+Final best objective: 408817.95690932235
+403604.9395750989
+424175.5600924527
+424175.5590195949
+424175.56009142054
+424175.5600790956
+Final best solution after multistart: 403604.9395750989
+Solver_time: 2.558987000000001
+Heuristic elapsed time: 2.6470565795898438

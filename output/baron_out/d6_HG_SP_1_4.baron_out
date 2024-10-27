@@ -1,10 +1,6 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver=conopt
-barstats  
-objbound  
-prloc =0
-prtime = 100
+lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -50,7 +46,7 @@ variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value
 	U = 86.33
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-          1             1            11.43      786997.         0.355429E+07             
+          1             1            11.29      786997.         0.355429E+07             
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
 /opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.11":
@@ -75,7 +71,9 @@ variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value
 	U = 20.26
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+         45            21            41.19      786997.         0.355429E+07             
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+        114            24            71.24      786997.         0.355429E+07             
 
 /opt/ampl/conopt: bad bound triple 13 in bounds file "boundsfile.20":
 	L = 0
@@ -83,9 +81,12 @@ variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value
 	U = 63.9
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-        153            26           129.31      786997.         0.355429E+07             
+        153            26           131.21      786997.         0.355429E+07             
+        209            27           161.34      786997.         0.355429E+07             
+        273            27           191.41      786997.         0.355429E+07             
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-        345            25           229.03      786997.         0.355429E+07             
+        329            27           221.51      786997.         0.355429E+07             
+        393            27           251.76      786997.         0.355429E+07             
 
 /opt/ampl/conopt: bad bound triple 158 in bounds file "boundsfile.23":
 	L = 0
@@ -93,15 +94,20 @@ variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value
 	U = 67.27
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-        538            29           330.07      786997.         0.355429E+07             
-        572            30          2492.56      786997.         0.355429E+07             
-        721            28          2592.94      786997.         0.355429E+07             
-        746            29          3601.09      786997.         0.355429E+07             
+        453            29           282.20      786997.         0.355429E+07             
+        505            27           312.49      786997.         0.355429E+07             
+        546            29           342.59      786997.         0.355429E+07             
+        572            30          2863.16      786997.         0.355429E+07             
+        617            30          2893.58      786997.         0.355429E+07             
+        647            28          2923.78      786997.         0.355429E+07             
+        683            27          2954.15      786997.         0.355429E+07             
+        725            29          2984.37      786997.         0.355429E+07             
+        746            29          3600.71      786997.         0.355429E+07             
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3601.51
- Total CPU time used:              3601.09
+ Wall clock time:                  4625.05
+ Total CPU time used:              3600.71
 
  Total no. of BaR iterations:     746
  Best solution found at node:      -1
@@ -111,14 +117,6 @@ variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value
 ===========================================================================
 BARON 24.5.8 (2024.05.08): 746 iterations, CPU time limit reached.
 Objective 3554292.618
-Objective lower bound = 786996.7799999999, upper bound = 3554292.61774325
-barstatus = 4, modelstatus = 4
-max nodes in memory = 32
-optimum found at node -1
-Baron run time (excluding setup) = 3601.09 seconds
-
-suffix obj_ub OUT;
-suffix obj_lb OUT;
 l [*,*,1]
 :      1     3     4       5       7      8    11     12      14      15     :=
 2     .      .     .      .       86.33   .     .      .     100.5    .

@@ -1,9 +1,9 @@
 Environment: User provided options:
-  problem_file = /tmp/at494684
+  problem_file = /tmp/at713811
   ampl = 1
 Environment: End of user provided options.
 
-MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-84-gfb5cee3
+MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-103-ga3bd53de
 MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
 Environment: User provided options:
   presolve = 1
@@ -11,53 +11,54 @@ Environment: User provided options:
   eval_within_bnds = 1
 Environment: End of user provided options.
 
+AMPLInterface: reading file /tmp/at713811
 AMPLInterface: problem type is NLP
-Solver: time used in reading instance = 0.02
------------------------------------------------------
-|                 Problem Size                      |
-|---------------------------------------------------|
-| # variables                               4702    |
-| # binary variables                           0    |
-| # general integer variables                  0    |
-| # continuous variables                    4702    |
-| # fixed variables                            0    |
-| # constraints                              902    |
-| # linear constraints                       589    |
-| # SOS1 constraints                           0    |
-| # SOS2 constraints                           0    |
-| # quadratic constraints                      0    |
-| # nonlinear constraints                    313    |
-| # constraints with linear terms            902    |
-| # constraints with bilinear terms            0    |
-| # constraints with quadratic terms           0    |
-| # linear terms in constraints             5377    |
-| # bilinear terms in constraints              0    |
-| # square terms in constraints                0    |
-| # quadratic terms in constraints             0    |
-| # objectives                                 1    |
-| # linear terms in objective               4121    |
-| # quadratic terms in objective               0    |
-| Type of objective:                      linear    |
------------------------------------------------------
+Solver: time used in reading instance = 0.01
+---------------------------------------------------
+|Model Statistics                                 |
+|-------------------------------------------------|
+| # variables                                4702 |
+| # binary variables                            0 |
+| # general integer variables                   0 |
+| # continuous variables                     4702 |
+| # fixed variables                             0 |
+| # constraints                               902 |
+| # linear constraints                        589 |
+| # SOS1 constraints                            0 |
+| # SOS2 constraints                            0 |
+| # quadratic constraints                       0 |
+| # nonlinear constraints                     313 |
+| # constraints with linear terms             902 |
+| # constraints with bilinear terms             0 |
+| # constraints with quadratic terms            0 |
+| # linear terms in constraints              5377 |
+| # bilinear terms in constraints               0 |
+| # square terms in constraints                 0 |
+| # quadratic terms in constraints              0 |
+| # objectives                                  1 |
+| # linear terms in objective                4121 |
+| # quadratic terms in objective                0 |
+| Type of objective:                       linear |
+---------------------------------------------------
 MultiStart: Starting constraint classification
---------------------------------------------
-|            Constraints Size              |
-|------------------------------------------|
-|Aggregation constraint       |    198     |
-|Precedence constraint        |      0     |
-|Variable Bound constraint    |      0     |
-|Partitioning constraint      |      0     |
-|Set Packing constraint       |      0     |
-|Set Covering constraint      |      0     |
-|Cardinality constraint       |      0     |
-|Invariant Knapsack constraint|      0     |
-|Equation Knapsack constraint |      0     |
-|Bin Packing constraint       |      0     |
-|Knapsack constraint          |      0     |
-|Integer Knapsack constraint  |      0     |
-|Mixed Binary constraint      |      0     |
-|No specific structure        |    391     |
---------------------------------------------
+-----------------------------------------
+|Constraint Statistics                  |
+|---------------------------------------|
+|Aggregation constraint       |     198 |
+|Precedence constraint        |       0 |
+|Variable Bound constraint    |       0 |
+|Partitioning constraint      |       0 |
+|Set Packing constraint       |       0 |
+|Set Covering constraint      |       0 |
+|Cardinality constraint       |       0 |
+|Invariant Knapsack constraint|       0 |
+|Equation Knapsack constraint |       0 |
+|Bin Packing constraint       |       0 |
+|Knapsack constraint          |       0 |
+|Integer Knapsack constraint  |       0 |
+|Mixed Binary constraint      |       0 |
+|No specific structure        |     391 |
+-----------------------------------------
 MultiStart: Finished constraint classification
 MultiStart: objective sense: minimize
 MultiStart: handlers used in presolve:
@@ -91,6 +92,50 @@ NlPresHandler: Times constraints tightened    = 0
 NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
+---------------------------------------------------
+|Model Statistics                                 |
+|-------------------------------------------------|
+| # variables                                4702 |
+| # binary variables                            0 |
+| # general integer variables                   0 |
+| # continuous variables                     4702 |
+| # fixed variables                             0 |
+| # constraints                               902 |
+| # linear constraints                        589 |
+| # SOS1 constraints                            0 |
+| # SOS2 constraints                            0 |
+| # quadratic constraints                       0 |
+| # nonlinear constraints                     313 |
+| # constraints with linear terms             902 |
+| # constraints with bilinear terms             0 |
+| # constraints with quadratic terms            0 |
+| # linear terms in constraints              5377 |
+| # bilinear terms in constraints               0 |
+| # square terms in constraints                 0 |
+| # quadratic terms in constraints              0 |
+| # objectives                                  1 |
+| # linear terms in objective                4121 |
+| # quadratic terms in objective                0 |
+| Type of objective:                       linear |
+---------------------------------------------------
+-----------------------------------------
+|Constraint Statistics                  |
+|---------------------------------------|
+|Aggregation constraint       |     198 |
+|Precedence constraint        |       0 |
+|Variable Bound constraint    |       0 |
+|Partitioning constraint      |       0 |
+|Set Packing constraint       |       0 |
+|Set Covering constraint      |       0 |
+|Cardinality constraint       |       0 |
+|Invariant Knapsack constraint|       0 |
+|Equation Knapsack constraint |       0 |
+|Bin Packing constraint       |       0 |
+|Knapsack constraint          |       0 |
+|Integer Knapsack constraint  |       0 |
+|Mixed Binary constraint      |       0 |
+|No specific structure        |     391 |
+-----------------------------------------
 LinearHandler: Statistics for presolve by Linear Handler:
 LinearHandler: Number of iterations           = 0
 LinearHandler: Time taken in initial presolve = 0.00

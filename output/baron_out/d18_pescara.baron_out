@@ -1,202 +1,40 @@
-Environment: User provided options:
-  problem_file = /tmp/at496457
-  ampl = 1
-Environment: End of user provided options.
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine saki
 
-MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-84-gfb5cee3
-MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
-Environment: User provided options:
-  presolve = 1
-  log_level = 3
-  eval_within_bnds = 1
-Environment: End of user provided options.
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
 
-AMPLInterface: problem type is NLP
-Solver: time used in reading instance = 0.00
------------------------------------------------------
-|                 Problem Size                      |
-|---------------------------------------------------|
-| # variables                               1447    |
-| # binary variables                           0    |
-| # general integer variables                  0    |
-| # continuous variables                    1447    |
-| # fixed variables                            0    |
-| # constraints                              262    |
-| # linear constraints                       170    |
-| # SOS1 constraints                           0    |
-| # SOS2 constraints                           0    |
-| # quadratic constraints                      0    |
-| # nonlinear constraints                     92    |
-| # constraints with linear terms            262    |
-| # constraints with bilinear terms            0    |
-| # constraints with quadratic terms           0    |
-| # linear terms in constraints             1685    |
-| # bilinear terms in constraints              0    |
-| # square terms in constraints                0    |
-| # quadratic terms in constraints             0    |
-| # objectives                                 1    |
-| # linear terms in objective               1287    |
-| # quadratic terms in objective               0    |
-| Type of objective:                      linear    |
------------------------------------------------------
-MultiStart: Starting constraint classification
---------------------------------------------
-|            Constraints Size              |
-|------------------------------------------|
-|Aggregation constraint       |     16     |
-|Precedence constraint        |      0     |
-|Variable Bound constraint    |      0     |
-|Partitioning constraint      |      0     |
-|Set Packing constraint       |      0     |
-|Set Covering constraint      |      0     |
-|Cardinality constraint       |      0     |
-|Invariant Knapsack constraint|      0     |
-|Equation Knapsack constraint |      0     |
-|Bin Packing constraint       |      0     |
-|Knapsack constraint          |      0     |
-|Integer Knapsack constraint  |      0     |
-|Mixed Binary constraint      |      0     |
-|No specific structure        |    154     |
---------------------------------------------
-MultiStart: Finished constraint classification
-MultiStart: objective sense: minimize
-MultiStart: handlers used in presolve:
-MultiStart: LinearHandler (Handling linear constraints)
-MultiStart: NlPresHandler (presolving nonlinear constraints).
-Presolver: Presolving ... 
-Presolver: Finished presolving.
-LinearHandler: Statistics for presolve by Linear Handler:
-LinearHandler: Number of iterations           = 3
-LinearHandler: Time taken in initial presolve = 0.00
-LinearHandler: Time taken in node presolves   = 0.00
-LinearHandler: Number of variables deleted    = 5
-LinearHandler: Number of constraints deleted  = 5
-LinearHandler: Number of vars set to binary   = 0
-LinearHandler: Number of vars set to integer  = 0
-LinearHandler: Times variables tightened      = 37
-LinearHandler: Times constraints tightened    = 0
-LinearHandler: Times coefficients improved    = 0
-LinearHandler: Times binary variable relaxed  = 0
-LinearHandler: Changes in nodes               = 0
-NlPresHandler: Statistics for presolve by NlPresHandler:
-NlPresHandler: Number of iterations           = 1
-NlPresHandler: Time taken in initial presolve = 0.00
-NlPresHandler: Time taken in node presolves   = 0.00
-NlPresHandler: Number of variables deleted    = 0
-NlPresHandler: Number of constraints deleted  = 0
-NlPresHandler: Number of constraints relaxed  = 0
-NlPresHandler: Number of perspective reform.  = 0
-NlPresHandler: Times variables tightened      = 0
-NlPresHandler: Times constraints tightened    = 0
-NlPresHandler: Times coefficients improved    = 0
-NlPresHandler: Times quad. changed to conic   = 0
-NlPresHandler: Changes in nodes               = 0
-Presolver: ERROR: code to modify debug sol after presolve not available
-LinearHandler: Statistics for presolve by Linear Handler:
-LinearHandler: Number of iterations           = 3
-LinearHandler: Time taken in initial presolve = 0.00
-LinearHandler: Time taken in node presolves   = 0.00
-LinearHandler: Number of variables deleted    = 5
-LinearHandler: Number of constraints deleted  = 5
-LinearHandler: Number of vars set to binary   = 0
-LinearHandler: Number of vars set to integer  = 0
-LinearHandler: Times variables tightened      = 37
-LinearHandler: Times constraints tightened    = 0
-LinearHandler: Times coefficients improved    = 0
-LinearHandler: Times binary variable relaxed  = 0
-LinearHandler: Changes in nodes               = 0
-NlPresHandler: Statistics for presolve by NlPresHandler:
-NlPresHandler: Number of iterations           = 1
-NlPresHandler: Time taken in initial presolve = 0.00
-NlPresHandler: Time taken in node presolves   = 0.00
-NlPresHandler: Number of variables deleted    = 0
-NlPresHandler: Number of constraints deleted  = 0
-NlPresHandler: Number of constraints relaxed  = 0
-NlPresHandler: Number of perspective reform.  = 0
-NlPresHandler: Times variables tightened      = 0
-NlPresHandler: Times constraints tightened    = 0
-NlPresHandler: Times coefficients improved    = 0
-NlPresHandler: Times quad. changed to conic   = 0
-NlPresHandler: Changes in nodes               = 0
-MultiStart: engine used = IPOPT
-MultiStart: brancher used = MaxVioBrancher
-BranchAndBound: starting branch-and-bound
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
 
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Problem is infeasible
 
+                         *** Normal completion ***            
+
+                       *** Problem is infeasible ***
+
+ Wall clock time:                     0.03
+ Total CPU time used:                 0.03
+
+ Total no. of BaR iterations:      -1
+ Best solution found at node:      -3
+ Max. no. of nodes in memory:       0
  
-----------------------------------------------------------------------------------------------
- Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
-----------------------------------------------------------------------------------------------
-     0         0             -inf          inf         inf              0             0      0
-    16        15              inf          inf         inf              1             0      0
-    16        15              inf          inf         inf              1             0      0
-----------------------------------------------------------------------------------------------
- 
-BranchAndBound: stopping branch-and-bound
-BranchAndBound: nodes processed = 1
-BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 15.69
-BranchAndBound: nodes processed = 1
-BranchAndBound: nodes created   = 1
-MsProcessor: nodes processed     = 1
-MsProcessor: nodes branched      = 0
-MsProcessor: nodes infeasible    = 1
-MsProcessor: nodes optimal       = 0
-MsProcessor: nodes hit ub        = 0
-MsProcessor: nodes with problems = 0
-MaxVio brancher: times called = 0
-MaxVio brancher: time in brancher = 0.00
-SolutionPool: Number of solutions found = 0
-SolutionPool: Time first solution found = -1.00
-SolutionPool: Time best solution found  = -1.00
-Ipopt: total calls            = 0
-Ipopt: calls to Optimize      = 0
-Ipopt: calls to ReOptimize    = 0
-Ipopt: strong branching calls = 0
-Ipopt: total time in solving  = 0.00
-Ipopt: total time in presolve = 0.00
-Ipopt: time in str branching  = 0.00
-Ipopt: total iterations       = 0
-Ipopt: strong br iterations   = 0
-LinearHandler: Statistics for presolve by Linear Handler:
-LinearHandler: Number of iterations           = 0
-LinearHandler: Time taken in initial presolve = 0.00
-LinearHandler: Time taken in node presolves   = 0.00
-LinearHandler: Number of variables deleted    = 0
-LinearHandler: Number of constraints deleted  = 0
-LinearHandler: Number of vars set to binary   = 0
-LinearHandler: Number of vars set to integer  = 0
-LinearHandler: Times variables tightened      = 0
-LinearHandler: Times constraints tightened    = 0
-LinearHandler: Times coefficients improved    = 0
-LinearHandler: Times binary variable relaxed  = 0
-LinearHandler: Changes in nodes               = 0
-NlPresHandler: Statistics for presolve by NlPresHandler:
-NlPresHandler: Number of iterations           = 0
-NlPresHandler: Time taken in initial presolve = 0.00
-NlPresHandler: Time taken in node presolves   = 0.00
-NlPresHandler: Number of variables deleted    = 0
-NlPresHandler: Number of constraints deleted  = 0
-NlPresHandler: Number of constraints relaxed  = 0
-NlPresHandler: Number of perspective reform.  = 0
-NlPresHandler: Times variables tightened      = 0
-NlPresHandler: Times constraints tightened    = 0
-NlPresHandler: Times coefficients improved    = 0
-NlPresHandler: Times quad. changed to conic   = 0
-NlPresHandler: Changes in nodes               = 0
- 
-MultiStart: best solution value = inf
-MultiStart: best bound estimate from remaining nodes = inf
-MultiStart: gap = 0.0000
-MultiStart: gap percentage = inf
-MultiStart: time used (s) = 15.70
-MultiStart: status of branch-and-bound: Detected infeasibility
-MultiStart: wall clock time used (s) = 15.32
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): infeasible
 l [*,*,1]
 :    1   2   4   5   6   7   8   9  11  12  13  14  17  18  19  20  21  22  23 :=
 1    .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
