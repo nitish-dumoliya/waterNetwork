@@ -256,45 +256,45 @@ class WaterNetworkOptimizer:
         print("Fixed arc set:",super_source_out_arc)
         BEST_ARC = []
         # BEST_ARC.append(best_arc)
-        for node in self.network_graph.nodes():
+        indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
+        for node in indegree_2_or_more:
             print("Node:", node,"in_degree:", self.network_graph.in_degree(node))
-            if self.network_graph.in_degree(node) >= 2:
-                for u,v in list(self.network_graph.in_edges(node)):
-                    if (u,v) not in super_source_out_arc and (u,v) not in BEST_ARC:
-                        self.network_graph.remove_edge(u,v)
-                        self.network_graph.add_edge(v,u)
-                        acy_check = nx.is_directed_acyclic_graph(self.network_graph)
-                        in_arc_check = self.check_incoming_arcs()
-                        if acy_check and in_arc_check:
-                            self.load_model()
-                            self.update_model()
-                            self.solve()
-                            if self.solve_result == "solved":
-                                if self.total_cost < current_cost:
-                                    print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", current_cost, "New optimal: ", self.total_cost, "Solve_result: ", self.solve_result, "Improved: Yes")
-                                    current_cost = self.total_cost
-                                    improved = True
-                                    best_acyclic_flow = self.network_graph.copy()
-                                    best_arc = (v,u)
-                                    l = self.ampl.getVariable('l').getValues().to_list()
-                                    q = self.ampl.getVariable('q').getValues().to_list()
-                                    h = self.ampl.getVariable('h').getValues().to_list()
-                                    self.network_graph.remove_edge(v, u)
-                                    self.network_graph.add_edge(u, v)  
-                                    # return best_acyclic_flow, improved, current_cost, l, q, h, best_arc
-                                else:
-                                    print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", current_cost, "New optimal: ", self.total_cost, "solve_result: ", self.solve_result, "Improved: No")
-                                    self.network_graph.remove_edge(v, u)
-                                    self.network_graph.add_edge(u, v)  
-                            else:
-                                print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check," Best optimal: ", current_cost, "New optimal: ", self.total_cost, "solve_result: ", self.solve_result)
+            for u,v in list(self.network_graph.in_edges(node)):
+                if (u,v) not in super_source_out_arc and (u,v) not in BEST_ARC:
+                    self.network_graph.remove_edge(u,v)
+                    self.network_graph.add_edge(v,u)
+                    acy_check = nx.is_directed_acyclic_graph(self.network_graph)
+                    in_arc_check = self.check_incoming_arcs()
+                    if acy_check and in_arc_check:
+                        self.load_model()
+                        self.update_model()
+                        self.solve()
+                        if self.solve_result == "solved":
+                            if self.total_cost < current_cost:
+                                print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", current_cost, "New optimal: ", self.total_cost, "Solve_result: ", self.solve_result, "Improved: Yes")
+                                current_cost = self.total_cost
+                                improved = True
+                                best_acyclic_flow = self.network_graph.copy()
+                                best_arc = (v,u)
+                                l = self.ampl.getVariable('l').getValues().to_list()
+                                q = self.ampl.getVariable('q').getValues().to_list()
+                                h = self.ampl.getVariable('h').getValues().to_list()
                                 self.network_graph.remove_edge(v, u)
-                                self.network_graph.add_edge(u, v)                         
+                                self.network_graph.add_edge(u, v)  
+                                # return best_acyclic_flow, improved, current_cost, l, q, h, best_arc
+                            else:
+                                print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", current_cost, "New optimal: ", self.total_cost, "solve_result: ", self.solve_result, "Improved: No")
+                                self.network_graph.remove_edge(v, u)
+                                self.network_graph.add_edge(u, v)  
                         else:
-                            print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check)
+                            print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check," Best optimal: ", current_cost, "New optimal: ", self.total_cost, "solve_result: ", self.solve_result)
                             self.network_graph.remove_edge(v, u)
-                            self.network_graph.add_edge(u, v)                      
-                print(" ")
+                            self.network_graph.add_edge(u, v)                         
+                    else:
+                        print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check)
+                        self.network_graph.remove_edge(v, u)
+                        self.network_graph.add_edge(u, v)                      
+            print(" ")
         return best_acyclic_flow, improved, current_cost, l, q, h, best_arc
         
     def iterate_acyclic_flows(self):
@@ -429,7 +429,7 @@ class WaterNetworkOptimizer:
         start_time = time.time()
         self.load_model()
         self.solve()
-        self.display_results()
+        # self.display_results()
         print("Objective: ",self.total_cost)
         print("solve_result: ",self.solve_result)
         self.generate_random_acyclic_from_solution()
@@ -472,8 +472,9 @@ if __name__ == "__main__":
     ]
 
     # Select the data number here (0 to 18)
-    data_number = 0
+    data_number = 17
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[data_number]}.dat"
     print("Water Network:", data_list[data_number],"\n")
-    optimizer = WaterNetworkOptimizer("../m1Basic.mod", input_data_file, data_number)
+    # optimizer = WaterNetworkOptimizer("../m1Basic.mod", input_data_file, data_number)
+    optimizer = WaterNetworkOptimizer(sys.argv[1], sys.argv[3], sys.argv[2])
     optimizer.run()
