@@ -65,7 +65,7 @@ def lpModel(n):
     lp_ampl.read("../lpNlp/lp_model.mod")
     input_data_file = f"../../data/{data_list[n]}.dat"
     lp_ampl.read_data(input_data_file)
-    lp_ampl.option["solver"] = "cplex"
+    lp_ampl.option["solver"] = "cplexamp"
     lp_ampl.option["presolve_eps"] = "1.08e-08"
     return lp_ampl
 
@@ -83,10 +83,10 @@ for [j] in my_set.getValues():
 # ampl.eval("expand;")
 
 ampl.solve()
-ampl.eval("display l;")
-ampl.eval("display q;")
-ampl.eval("display h;")
-ampl.eval("display u;")
+# ampl.eval("display l;")
+# ampl.eval("display q;")
+# ampl.eval("display h;")
+# ampl.eval("display u;")
 totalcost = ampl.get_objective("total_cost")
 print("Objective:", totalcost.value())
 
@@ -98,8 +98,7 @@ l_content = ampl.getVariable("l").getValues().toDict()
 
 for (i, j, k) in l_content.keys():
     if l_content[i, j, k] >= 1:
-        content_ampl.eval(f"s.t. fix_length_{i}_{j}_{
-                          k}: l[{i},{j},{k}]={l_content[i, j, k]};")
+        content_ampl.eval(f"s.t. fix_length_{i}_{j}_{k}: l[{i},{j},{k}]={l_content[i, j, k]};")
 
 content_ampl.solve()
 #content_ampl.eval("display l;")
@@ -168,8 +167,7 @@ while upperBound-lowerBound >= 0.001:
 
     for (i, j, k) in l_content.keys():
         if l_content[i, j, k] >= 1:
-            content_ampl.eval(f"s.t. fix_length_{i}_{j}_{
-                              k}: l[{i},{j},{k}]={l_content[i, j, k]};")
+            content_ampl.eval(f"s.t. fix_length_{i}_{j}_{k}: l[{i},{j},{k}]={l_content[i, j, k]};")
     content_ampl.solve()
 
     print(" ")

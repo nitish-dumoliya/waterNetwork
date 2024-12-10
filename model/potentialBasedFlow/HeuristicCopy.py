@@ -112,7 +112,7 @@ class WaterNetworkOptimizer:
         uwg.add_nodes_from(nodes_list)
         uwg.add_edges_from(edges_list)
         print("Edges in the undirected graph:", edges_list)
-        
+       
         # Generate a random spanning tree using Wilson's algorithm
         random_tree = nx.random_spanning_tree(uwg)
         

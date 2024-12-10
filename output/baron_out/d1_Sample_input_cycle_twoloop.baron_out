@@ -1,6 +1,5 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -17,184 +16,89 @@ lsolver = conopt
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
- For NLP: External NLP, IPOPT, FILTERSQP
+ For NLP: IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Solving bounding LP
  Starting multi-start local search
-
-/opt/ampl/conopt: bad bound triple 122 in bounds file "boundsfile.2":
-	L = -311.1087
-	x = -311.10870000000006
-	U = 311.1087
-Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 403607.
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             1             0.83      71265.8          403607.                 
-objective _sobj[1]: Initial function value too large = 2.7E+10
+          1             1             0.24      71265.8         0.100000E+52             
+*        95+           37             2.52      76107.1         0.309057E+07             
+*        99+           38             2.56      76107.1         0.309056E+07             
+*       103+           40             2.62      76107.1         0.290079E+07             
+*       107+           42             2.68      76107.1         0.245605E+07             
+*       107+           42             2.68      76107.1         0.245605E+07             
+*       111+           44             2.73      76107.1         0.208606E+07             
+*       115+           45             2.76      76107.1         0.198924E+07             
+*       115+           45             2.76      76107.1         0.198924E+07             
+*       126+           47             2.87      76107.1         0.146830E+07             
+*       127            48             2.90      76107.1         0.126871E+07             
+*       162            52             3.32      76107.1         0.123431E+07             
+*       311            42             4.00      116669.         0.122219E+07             
+*       355            39             4.68      116669.          888837.                 
+*       375            39             4.84      116669.          807473.                 
+*       378            20             4.87      116669.          666517.                 
+*       384            22             4.93      116669.          657242.                 
+*       389            21             4.97      116669.          657195.                 
+*       427            22             5.37      116669.          636330.                 
+*       434            26             5.44      116669.          626564.                 
+*       442            24             5.48      116669.          626226.                 
+*       443            25             5.48      116669.          625655.                 
+*       447            25             5.52      116669.          625384.                 
+*       448            23             5.53      116669.          625378.                 
+*       476            21             6.25      159981.          523814.                 
+*       480            23             6.40      159981.          520739.                 
+*       572            48             7.35      159981.          519949.                 
+*       573            44             7.36      159981.          519481.                 
+*       574            45             7.37      159981.          519480.                 
+*       575            44             7.38      159981.          519479.                 
+*       616            23             7.86      176500.          496093.                 
+*       709            44             8.80      177390.          472673.                 
+*       808            48             9.92      253708.          472250.                 
+*      1332            66            13.30      260879.          472194.                 
+*      1333            65            13.31      260879.          472179.                 
+*      1334            64            13.31      260879.          472178.                 
+       1960           157            17.44      261783.          472178.                 
+       2883           240            21.98      262114.          472178.                 
+       3978           364            27.18      262393.          472178.                 
+*      5088           479            32.44      262479.          472178.                 
+*      5693           590            35.48      262522.          472173.                 
+*      6215           678            38.10      262678.          472167.                 
+*      6343           691            38.73      262679.          472167.                 
+*      6768           745            40.69      262703.          472167.                 
+*      7567           846            45.23      262822.          472165.                 
+*      7735           737            46.08      262825.          472158.                 
+*      7736           699            46.09      262825.          472156.                 
+*      9156           889            52.80      262928.          472155.                 
+*      9502           909            54.21      262949.          472154.                 
+      11086          1179            61.71      263044.          472154.                 
+      12617          1452            69.22      263076.          472154.                 
+      16477          2115            87.20      263104.          472154.                 
 
-/opt/ampl/conopt: bad bound triple 29 in bounds file "boundsfile.8":
-	L = 0
-	x = 1000.0000000000002
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-objective _sobj[1]: Initial function value too large = 2.8E+10
+                     *** Search interrupted by user ***       
 
-/opt/ampl/conopt: bad bound triple 71 in bounds file "boundsfile.10":
-	L = 0
-	x = 1000.0000000000003
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
+ Wall clock time:                   424.30
+ Total CPU time used:                94.75
 
-/opt/ampl/conopt: bad bound triple 109 in bounds file "boundsfile.12":
-	L = 0
-	x = 1000.0000000000001
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 116 in bounds file "boundsfile.17":
-	L = 180
-	x = 179.99999999999997
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 117 in bounds file "boundsfile.19":
-	L = 195
-	x = 194.99999999999997
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 24 in bounds file "boundsfile.25":
-	L = 0
-	x = 1000.0000000000001
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 79 in bounds file "boundsfile.27":
-	L = 0
-	x = 1000.0000000000001
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 117 in bounds file "boundsfile.29":
-	L = 195
-	x = 194.99999999999997
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 118 in bounds file "boundsfile.33":
-	L = 190
-	x = 189.99999999999997
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-objective _sobj[1]: Initial function value too large = 2.0E+11
-       6902           210            30.56      298356.          403607.                 
-
-/opt/ampl/conopt: bad bound triple 118 in bounds file "boundsfile.43":
-	L = 190
-	x = 189.99999999999997
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      15113           519            60.55      322892.          403607.                 
-
-/opt/ampl/conopt: bad bound triple 45 in bounds file "boundsfile.45":
-	L = 0
-	x = 1000.0000000000001
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-      24003           601            90.55      343175.          403607.                 
-
-/opt/ampl/conopt: bad bound triple 9 in bounds file "boundsfile.49":
-	L = 0
-	x = -1.1368683772161603e-13
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-      31989           697           120.54      343555.          403607.                 
-      41814           809           150.54      343800.          403607.                 
-
-/opt/ampl/conopt: bad bound triple 49 in bounds file "boundsfile.53":
-	L = 0
-	x = -1.1368683772161603e-13
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 9 in bounds file "boundsfile.55":
-	L = 0
-	x = -1.1368683772161603e-13
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-      51637          1008           180.53      343981.          403607.                 
-      61378          1100           210.53      344088.          403607.                 
-
-/opt/ampl/conopt: bad bound triple 10 in bounds file "boundsfile.59":
-	L = 0
-	x = 1000.0000000000001
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-      68558          1050           240.53      344257.          403607.                 
-
-/opt/ampl/conopt: bad bound triple 21 in bounds file "boundsfile.61":
-	L = 0
-	x = 1000.0000000000001
-	U = 1000
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 117 in bounds file "boundsfile.63":
-	L = 195
-	x = 194.99999999999997
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      78101          1155           270.52      344378.          403607.                 
-      87351+         1032           300.52      344473.          403607.                 
-      88067+          679           330.52      344481.          403607.                 
-      88907+          246           360.53      344489.          403607.                 
-      89337             0           372.50      403607.          403607.                 
-
-                         *** Normal completion ***            
-
- Wall clock time:                   372.85
- Total CPU time used:               372.50
-
- Total no. of BaR iterations:   89337
- Best solution found at node:       5
- Max. no. of nodes in memory:    1168
+ Total no. of BaR iterations:   18205
+ Best solution found at node:    9502
+ Max. no. of nodes in memory:    2348
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 89337 iterations, optimal within tolerances.
-Objective 403606.7689
-l [1,*,*] (tr)
-:     2      :=
-1       0
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8       0
-9       0
-10      0
-11   1000
-12      0
-13      0
-14      0
+BARON: Cntrl-C Abort
 
- [2,*,*] (tr)
-:       3       4      :=
-1      0          0
-2      0          0
-3      0          0
-4      0          0
-5      0          0
-6      0          0
-7    793.067      0
-8    206.933      0
-9      0          0
-10     0       1000
-11     0          0
+amplexit
+BARON: Interrupted by Control-C
+recrmdir: Cannot open "/tmp/baron_tmp675306"
+
+Could not remove scratch directory "/tmp/baron_tmp675306".
+
+BARON 24.5.8 (2024.05.08): 0 iterations, numerical difficulties.
+Objective 1e+51
+        0
 12     0          0
 13     0          0
 14     0          0

@@ -1,6 +1,5 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -17,158 +16,89 @@ lsolver = conopt
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
- For NLP: External NLP, IPOPT, FILTERSQP
+ For NLP: IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Solving bounding LP
  Starting multi-start local search
-
-/opt/ampl/conopt: bad bound triple 49 in bounds file "boundsfile.2":
-	L = 0
-	x = 500.00000000000006
-	U = 500
-Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.607090E+07
- Preprocessing found feasible solution with value 0.606490E+07
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+          1             1             0.86     0.210141E+07     0.100000E+52             
+          5+            3             3.97     0.210141E+07     0.100000E+52             
+         45            20             7.22     0.210141E+07     0.100000E+52             
+         90            31            10.51     0.210141E+07     0.100000E+52             
+        144            41            14.24     0.210141E+07     0.100000E+52             
+        215            60            18.60     0.212733E+07     0.100000E+52             
+        279            77            23.12     0.213721E+07     0.100000E+52             
+        367            94            28.64     0.235879E+07     0.100000E+52             
+*       394            80            30.08     0.235879E+07     0.740394E+07             
+        460            89            38.18     0.238745E+07     0.740394E+07             
+*       531            78            41.59     0.241624E+07     0.740385E+07             
+*       543            79            42.83     0.241624E+07     0.740030E+07             
+*       545            77            42.90     0.241624E+07     0.740015E+07             
+*       546            76            42.94     0.241624E+07     0.739999E+07             
+*       629            89            47.62     0.242532E+07     0.739994E+07             
+*       630            86            47.67     0.242532E+07     0.739990E+07             
+*       634            87            48.12     0.242532E+07     0.739988E+07             
+*       732            99            54.21     0.242949E+07     0.739979E+07             
+*       815           113            57.96     0.243913E+07     0.739976E+07             
+*       816           110            58.04     0.243913E+07     0.739965E+07             
+*       821           112            58.38     0.243913E+07     0.739949E+07             
+*       822           106            58.47     0.243913E+07     0.739939E+07             
+*       823           105            58.63     0.243913E+07     0.739934E+07             
+*       911           103            62.64     0.246247E+07     0.739247E+07             
+*       931           105            64.06     0.247447E+07     0.739029E+07             
+*       932           100            64.09     0.247447E+07     0.739015E+07             
+*       937           102            64.39     0.247447E+07     0.738926E+07             
+       1098           128            72.04     0.248420E+07     0.738926E+07             
+*      1198           140            76.63     0.248812E+07     0.738922E+07             
+*      1200           139            76.69     0.248812E+07     0.738907E+07             
+*      1247           145            77.87     0.249105E+07     0.738899E+07             
+*      1249           145            77.99     0.249105E+07     0.738894E+07             
+*      1252           135            78.21     0.249105E+07     0.738853E+07             
+*      1267           141            79.21     0.249105E+07     0.738832E+07             
+*      1268           139            79.27     0.249105E+07     0.738829E+07             
+*      1270           136            79.32     0.249105E+07     0.738827E+07             
+*      1273           136            79.52     0.249105E+07     0.738820E+07             
+*      1277           135            79.65     0.249105E+07     0.738819E+07             
+*      1318           139            80.56     0.250342E+07     0.738812E+07             
+*      1319           132            80.59     0.250342E+07     0.738804E+07             
+*      1448           132            84.19     0.251083E+07     0.738267E+07             
+*      1453           120            84.39     0.251083E+07     0.738137E+07             
+*      1606           129            88.32     0.251966E+07     0.738118E+07             
+*      1671           128            90.29     0.252359E+07     0.738109E+07             
+*      1674           127            90.39     0.252359E+07     0.738008E+07             
+*      1748           133            92.76     0.252402E+07     0.737999E+07             
+*      1752           132            92.95     0.252402E+07     0.737998E+07             
+*      1805           131            93.84     0.252899E+07     0.737996E+07             
+*      1806           130            93.90     0.252899E+07     0.737993E+07             
+*      1895           142            96.69     0.252900E+07     0.737980E+07             
+*      1896           140            96.75     0.252900E+07     0.737974E+07             
+*      1915           138            97.07     0.252900E+07     0.737939E+07             
 
-/opt/ampl/conopt: bad bound triple 67 in bounds file "boundsfile.8":
-	L = 0
-	x = 1750.0000000000002
-	U = 1750
-Surprise errno 4 ==> Interrupted system call
-          1             1             2.76     0.210141E+07     0.606490E+07             
+                     *** Search interrupted by user ***       
 
-/opt/ampl/conopt: bad bound triple 8 in bounds file "boundsfile.11":
-	L = 0
-	x = -1.563056130999921e-13
-	U = 1150
-Surprise errno 4 ==> Interrupted system call
+ Wall clock time:                   429.69
+ Total CPU time used:               100.45
 
-/opt/ampl/conopt: bad bound triple 8 in bounds file "boundsfile.14":
-	L = 0
-	x = -1.2021001176933022e-15
-	U = 1150
-Surprise errno 4 ==> Interrupted system call
+ Total no. of BaR iterations:    2070
+ Best solution found at node:    1915
+ Max. no. of nodes in memory:     155
+ 
+ All done
+===========================================================================
+BARON: Cntrl-C Abort
 
-/opt/ampl/conopt: bad bound triple 17 in bounds file "boundsfile.18":
-	L = 0
-	x = -4.22259139845115e-13
-	U = 1450
-Surprise errno 4 ==> Interrupted system call
+amplexit
+BARON: Interrupted by Control-C
+recrmdir: Cannot open "/tmp/baron_tmp675311"
 
-/opt/ampl/conopt: bad bound triple 5 in bounds file "boundsfile.20":
-	L = 0
-	x = -2.0135543910363146e-14
-	U = 900
-Surprise errno 4 ==> Interrupted system call
+Could not remove scratch directory "/tmp/baron_tmp675311".
 
-/opt/ampl/conopt: bad bound triple 11 in bounds file "boundsfile.22":
-	L = 0
-	x = -4.2296826786633565e-15
-	U = 1150
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 5 in bounds file "boundsfile.24":
-	L = 0
-	x = -1.3846970736357554e-16
-	U = 900
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 15 in bounds file "boundsfile.26":
-	L = 0
-	x = -4.794056338045403e-15
-	U = 1450
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 22 in bounds file "boundsfile.28":
-	L = 0
-	x = -6.555660404420744e-14
-	U = 450
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 29 in bounds file "boundsfile.30":
-	L = 0
-	x = -9.811437436674461e-14
-	U = 850
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 6 in bounds file "boundsfile.32":
-	L = 0
-	x = 900.0000000000001
-	U = 900
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 23 in bounds file "boundsfile.34":
-	L = 0
-	x = -1.3623113830128158e-13
-	U = 450
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 6 in bounds file "boundsfile.36":
-	L = 0
-	x = 900.0000000000001
-	U = 900
-Surprise errno 4 ==> Interrupted system call
-        556           139           521.38     0.239418E+07     0.606490E+07             
-
-/opt/ampl/conopt: bad bound triple 44 in bounds file "boundsfile.38":
-	L = 0
-	x = -1.7821156428969093e-13
-	U = 800
-Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 35 in bounds file "boundsfile.40":
-	L = 0
-	x = 850.0000000000009
-	U = 850
-Surprise errno 4 ==> Interrupted system call
-       1107           213           551.38     0.241446E+07     0.606490E+07             
-
-/opt/ampl/conopt: bad bound triple 29 in bounds file "boundsfile.42":
-	L = 0
-	x = -3.0682975942664167e-13
-	U = 850
-Surprise errno 4 ==> Interrupted system call
-       1663           283           581.38     0.243181E+07     0.606490E+07             
-
-/opt/ampl/conopt: bad bound triple 6 in bounds file "boundsfile.44":
-	L = 0
-	x = 900.0000000000001
-	U = 900
-Surprise errno 4 ==> Interrupted system call
-       2177           418           611.40     0.245092E+07     0.606490E+07             
-       4386           570           641.41     0.247387E+07     0.606490E+07             
-       9253           536           671.41     0.247387E+07     0.606490E+07             
-      11394+          498           701.41     0.247435E+07     0.606490E+07             
-      11652           534           731.42     0.248074E+07     0.606490E+07             
-      12155           644           761.42     0.249420E+07     0.606490E+07             
-      12943           799           791.42     0.250379E+07     0.606490E+07             
-
-/opt/ampl/conopt: bad bound triple 13 in bounds file "boundsfile.50":
-	L = 0
-	x = 1450.0000000000002
-	U = 1450
-Surprise errno 4 ==> Interrupted system call
-      13503           931           821.45     0.251750E+07     0.606490E+07             
-      14209          1034           851.46     0.252196E+07     0.606490E+07             
-      14797          1157           880.83     0.252675E+07     0.606490E+07             
-      14960          1186           887.11     0.252686E+07     0.606490E+07             
-      15050          1201           892.12     0.252754E+07     0.606490E+07             
-      15149          1221           897.08     0.252916E+07     0.606490E+07             
-      15223          1231           901.60     0.253341E+07     0.606490E+07             
-      15268          1243           906.06     0.253341E+07     0.606490E+07             
-      15352          1260           910.69     0.253393E+07     0.606490E+07             
-      15395          1275           915.21     0.253393E+07     0.606490E+07             
-      15464          1280           919.76     0.253442E+07     0.606490E+07             
-
-/opt/ampl/conopt: bad bound triple 23 in bounds file "boundsfile.52":
-	L = 0
-	x = -8.497911939363476e-14
-	U = 450
-Surprise errno 4 ==> Interrupted system call
+BARON 24.5.8 (2024.05.08): 0 iterations, numerical difficulties.
+Objective 1e+51
+ Interrupted system call
       15515          1288           924.39     0.253724E+07     0.606490E+07             
       15560          1308           928.96     0.253968E+07     0.606490E+07             
       15620          1309           933.69     0.254004E+07     0.606490E+07             

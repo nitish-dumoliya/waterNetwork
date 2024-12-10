@@ -1,6 +1,5 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -17,62 +16,48 @@ lsolver = conopt
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
- For NLP: External NLP, IPOPT, FILTERSQP
+ For NLP: IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Solving bounding LP
  Starting multi-start local search
-
-/opt/ampl/conopt: bad bound triple 31 in bounds file "boundsfile.2":
-	L = 0
-	x = 850.0000000000001
-	U = 850
-Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.120998E+08
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-*         1             1             1.45     0.359900E+07     0.120831E+08             
-          1             1             2.20     0.359900E+07     0.120831E+08             
-*         2             2             2.97     0.359900E+07     0.120718E+08             
+          1             1             1.31     0.359900E+07     0.100000E+52             
+          4+            3             4.38     0.359900E+07     0.100000E+52             
+         10             6             7.60     0.359900E+07     0.100000E+52             
+         31             8            11.07     0.359900E+07     0.100000E+52             
+         65            11            15.02     0.359900E+07     0.100000E+52             
+         79            17            56.35     0.359900E+07     0.100000E+52             
+        123            32            63.89     0.359900E+07     0.100000E+52             
+        162            44            71.90     0.359900E+07     0.100000E+52             
+        295            64            95.89     0.359900E+07     0.100000E+52             
 
-/opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.7":
-	L = 0
-	x = 1350.0000000000002
-	U = 1350
-Surprise errno 4 ==> Interrupted system call
+                     *** Search interrupted by user ***       
 
-/opt/ampl/conopt: bad bound triple 55 in bounds file "boundsfile.9":
-	L = 0
-	x = 500.00000000000006
-	U = 500
-Surprise errno 4 ==> Interrupted system call
+                   *** No feasible solution was found ***
 
-/opt/ampl/conopt: bad bound triple 115 in bounds file "boundsfile.11":
-	L = 0
-	x = 850.0000000000001
-	U = 850
-Surprise errno 4 ==> Interrupted system call
+ Wall clock time:                   431.64
+ Total CPU time used:               103.08
 
-/opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.15":
-	L = 0
-	x = 1350.0000000000002
-	U = 1350
-Surprise errno 4 ==> Interrupted system call
+ Total no. of BaR iterations:     337
+ Best solution found at node:      -3
+ Max. no. of nodes in memory:      77
+ 
+ All done
+===========================================================================
+BARON: Cntrl-C Abort
 
-/opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.17":
-	L = 0
-	x = 1350.0000000000002
-	U = 1350
-Surprise errno 4 ==> Interrupted system call
+amplexit
+BARON: Interrupted by Control-C
+recrmdir: Cannot open "/tmp/baron_tmp675313"
 
-/opt/ampl/conopt: bad bound triple 55 in bounds file "boundsfile.19":
-	L = 0
-	x = 500.00000000000006
-	U = 500
-Surprise errno 4 ==> Interrupted system call
+Could not remove scratch directory "/tmp/baron_tmp675313".
 
-/opt/ampl/conopt: bad bound triple 7 in bounds file "boundsfile.21":
+BARON 24.5.8 (2024.05.08): 0 iterations, numerical difficulties.
+Objective 1e+51
+d bound triple 7 in bounds file "boundsfile.21":
 	L = 0
 	x = 900.0000000000001
 	U = 900

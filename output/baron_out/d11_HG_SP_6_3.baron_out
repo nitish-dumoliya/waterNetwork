@@ -44,8 +44,8 @@ objective _sobj[1]: Initial function value too large = 3.0E+10
 	U = 37.33
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 3.0E+10
-*         1             1            20.95     0.133211E+07     0.121509E+08             
-          1             1            23.18     0.133211E+07     0.121509E+08             
+*         1             1            19.89     0.133211E+07     0.121509E+08             
+          1             1            21.98     0.133211E+07     0.121509E+08             
 
 /opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.10":
 	L = 0
@@ -59,7 +59,6 @@ objective _sobj[1]: Initial function value too large = 3.0E+10
 	x = -5.771905898294934e-16
 	U = 7.673
 Surprise errno 4 ==> Interrupted system call
-         11             6            53.34     0.133211E+07     0.121509E+08             
 
 /opt/ampl/conopt: bad bound triple 38 in bounds file "boundsfile.13":
 	L = 0
@@ -67,6 +66,7 @@ Surprise errno 4 ==> Interrupted system call
 	U = 7.673
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 3.0E+10
+         13             7            52.36     0.133211E+07     0.121509E+08             
 
 /opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.15":
 	L = 0
@@ -80,23 +80,22 @@ Surprise errno 4 ==> Interrupted system call
 	U = 17.19
 Surprise errno 4 ==> Interrupted system call
 objective _sobj[1]: Initial function value too large = 2.9E+10
-         32            17            83.68     0.133211E+07     0.121509E+08             
+         33            17            82.48     0.133211E+07     0.121509E+08             
 
 /opt/ampl/conopt: bad bound triple 25 in bounds file "boundsfile.18":
 	L = 0
 	x = 31.790000000000003
 	U = 31.79
 Surprise errno 4 ==> Interrupted system call
-         63            31           114.11     0.133211E+07     0.121509E+08             
-         81            39           144.15     0.133211E+07     0.121509E+08             
-         89            39           176.47     0.133211E+07     0.121509E+08             
-         99            38           206.58     0.133211E+07     0.121509E+08             
-        102            40          3602.72     0.133211E+07     0.121509E+08             
+         65            32           115.12     0.133211E+07     0.121509E+08             
+         83            39           145.77     0.133211E+07     0.121509E+08             
+         96            39           180.97     0.133211E+07     0.121509E+08             
+        102            40          3601.95     0.133211E+07     0.121509E+08             
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3602.84
- Total CPU time used:              3602.72
+ Wall clock time:                  9246.66
+ Total CPU time used:              3601.95
 
  Total no. of BaR iterations:     102
  Best solution found at node:       1
@@ -3325,6 +3324,11 @@ h [*] :=
  31 30.664     65 42.3964    99 38.1694   133 30.7746
  32 29.4187    66 39.6075   100 35.8177   134 31.7221
  33 25.0931    67 38.0936   101 37.1886   135 31.7177
+ 34 43.6003    68 29.1465   102 40.6895   136 33.6605
+;
+
+total_cost: 12150906.267876938
+7
  34 43.6003    68 29.1465   102 40.6895   136 33.6605
 ;
 

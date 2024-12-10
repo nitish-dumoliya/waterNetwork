@@ -1,6 +1,5 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-lsolver = conopt
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
  Running on machine saki
@@ -17,52 +16,52 @@ lsolver = conopt
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
- For NLP: External NLP, IPOPT, FILTERSQP
+ For NLP: IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Solving bounding LP
  Starting multi-start local search
-
-/opt/ampl/conopt: bad bound triple 1223 in bounds file "boundsfile.2":
-	L = 6
-	x = 5.999999999999999
-	U = 14248.607100667812
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
- Preprocessing found feasible solution with value 0.367616E+07
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
- Preprocessing found feasible solution with value 0.355496E+07
- Preprocessing found feasible solution with value 0.355429E+07
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+          1             1             2.30      786997.         0.100000E+52             
+          3+            2             5.53      786997.         0.100000E+52             
+          5             3             9.26      786997.         0.100000E+52             
+          7+            4            13.05      786997.         0.100000E+52             
+         14             8            18.03      786997.         0.100000E+52             
+         23            12            23.02      786997.         0.100000E+52             
+         30            16            28.93      786997.         0.100000E+52             
+         36            18            35.98      786997.         0.100000E+52             
+         50            23            44.72      786997.         0.100000E+52             
+         58            24            51.50      786997.         0.100000E+52             
+         68            28            57.91      786997.         0.100000E+52             
+         74            31            65.15      786997.         0.100000E+52             
+         76            32            78.47      786997.         0.100000E+52             
 
-/opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.8":
-	L = 0
-	x = 86.33000000000001
-	U = 86.33
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-          1             1            11.29      786997.         0.355429E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+                     *** Search interrupted by user ***       
 
-/opt/ampl/conopt: bad bound triple 1 in bounds file "boundsfile.11":
-	L = 0
-	x = 86.33000000000001
-	U = 86.33
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+                   *** No feasible solution was found ***
 
-/opt/ampl/conopt: bad bound triple 14 in bounds file "boundsfile.14":
-	L = 0
-	x = -2.6813677450285508e-14
-	U = 63.9
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+ Wall clock time:                   415.01
+ Total CPU time used:                83.60
+
+ Total no. of BaR iterations:      85
+ Best solution found at node:      -3
+ Max. no. of nodes in memory:      35
+ 
+ All done
+===========================================================================
+BARON: Cntrl-C Abort
+
+amplexit
+BARON: Interrupted by Control-C
+recrmdir: Cannot open "/tmp/baron_tmp675318"
+
+Could not remove scratch directory "/tmp/baron_tmp675318".
+
+BARON 24.5.8 (2024.05.08): 0 iterations, numerical difficulties.
+Objective 1e+51
+nd and Initial value is moved.
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
 /opt/ampl/conopt: bad bound triple 182 in bounds file "boundsfile.17":

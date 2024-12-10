@@ -12,7 +12,7 @@ param D{nodes};		   # Demand of each node
 param d{pipes};		   # Diameter of each commercial pipe
 param C{pipes};		   # Cost per unit length of each commercial pipe
 param R{pipes};		   # Roughness of each commercial pipe
-param omega := 10.68;  # SI Unit Constant for Hazen Williams Equation
+param omega := 10.67;  # SI Unit Constant for Hazen Williams Equation
 param vmax{arcs} default (sum {k in nodes diff Source} D[k]/1000)/((3.14/4)*(d[1]/1000)^2);
 param delta := 0.1;
 param p:= 1.852;
@@ -39,7 +39,7 @@ subject to con2{(i,j) in arcs}:
 ;
 
 #subject to con2{(i,j) in arcs }: 
-#    (if -0.01<=q[i,j]<=0.01  then 
+#    (if -delta<=q[i,j]<=delta  then 
 #        (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) 
 #    else 
 #		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j] 

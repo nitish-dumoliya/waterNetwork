@@ -1,0 +1,171 @@
+Ipopt 3.14.13: print_level 3
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+Total number of variables............................:      125
+                     variables with only lower bounds:        6
+                variables with lower and upper bounds:      119
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:       22
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+
+Number of Iterations....: 124
+
+                                   (scaled)                 (unscaled)
+Objective...............:   7.7089483969956316e+04    4.2399216183475975e+05
+Dual infeasibility......:   5.7882253096280568e-02    3.1835239202954313e-01
+Constraint violation....:   1.4243255463952664e-09    1.4243255463952664e-09
+Variable bound violation:   1.9478492845337314e-06    1.9478492845337314e-06
+Complementarity.........:   1.3021459813146463e-05    7.1618028972305543e-05
+Overall NLP error.......:   8.4201139883775088e-09    3.1835239202954313e-01
+
+
+Number of objective function evaluations             = 125
+Number of objective gradient evaluations             = 125
+Number of equality constraint evaluations            = 125
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 125
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 124
+Total seconds in IPOPT                               = 0.065
+
+EXIT: Optimal Solution Found.
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+l [1,*,*] (tr)
+:          2           :=
+1      -9.99979e-09
+2      -9.99395e-09
+3      -9.95642e-09
+4      -9.82287e-09
+5      -8.71138e-09
+6      -4.58751e-09
+7       7.53727e-09
+8       4.14234e-08
+9       1.64676e-07
+10      9.64136e-07
+11   1000
+12      5.90791e-06
+13      1.81525e-07
+14      5.26317e-08
+
+ [2,*,*] (tr)
+:          3               4           :=
+1     -9.611e-09       -9.99968e-09
+2      1.48988e-09     -9.99065e-09
+3      7.74806e-08     -9.9326e-09
+4      4.12817e-07     -9.72597e-09
+5    744.127           -8.00037e-09
+6    255.873           -1.51268e-09
+7      2.9689e-06       1.8284e-08
+8      8.79979e-07      7.81892e-08
+9      6.2891e-07       3.71239e-07
+10     3.33739e-07      2.46229e-05
+11     2.02587e-07   1000
+12     1.43858e-07      1.22426e-06
+13     7.10564e-08      1.53582e-07
+14     3.24379e-08      4.87305e-08
+
+ [3,*,*] (tr)
+:          5           :=
+1    1000
+2       1.43507e-06
+3       4.36625e-06
+4       2.82546e-06
+5       1.73639e-06
+6       1.1201e-06
+7       7.66412e-07
+8       4.6722e-07
+9       3.83033e-07
+10      2.46991e-07
+11      1.6583e-07
+12      1.23627e-07
+13      6.50672e-08
+14      3.0736e-08
+
+ [4,*,*] (tr)
+:          5               6          :=
+1     -9.93444e-09    -9.99907e-09
+2     -8.07782e-09    -9.97284e-09
+3      4.05868e-09    -9.80416e-09
+4      4.99157e-08    -9.20266e-09
+5      6.34467e-07    -4.11759e-09
+6    616.685           1.59213e-08
+7    383.315           8.57154e-08
+8      1.44537e-06     3.59255e-07
+9      9.06189e-07   204.965
+10     4.0329e-07    795.035
+11     2.27709e-07     8.5726e-07
+12     1.56711e-07     3.72213e-07
+13     7.45034e-08     1.1092e-07
+14     3.33664e-08     4.15755e-08
+
+ [6,*,*] (tr)
+:          7          :=
+1     -9.90499e-09
+2     -7.21226e-09
+3      1.0464e-08
+4      7.81683e-08
+5      1.02185e-06
+6     11.0911
+7    988.909
+8      1.4399e-06
+9      8.71765e-07
+10     3.88668e-07
+11     2.21933e-07
+12     1.53673e-07
+13     7.36673e-08
+14     3.31388e-08
+
+ [7,*,*] (tr)
+:          5           :=
+1    1000
+2      -9.99924e-09
+3       5.96793e-06
+4       3.31674e-06
+5       1.89656e-06
+6       1.1825e-06
+7       7.94769e-07
+8       4.77611e-07
+9       3.90022e-07
+10      2.49939e-07
+11      1.672e-07
+12      1.24415e-07
+13      6.53145e-08
+14      3.08086e-08
+;
+
+q :=
+1 2   311.109
+2 3    27.9694
+2 4   255.362
+3 5     0.192412
+4 5    74.6152
+4 6   147.413
+6 7    55.7474
+7 5     0.192412
+;
+
+h [*] :=
+1  210
+2  203.25
+3  190
+4  198.568
+5  180
+6  195
+7  190
+;
+
+total_cost: 423992.1618347593
