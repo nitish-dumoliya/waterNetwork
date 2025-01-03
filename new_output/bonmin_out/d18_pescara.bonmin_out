@@ -1,4 +1,27 @@
-Cannot find "bonmin"
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 5
+bonmin.nlp_log_level 1
+bonmin.num_resolve_at_root 1
+
+Cbc3007W No integer variables - nothing to do
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1      FAILED 6516282.8     3000 94.3692
+NLP0014I             1      FAILED 6516282.8     3000 57.635346   resolve robustness
+NLP0014I             3      FAILED 6516282.8     3000 54.675091
+Cbc3007W No integer variables - nothing to do
+Cbc0006I The LP relaxation is infeasible or too expensive
+
+ 	"Aborted"
+
+bonmin: Error encountered in optimization.
 l [*,*,1]
 :    1   2   4   5   6   7   8   9  11  12  13  14  17  18  19  20  21  22  23 :=
 1    .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .

@@ -47,7 +47,6 @@ source = ampl.getSet('Source').to_list()
 E = ampl.getParameter('E').getValues().toDict()
 P = ampl.getParameter('P').getValues().toDict()
 
-
 # Define the number of starts for multistart heuristic
 num_starts = 50
 best_cost = float('inf')
