@@ -93,10 +93,11 @@ class WaterNetworkOptimizer:
         plt.box(False)
         plt.show()
 
-    def plot_graph(self, super_source_out_arc=None, best_arc=None, current_cost = None, iteration = 1):
+    def plot_graph(self, super_source_out_arc=None, current_cost = None, iteration = 1, edge_weights= None, h = None, D = None, arc=(0,0)):
         # self.network_graph = nx.DiGraph()
         # self.network_graph.add_edges_from(edges)
         # Node positions as per your specifications
+        
         new_positions0 = {
              2 : (2000.00, 3000.00),
              3 : (1000.00, 3000.00),        
@@ -183,10 +184,10 @@ class WaterNetworkOptimizer:
         }
 
         # # Update node positions
-        pos = new_positions0
-        # pos = nx.spectral_layout(self.network_graph)
+        # pos = new_positions1
+        pos = nx.spectral_layout(self.network_graph)
 
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(14, 10))
         cmap = plt.cm.plasma
 
         # Draw nodes with default color (lightblue)
@@ -201,31 +202,48 @@ class WaterNetworkOptimizer:
         nx.draw_networkx_labels(self.network_graph, pos, font_size=10)
 
         # Draw edges
-        nx.draw_networkx_edges(self.network_graph, pos, arrowstyle="->", arrowsize=12, edge_color='black', label='Regular Arcs')
+        nx.draw_networkx_edges(self.network_graph, pos, arrowstyle="->", arrowsize=12, edge_color='gray', label='Regular Arcs')
 
         # Highlight super-source edges in red
         if super_source_out_arc:
-            nx.draw_networkx_edges(self.network_graph, pos, edgelist=super_source_out_arc, edge_color='red', width=1, label='Fix arc direction')
+            nx.draw_networkx_edges(self.network_graph, pos, edgelist=super_source_out_arc,arrowstyle="->", arrowsize=12, edge_color='red', width=1, label='Fix arc direction')
 
         # Highlight the best arc in magenta
-        if best_arc:
-            nx.draw_networkx_edges(self.network_graph, pos, edgelist=[best_arc], edge_color='magenta', width=1, label = 'Best arc')
+        # if best_arc:
+        #     nx.draw_networkx_edges(self.network_graph, pos, edgelist=[best_arc],arrowstyle="->", arrowsize=12, edge_color='magenta', width=1, label = 'Best arc')
+        # Annotate node demands
+        if h:
+            for node, (x, y) in pos.items():
+                demand = h.get(node, 0)  # Get the head for the node, default to 0 if not in dictionary
+                # plt.text(x, y + 250, f"{demand:.2f}", fontsize=8, color='blue', ha='center')  # Annotate demand below the node
+        if D:
+            for node, (x, y) in pos.items():
+                demand = D.get(node, 0)  # Get the demand for the node, default to 0 if not in dictionary
+                # plt.text(x, y - 300, f"{demand:.2f}", fontsize=8, color='magenta', ha='center')  # Annotate demand below the node
+
+        # Annotate edge weights
+        if edge_weights:
+            for (u, v), weight in edge_weights.items():
+                # if self.network_graph.has_edge(u, v):
+                mid_x = (pos[u][0] + pos[v][0]) / 2  # Midpoint x-coordinate
+                mid_y = (pos[u][1] + pos[v][1]) / 2  # Midpoint y-coordinate
+                # plt.text(mid_x, mid_y+100 , f"{weight:.2f}", fontsize=8, color='green', ha='center')  # Annotate weight on edge
         
         # Create legend
         regular_node_patch = mpatches.Patch(color='lightblue', label='Regular Nodes')
         indegree_node_patch = mpatches.Patch(color='orange', label='Nodes with In-Degree ≥ 2')
         regular_edge_line = mlines.Line2D([], [], color='black', label='Regular Arcs')
         super_source_edge_line = mlines.Line2D([], [], color='red', label='Fix arc direction')
-        best_edge_line = mlines.Line2D([], [], color='magenta', label='Best Arc')
-        plt.legend(handles=[regular_node_patch, indegree_node_patch, regular_edge_line, super_source_edge_line, best_edge_line], loc='lower right')
+        # best_edge_line = mlines.Line2D([], [], color='magenta', label='Best Arc')
+        plt.legend(handles=[regular_node_patch, indegree_node_patch, regular_edge_line, super_source_edge_line], loc='lower right')
         
         cost = round(self.total_cost)
         # res = f"{cost:,}"
-        
-        plt.title(f"total_cost:{'{:,}'.format(cost)}")
-        plt.savefig(f"/home/nitishdumoliya/waterNetwork/model/figure/d{self.data_number}_iteration_{iteration}.png")
-        plt.box(False)
-        plt.show() 
+        plt.title(f"total_cost:{self.format_indian_number(cost)}")
+        (u,v) = arc
+        plt.savefig(f"/home/nitishdumoliya/waterNetwork/model/figure/d{self.data_number}_iteration_{iteration}_{u}_{v}.png")
+        plt.box(True)
+        plt.show()
         
     def cycle_basis(self):
         root = self.ampl.getSet('Source').to_list()[0]
@@ -312,11 +330,13 @@ class WaterNetworkOptimizer:
         for edge in self.network_graph.edges:
             i, j = edge
             if edge in edges_list:
-                self.ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i},{j}] >=0;")
+                self.ampl.eval(f"s.t. flow_bound_left{i}_{j}: q[{i},{j}] >=0;")
+                self.ampl.eval(f"subject to flow_bound_right{i}_{j}: q[{i},{j}] <= sum{{k in nodes diff Source}} D[k];")
                 # self.ampl.eval(f"s.t. head_bound_left{i}_{j}: E[{j}]+P[{j}] <= h[{j}];")
                 # self.ampl.eval(f"s.t. head_bound_right{i}_{j}: E[{j}] + P[{j}] <= h[{i}];")
             else:
-                self.ampl.eval(f"s.t. flow_direction{i}_{j}: q[{j},{i}] <=0;")
+                self.ampl.eval(f"s.t. flow_bound_right{i}_{j}: q[{j},{i}] <=0;")
+                self.ampl.eval(f"subject to flow_bound_left{i}_{j}: q[{j},{i}] >= -sum{{k in nodes diff Source}} D[k];")
                 # self.ampl.eval(f"s.t. head_bound_left{i}_{j}: E[{i}]+P[{i}] <= h[{i}];")
                 # self.ampl.eval(f"s.t. head_bound_right{i}_{j}: E[{i}] + P[{i}] <= h[{j}];")  
 
@@ -333,7 +353,19 @@ class WaterNetworkOptimizer:
                 self.ampl.eval(f"s.t. flow_direction{i}_{j}: q_lp[{j},{i}] <=0;")
                 # self.ampl.eval(f"s.t. head_bound_left{i}_{j}: E[{i}]+P[{i}] <= h[{i}];")
                 # self.ampl.eval(f"s.t. head_bound_right{i}_{j}: E[{i}] + P[{i}] <= h[{j}];") 
-                
+    
+    def updated_data_file(self):
+        edges_list = [(arc[0],arc[1]) for arc in self.ampl.getSet('arcs')]
+        # Example: Update parameter values
+        q = self.ampl.getVariable('q').getValues().to_dict()
+        L = self.ampl.getParameter('L').getValues().to_dict()
+        for (i,j), value in q.items():
+            self.ampl.getParameter('arcs').setValues({
+                ('NewYork', 'LosAngeles'): 2500,
+                ('NewYork', 'Chicago'): 750,
+                ('LosAngeles', 'Chicago'): 1900
+            })
+
     def is_valid_edge(self, source, target):
         """Check if adding the directed edge (source -> target) maintains acyclicity."""
         self.network_graph.add_edge(source, target)  # Temporarily add the edge
@@ -354,7 +386,18 @@ class WaterNetworkOptimizer:
                 return False
         # print("All nodes except the root have at least one incoming arc.")
         return True
-
+            
+    def format_indian_number(self,num):
+        num_str = str(num)
+        if len(num_str) <= 3:
+            return num_str
+        else:
+            # Split the number into the last three digits and the rest
+            last_three = num_str[-3:]
+            remaining = num_str[:-3]
+            # Add commas every two digits in the remaining part
+            remaining = ','.join([remaining[max(i - 2, 0):i] for i in range(len(remaining), 0, -2)][::-1])
+            return remaining + ',' + last_three
 
     def fix_leaf_arc_flow(self):
         graph = nx.Graph()
@@ -363,12 +406,12 @@ class WaterNetworkOptimizer:
         D = self.ampl.getParameter('D').getValues().to_dict()  
         source = self.ampl.getSet('Source').to_list()[0]
         fixed_arcs = set()
-        print("\nPresolve the model for fixing the flow value in the leaf arcs")
-        print("Source:",self.ampl.getSet('Source').to_list())
+        # print("\nPresolve the model for fixing the flow value in the leaf arcs")
+        # print("Source:",self.ampl.getSet('Source').to_list())
 
         while True:
             leaf_nodes = [node for node in graph.nodes if graph.degree[node] == 1]
-            print("leaf_nodes:", leaf_nodes)
+            # print("leaf_nodes:", leaf_nodes)
             if not leaf_nodes:  
                 break
 
@@ -385,7 +428,7 @@ class WaterNetworkOptimizer:
                             flow_value = D[leaf]
                             D[neighbor] = D[neighbor] + flow_value
                         self.ampl.eval(f"s.t. fix_q_{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] = {flow_value};")
-                        print(f"Fixing flow for arc {edge}: {flow_value}")
+                        # print(f"Fixing flow for arc {edge}: {flow_value}")
                         fixed_arcs.add(edge)  
 
                     graph.remove_node(leaf)
@@ -405,7 +448,7 @@ class WaterNetworkOptimizer:
                             flow_value = -D[leaf]
                             D[neighbor] += -flow_value
                             self.ampl.eval(f"s.t. fix_q_{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] = {flow_value};")
-                        print(f"Fixing flow for arc {edge}: {flow_value}")
+                        # print(f"Fixing flow for arc {edge}: {flow_value}")
                         fixed_arcs.add(edge)  
                     graph.remove_node(leaf)
         # print("All leaf arc flows have been fixed.")
@@ -433,20 +476,20 @@ class WaterNetworkOptimizer:
         visited_copy = visited.copy()
         # print(visited_copy)
         isCycle = self.is_cycle(graph, node, node, visited_copy, parent)
-        print(f"Is node {node} in cycle?",isCycle)
+        # print(f"Is node {node} in cycle?",isCycle)
         visited[node] = True
         if isCycle:
             for neighbor in graph.neighbors(node):
                 if parent!=neighbor:
                     set_arc.append((node,neighbor))
-                    print("Fix the arc", (node, neighbor))
+                    # print("Fix the arc", (node, neighbor))
             return set_arc
         else:
             for neighbor in graph.neighbors(node):
                 if parent != neighbor:
                     set_arc.append((node,neighbor))
                     # print(set_arc)
-                    print("Fix the arc", (node, neighbor))
+                    # print("Fix the arc", (node, neighbor))
                     # print("neighbor:", neighbor)
                     self.presolve(graph, neighbor, visited, node, set_arc)
         return set_arc
@@ -458,9 +501,9 @@ class WaterNetworkOptimizer:
         visited = {node: False for node in graph.nodes()}
         source = self.ampl.getSet('Source').to_list()[0]
         set_arc = []
-        print("\nPresolve the model for fixing the arc direction")
+        # print("\nPresolve the model for fixing the arc direction")
         set_ = self.presolve(graph, source, visited, -1, set_arc)
-        print("fixed arc direction:",set_, "\n") 
+        # print("fixed arc direction:",set_, "\n") 
         return set_
 
     def generate_initial_points(self):
@@ -518,7 +561,7 @@ class WaterNetworkOptimizer:
         for i, val in h_solution.items():
             self.ampl.eval(f'let h[{i}] := {val};')
 
-    def update_initial_points1(self,l_solution, q_solution, h_solution):
+    def update_initial_points1(self):
         for (i, j, k), val in l_solution.items():
             self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
         
@@ -534,63 +577,78 @@ class WaterNetworkOptimizer:
     def iterate_arc(self, iteration, best_acyclic_flow, improved, current_cost, l, q, h, best_arc, super_source_out_arc):
         improved = False
         self.network_graph = best_acyclic_flow.copy()
-        print("Acyclic network arcs direction: ",self.network_graph.edges())
+        # print("Acyclic network arcs direction: ",self.network_graph.edges())
         # self.plot_graph(super_source_out_arc, best_arc, current_cost, iteration)
-        print("Fixed arc set:",super_source_out_arc)
+        # print("Fixed arc set:",super_source_out_arc)
         BEST_ARC = []
-        # BEST_ARC.append(best_arc)
+        # if best_arc:
+        #     (u,v) = best_arc
+        #     BEST_ARC.append((u,v))
         l = self.ampl.getVariable('l').getValues().to_dict()
         q = self.ampl.getVariable('q').getValues().to_dict()
         h = self.ampl.getVariable('h').getValues().to_dict()
+        D = self.ampl.getParameter('D').getValues().to_dict()
         indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
         for node in indegree_2_or_more:
-            print("Node:", node,"in_degree:", self.network_graph.in_degree(node))
+            # print("Node:", node,"in_degree:", self.network_graph.in_degree(node))
             for u,v in list(self.network_graph.in_edges(node)):
-                if (u,v) not in super_source_out_arc and (u,v) not in BEST_ARC:
+                if (u,v) not in super_source_out_arc and (v,u) not in [best_arc]:
                     self.network_graph.remove_edge(u,v)
                     self.network_graph.add_edge(v,u)
                     acy_check = nx.is_directed_acyclic_graph(self.network_graph)
                     in_arc_check = self.check_incoming_arcs()
+                    # print("Acyclic", acy_check and in_arc_check)
                     if acy_check and in_arc_check:
                         #l_sol, q_sol, h_sol = self.generate_initial_points()
                         self.load_model()
                         self.fix_leaf_arc_flow()
                         self.update_initial_points(l, q, h)
                         self.update_model()
+                        # self.ampl.option["solver"]='snopt'
                         self.solve()
+                        # self.solve_result = self.ampl.solve_result
+                        # self.total_cost = self.ampl.get_objective('total_cost').value()
                         # print("cost:", self.total_cost)   
                         #self.display_results()
+                        l = self.ampl.getVariable('l').getValues().to_dict()
+                        q = self.ampl.getVariable('q').getValues().to_dict()
+                        h = self.ampl.getVariable('h').getValues().to_dict()
+                        # self.plot_graph(super_source_out_arc, self.total_cost, iteration, q, h, D, (v,u))
                         if self.solve_result == "solved":
-                            if self.total_cost < current_cost:
+                            if float(self.total_cost) < current_cost:
                                 print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", '{:,}'.format(round(current_cost)), "New optimal: ", '{:,}'.format(round(self.total_cost)), "Solve_time:", self.ampl.get_value('_solve_elapsed_time'), "Solve_result: ", self.solve_result, "Improved: Yes")
                                 current_cost = self.total_cost
                                 improved = True
                                 best_acyclic_flow = self.network_graph.copy()
                                 best_arc = (v,u)
-                                #self.plot_graph(super_source_out_arc, best_arc, current_cost, iteration)
                                 l = self.ampl.getVariable('l').getValues().to_dict()
                                 q = self.ampl.getVariable('q').getValues().to_dict()
                                 h = self.ampl.getVariable('h').getValues().to_dict()
                                 
+                                # self.plot_graph(super_source_out_arc, current_cost, iteration, q, h, D, (u,v))
                                 self.network_graph.remove_edge(v, u)
                                 self.network_graph.add_edge(u, v)  
+                                
                                 # return best_acyclic_flow, improved, current_cost, l, q, h, best_arc
-                                #break
+                                # break
                             else:
-                                print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", '{:,}'.format(round(current_cost)), "New optimal: ", '{:,}'.format(round(self.total_cost)), "Solve_time:", self.ampl.get_value('_solve_elapsed_time'), "Solve_result: ", self.solve_result, "Improved: No")
+                                # print("Arc", (u,v),"Acyclic:", acy_check and in_arc_check, "Best optimal: ", '{:,}'.format(round(current_cost)), "New optimal: ", '{:,}'.format(round(self.total_cost)), "Solve_time:", self.ampl.get_value('_solve_elapsed_time'), "Solve_result: ", self.solve_result, "Improved: No")
                                 self.network_graph.remove_edge(v, u)
                                 self.network_graph.add_edge(u, v)  
                         else:
-                            print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check, "Best optimal: ", '{:,}'.format(round(current_cost)), "New optimal: ", '{:,}'.format(round(self.total_cost)),  "Solve_time:", self.ampl.get_value('_solve_elapsed_time'), "Solve_result: ", self.solve_result)
+                            # print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check, "Best optimal: ", '{:,}'.format(round(current_cost)), "New optimal: ", '{:,}'.format(round(self.total_cost)),  "Solve_time:", self.ampl.get_value('_solve_elapsed_time'), "Solve_result: ", self.solve_result)
                             self.network_graph.remove_edge(v, u)
                             self.network_graph.add_edge(u, v)                         
                     else:
-                        print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check)
+                        # print("Arc", (u,v),"Acyclic:",acy_check and in_arc_check)
                         self.network_graph.remove_edge(v, u)
                         self.network_graph.add_edge(u, v)                      
-            print(" ")
-            #if improved:
-            #    break
+            # print(" ")
+            
+            # if improved:
+            #     break
+        # (u,v) = best_arc
+        # BEST_ARC.append(best_arc)
         return best_acyclic_flow, improved, current_cost, l, q, h, best_arc
     
     def iterate_acyclic_flows(self):
@@ -615,7 +673,8 @@ class WaterNetworkOptimizer:
         iteration = 1
         best_arc = None
         super_source_out_arc = self.fix_arc_set()
-        # self.plot_graph(super_source_out_arc, best_arc, current_cost, 0)
+        D = self.ampl.getParameter('D').getValues().to_dict()
+        #self.plot_graph(super_source_out_arc, current_cost, 0, q, h, D, (0,0))
         # super_source_out_arc.append(best_arc)
         # print("super_source_out_arc:",super_source_out_arc)
         # super_source_out_arc = self.fix_arc(self.data_number)
@@ -659,13 +718,14 @@ class WaterNetworkOptimizer:
                 # Restore original stdout and stderr
                 sys.stdout = old_stdout
                 sys.stderr = old_stderr
+
     
     def solve(self):
-        #with self.suppress_output():
+        # with self.suppress_output():
         """Solve the optimization problem."""
         self.ampl.option["solver"] = "ipopt"
-        self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes")   #max_iter = 1000
-        self.ampl.option["presolve_eps"] = "8.53e-15"
+        self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo")   #max_iter = 1000
+        self.ampl.option["presolve_eps"] = "6.82e-14"
         self.ampl.option['presolve'] = 1
         # self.ampl.option['solver_msg'] = 0
         # self.ampl.option['show_stats'] = 0
@@ -680,13 +740,15 @@ class WaterNetworkOptimizer:
     def run(self):
         """Main method to run the optimization process."""
         start_time = time.time() 
-        print("Solve the original nonconvex optimization problem using IPOPT ")
+        print("Solve the original nonconvex optimization problem using IPOPT")
         self.load_model()
         self.fix_leaf_arc_flow()
+        self.ampl.eval("subject to con7{(i,j) in arcs}: -sum{k in nodes diff Source} D[k] <= q[i,j];")
+        self.ampl.eval("subject to con8{(i,j) in arcs}: q[i,j] <= sum{k in nodes diff Source} D[k];")
         self.solve()
         cost = self.total_cost
         print("Objective: ",self.total_cost)
-        #self.display_results()
+        # self.display_results()
         # print("Objective: ",self.total_cost)
         print("solve_result: ",self.solve_result)
         print("Solve_time:", self.ampl.get_value('_solve_elapsed_time'),"\n")
@@ -699,7 +761,7 @@ class WaterNetworkOptimizer:
         # print("Acyclic network:",self.network_graph.edges(), "\n")
         # self.generate_random_acyclic_graph()
         # l_sol, q_sol, h_sol = self.generate_initial_points()
-
+        
         self.load_model()
         self.fix_leaf_arc_flow()
         self.update_initial_points(l_sol, q_sol, h_sol)
@@ -707,7 +769,7 @@ class WaterNetworkOptimizer:
         self.solve()
         #self.display_results()
         cost = self.ampl.get_objective("total_cost").value()
-        # print("cost:", self.total_cost)  
+        # print("cost:", self.total_cost)
         # if self.solve_result == "solved":
         #     l_init, q_init, h_init = self.generate_bounding_box_points(num_samples=20)  # Generate 2 feasible points
         #     self.set_initial_point(l_init, q_init, h_init)
@@ -716,6 +778,7 @@ class WaterNetworkOptimizer:
         #     self.solve()
         #     print("perturbed cost:", self.total_cost)
         # Get the solver results
+
         print("Objective: ",self.total_cost)
         print("solve_result: ",self.solve_result)
         print("Solve_time:", self.ampl.get_value('_solve_elapsed_time'))
@@ -739,7 +802,7 @@ if __name__ == "__main__":
         "d6_HG_SP_1_4",
         "d7_HG_SP_2_3",
         "d8_HG_SP_3_4",
-        "d9_HG_SP_4_2", 
+        "d9_HG_SP_4_2",
         "d10_HG_SP_5_5",
         "d11_HG_SP_6_3",
         "d12",
@@ -753,7 +816,7 @@ if __name__ == "__main__":
     ]
 
     # Select the data number here (0 to 18)
-    data_number = 5
+    data_number = 1
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[data_number]}.dat"
     print("Water Network:", data_list[data_number],"\n")
     optimizer = WaterNetworkOptimizer("../m1Basic.mod", input_data_file, data_number)

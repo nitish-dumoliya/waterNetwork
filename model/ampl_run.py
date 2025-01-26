@@ -30,6 +30,8 @@ ampl.read_data(sys.argv[3])
 ampl.option["solver"]= sys.argv[2]
 # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
 ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1"
+ampl.option["gurobi_options"] = "outlev 1"
+
 # ampl.option["presolve_eps"] = "1.09e-12"
 
 # ampl.option["solver"] = "knitro"
@@ -94,10 +96,10 @@ ampl.solve()
 # ampl.eval("display {(i,j) in arcs, k in pipes : X[i,j,k]=1}: X[i,j,k];")
 # ampl.eval("display {(i,j) in arcs, k in pipes }: l[i,j,k];")
 
-ampl.eval("display l;")
-ampl.eval("display q;")
+# ampl.eval("display l;")
+# ampl.eval("display q;")
 # ampl.eval("display {(i,j) in arcs}: q1[i,j]+q2[i,j];")
-ampl.eval("display h;")
+# ampl.eval("display h;")
 # ampl.eval("display total_cost;")
 total_cost = ampl.getObjective("total_cost").value()
 print("total_cost:", total_cost)

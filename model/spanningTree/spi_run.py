@@ -98,7 +98,7 @@ for cycle in cycle_basis:
     # print("s.t. cycle_basis"f{count}": sum{(i,j) in arcs : i,j in "f{cycle}"} x[i,j] <= "f{len(cycle)-1}";")
     # print(f"s.t. cycle_basis{count}: sum{{(i,j) in arcs : i in cycle{count} and j in cycle{count}}} x[i,j] <= {len(cycle)-1};" )  
     tree_ampl.eval(f"s.t. cycle_basis{count}: sum{{(i,j) in arcs : i in cycle{count} and j in cycle{count}}} x[i,j] <= {len(cycle)-1};" ) 
-    count = count +1 
+    count = count +1
 
 ####################################################################################################
 print("======================Solver Results====================")

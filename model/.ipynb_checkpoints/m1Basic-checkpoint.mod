@@ -24,10 +24,10 @@ param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
-
+var t{nodes}>=0;
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
-minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
+#minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes}: 
@@ -54,20 +54,22 @@ subject to con4{(i,j) in arcs , k in pipes}:
 subject to con5{i in Source}: 
     h[i] = E[i]
 ;
-subject to con6{i in nodes diff Source}: 
-    h[i] >= E[i] + P[i]
-;
-#subject to con6_{i in nodes diff Source}: 
-#    h[i] <= E[1] 
+
+#subject to con6{i in nodes diff Source}: 
+#    h[i] >= E[i] + P[i] 
 #;
 
-subject to con7{(i,j) in arcs}:
-    -sum{k in nodes diff Source} D[k] <= q[i,j]
+subject to con6{i in nodes diff Source}: 
+    h[i] = E[i] + P[i] + t[i]
 ;
 
-subject to con8{(i,j) in arcs}:
-    q[i,j] <= sum{k in nodes diff Source} D[k]
-;
+#subject to con7{(i,j) in arcs}:
+#    -sum{k in nodes diff Source} D[k] <= q[i,j]
+#;
+
+#subject to con8{(i,j) in arcs}:
+#    q[i,j] <= sum{k in nodes diff Source} D[k]
+#;
 
 # subject to flow_bound_right{(i,j) in arcs}: 
 #   q[i,j] <= vmax[i,j]*(3.14/4)*(L[i,j]/(sum{k in pipes} l[i,j,k]/(d[k])**4.87))**(2/4.87)
