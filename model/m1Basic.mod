@@ -55,13 +55,9 @@ subject to con5{i in Source}:
     h[i] = E[i]
 ;
 
-#subject to con6{i in nodes diff Source}: 
-#    h[i] >= E[i] + P[i] 
-#;
+subject to con6_{i in nodes diff Source}: h[i] >= E[i] + P[i] ;
 
-subject to con6{i in nodes diff Source}: 
-    h[i] = E[i] + P[i] + t[i]
-;
+#subject to con6{i in nodes diff Source}: h[i] = E[i] + P[i] + t[i];
 
 #subject to con7{(i,j) in arcs}:
 #    -sum{k in nodes diff Source} D[k] <= q[i,j]

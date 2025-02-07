@@ -24,12 +24,12 @@ ampl.reset()
 ampl.read(sys.argv[1])
 ampl.read_data(sys.argv[3])
 # ampl.read_data(f"/home/nitishdumoliya/minotaur/examples/water-network/Data/{data}")
-
+ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
 # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build-d/bin/mqg"
 # ampl.set_option("mqg_options","--presolve 1,--log_level 6, --nlp_engine IPOPT, --eval_within_bnds 1")
 ampl.option["solver"]= sys.argv[2]
 # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
-ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1"
+ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 ampl.option["gurobi_options"] = "outlev 1"
 
 # ampl.option["presolve_eps"] = "1.09e-12"
