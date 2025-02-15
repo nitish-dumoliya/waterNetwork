@@ -1,0 +1,108 @@
+git init     ## initialize the git folder 
+
+git status   ## status od the changes in project, which files are remaining to commit
+
+git branch   ## which branch you are in.
+
+git log --oneline   ## List commits that are reachable by following the parent links
+                     from the given commit(s), but exclude commits that are 
+                     reachable from the one(s) given with a ^ in front of them.  
+
+git branch -b <branch name >
+
+git checkout <branch name>
+
+git commit -m <comments>
+
+git branch -d <branch name>
+
+git merge <branch name>
+
+git pull
+
+git push 
+	ssh-keygen -t ed25519 -C "your_email@example.com"
+	eval "$(ssh-agent -s)"	
+	ssh-add ~/.ssh/id_ed25519
+	cat ~/.ssh/id_ed25519.pub
+	copy this key and add on github account 
+
+	ssh -T git@github.com
+	git remote set-url origin git@github.com:username/your-repository.git
+	git add -A
+	git commit -m "add commit comments"
+	pit push 
+
+Jupeter notebook session :	
+       jupyter lab --no-browser --ip=10.119.2.11 --port=8910
+
+ 
+
+
+NeoVim Commands:
+
+comments multiple line:
+                         ctrl-v
+                         select lines
+                         shift-i
+                         type #
+                         Esc
+  42b7a8e80d805daa03022ed3fde4321d4c3bf2c990a144165d01eeecd6f699c6
+Uncomments multiple line
+
+Tmux Commands  
+
+Create a new window-  (ctrl + b) + c
+
+Move to next window- (ctrl + b) + n
+
+Split vertical-  (ctrl + b) + %
+
+Split horizontal-  (ctrl + b) + "
+
+move to split window-  (ctrl + b) + (down/up/right/left)
+
+command mode-  (ctrl + b) + :
+                                 :rename-window <name>
+
+detach window- (ctrl+b) + d
+reattach- tmux attach
+
+list all tmux sessions currently open in tmux- (ctrl + b) + s
+
+go to tmux session- tmux a -t (n)
+
+tmux list-sessions   or   tmux ls
+
+tmux kill-session 
+
+tmux kill-session -t <number>
+
+tmux kill-server
+
+tmux kill-server -a #The kill-session command can be used to kill all sessions except the current one
+
+
+find command 
+	find . -type f -name <file name>
+	find . -type f -name *.mod       #find the file has suffix .mod
+	find . -type f -name \*mod\*     #find the file has word mod
+	find . -type f -name \*mod\* -exec rm -i {} \;
+
+
+
+powai server git repo address: git clone www.ieor.iitb.ac.in:/home/amahajan/git/phd-thesis/nitish phd-thesis
+
+
+ideas : 1. find the optimal search directions :w
+
+
+
+
+References for water distribution Network :
+
+Cost Optimization of Water Distribution Networks without Storage Tanks
+          https://www.researchgate.net/publication/367583388_Cost_Optimization_of_Water_Distribution_Networks_without_Storage_Tanks
+
+Benchmarks dataset for water distribution networks:
+          https://www.exeter.ac.uk/research/centres/cws/resources/benchmarks/

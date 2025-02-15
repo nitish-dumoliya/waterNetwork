@@ -1,0 +1,41 @@
+SCIP 9.0.1:   tech:outlev = 1
+  lim:time = 3600
+  pre:maxrounds = 1
+  pre:settings = 3
+  cvt:pre:all = 0
+presolving:
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) no symmetry present (symcode time: 0.00)
+presolving (0 rounds: 0 fast, 0 medium, 0 exhaustive):
+ 0 deleted vars, 0 deleted constraints, 0 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 3226 variables (0 bin, 0 int, 0 impl, 3226 cont) and 1038 constraints
+    342 constraints of type <linear>
+    696 constraints of type <nonlinear>
+Presolving Time: 0.02
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.1s|     1 |     0 |  1698 |     - |    44M |   0 |6532 |1038 |6616 |   0 |  0 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  0.3s|     1 |     0 |  4486 |     - |    48M |   0 |6532 |1038 |8616 |2000 |  1 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  0.5s|     1 |     0 |  5529 |     - |    48M |   0 |6532 |1038 |8756 |2140 |  2 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  0.6s|     1 |     0 |  6345 |     - |    48M |   0 |6532 |1038 |8862 |2246 |  3 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  0.8s|     1 |     0 |  7726 |     - |    48M |   0 |6532 |1038 |8952 |2336 |  4 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  0.9s|     1 |     0 |  8639 |     - |    48M |   0 |6532 |1038 |9043 |2427 |  5 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  1.1s|     1 |     0 |  9833 |     - |    48M |   0 |6532 |1038 |9108 |2492 |  6 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  1.2s|     1 |     0 | 10526 |     - |    48M |   0 |6532 |1038 |9165 |2549 |  7 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  1.3s|     1 |     0 | 11255 |     - |    48M |   0 |6532 |1038 |9214 |2598 |  8 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  1.4s|     1 |     0 | 11809 |     - |    48M |   0 |6532 |1038 |9264 |2648 |  9 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  1.4s|     1 |     0 | 12308 |     - |    48M |   0 |6532 |1038 |9308 |2692 | 10 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+  1.5s|     1 |     0 | 12841 |     - |    48M |   0 |6532 |1038 |4180 |2736 | 11 |   0 |   0 | 1.341970e+06 |      --      |    Inf | unknown
+ 26.8s|     1 |     0 |150838 |     - |    49M |   0 |6532 |1038 |4180 |2736 | 11 |   0 |   0 |    cutoff    |      --      |   0.00%| unknown
+
+SCIP Status        : problem is solved [infeasible]
+Solving Time (sec) : 26.78
+Solving Nodes      : 1
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +1.00000000000000e+20
+Gap                : 0.00 %
+WARNING: Dual information only available for pure LPs (only linear constraints).
+SCIP 9.0.1: infeasible problem
+12841 simplex iterations
+total_cost: 0.0

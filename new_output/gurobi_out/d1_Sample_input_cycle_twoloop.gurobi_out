@@ -1,0 +1,141 @@
+Gurobi 11.0.2: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 24.10")
+
+CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 15 rows, 146 columns and 141 nonzeros
+Model fingerprint: 0x097f512a
+Model has 14 quadratic constraints
+Model has 14 general constraints
+Variable types: 146 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [2e-03, 9e+03]
+  QMatrix range    [3e-06, 8e+04]
+  QLMatrix range   [1e+00, 1e+00]
+  Objective range  [2e+00, 6e+02]
+  Bounds range     [1e-01, 1e+03]
+  RHS range        [3e+01, 1e+03]
+Warning: Quadratic constraints contain large coefficient range
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+Presolve added 119 rows and 280 columns
+Presolve time: 0.01s
+Presolved: 596 rows, 531 columns, 4180 nonzeros
+Presolved model has 112 bilinear constraint(s)
+
+Solving non-convex MIQCP
+
+Variable types: 489 continuous, 42 integer (14 binary)
+
+Root relaxation: objective 7.125488e+04, 216 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 71254.8842    0   27          - 71254.8842      -     -    0s
+     0     0 71254.8842    0   33          - 71254.8842      -     -    0s
+     0     0 71254.8842    0   26          - 71254.8842      -     -    0s
+     0     0 73202.4788    0   26          - 73202.4788      -     -    0s
+     0     2 73202.4788    0   23          - 73202.4788      -     -    0s
+  2244   956 102027.416   52   27          - 84189.1629      -  13.4    5s
+  6793  2260 infeasible   47               - 104601.919      -  16.4   10s
+ 12777  5194 398457.122   47   37          - 161824.111      -  14.9   15s
+ 16134  7337 955672.283   47   24          - 183552.512      -  15.2   20s
+ 20870  9429 424125.873   57   28          - 221116.802      -  14.8   25s
+ 25848 12138 346170.059   47   32          - 285785.594      -  14.6   30s
+ 31815 15875 503712.351   45   28          - 316705.256      -  13.7   35s
+ 36525 18354 infeasible   66               - 329015.916      -  13.5   40s
+ 40619 20254 400615.420   43   21          - 335547.882      -  13.4   45s
+ 44859 22478 359575.865   45   32          - 341531.831      -  13.2   50s
+ 49819 24758 435947.281   54   37          - 343154.059      -  12.7   55s
+ 53905 27340 infeasible   79               - 344277.974      -  12.4   60s
+ 58791 28444 438106.023   68   27          - 348714.074      -  12.1   65s
+ 63037 29964 520997.241   63   18          - 350099.212      -  12.2   70s
+ 67512 31781 428005.228   59   35          - 352093.678      -  12.1   75s
+H70839 32533                    4399788.0998 355362.965  91.9%  12.0   78s
+ 71329 32914 445782.152   55   36 4399788.10 355430.584  91.9%  12.0   80s
+ 75899 33948 infeasible   67      4399788.10 361076.328  91.8%  12.0   85s
+H76553 22238                    447838.41178 362362.974  19.1%  12.0   87s
+H76665 12068                    424612.20589 362362.974  14.7%  12.0   87s
+ 78087 11855 415797.336   45   37 424612.206 367209.810  13.5%  12.1   90s
+ 81820 11199 379269.322   49   29 424612.206 375254.208  11.6%  12.4   95s
+ 84628 10665 infeasible   55      424612.206 383179.109  9.76%  12.7  100s
+*86712 10805             129    424416.38358 385890.533  9.08%  12.8  102s
+*86714 10799             130    424409.21199 385890.533  9.08%  12.8  102s
+*86718 10792             133    424402.58321 385890.533  9.07%  12.8  102s
+H87826  9178                    421669.00889 388075.661  7.97%  12.8  104s
+ 88400  9114 407296.275   64   19 421669.009 389592.702  7.61%  12.9  105s
+H91551  9140                    421669.00884 392141.180  7.00%  13.0  109s
+ 91654  9211 420500.581   52   26 421669.009 392277.424  6.97%  13.0  110s
+H93445  8771                    420353.13540 394269.622  6.21%  13.1  112s
+ 95089  9009 408758.577   49   36 420353.135 395579.087  5.89%  13.1  115s
+H95374  9009                    420353.13535 395579.087  5.89%  13.1  115s
+H97156  8073                    418113.64720 397496.996  4.93%  13.1  118s
+ 98457  8528 infeasible   52      418113.647 398713.299  4.64%  13.1  121s
+*100519  8415              76    417162.18763 399171.802  4.31%  13.1  123s
+ 102273  8833 409046.552   60   20 417162.188 400195.405  4.07%  13.1  126s
+ 106528 10274 infeasible   52      417162.188 401357.965  3.79%  13.0  131s
+*106837  7656             131    413332.37265 401366.049  2.90%  13.0  131s
+*106894  7656             187    413332.37257 401366.049  2.90%  12.9  131s
+*108809  5309             107    408948.55819 401471.266  1.83%  12.8  132s
+H110356  4421                    407361.94350 401779.094  1.37%  12.8  135s
+H111696  3868                    406474.24655 402030.775  1.09%  12.7  138s
+H112290  3247                    405688.03863 402113.730  0.88%  12.7  138s
+ 113368  3979 405472.971   83   11 405688.039 402401.462  0.81%  12.6  140s
+H113629  3835                    405559.07250 402408.096  0.78%  12.6  140s
+ 117498  5785 infeasible   80      405559.073 402693.551  0.71%  12.4  145s
+*120007  6583             104    405549.45097 402714.056  0.70%  12.3  146s
+*120008  6581             104    405548.94227 402714.056  0.70%  12.3  146s
+*120009  6578             103    405548.40535 402714.056  0.70%  12.3  146s
+*120010  6575             102    405547.84018 402714.056  0.70%  12.3  146s
+*120011  6573             101    405547.24527 402714.056  0.70%  12.3  146s
+*120012  6573             100    405546.61904 402714.056  0.70%  12.3  146s
+*120013  6573              99    405545.95985 402714.056  0.70%  12.3  146s
+ 121943  6711 404914.594  100    4 405545.960 402885.957  0.66%  12.3  150s
+*122251  2019              80    404008.00253 402885.957  0.28%  12.3  150s
+*122252  2019              80    404007.48751 402885.957  0.28%  12.3  150s
+*123694  2473              98    403985.16732 402903.740  0.27%  12.3  152s
+H124184  1075                    403378.90038 402903.740  0.12%  12.3  152s
+*125575   587              78    403363.30870 402953.100  0.10%  12.3  154s
+ 125933   573 infeasible   88      403363.309 402965.225  0.10%  12.3  155s
+*126937   585              75    403355.80062 403191.924  0.04%  12.3  156s
+*126943   562              79    403350.53656 403191.924  0.04%  12.3  156s
+*127788   708              75    403345.89581 403200.786  0.04%  12.3  157s
+*127800   708              77    403345.81523 403200.786  0.04%  12.3  157s
+*127832   677              80    403339.71767 403200.786  0.03%  12.3  157s
+*128013   677              84    403288.78751 403203.963  0.02%  12.2  157s
+*128741   741              86    403269.06001 403204.242  0.02%  12.2  158s
+*128906   741              86    403257.05970 403205.417  0.01%  12.2  158s
+
+Cutting planes:
+  Implied bound: 2
+
+Explored 130250 nodes (1581075 simplex iterations) in 159.18 seconds (20.19 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 403257 403269 403289 ... 403379
+
+Optimal solution found (tolerance 1.00e-04)
+Warning: max constraint violation (6.7803e-02) exceeds tolerance
+Warning: max general constraint violation (6.7803e-02) exceeds tolerance
+  Piecewise linearization of function constraints often causes big violation.
+  Try to adjust the settings of the related parameters, such as FuncPieces.
+Best objective 4.032570597011e+05, best bound 4.032189945754e+05, gap 0.0094%
+Gurobi 11.0.2: optimal solution; objective 403257.0597
+1.58108e+06 simplex iterations
+130250 branching nodes
+absmipgap=38.0651, relmipgap=9.43942e-05
+------------ WARNINGS ------------
+WARNING:  "Tolerance violations"
+  Type                         MaxAbs [Name]   MaxRel [Name]
+* expr '_pow'                  7E-02           4E-03         
+*: Using the solver's aux variable values.
+Documentation: mp.ampl.com/modeling-tools.html#automatic-solution-check.
+total_cost: 403257.0597011193

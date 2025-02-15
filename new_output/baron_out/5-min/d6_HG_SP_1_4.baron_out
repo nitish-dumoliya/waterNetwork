@@ -1,0 +1,128 @@
+BARON 24.5.8 (2024.05.08): maxtime = 300
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1165 in bounds file "boundsfile.2":
+	L = 0
+	x = 112.20000000000002
+	U = 112.2
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+ Preprocessing found feasible solution with value 0.367173E+07
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+ Preprocessing found feasible solution with value 0.355807E+07
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 97 in bounds file "boundsfile.8":
+	L = 0
+	x = 32.84000000000001
+	U = 32.84
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+          1             1            13.21      786997.         0.355807E+07             
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 26 in bounds file "boundsfile.11":
+	L = 0
+	x = -3.806148416611628e-15
+	U = 49.8
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.14":
+	L = 0
+	x = 86.33000000000001
+	U = 86.33
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+*        15             8            29.28      786997.         0.355359E+07             
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 26 in bounds file "boundsfile.16":
+	L = 0
+	x = -1.3132035354169283e-19
+	U = 49.8
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 38 in bounds file "boundsfile.18":
+	L = 0
+	x = -2.7169446116970895e-14
+	U = 32.97
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 35 in bounds file "boundsfile.19":
+	L = 0
+	x = -2.8367515797276657e-12
+	U = 49.8
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 98 in bounds file "boundsfile.21":
+	L = 0
+	x = -1.722562875057152e-15
+	U = 32.84
+Surprise errno 4 ==> Interrupted system call
+         91            29            59.27      786997.         0.355359E+07             
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 13 in bounds file "boundsfile.22":
+	L = 0
+	x = 63.90000000000002
+	U = 63.9
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+        195            50            92.12      786997.         0.355359E+07             
+        259            52           123.12      786997.         0.355359E+07             
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 13 in bounds file "boundsfile.24":
+	L = 0
+	x = 63.900000000000006
+	U = 63.9
+Surprise errno 4 ==> Interrupted system call
+        305            53           155.45      786997.         0.355359E+07             
+        345            54           182.90      786997.         0.355359E+07             
+        412            55           214.03      786997.         0.355359E+07             
+        471            56           245.68      786997.         0.355359E+07             
+        533            52           276.35      786997.         0.355359E+07             
+        574            53           300.01      786997.         0.355359E+07             
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                   307.98
+ Total CPU time used:               300.01
+
+ Total no. of BaR iterations:     574
+ Best solution found at node:      15
+ Max. no. of nodes in memory:      57
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 574 iterations, CPU time limit reached.
+Objective 3553592.093
+total_cost: 3553592.092557246

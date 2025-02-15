@@ -1,0 +1,114 @@
+Gurobi 11.0.2: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 24.10")
+
+CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 178 rows, 1633 columns and 1532 nonzeros
+Model fingerprint: 0x778dc56b
+Model has 178 quadratic constraints
+Model has 178 general constraints
+Variable types: 1633 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [4e-11, 2e+01]
+  QMatrix range    [3e-06, 8e+02]
+  QLMatrix range   [1e+00, 1e+00]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [3e-01, 5e+02]
+  RHS range        [5e-03, 5e+02]
+  QRHS range       [4e+01, 4e+01]
+Presolve added 605 rows and 3312 columns
+Presolve time: 0.10s
+Presolved: 5945 rows, 6102 columns, 26780 nonzeros
+Presolved model has 89 SOS constraint(s)
+Presolved model has 1246 bilinear constraint(s)
+
+Solving non-convex MIQCP
+
+Variable types: 6015 continuous, 87 integer (87 binary)
+
+Root relaxation: objective 8.789158e+05, 2630 iterations, 0.09 seconds (0.03 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 878915.819    0  181          - 878915.819      -     -    0s
+     0     0 882216.736    0  182          - 882216.736      -     -    0s
+     0     0 882453.249    0  186          - 882453.249      -     -    1s
+     0     0 882453.249    0  186          - 882453.249      -     -    1s
+     0     0 882453.249    0  190          - 882453.249      -     -    1s
+     0     0 882453.249    0  190          - 882453.249      -     -    1s
+     0     0 882453.249    0  190          - 882453.249      -     -    2s
+     0     0 1031296.99    0  193          - 1031296.99      -     -    3s
+     0     2 1031296.99    0  193          - 1031296.99      -     -    4s
+    39    11 1031296.99   12  198          - 1031296.99      -   156    5s
+   545   193 1471462.99   63  216          - 1031296.99      -  56.3   10s
+  1193   533 1462718.59   75  176          - 1031296.99      -  39.9   15s
+  1480   698 1188641.97   80  152          - 1031296.99      -  37.2   20s
+  1483   703 1031296.99   11  289          - 1031296.99      -  42.1   31s
+  1562   707 1755329.04   25  445          - 1031296.99      -  48.0   35s
+  1760   737 1751373.60   51  417          - 1031296.99      -  51.5   40s
+  2018   824 infeasible   68               - 1031296.99      -  54.0   45s
+  2277   891 1036597.03   92  396          - 1031296.99      -  57.3   50s
+  2571  1056 1047888.22   56  519          - 1031296.99      -  58.9   55s
+  2942  1149 1031296.99  113  447          - 1031296.99      -  60.5   61s
+  3507  1330 1031296.99   66  323          - 1031296.99      -  56.7   66s
+  3888  1531 1031296.99  111  331          - 1031296.99      -  55.7   72s
+  4248  1594 infeasible   99               - 1031296.99      -  54.7   75s
+  4847  2124 1035570.08  129  350          - 1031296.99      -  56.0   82s
+  5447  2222 infeasible  123               - 1031296.99      -  53.6   85s
+  6036  2769 1031296.99  134  344          - 1031296.99      -  54.2   95s
+  6643  2786 1031296.99  120  349          - 1031296.99      -  54.2  100s
+  7238  3088 1031296.99  104  425          - 1031296.99      -  56.3  109s
+  7318  3091 1031296.99  108  393          - 1031296.99      -  58.7  115s
+  7323  3171 1031296.99  109  384          - 1031296.99      -  58.7  120s
+  7471  3423 1034078.94  133  380          - 1031296.99      -  60.4  125s
+  8340  3641 1031296.99  112  371          - 1031296.99      -  61.8  133s
+  8543  3910 1031296.99   91  359          - 1031296.99      -  62.8  138s
+  9044  4094 infeasible  111               - 1031296.99      -  64.4  143s
+  9417  4204 infeasible  111               - 1031296.99      -  65.8  149s
+  9612  4599 1035510.92  145  338          - 1031296.99      -  67.3  155s
+ 10238  4662 infeasible  147               - 1031296.99      -  68.0  161s
+ 10375  5066 1035490.64   95  388          - 1031296.99      -  70.2  166s
+ 10975  5112 infeasible   97               - 1031296.99      -  70.6  172s
+ 11137  5495 1035164.61  107  348          - 1031296.99      -  72.8  178s
+ 11803  5735 1060268.38  118  355          - 1031296.99      -  73.9  185s
+ 12168  6195 1035195.15  112  375          - 1031296.99      -  73.7  191s
+ 12917  6392 infeasible  158               - 1031296.99      -  74.1  196s
+ 13299  6647 infeasible  168               - 1031296.99      -  74.6  202s
+ 13798  6764 infeasible  181               - 1031296.99      -  76.8  209s
+ 13999  7123 1275615.37  185  378          - 1031296.99      -  77.6  218s
+ 14638  7202 infeasible  114               - 1031296.99      -  78.1  226s
+ 14864  7499 infeasible  132               - 1031296.99      -  78.5  232s
+ 15488  7497 1032927.60  109  353          - 1031296.99      -  79.4  238s
+ 15514  7654 1042337.83   75  388          - 1031296.99      -  79.6  247s
+ 15779  8019 1034741.51   99  353          - 1031296.99      -  80.2  256s
+ 16463  8369 infeasible  163               - 1031296.99      -  81.0  265s
+ 17136  8448 infeasible  160               - 1031296.99      -  82.0  275s
+ 17355  8749 1038925.28  133  355          - 1031296.99      -  82.3  283s
+ 17918  9025 1066310.70  155  342          - 1031296.99      -  83.6  295s
+ 18551  9089 infeasible  120               - 1031296.99      -  83.8  300s
+
+Cutting planes:
+  Implied bound: 2
+  MIR: 1
+  RLT: 2
+  Relax-and-lift: 2
+
+Explored 18678 nodes (1572691 simplex iterations) in 300.02 seconds (67.98 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 1.031296986402e+06, gap -
+Gurobi 11.0.2: time limit, without a feasible solution
+1.57269e+06 simplex iterations
+18678 branching nodes
+total_cost: 0.0

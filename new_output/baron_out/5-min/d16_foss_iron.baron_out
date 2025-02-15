@@ -1,0 +1,90 @@
+BARON 24.5.8 (2024.05.08): maxtime = 300
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 759 in bounds file "boundsfile.2":
+	L = 101.24
+	x = 101.23999999999998
+	U = 2947.4103578919203
+Surprise errno 4 ==> Interrupted system call
+ Preprocessing found feasible solution with value 171724.
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 41 in bounds file "boundsfile.8":
+	L = 0
+	x = -3.740893350959883e-14
+	U = 312.72
+Surprise errno 4 ==> Interrupted system call
+          1             1             4.08      166436.          171724.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.11":
+	L = 0
+	x = 132.76000000000002
+	U = 132.76
+Surprise errno 4 ==> Interrupted system call
+         22            12            34.03      166436.          171724.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.13":
+	L = 0
+	x = 132.76000000000002
+	U = 132.76
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 196 in bounds file "boundsfile.15":
+	L = 0
+	x = 146.96000000000004
+	U = 146.96
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 40 in bounds file "boundsfile.16":
+	L = 0
+	x = 312.7200000000001
+	U = 312.72
+Surprise errno 4 ==> Interrupted system call
+         85            40            64.58      166436.          171724.                 
+        350            39            94.57      166436.          171724.                 
+       4536           112           124.54      166436.          171724.                 
+       8820           109           154.53      166436.          171724.                 
+      12930           114           184.52      166436.          171724.                 
+      16805           111           214.52      166436.          171724.                 
+      20888           110           244.50      166436.          171724.                 
+      24403           109           274.35      166436.          171724.                 
+      27776           109           300.00      166436.          171724.                 
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                   300.52
+ Total CPU time used:               300.00
+
+ Total no. of BaR iterations:   27776
+ Best solution found at node:      14
+ Max. no. of nodes in memory:     118
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 27776 iterations, CPU time limit reached.
+Objective 171724.3325
+total_cost: 171724.33253762848

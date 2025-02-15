@@ -1,0 +1,47 @@
+BARON 24.5.8 (2024.05.08): maxtime = 300
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 7 in bounds file "boundsfile.2":
+	L = 0
+	x = 900.0000000000001
+	U = 900
+Surprise errno 4 ==> Interrupted system call
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+*         1             1             2.71     0.544054E+07     0.183764E+08             
+          1             1             2.95     0.544054E+07     0.183764E+08             
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 7 in bounds file "boundsfile.11":
+	L = 0
+	x = 900.0000000000001
+	U = 900
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 104 in bounds file "boundsfile.14":
+	L = 0
+	x = -5.388375531726626e-14
+	U = 1230
+Surprise errno 4 ==> Interrupted system call

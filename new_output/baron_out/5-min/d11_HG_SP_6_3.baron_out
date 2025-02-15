@@ -1,0 +1,103 @@
+BARON 24.5.8 (2024.05.08): maxtime = 300
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 2234 in bounds file "boundsfile.2":
+	L = 0
+	x = -3.381702717495259e-15
+	U = 98.37
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+objective _sobj[1]: Initial function value too large = 3.0E+10
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 25 in bounds file "boundsfile.5":
+	L = 0
+	x = 31.790000000000003
+	U = 31.79
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 2 in bounds file "boundsfile.7":
+	L = 0
+	x = -2.3087044781183875e-15
+	U = 37.33
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+          1             1            16.62     0.133211E+07     0.100000E+52             
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 14 in bounds file "boundsfile.9":
+	L = 0
+	x = -3.2162961600041274e-15
+	U = 62.93
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 14 in bounds file "boundsfile.11":
+	L = 0
+	x = -3.2162961600041286e-15
+	U = 62.93
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 13 in bounds file "boundsfile.13":
+	L = 0
+	x = 62.93000000000001
+	U = 62.93
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.15":
+	L = 0
+	x = 37.330000000000005
+	U = 37.33
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 25 in bounds file "boundsfile.17":
+	L = 0
+	x = 31.790000000000003
+	U = 31.79
+Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.0E+10
+          4             3           300.22     0.133211E+07     0.100000E+52             
+
+                    *** Max. allowable time exceeded ***      
+
+                   *** No feasible solution was found ***
+
+ Wall clock time:                   300.54
+ Total CPU time used:               300.22
+
+ Total no. of BaR iterations:       4
+ Best solution found at node:      -3
+ Max. no. of nodes in memory:       3
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 4 iterations, CPU time limit reached.
+Objective 1e+51
+total_cost: 0.0

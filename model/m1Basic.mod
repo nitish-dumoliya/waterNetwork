@@ -19,6 +19,7 @@ param p:= 1.852;
 param a := (15*(delta)^(p-1))/8 + ((p-1)*p*delta^(p-1))/8 - 7*p*(delta^(p-1))/8;
 param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4; 
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
+param eps default 1e-6;  # Small smoothing parameter
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
@@ -34,16 +35,55 @@ subject to con1{j in nodes}:
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
 ;
 
+
 #subject to con2{(i,j) in arcs}: 
-#     h[i] - h[j]  = q[i,j]*abs(q[i,j])^1.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87))
+#     h[i] - h[j]  = q[i,j]*(abs(q[i,j]))^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87))
+#;
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = (q[i,j])*(abs(q[i,j])+eps)^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+#f_first_order_approx1
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = (q[i,j]*(abs(q[i,j]) + eps)^0.852 - 0.852*eps*q[i,j]/(abs(q[i,j])+eps)^0.148) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+#f_first_order_approx2
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = ((q[i,j]*(abs(q[i,j])+0.148*eps)) / (abs(q[i,j]) + eps)^0.148) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+#f_first_order_approx3
+subject to con2{(i,j) in arcs}: 
+     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+eps)^0.852) / (abs(q[i,j]) + 0.852*eps)) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+#f_second_order_approx
+#subject to con2{(i,j) in arcs}:
+#     h[i] - h[j]  = (q[i,j]*(abs(q[i,j]) + eps)^0.852 - 0.852*eps*q[i,j]/(abs(q[i,j])+eps)^0.148 + (0.063048*(eps)^2) * q[i,j]/(abs(q[i,j])+eps)^1.148) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+#var f_first_order_approx{arcs};
+#s.t. first_order_approx{(i,j) in arcs}:
+    #f_first_order_approx[i,j] = q[i,j]*(abs(q[i,j]) + eps)^0.852 - 0.852*eps*q[i,j]/(abs(q[i,j])+eps)^0.148;
+    #f_first_order_approx[i,j] = (q[i,j]*(abs(q[i,j])+0.148*eps)) / (abs(q[i,j]) + eps)^0.148;
+    #f_first_order_approx[i,j] = (q[i,j] * abs(q[i,j])*(abs(q[i,j])+eps)^0.852) / ((abs(q[i,j]) + 0.852*eps));
+
+#var f_second_order_approx{arcs};
+#s.t. second_order_approx{(i,j) in arcs}: f_second_order_approx[i,j] = f_first_order_approx[i,j] + (0.063048*(eps)^2) * q[i,j]/(abs(q[i,j])+eps)^1.148;
+
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = (f_first_order_approx[i,j]) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87))
 #;
 
-subject to con2{(i,j) in arcs }: 
-    (if -delta<=q[i,j]<=delta  then 
-        (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) 
-    else 
-		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j]  
-;
+#subject to con2{(i,j) in arcs }: 
+#    (if -delta<=q[i,j]<=delta  then 
+#        (0.001^1.852)*((q[i,j])*(abs(q[i,j])+eps)^0.852)*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) 
+#    else 
+#		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j]  
+#;
+
+#subject to con2{(i,j) in arcs }: 
+#    (if -delta<=q[i,j]<=delta  then 
+#        (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) 
+#    else 
+#		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j]  
+#;
 
 subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]
@@ -51,6 +91,7 @@ subject to con3{(i,j) in arcs}:
 subject to con4{(i,j) in arcs , k in pipes}: 
     l[i,j,k] <= L[i,j]
 ;
+
 subject to con5{i in Source}: 
     h[i] = E[i]
 ;
