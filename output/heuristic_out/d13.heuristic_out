@@ -1,42 +1,28 @@
-Water Network: d18_pescara 
+Water Network: d13 
 
-Objective:  14902766.281775728
-solve_result:  solved
-Generate the acyclic network using ipopt solution
-Acyclic network: [(2, 6), (2, 4), (3, 7), (3, 10), (4, 6), (4, 11), (8, 9), (9, 3), (10, 2), (11, 1)] 
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(11, 1), (9, 3), (3, 7), (3, 10), (8, 9), (4, 11), (10, 2)}
+super_source_out_arc: [(8, 9), (9, 3), (3, 7), (3, 10), (10, 2), (2, 6), (2, 4)] 
 
-Objective:  14902766.28177572
-solve_result:  solved
+Objective:  14896324.022231866
+Solve_result:  solved
+Solve_time: 0.180064 
 
-Presolve the model for fixing the arc direction
-Is node 8 in cycle? False
-Fix the arc (8, 9)
-Is node 9 in cycle? False
-Fix the arc (9, 3)
-Is node 3 in cycle? False
-Fix the arc (3, 7)
-Is node 7 in cycle? False
-Fix the arc (3, 10)
-Is node 10 in cycle? False
-Fix the arc (10, 2)
-Is node 2 in cycle? True
-Fix the arc (2, 6)
-Fix the arc (2, 4)
-fixed arc direction: [(8, 9), (9, 3), (3, 7), (3, 10), (10, 2), (2, 6), (2, 4)] 
 
-Iteration : 1
-Acyclic network arcs direction:  [(2, 6), (2, 4), (3, 7), (3, 10), (4, 6), (4, 11), (8, 9), (9, 3), (10, 2), (11, 1)]
-Fixed arc set: [(8, 9), (9, 3), (3, 7), (3, 10), (10, 2), (2, 6), (2, 4)]
-Node: 6 in_degree: 2
-Arc (4, 6) Acyclic: True Best optimal:  14902766.28177572 New optimal:  15183164.327051898 solve_result:  solved Improved: No
- 
-*********************************************************Final best results***************************************************************
-Final best objective: 14902766.28177572
-14902766.281775733
-14902766.281775745
-14902766.28177575
-14902766.281775713
-14902766.281775726
-Final best solution after multistart: 14902766.281775713
-Solver_time: 1.2704900000000001
-Heuristic elapsed time: 1.3233914375305176
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [6] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(4, 6)    True      1,48,96,324    1,51,76,153    0.08        solved         No        0.32        
+
+**********************************Final best results******************************************
+
+Water Network: d13
+Final best objective: 14896324.022231866
+Number of nlp problem solved: 2
+Total number of iteration: 1
+Solver_time: 0.26 seconds
+Heuristic elapsed time: 0.32 seconds
+

@@ -1,0 +1,59 @@
+Artelys Knitro 14.0.0: maxtime_real = 3600
+outlev = 4
+threads=8
+feastol = 1.0e-7
+feastol_abs = 1.0e-7
+ms_enable = 1
+ms_maxsolves = 10
+
+=======================================
+          Commercial License
+         Artelys Knitro 14.0.0
+=======================================
+
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 7 variables and 7 constraints.
+
+concurrent_evals:        0
+datacheck:               0
+feastol:                 1e-07
+feastol_abs:             1e-07
+hessian_no_f:            1
+maxtime_real:            3600
+ms_enable:               1
+ms_maxsolves:            10
+numthreads:              8
+outlev:                  4
+
+Problem Characteristics                                 (   Presolved)
+-----------------------
+Objective goal:  Minimize
+Objective type:  linear
+Number of variables:                               1333 (        1326)
+    bounded below only:                              82 (          92)
+    bounded above only:                               0 (          18)
+    bounded below and above:                       1251 (        1207)
+    fixed:                                            0 (           0)
+    free:                                             0 (           9)
+Number of constraints:                              245 (         238)
+    linear equalities:                              182 (         175)
+    quadratic equalities:                             0 (           0)
+    gen. nonlinear equalities:                       63 (          63)
+    linear one-sided inequalities:                    0 (           0)
+    quadratic one-sided inequalities:                 0 (           0)
+    gen. nonlinear one-sided inequalities:            0 (           0)
+    linear two-sided inequalities:                    0 (           0)
+    quadratic two-sided inequalities:                 0 (           0)
+    gen. nonlinear two-sided inequalities:            0 (           0)
+Number of nonzeros in Jacobian:                    2762 (        2664)
+Number of nonzeros in Hessian:                      819 (         819)
+
+Multistart will generate 10 start points as follows:
+   1251 variables will vary within their upper and lower bounds
+     82 variables will vary over a range of 1000
+
+Knitro parallel multistart will run with 8 threads.
+
+ Solve #  ThreadID  Status     Objective     FeasError   OptError   Real Time 
+--------  --------  ------  --------------  ----------  ---------- ----------

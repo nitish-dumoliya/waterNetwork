@@ -1,107 +1,54 @@
-Water Network: d18_pescara 
+Water Network: d5_Taichung_input 
 
-Objective:  8903120.007462097
-solve_result:  solved
-Generate the acyclic network using ipopt solution
-Acyclic network: [(20, 10), (20, 19), (1, 6), (2, 1), (3, 2), (4, 3), (5, 4), (6, 11), (7, 6), (7, 12), (7, 2), (8, 7), (8, 13), (8, 3), (9, 8), (9, 14), (9, 4), (10, 9), (10, 5), (11, 15), (12, 11), (13, 12), (14, 13), (16, 11), (16, 15), (17, 12), (17, 16), (18, 13), (18, 17), (19, 14), (19, 18)] 
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: set()
+super_source_out_arc: [(20, 10), (20, 19)] 
 
-Objective:  8903120.007462043
-solve_result:  solved
+Objective:  8874548.654743606
+Solve_result:  solved
+Solve_time: 1.1535590000000002 
 
-Presolve the model for fixing the arc direction
-Is node 20 in cycle? True
-Fix the arc (20, 10)
-Fix the arc (20, 19)
-fixed arc direction: [(20, 10), (20, 19)] 
 
-Iteration : 1
-Acyclic network arcs direction:  [(20, 10), (20, 19), (1, 6), (2, 1), (3, 2), (4, 3), (5, 4), (6, 11), (7, 6), (7, 12), (7, 2), (8, 7), (8, 13), (8, 3), (9, 8), (9, 14), (9, 4), (10, 9), (10, 5), (11, 15), (12, 11), (13, 12), (14, 13), (16, 11), (16, 15), (17, 12), (17, 16), (18, 13), (18, 17), (19, 14), (19, 18)]
-Fixed arc set: [(20, 10), (20, 19)]
-Node: 2 in_degree: 2
-Arc (3, 2) Acyclic: True Best optimal:  8903120.007462043 New optimal:  8879902.425172478 Solve_result:  solved Improved: Yes
-Arc (7, 2) Acyclic: True Best optimal:  8879902.425172478 New optimal:  8887077.216971386 solve_result:  solved Improved: No
- 
-Node: 3 in_degree: 2
-Arc (4, 3) Acyclic: True Best optimal:  8879902.425172478 New optimal:  8820363.911824077 Solve_result:  solved Improved: Yes
-Arc (8, 3) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8938077.160628516 solve_result:  solved Improved: No
- 
-Node: 4 in_degree: 2
-Arc (5, 4) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8872686.751887873 solve_result:  solved Improved: No
-Arc (9, 4) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8970784.649767522 solve_result:  solved Improved: No
- 
-Node: 6 in_degree: 2
-Arc (1, 6) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8850975.92112541 solve_result:  solved Improved: No
-Arc (7, 6) Acyclic: False
- 
-Node: 11 in_degree: 3
-Arc (6, 11) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9124707.022552297 solve_result:  solved Improved: No
-Arc (12, 11) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8936917.148369294 solve_result:  solved Improved: No
-Arc (16, 11) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8981671.647038367 solve_result:  solved Improved: No
- 
-Node: 12 in_degree: 3
-Arc (7, 12) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9014573.978031512 solve_result:  solved Improved: No
-Arc (13, 12) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8889972.706740232 solve_result:  solved Improved: No
-Arc (17, 12) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9019349.50234282 solve_result:  solved Improved: No
- 
-Node: 13 in_degree: 3
-Arc (8, 13) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9009056.29526108 solve_result:  solved Improved: No
-Arc (14, 13) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8906753.016471399 solve_result:  solved Improved: No
-Arc (18, 13) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9013683.0654082 solve_result:  solved Improved: No
- 
-Node: 14 in_degree: 2
-Arc (9, 14) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8996885.600468649 solve_result:  solved Improved: No
-Arc (19, 14) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8981853.962449472 solve_result:  solved Improved: No
- 
-Node: 15 in_degree: 2
-Arc (11, 15) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8921030.322356667 solve_result:  solved Improved: No
-Arc (16, 15) Acyclic: False
- 
-Iteration : 2
-Acyclic network arcs direction:  [(20, 10), (20, 19), (1, 6), (2, 1), (3, 2), (3, 4), (5, 4), (6, 11), (7, 6), (7, 12), (7, 2), (8, 7), (8, 13), (8, 3), (9, 8), (9, 14), (9, 4), (10, 9), (10, 5), (11, 15), (12, 11), (13, 12), (14, 13), (16, 11), (16, 15), (17, 12), (17, 16), (18, 13), (18, 17), (19, 14), (19, 18)]
-Fixed arc set: [(20, 10), (20, 19)]
-Node: 2 in_degree: 2
-Arc (3, 2) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8834637.990453245 solve_result:  solved Improved: No
-Arc (7, 2) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8840452.679852087 solve_result:  solved Improved: No
- 
-Node: 4 in_degree: 3
-Arc (3, 4) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8843678.677927554 solve_result:  solved Improved: No
-Arc (5, 4) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8865257.014337191 solve_result:  solved Improved: No
-Arc (9, 4) Acyclic: False
- 
-Node: 6 in_degree: 2
-Arc (1, 6) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8852584.186870798 solve_result:  solved Improved: No
-Arc (7, 6) Acyclic: False
- 
-Node: 11 in_degree: 3
-Arc (6, 11) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9094579.020943735 solve_result:  solved Improved: No
-Arc (12, 11) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8923446.427311836 solve_result:  solved Improved: No
-Arc (16, 11) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8900429.432432277 solve_result:  solved Improved: No
- 
-Node: 12 in_degree: 3
-Arc (7, 12) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9045231.582545867 solve_result:  solved Improved: No
-Arc (13, 12) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8847307.4294482 solve_result:  solved Improved: No
-Arc (17, 12) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8963293.805555537 solve_result:  solved Improved: No
- 
-Node: 13 in_degree: 3
-Arc (8, 13) Acyclic: True Best optimal:  8820363.911824077 New optimal:  9010480.969880026 solve_result:  solved Improved: No
-Arc (14, 13) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8854576.361064319 solve_result:  solved Improved: No
-Arc (18, 13) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8926361.513783962 solve_result:  solved Improved: No
- 
-Node: 14 in_degree: 2
-Arc (9, 14) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8958109.668606015 solve_result:  solved Improved: No
-Arc (19, 14) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8964350.712631 solve_result:  solved Improved: No
- 
-Node: 15 in_degree: 2
-Arc (11, 15) Acyclic: True Best optimal:  8820363.911824077 New optimal:  8897364.011521282 solve_result:  solved Improved: No
-Arc (16, 15) Acyclic: False
- 
-*********************************************************Final best results***************************************************************
-Final best objective: 8820363.911824077
-8829861.235986717
-9042302.412794441
-9015016.688452797
-9029751.598120252
-8845083.382878141
-Final best solution after multistart: 8820363.911824077
-Solver_time: 21.069800000000004
-Heuristic elapsed time: 21.449041604995728
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [13, 14, 1, 3, 4, 12, 15, 11] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(8, 13)   True      88,74,549      91,35,604      0.36        solved         No        1.63        
+(19, 14)  True      88,74,549      90,00,679      0.24        solved         No        1.91        
+(2, 1)    True      88,74,549      89,27,005      0.48        solved         No        2.44        
+(4, 3)    True      88,74,549      89,78,839      0.37        solved         No        2.87        
+(5, 4)    True      88,74,549      88,49,511      0.25        solved         Yes       3.16        
+
+visited_nodes: [13, 14, 1, 3, 4]
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [5, 12, 15, 11] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(4, 5)    True      88,49,511      88,27,702      0.28        solved         Yes       3.5         
+
+visited_nodes: [13, 14, 1, 3, 4, 5]
+
+**********************************************************************************************
+Iteration : 3 
+
+self.sorted_nodes: [12, 15, 11] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(7, 12)   True      88,27,702      91,02,233      0.57        solved         No        4.12        
+(11, 15)  True      88,27,702      89,22,189      0.27        solved         No        4.43        
+(6, 11)   True      88,27,702      90,44,930      1.02        solved         No        5.53        
+
+**********************************Final best results******************************************
+
+Water Network: d5_Taichung_input
+Final best objective: 8827701.727622662
+Number of nlp problem solved: 10
+Total number of iteration: 3
+Solver_time: 4.99 seconds
+Heuristic elapsed time: 5.53 seconds
+

@@ -19,6 +19,8 @@ param p:= 1.852;
 param a := (15*(delta)^(p-1))/8 + ((p-1)*p*delta^(p-1))/8 - 7*p*(delta^(p-1))/8;
 param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4; 
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
+param Q_max = sum{k in nodes diff Source} D[k];
+
 param eps default 1e-6;  # Small smoothing parameter
 
 #****************************************VARIABLES****************************************#
@@ -76,11 +78,7 @@ subject to con5{i in Source}:
 
 subject to con6_{i in nodes diff Source}: h[i] >= E[i] + P[i] ;
 
-subject to con7{(i,j) in arcs}:
-    -sum{k in nodes diff Source} D[k] <= q[i,j]
-;
+subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
+subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
 
-subject to con8{(i,j) in arcs}:
-    q[i,j] <= sum{k in nodes diff Source} D[k]
-;
 #*******************************************************************************************#

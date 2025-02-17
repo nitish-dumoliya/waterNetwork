@@ -761,10 +761,10 @@ class WaterNetworkOptimizer:
         
         violations = {}
         
-        for j in ampl.getSet("nodes"):
-            lhs = sum(ampl.getValue(f"q[{i},{j}]") for i in ampl.getSet("nodes") if (i, j) in ampl.getSet("arcs"))
-            rhs = sum(ampl.getValue(f"q[{j},{i}]") for i in ampl.getSet("nodes") if (j, i) in ampl.getSet("arcs"))
-            violations[f"con1_{j}"] = abs(lhs - rhs - ampl.getParameter("D")[j])
+        # for j in ampl.getSet("nodes"):
+        #     lhs = sum(ampl.getValue(f"q[{i},{j}]") for i in ampl.getSet("nodes") if (i, j) in ampl.getSet("arcs"))
+        #     rhs = sum(ampl.getValue(f"q[{j},{i}]") for i in ampl.getSet("nodes") if (j, i) in ampl.getSet("arcs"))
+        #     violations[f"con1_{j}"] = abs(lhs - rhs - ampl.getParameter("D")[j])
         
         for (i, j) in ampl.getSet("arcs"):
             lhs = ampl.getValue(f"h[{i}]") - ampl.getValue(f"h[{j}]")
@@ -772,11 +772,11 @@ class WaterNetworkOptimizer:
                   sum(10.67*ampl.getValue(f"l[{i},{j},{k}]") / ((ampl.getParameter("R")[k] ** 1.852) * ((ampl.getParameter("d")[k] / 1000) ** 4.87)) for k in ampl.getSet("pipes"))
             violations[f"con2_{i},{j}"] = abs(lhs - rhs)
         
-        for i in ampl.getSet("nodes"):
-            if i not in ampl.getSet("Source"):
-                lhs = ampl.getValue(f"h[{i}]")
-                rhs = ampl.getValue(f"E[{i}]") + ampl.getValue(f"P[{i}]")
-                violations[f"con6_{i}"] = max(0, rhs - lhs)
+        # for i in ampl.getSet("nodes"):
+        #     if i not in ampl.getSet("Source"):
+        #         lhs = ampl.getValue(f"h[{i}]")
+        #         rhs = ampl.getValue(f"E[{i}]") + ampl.getValue(f"P[{i}]")
+        #         violations[f"con6_{i}"] = max(0, rhs - lhs)
         
         # Display violations
         for constraint, violation in violations.items():
@@ -869,14 +869,6 @@ class WaterNetworkOptimizer:
                     self.visited_nodes.append(node)
                     self.visited_arc.append((v,u))
                     
-                    # print(f"Arc: {(u,v)}",
-                    #       f"Acyclic: {acy_check and in_arc_check}",
-                    #       f"Best_optimal: {self.format_indian_number(round(current_cost))}", 
-                    #       f"New_optimal: {self.format_indian_number(round(self.total_cost))}", 
-                    #       f"Solve_time: {round(self.ampl.get_value('_solve_elapsed_time'), 2)}", 
-                    #       f"Solve_result: {self.solve_result}", "Improved: Yes", 
-                    #       f"Time_count: {round(time.time() - self.start_time, 2)}")
-                    
                     print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<10}"
                       f"{self.format_indian_number(round(current_cost)):<15}"
                       f"{self.format_indian_number(round(self.total_cost)):<15}"
@@ -919,14 +911,6 @@ class WaterNetworkOptimizer:
                     self.visited_nodes.append(node)
                     self.visited_arc.append(edge)
                 
-                    # print(f"Arc: {(u,v)}",
-                    #       f"Acyclic: {acy_check and in_arc_check}",
-                    #       f"Best_optimal: {self.format_indian_number(round(current_cost))}", 
-                    #       f"New_optimal: {self.format_indian_number(round(self.total_cost))}", 
-                    #       f"Solve_time: {round(self.ampl.get_value('_solve_elapsed_time'), 2)}", 
-                    #       f"Solve_result: {self.solve_result}", "Improved: No ", 
-                    #       f"Time_count: {round(time.time() - self.start_time, 2)}")
-
                     print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<10}"
                       f"{self.format_indian_number(round(current_cost)):<15}"
                       f"{self.format_indian_number(round(self.total_cost)):<15}"
@@ -936,13 +920,7 @@ class WaterNetworkOptimizer:
             else:
                 self.visited_nodes.append(node)
                 self.visited_arc.append(edge)
-                # print(f"Arc: {(u,v)}",
-                #       f"Acyclic: {acy_check and in_arc_check}",
-                #       f"Best_optimal: {self.format_indian_number(round(current_cost))}", 
-                #       f"New_optimal: {self.format_indian_number(round(self.total_cost))}", 
-                #       f"Solve_time: {round(self.ampl.get_value('_solve_elapsed_time'), 2)}", 
-                #       f"Solve_result: {self.solve_result}", "Improved: No ", 
-                #       f"Time_count: {round(time.time() - self.start_time, 2)}")
+                
                 print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<10}"
                   f"{self.format_indian_number(round(current_cost)):<15}"
                   f"{self.format_indian_number(round(self.total_cost)):<15}"
@@ -1008,8 +986,8 @@ class WaterNetworkOptimizer:
         
         print("\n**********************************Final best results******************************************\n")
         print("Water Network:", self.data_list[self.data_number])
-        self.constraint_violation()
-        print(f"Final best objective: {current_cost:.4f}")
+        # self.constraint_violation()
+        print(f"Final best objective: {current_cost}")
 
         print("Number of nlp problem solved:", self.number_of_nlp)
         print("Total number of iteration:", iteration-1)
@@ -1063,7 +1041,7 @@ class WaterNetworkOptimizer:
             # self.ampl.option["scip_options"] = "outlev  1 timelimit 20 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0" #cvt/pre/all = 0
             # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
             # self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive tol = 1e-4 dual_inf_tol=1e-6 ")   #max_iter = 1000
-            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.01  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             # self.ampl.set_option("ipopt_options", """outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo halt_on_ampl_error = yes max_iter = 700""")   #max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
@@ -1161,7 +1139,8 @@ class WaterNetworkOptimizer:
         elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
         print(f"Solver_time: {solver_time:.2f} seconds")
-        print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
+        # print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
+        print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds\n")
         
 if __name__ == "__main__":
     data_list = [

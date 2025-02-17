@@ -29,20 +29,22 @@ ampl.read_data(sys.argv[3])
 # ampl.set_option("mqg_options","--presolve 1,--log_level 6, --nlp_engine IPOPT, --eval_within_bnds 1")
 ampl.option["solver"]= sys.argv[2]
 # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
-#ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
+ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 #ampl.option["gurobi_options"] = "outlev 1"
 # ampl.option["presolve_eps"] = "1.09e-12"
 
 # ampl.option["solver"] = "knitro"
 # ampl.option["solver"] = "/home/nitishdumoliya/dist/bin/ipopt"
 #ampl.option["ipopt_options"] = "print_level 3"
-ampl.set_option("ipopt_options", "outlev = 1 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes")   #max_iter = 1000
-#ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 0 warm_start_init_point 10"
+# ampl.set_option("ipopt_options", "outlev = 1 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes")   #max_iter = 1000
+ampl.option["ipopt_options"] = "outlev = 4 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes"
+
+ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
 # ampl.eval("option gurobi_auxfiles rc;")
-ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3" #lim:time=10 concurrentmip 8 pool_jobs 0
-ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 lsolver = conopt" # lsolver = conopt
-ampl.option["scip_options"] = "outlev  1 timelimit 3600 wantsol" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
-# ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=12 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 0"
+ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iis lsolver = conopt lpsolver = cplex" # lsolver = conopt
+ampl.option["scip_options"] = "outlev  1 timelimit 3600 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
 #ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 1  feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 0 ms_maxsolves = 0"
 ampl.option["presolve"] = "1"
 ampl.option["presolve_eps"] = "8.53e-15"
@@ -106,8 +108,11 @@ ampl.solve()
 # ampl.eval("display {(i,j) in arcs}: q1[i,j]+q2[i,j];")
 # ampl.eval("display h;")
 # ampl.eval("display total_cost;")
+solve_time = ampl.get_value('_solve_elapsed_time')
+
 total_cost = ampl.getObjective("total_cost").value()
 print("total_cost:", total_cost)
+print("solve_time:", solve_time)
 # ampl.eval("display x;")
 # df2 = ampl.get_variable("q")
 # print("Flow Values : ",df2.get_values())

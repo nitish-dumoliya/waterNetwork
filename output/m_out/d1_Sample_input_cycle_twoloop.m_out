@@ -1,65 +1,19 @@
 Environment: User provided options:
-  problem_file = /tmp/at712632
+  problem_file = /tmp/at1523986
   ampl = 1
 Environment: End of user provided options.
 
-MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-103-ga3bd53de
+MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-52-g0ae7849
 MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
 Environment: User provided options:
   presolve = 1
   log_level = 3
   eval_within_bnds = 1
+  nlp_engine = IPOPT
 Environment: End of user provided options.
 
-AMPLInterface: reading file /tmp/at712632
 AMPLInterface: problem type is NLP
 Solver: time used in reading instance = 0.00
----------------------------------------------------
-|Model Statistics                                 |
-|-------------------------------------------------|
-| # variables                                 125 |
-| # binary variables                            0 |
-| # general integer variables                   0 |
-| # continuous variables                      125 |
-| # fixed variables                             0 |
-| # constraints                                22 |
-| # linear constraints                         15 |
-| # SOS1 constraints                            0 |
-| # SOS2 constraints                            0 |
-| # quadratic constraints                       0 |
-| # nonlinear constraints                       7 |
-| # constraints with linear terms              22 |
-| # constraints with bilinear terms             0 |
-| # constraints with quadratic terms            0 |
-| # linear terms in constraints               155 |
-| # bilinear terms in constraints               0 |
-| # square terms in constraints                 0 |
-| # quadratic terms in constraints              0 |
-| # objectives                                  1 |
-| # linear terms in objective                 112 |
-| # quadratic terms in objective                0 |
-| Type of objective:                       linear |
----------------------------------------------------
-MultiStart: Starting constraint classification
------------------------------------------
-|Constraint Statistics                  |
-|---------------------------------------|
-|Aggregation constraint       |       4 |
-|Precedence constraint        |       0 |
-|Variable Bound constraint    |       0 |
-|Partitioning constraint      |       0 |
-|Set Packing constraint       |       0 |
-|Set Covering constraint      |       0 |
-|Cardinality constraint       |       0 |
-|Invariant Knapsack constraint|       0 |
-|Equation Knapsack constraint |       0 |
-|Bin Packing constraint       |       0 |
-|Knapsack constraint          |       0 |
-|Integer Knapsack constraint  |       0 |
-|Mixed Binary constraint      |       0 |
-|No specific structure        |      11 |
------------------------------------------
-MultiStart: Finished constraint classification
 MultiStart: objective sense: minimize
 MultiStart: handlers used in presolve:
 MultiStart: LinearHandler (Handling linear constraints)
@@ -92,50 +46,6 @@ NlPresHandler: Times constraints tightened    = 0
 NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
----------------------------------------------------
-|Model Statistics                                 |
-|-------------------------------------------------|
-| # variables                                 125 |
-| # binary variables                            0 |
-| # general integer variables                   0 |
-| # continuous variables                      125 |
-| # fixed variables                             0 |
-| # constraints                                22 |
-| # linear constraints                         15 |
-| # SOS1 constraints                            0 |
-| # SOS2 constraints                            0 |
-| # quadratic constraints                       0 |
-| # nonlinear constraints                       7 |
-| # constraints with linear terms              22 |
-| # constraints with bilinear terms             0 |
-| # constraints with quadratic terms            0 |
-| # linear terms in constraints               155 |
-| # bilinear terms in constraints               0 |
-| # square terms in constraints                 0 |
-| # quadratic terms in constraints              0 |
-| # objectives                                  1 |
-| # linear terms in objective                 112 |
-| # quadratic terms in objective                0 |
-| Type of objective:                       linear |
----------------------------------------------------
------------------------------------------
-|Constraint Statistics                  |
-|---------------------------------------|
-|Aggregation constraint       |       4 |
-|Precedence constraint        |       0 |
-|Variable Bound constraint    |       0 |
-|Partitioning constraint      |       0 |
-|Set Packing constraint       |       0 |
-|Set Covering constraint      |       0 |
-|Cardinality constraint       |       0 |
-|Invariant Knapsack constraint|       0 |
-|Equation Knapsack constraint |       0 |
-|Bin Packing constraint       |       0 |
-|Knapsack constraint          |       0 |
-|Integer Knapsack constraint  |       0 |
-|Mixed Binary constraint      |       0 |
-|No specific structure        |      11 |
------------------------------------------
 LinearHandler: Statistics for presolve by Linear Handler:
 LinearHandler: Number of iterations           = 3
 LinearHandler: Time taken in initial presolve = 0.00
@@ -162,14 +72,9 @@ NlPresHandler: Times constraints tightened    = 0
 NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
-MultiStart: engine used = ipopt
+MultiStart: engine used = IPOPT
 MultiStart: brancher used = MaxVioBrancher
 BranchAndBound: starting branch-and-bound
- 
-----------------------------------------------------------------------------------------------
- Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
-----------------------------------------------------------------------------------------------
-     0         0             -inf          inf         inf              0             0      0
 
 ******************************************************************************
 This program contains Ipopt, a library for large-scale nonlinear optimization.
@@ -177,13 +82,18 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit https://github.com/coin-or/Ipopt
 ******************************************************************************
 
-     2         1              inf   4.1683e+05    0.00e+00              1             0      1
+ 
+----------------------------------------------------------------------------------------------
+ Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
+----------------------------------------------------------------------------------------------
+     0         0             -inf          inf         inf              0             0      0
+     2         2              inf   4.1719e+05    0.00e+00              1             0      1
 ----------------------------------------------------------------------------------------------
  
 BranchAndBound: stopping branch-and-bound
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 1.54
+BranchAndBound: time taken      = 1.70
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
 MsProcessor: nodes processed     = 1
@@ -195,8 +105,8 @@ MsProcessor: nodes with problems = 0
 MaxVio brancher: times called = 0
 MaxVio brancher: time in brancher = 0.00
 SolutionPool: Number of solutions found = 1
-SolutionPool: Time first solution found = 1.53
-SolutionPool: Time best solution found  = 1.53
+SolutionPool: Time first solution found = 1.68
+SolutionPool: Time best solution found  = 1.68
 Ipopt: total calls            = 0
 Ipopt: calls to Optimize      = 0
 Ipopt: calls to ReOptimize    = 0
@@ -233,135 +143,11 @@ NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
  
-MultiStart: best solution value = 416828.0369
+MultiStart: best solution value = 417194.9526
 MultiStart: best bound estimate from remaining nodes = inf
 MultiStart: gap = 0.0000
 MultiStart: gap percentage = 0.0000
-MultiStart: time used (s) = 1.55
+MultiStart: time used (s) = 1.70
 MultiStart: status of branch-and-bound: Optimal solution found
-MultiStart: wall clock time used (s) = 1.15
-l [1,*,*] (tr)
-:           2            :=
-1    -1e-08
-2    -1e-08
-3    -1e-08
-4    -1e-08
-5        -9.99999e-09
-6        -9.99995e-09
-7        -9.99984e-09
-8        -9.9995e-09
-9        -9.99778e-09
-10       64.3459
-11      935.654
-12       -9.99378e-09
-13       -9.99913e-09
-14       -9.99969e-09
-
- [2,*,*] (tr)
-:           3                  4            :=
-1    -1e-08             -1e-08
-2    -1e-08             -1e-08
-3    -1e-08             -1e-08
-4        -9.99998e-09       -9.99999e-09
-5        -9.99988e-09       -9.99991e-09
-6        -9.99942e-09       -9.99959e-09
-7        -9.99723e-09       -9.99823e-09
-8        -9.98702e-09       -9.99243e-09
-9      1000               1000
-10       -9.9945e-09        -9.99368e-09
-11       -9.99793e-09       -9.99777e-09
-12       -9.99875e-09       -9.99868e-09
-13       -9.99947e-09       -9.99945e-09
-14       -9.99975e-09       -9.99974e-09
-
- [3,*,*] (tr)
-:           5            :=
-1    -1e-08
-2    -1e-08
-3        -9.99999e-09
-4        -9.99998e-09
-5        -9.99982e-09
-6        -9.99907e-09
-7        -9.99413e-09
-8        -9.96083e-09
-9      1000
-10       -9.99509e-09
-11       -9.99806e-09
-12       -9.99881e-09
-13       -9.99948e-09
-14       -9.99975e-09
-
- [4,*,*] (tr)
-:          5                 6            :=
-1    1000             -1e-08
-2      -9.95997e-09   -1e-08
-3      -9.98e-09      -1e-08
-4      -9.98667e-09       -9.99998e-09
-5      -9.99143e-09       -9.99985e-09
-6      -9.99429e-09       -9.99924e-09
-7      -9.996e-09         -9.99584e-09
-8      -9.9975e-09        -9.97745e-09
-9      -9.99793e-09     1000
-10     -9.99864e-09       -9.99489e-09
-11     -9.99906e-09       -9.99801e-09
-12     -9.99929e-09       -9.99879e-09
-13     -9.9996e-09        -9.99947e-09
-14     -9.99978e-09       -9.99975e-09
-
- [6,*,*] (tr)
-:          7          :=
-1     -9.99998e-09
-2     -9.99924e-09
-3     -9.99188e-09
-4    119.626
-5    880.374
-6     -9.98125e-09
-7     -9.99215e-09
-8     -9.99639e-09
-9     -9.99723e-09
-10    -9.99836e-09
-11    -9.99894e-09
-12    -9.99922e-09
-13    -9.99958e-09
-14    -9.99978e-09
-
- [7,*,*] (tr)
-:           5            :=
-1    -1e-08
-2    -1e-08
-3        -9.99996e-09
-4        -9.99985e-09
-5        -9.99868e-09
-6        -9.9881e-09
-7      1000
-8        -9.99024e-09
-9        -9.99406e-09
-10       -9.99757e-09
-11       -9.99865e-09
-12       -9.99907e-09
-13       -9.99954e-09
-14       -9.99976e-09
-;
-
-q :=
-1 2   311.109
-2 3   147.302
-2 4   136.029
-3 5   119.525
-4 5     0.12786
-4 6   102.568
-6 7    10.9022
-7 5   -44.6528
-;
-
-h [*] :=
-1  210
-2  202.907
-3  197.154
-4  197.943
-5  193.247
-6  195
-7  190
-;
-
-total_cost: 416828.03680962214
+MultiStart: wall clock time used (s) = 1.60
+total_cost: 417194.95247263275

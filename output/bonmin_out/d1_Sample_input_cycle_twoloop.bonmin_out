@@ -1,7 +1,8 @@
 Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
 bonmin: bonmin.bb_log_level 5
-bonmin.nlp_log_level 1
-bonmin.num_resolve_at_root 10
+bonmin.nlp_log_level 2
+warm_start_init_point = no
+bonmin.num_resolve_at_root = 10
 
 Cbc3007W No integer variables - nothing to do
 
@@ -11,146 +12,57 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit http://projects.coin-or.org/Ipopt
 ******************************************************************************
 
+NLP0010I Ipopt return (for initialSolve): status  1, iter count  180, time 0.457643
 NLP0012I 
               Num      Status      Obj             It       time                 Location
-NLP0014I             1         OPT 425821.77       59 0.098482
-NLP0014I *           1         OPT 417364.45      155 0.195457         resolve cost
-NLP0014I *           2         OPT 403604.94      185 0.346784         resolve cost
-NLP0014I             3         OPT 424175.56      139 0.188968         resolve cost
-NLP0014I             4         OPT 661238.82      139 0.215001         resolve cost
-NLP0014I             5         OPT 696827.16      147 0.234523         resolve cost
-NLP0014I             6         OPT 472014.87      115 0.154542         resolve cost
-NLP0014I             7         OPT 437457.45      259 0.488234         resolve cost
-NLP0014I             8         OPT 502475.72      120 0.184113         resolve cost
-NLP0014I             9         OPT 472014.87      144 0.2249         resolve cost
-NLP0014I            10         OPT 787185.43      155 0.232946         resolve cost
+NLP0014I             1         OPT 442281.57      180 0.457643
+NLP0001I After 1 tries found a solution of 442281.57 (previous best 442281.57).
+NLP3003W Trying to resolve NLP with different starting point (1 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  236, time 0.550495
+NLP0014I             1         OPT 688164.23      236 0.550495         resolve cost
+NLP0001I After 2 tries found a solution of 688164.23 (previous best 442281.57).
+NLP3003W Trying to resolve NLP with different starting point (2 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  175, time 0.476943
+NLP0011I Solution of value 417193.62 found on 2'th attempt
+NLP0014I *           2         OPT 417193.62      175 0.476943         resolve cost
+NLP0001I After 3 tries found a solution of 417193.62 (previous best 417193.62).
+NLP3003W Trying to resolve NLP with different starting point (3 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  127, time 0.232374
+NLP0014I             3         OPT 433731.24      127 0.232374         resolve cost
+NLP0001I After 4 tries found a solution of 433731.24 (previous best 417193.62).
+NLP3003W Trying to resolve NLP with different starting point (4 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  119, time 0.303853
+NLP0014I             4         OPT 660861.78      119 0.303853         resolve cost
+NLP0001I After 5 tries found a solution of 660861.78 (previous best 417193.62).
+NLP3003W Trying to resolve NLP with different starting point (5 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  133, time 0.307003
+NLP0014I             5         OPT 696445.25      133 0.307003         resolve cost
+NLP0001I After 6 tries found a solution of 696445.25 (previous best 417193.62).
+NLP3003W Trying to resolve NLP with different starting point (6 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  117, time 0.258643
+NLP0014I             6         OPT 471782.44      117 0.258643         resolve cost
+NLP0001I After 7 tries found a solution of 471782.44 (previous best 417193.62).
+NLP3003W Trying to resolve NLP with different starting point (7 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  120, time 0.273406
+NLP0011I Solution of value 403404.33 found on 7'th attempt
+NLP0014I *           7         OPT 403404.33      120 0.273406         resolve cost
+NLP0001I After 8 tries found a solution of 403404.33 (previous best 403404.33).
+NLP3003W Trying to resolve NLP with different starting point (8 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  145, time 0.313143
+NLP0014I             8         OPT 648664.1      145 0.313143         resolve cost
+NLP0001I After 9 tries found a solution of 648664.1 (previous best 403404.33).
+NLP3003W Trying to resolve NLP with different starting point (9 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  135, time 0.295891
+NLP0014I             9         OPT 433731.24      135 0.295891         resolve cost
+NLP0001I After 10 tries found a solution of 433731.24 (previous best 403404.33).
+NLP3003W Trying to resolve NLP with different starting point (10 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  152, time 0.285561
+NLP0014I            10         OPT 786750.1      152 0.285561         resolve cost
+NLP0001I After 11 tries found a solution of 786750.1 (previous best 403404.33).
 Cbc3007W No integer variables - nothing to do
 
  	"Finished"
 
 bonmin: Optimal
-l [1,*,*] (tr)
-:     2      :=
-1       0
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8       0
-9       0
-10      0
-11   1000
-12      0
-13      0
-14      0
-
- [2,*,*] (tr)
-:       3       4      :=
-1      0          0
-2      0          0
-3      0          0
-4      0          0
-5      0          0
-6      0          0
-7    793.078      0
-8    206.922      0
-9      0          0
-10     0       1000
-11     0          0
-12     0          0
-13     0          0
-14     0          0
-
- [3,*,*] (tr)
-:       5        :=
-1      0
-2      0
-3      0
-4      0
-5      0
-6     97.8525
-7    902.147
-8      0
-9      0
-10     0
-11     0
-12     0
-13     0
-14     0
-
- [4,*,*] (tr)
-:     5        6       :=
-1    1000     0
-2       0     0
-3       0     0
-4       0     0
-5       0     0
-6       0     0
-7       0     0
-8       0     0
-9       0   304.784
-10      0   695.216
-11      0     0
-12      0     0
-13      0     0
-14      0     0
-
- [6,*,*] (tr)
-:       7        :=
-1      0
-2      0
-3      0
-4      0
-5      0
-6     10.6058
-7    989.394
-8      0
-9      0
-10     0
-11     0
-12     0
-13     0
-14     0
-
- [7,*,*] (tr)
-:     5      :=
-1    1000
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8       0
-9       0
-10      0
-11      0
-12      0
-13      0
-14      0
-;
-
-q :=
-1 2   311.109
-2 3   102.314
-2 4   181.017
-3 5    74.5369
-4 5     0.270782
-4 6   147.413
-6 7    55.7473
-7 5     0.192315
-;
-
-h [*] :=
-1  210
-2  203.244
-3  190
-4  198.846
-5  180
-6  195
-7  190
-;
-
-total_cost: 403604.939654707
+total_cost: 403404.3255988643
+solve_time: 3.9252770000000003

@@ -37,7 +37,6 @@ subject to con1{j in nodes}:
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
 ;
 
-
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = q[i,j]*(abs(q[i,j]))^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87))
 #;

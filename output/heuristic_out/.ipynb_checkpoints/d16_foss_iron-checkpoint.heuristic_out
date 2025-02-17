@@ -1,0 +1,79 @@
+Water Network: d16_foss_iron 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(37, 1)}
+super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
+
+Objective:  172724.6014023794
+Solve_result:  solved
+Solve_time: 1.2165940000000002 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [18, 19, 11, 26, 16, 13, 35, 10, 15, 2, 22, 21, 12, 25, 24, 5, 29, 9, 14, 28, 7] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(17, 18)  True      1,72,725       1,75,232       0.46        solved         No        1.77        
+(20, 19)  True      1,72,725       1,73,101       0.3         solved         No        2.11        
+(3, 11)   True      1,72,725       1,72,639       0.31        solved         Yes       2.47        
+
+visited_nodes: [18, 19, 11]
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [26, 16, 13, 35, 10, 15, 2, 3, 22, 20, 12, 6, 25, 24, 5, 29, 14, 30, 28, 7] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(27, 26)  True      1,72,639       1,73,777       0.27        solved         No        2.8         
+(27, 16)  True      1,72,639       1,74,074       0.71        solved         No        3.56        
+(14, 13)  True      1,72,639       1,73,940       0.33        solved         No        3.94        
+(34, 35)  True      1,72,639       1,73,856       0.37        solved         No        4.36        
+(32, 10)  True      1,72,639       1,71,769       0.46        solved         Yes       4.86        
+
+visited_nodes: [18, 19, 11, 26, 16, 13, 35, 10]
+
+**********************************************************************************************
+Iteration : 3 
+
+self.sorted_nodes: [15, 2, 32, 3, 22, 21, 20, 12, 6, 25, 24, 5, 29, 30, 28, 7] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(26, 15)  True      1,71,769       1,73,394       0.42        solved         No        5.34        
+(18, 2)   True      1,71,769       1,73,507       0.25        solved         No        5.64        
+(33, 32)  True      1,71,769       1,72,389       0.24        solved         No        5.96        
+(2, 3)    True      1,71,769       1,80,907       0.46        solved         No        6.46        
+(15, 22)  True      1,71,769       1,73,454       0.46        solved         No        6.99        
+(22, 21)  True      1,71,769       1,74,235       0.45        solved         No        7.5         
+(15, 20)  True      1,71,769       1,74,213       0.37        solved         No        7.93        
+(19, 12)  True      1,71,769       1,73,494       0.22        solved         No        8.2         
+(7, 6)    True      1,71,769       1,78,524       0.53        solved         No        8.78        
+(16, 25)  True      1,71,769       1,75,073       0.43        solved         No        9.27        
+(23, 24)  True      1,71,769       1,71,743       0.23        solved         Yes       9.57        
+
+visited_nodes: [18, 19, 11, 26, 16, 13, 35, 10, 15, 2, 32, 3, 22, 21, 20, 12, 6, 25, 24]
+
+**********************************************************************************************
+Iteration : 4 
+
+self.sorted_nodes: [23, 5, 29, 30, 28, 7] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(25, 23)  True      1,71,743       1,78,188       1.36        solved         No        10.99       
+(4, 5)    True      1,71,743       1,74,605       1.27        solved         No        12.3        
+(33, 29)  True      1,71,743       1,74,835       0.9         solved         No        13.26       
+(35, 30)  True      1,71,743       1,75,177       1.22        solved         No        14.52       
+(29, 28)  True      1,71,743       1,73,083       0.29        solved         No        14.86       
+(22, 7)   True      1,71,743       1,73,178       0.37        solved         No        15.27       
+
+**********************************Final best results******************************************
+
+Water Network: d16_foss_iron
+Final best objective: 171743.2828
+Number of nlp problem solved: 26
+Total number of iteration: 4
+Solver_time: 13.89 seconds
+Heuristic elapsed time: 15.27 seconds = 0.25 minutes.
+

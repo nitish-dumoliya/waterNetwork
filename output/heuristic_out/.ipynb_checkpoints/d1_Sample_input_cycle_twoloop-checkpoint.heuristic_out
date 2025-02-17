@@ -1,0 +1,38 @@
+Water Network: d1_Sample_input_cycle_twoloop 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 4), (2, 3)] 
+
+Objective:  417193.6170951268
+Solve_result:  solved
+Solve_time: 0.6298499999999999 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [5, 7] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(3, 5)    True      4,17,194       4,33,731       0.3         solved         No        1.02        
+(5, 7)    True      4,17,194       4,03,404       0.13        solved         Yes       1.18        
+
+visited_nodes: [5, 7]
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+
+**********************************Final best results******************************************
+
+Water Network: d1_Sample_input_cycle_twoloop
+Final best objective: 403404.3262
+Number of nlp problem solved: 3
+Total number of iteration: 2
+Solver_time: 1.06 seconds
+Heuristic elapsed time: 1.18 seconds = 0.02 minutes.
+
