@@ -1,8 +1,11 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
+iisfind = 2
+lsolver = conopt
+lpsolver = cplex
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine saki
+ Running on machine asus
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -10,197 +13,513 @@ outlev = 1
  If you publish work using this software, please cite publications from
  https://minlp.com/baron-publications, such as: 
 
- Khajavirad, A. and N. V. Sahinidis,
- A hybrid LP/NLP paradigm for global optimization relaxations,
- Mathematical Programming Computation, 10, 383-421, 2018.
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: CLP/CBC                                         
- For NLP: IPOPT, FILTERSQP
+ For LP/MIP/QP: ILOG CPLEX                                      
+ For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Solving bounding LP
  Starting multi-start local search
+ Preprocessing found feasible solution with value 786759.
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             1             0.24      71265.8         0.100000E+52             
-*        95+           37             2.52      76107.1         0.309057E+07             
-*        99+           38             2.56      76107.1         0.309056E+07             
-*       103+           40             2.62      76107.1         0.290079E+07             
-*       107+           42             2.68      76107.1         0.245605E+07             
-*       107+           42             2.68      76107.1         0.245605E+07             
-*       111+           44             2.73      76107.1         0.208606E+07             
-*       115+           45             2.76      76107.1         0.198924E+07             
-*       115+           45             2.76      76107.1         0.198924E+07             
-*       126+           47             2.87      76107.1         0.146830E+07             
-*       127            48             2.90      76107.1         0.126871E+07             
-*       162            52             3.32      76107.1         0.123431E+07             
-*       311            42             4.00      116669.         0.122219E+07             
-*       355            39             4.68      116669.          888837.                 
-*       375            39             4.84      116669.          807473.                 
-*       378            20             4.87      116669.          666517.                 
-*       384            22             4.93      116669.          657242.                 
-*       389            21             4.97      116669.          657195.                 
-*       427            22             5.37      116669.          636330.                 
-*       434            26             5.44      116669.          626564.                 
-*       442            24             5.48      116669.          626226.                 
-*       443            25             5.48      116669.          625655.                 
-*       447            25             5.52      116669.          625384.                 
-*       448            23             5.53      116669.          625378.                 
-*       476            21             6.25      159981.          523814.                 
-*       480            23             6.40      159981.          520739.                 
-*       572            48             7.35      159981.          519949.                 
-*       573            44             7.36      159981.          519481.                 
-*       574            45             7.37      159981.          519480.                 
-*       575            44             7.38      159981.          519479.                 
-*       616            23             7.86      176500.          496093.                 
-*       709            44             8.80      177390.          472673.                 
-*       808            48             9.92      253708.          472250.                 
-*      1332            66            13.30      260879.          472194.                 
-*      1333            65            13.31      260879.          472179.                 
-*      1334            64            13.31      260879.          472178.                 
-       1960           157            17.44      261783.          472178.                 
-       2883           240            21.98      262114.          472178.                 
-       3978           364            27.18      262393.          472178.                 
-*      5088           479            32.44      262479.          472178.                 
-*      5693           590            35.48      262522.          472173.                 
-*      6215           678            38.10      262678.          472167.                 
-*      6343           691            38.73      262679.          472167.                 
-*      6768           745            40.69      262703.          472167.                 
-*      7567           846            45.23      262822.          472165.                 
-*      7735           737            46.08      262825.          472158.                 
-*      7736           699            46.09      262825.          472156.                 
-*      9156           889            52.80      262928.          472155.                 
-*      9502           909            54.21      262949.          472154.                 
-      11086          1179            61.71      263044.          472154.                 
-      12617          1452            69.22      263076.          472154.                 
-      16477          2115            87.20      263104.          472154.                 
+*         1             1             0.12      71254.9          417195.                 
+          1             1             0.37      71254.9          417195.                 
+*         2             2             0.45      71254.9          403406.                 
 
-                     *** Search interrupted by user ***       
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.7":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
 
- Wall clock time:                   424.30
- Total CPU time used:                94.75
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.9":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
 
- Total no. of BaR iterations:   18205
- Best solution found at node:    9502
- Max. no. of nodes in memory:    2348
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.10":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.12":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.13":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.15":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.17":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.20":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.23":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.26":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+       6517           323            29.51      246628.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.29":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+      12637           566            58.89      251888.          403406.                 
+      18675           892            88.58      263320.          403406.                 
+      24565          1271           118.23      264988.          403406.                 
+      30189          1681           147.92      267459.          403406.                 
+      35482          2047           177.71      268628.          403406.                 
+      40938          2422           207.55      269613.          403406.                 
+      46422          2749           237.08      270363.          403406.                 
+      52152          3155           266.77      270951.          403406.                 
+      57948          3495           296.53      271312.          403406.                 
+      63779          3836           326.30      271868.          403406.                 
+      69333          4171           355.88      272533.          403406.                 
+      74809          4586           385.62      273131.          403406.                 
+      80288          5003           415.16      273453.          403406.                 
+      85956          5445           444.50      273717.          403406.                 
+      91642          5922           474.26      274022.          403406.                 
+      97444          6374           504.00      274431.          403406.                 
+     103042          6793           533.82      274767.          403406.                 
+     108365          7230           563.46      275123.          403406.                 
+     113751          7640           593.26      275697.          403406.                 
+     119015          8051           623.04      276138.          403406.                 
+     124349          8460           652.83      276303.          403406.                 
+     129737          8834           682.62      276547.          403406.                 
+     135004          9176           712.27      276732.          403406.                 
+     140318          9563           742.01      276972.          403406.                 
+     145761         10008           771.79      277286.          403406.                 
+     151106         10494           801.54      277580.          403406.                 
+     156474         10939           831.38      277956.          403406.                 
+     161948         11377           861.07      278437.          403406.                 
+     167488         11888           890.85      278676.          403406.                 
+     172715         12350           920.66      279059.          403406.                 
+     178040         12752           950.43      279620.          403406.                 
+     183796         13267           980.21      280140.          403406.                 
+     189256         13742          1009.83      280600.          403406.                 
+     194223         14171          1039.52      280904.          403406.                 
+     199305         14551          1069.33      281154.          403406.                 
+     204602         15011          1099.23      281361.          403406.                 
+     209869         15460          1129.02      281547.          403406.                 
+     214934         15819          1158.87      281737.          403406.                 
+     220189         16249          1188.60      281930.          403406.                 
+     225606         16735          1218.19      282160.          403406.                 
+     230948         17178          1247.98      282295.          403406.                 
+     236177         17587          1277.76      282465.          403406.                 
+     241631         18048          1307.41      282624.          403406.                 
+     246772         18401          1337.19      282824.          403406.                 
+     252107         18790          1366.86      283069.          403406.                 
+     257504         19135          1396.71      283253.          403406.                 
+     262975         19567          1426.45      283463.          403406.                 
+     268451         19981          1456.37      283662.          403406.                 
+     273722         20341          1486.04      283908.          403406.                 
+     279171         20860          1515.76      284089.          403406.                 
+     284537         21320          1545.58      284352.          403406.                 
+     290093         21813          1575.21      284552.          403406.                 
+     295383         22257          1604.95      284734.          403406.                 
+     300589         22754          1634.69      284961.          403406.                 
+     305832         23234          1664.53      285109.          403406.                 
+     311491         23833          1694.27      285241.          403406.                 
+     316927         24375          1724.07      285366.          403406.                 
+     322261         24814          1753.94      285536.          403406.                 
+     327810         25232          1783.70      285702.          403406.                 
+     333184         25718          1813.54      285835.          403406.                 
+     338848         26168          1843.41      286071.          403406.                 
+     344092         26580          1873.05      286252.          403406.                 
+     349477         27044          1902.76      286400.          403406.                 
+     354587         27463          1932.35      286520.          403406.                 
+     359950         27915          1962.04      286661.          403406.                 
+     365091         28302          1991.82      286800.          403406.                 
+     370462         28791          2021.49      286914.          403406.                 
+     375691         29259          2051.24      286979.          403406.                 
+     380860         29669          2080.88      287071.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.31":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     385864         30136          2110.34      287159.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.33":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     391499         30685          2140.03      287254.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.35":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     396615         31141          2169.55      287311.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.37":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     401833         31532          2198.86      287411.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.39":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     407066         31995          2228.54      287546.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.41":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     412345         32458          2258.33      287617.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.45":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     417867         32901          2288.19      287716.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.47":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     423240         33334          2317.84      287820.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.49":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     428544         33682          2347.54      287939.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.51":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     433649         34056          2377.21      288013.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.53":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     438797         34469          2407.09      288081.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.55":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     443768         34848          2436.88      288145.          403406.                 
+     449039         35248          2466.70      288262.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.59":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     454179         35600          2496.28      288348.          403406.                 
+     459486         36012          2526.05      288439.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.63":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.65":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     464948         36483          2555.85      288546.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.67":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     470217         36962          2585.60      288624.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.69":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     475497         37444          2615.18      288732.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.71":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     480940         37903          2644.57      288845.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.73":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     486200         38404          2674.23      288961.          403406.                 
+     491567         38843          2704.02      289065.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.77":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     497000         39297          2733.79      289128.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.79":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     502352         39720          2763.43      289227.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.81":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     507551         40144          2793.28      289339.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.85":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     512910         40595          2823.02      289453.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.87":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     518061         41004          2852.85      289515.          403406.                 
+     523501         41454          2882.62      289574.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.91":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     528469         41842          2912.34      289659.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.93":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     533609         42231          2942.14      289778.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.95":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     538973         42702          2971.95      289853.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 71 in bounds file "boundsfile.97":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     543936         43106          3001.76      289914.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.99":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     549122         43486          3031.57      289995.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.101":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     554544         43935          3061.22      290095.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.103":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     559817         44416          3090.88      290189.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.105":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     565039         44899          3120.45      290255.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.107":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.109":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     570457         45366          3150.03      290358.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.111":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     575968         45905          3179.66      290488.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.113":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     581315         46347          3209.16      290577.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.115":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     586579         46804          3238.62      290669.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.117":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     592045         47364          3268.24      290748.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.119":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     597404         47931          3297.83      290845.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.121":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     602757         48421          3327.40      290965.          403406.                 
+     607956         48930          3356.96      291052.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.125":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.127":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     613131         49382          3386.29      291150.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.129":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     618420         49801          3415.85      291270.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.131":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     623629         50286          3445.39      291371.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.133":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     628824         50738          3474.97      291450.          403406.                 
+     634041         51181          3504.43      291546.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.137":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     639534         51638          3533.91      291663.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 15 in bounds file "boundsfile.139":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     644847         52071          3563.24      291736.          403406.                 
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1 in bounds file "boundsfile.141":
+	L = 0
+	x = 1000.0000000000001
+	U = 1000
+Surprise errno 4 ==> Interrupted system call
+     649956         52502          3592.95      291806.          403406.                 
+     651128         52600          3600.00      291821.          403406.                 
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3638.11
+ Total CPU time used:              3600.00
+
+ Total no. of BaR iterations:  651128
+ Best solution found at node:  301797
+ Max. no. of nodes in memory:   52600
  
  All done
 ===========================================================================
-BARON: Cntrl-C Abort
-
-amplexit
-BARON: Interrupted by Control-C
-recrmdir: Cannot open "/tmp/baron_tmp675306"
-
-Could not remove scratch directory "/tmp/baron_tmp675306".
-
-BARON 24.5.8 (2024.05.08): 0 iterations, numerical difficulties.
-Objective 1e+51
-        0
-12     0          0
-13     0          0
-14     0          0
-
- [3,*,*] (tr)
-:       5        :=
-1      0
-2      0
-3      0
-4      0
-5      0
-6     97.8521
-7    902.148
-8      0
-9      0
-10     0
-11     0
-12     0
-13     0
-14     0
-
- [4,*,*] (tr)
-:     5        6       :=
-1    1000     0
-2       0     0
-3       0     0
-4       0     0
-5       0     0
-6       0     0
-7       0     0
-8       0     0
-9       0   304.731
-10      0   695.269
-11      0     0
-12      0     0
-13      0     0
-14      0     0
-
- [6,*,*] (tr)
-:       7        :=
-1      0
-2      0
-3      0
-4      0
-5      0
-6     10.6054
-7    989.395
-8      0
-9      0
-10     0
-11     0
-12     0
-13     0
-14     0
-
- [7,*,*] (tr)
-:     5      :=
-1    1000
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8       0
-9       0
-10      0
-11      0
-12      0
-13      0
-14      0
-;
-
-q :=
-1 2   311.109
-2 3   102.314
-2 4   181.017
-3 5    74.5369
-4 5     0.270781
-4 6   147.413
-6 7    55.7473
-7 5     0.192315
-;
-
-h [*] :=
-1  210
-2  203.244
-3  190
-4  198.846
-5  180
-6  195
-7  190
-;
-
-total_cost: 403606.7689052183
-1  210
-2  203.244
-3  190
-4  198.846
-5  180
-6  195
-7  190
-;
-
-total_cost: 403606.7689052183
+BARON 24.5.8 (2024.05.08): 651128 iterations, CPU time limit reached.
+Objective 403406.1549
+total_cost: 403406.15487382683
+solve_time: 3638.288854

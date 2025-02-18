@@ -1,9 +1,11 @@
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
+iisfind = 2
 lsolver = conopt
+lpsolver = cplex
 ===========================================================================
  BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine saki
+ Running on machine asus
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -11,181 +13,48 @@ lsolver = conopt
  If you publish work using this software, please cite publications from
  https://minlp.com/baron-publications, such as: 
 
- Khajavirad, A. and N. V. Sahinidis,
- A hybrid LP/NLP paradigm for global optimization relaxations,
- Mathematical Programming Computation, 10, 383-421, 2018.
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: CLP/CBC                                         
+ For LP/MIP/QP: ILOG CPLEX                                      
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Solving bounding LP
  Starting multi-start local search
 
-/opt/ampl/conopt: bad bound triple 135 in bounds file "boundsfile.2":
-	L = 397
-	x = 396.99999999999994
-	U = 2877.3283173280097
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 131 in bounds file "boundsfile.2":
+	L = 449
+	x = 58154297039.172165
+	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.156912E+08
+ Preprocessing found feasible solution with value 0.148963E+08
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-*         1             1             0.11     0.131781E+08     0.149028E+08             
-          1             1             0.26     0.131781E+08     0.149028E+08             
-          7             0             0.99     0.149028E+08     0.149028E+08             
+
+/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 131 in bounds file "boundsfile.8":
+	L = 449
+	x = 20503799680.10638
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+          1             1             0.45     0.131729E+08     0.148963E+08             
+         21             0             2.02     0.148963E+08     0.148963E+08             
 
                          *** Normal completion ***            
 
- Wall clock time:                     1.01
- Total CPU time used:                 0.99
+ Wall clock time:                     2.33
+ Total CPU time used:                 2.02
 
- Total no. of BaR iterations:       7
- Best solution found at node:       2
- Max. no. of nodes in memory:       3
+ Total no. of BaR iterations:      21
+ Best solution found at node:       1
+ Max. no. of nodes in memory:       2
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 7 iterations, optimal within tolerances.
-Objective 14902767.46
-l [2,*,*] (tr)
-:       4        6      :=
-0       0       3491
-1       0          0
-2       0          0
-3       0          0
-4    1459.52       0
-5     982.479      0
-6       0          0
-7       0          0
-8       0          0
-9       0          0
-10      0          0
-11      0          0
-12      0          0
-
- [3,*,*] (tr)
-:      7      10     :=
-0       0       0
-1       0       0
-2       0       0
-3    4336.1     0
-4    3008.9     0
-5       0       0
-6       0     924
-7       0       0
-8       0       0
-9       0       0
-10      0       0
-11      0       0
-12      0       0
-
- [4,*,*] (tr)
-:     6    11     :=
-0    318     0
-1      0     0
-2      0     0
-3      0   485
-4      0     0
-5      0     0
-6      0     0
-7      0     0
-8      0     0
-9      0     0
-10     0     0
-11     0     0
-12     0     0
-
- [8,*,*] (tr)
-:       9       :=
-0       0
-1       0
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8     887.19
-9    1798.81
-10      0
-11      0
-12      0
-
- [9,*,*] (tr)
-:       3        :=
-0       0
-1       0
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8    1714.7
-9     228.304
-10      0
-11      0
-12      0
-
- [10,*,*] (tr)
-:     2      :=
-0       0
-1       0
-2       0
-3       0
-4       0
-5    4808
-6       0
-7       0
-8       0
-9       0
-10      0
-11      0
-12      0
-
- [11,*,*] (tr)
-:       1        :=
-0       0
-1     790.281
-2    3475.72
-3       0
-4       0
-5       0
-6       0
-7       0
-8       0
-9       0
-10      0
-11      0
-12      0
-;
-
-q :=
-2  4     9.91069
-2  6     1.38931
-3  7     5.2
-3  10   12.9
-4  6     2.21069
-4  11    4.2
-8  9    24.9
-9  3    24.9
-10 2    12.9
-11 1     4.2
-;
-
-h [*] :=
- 1  449
- 2  491.164
- 3  518.491
- 4  480.015
- 6  476.955
- 7  500
- 8  530
- 9  524.157
-10  516
-11  479
-;
-
-total_cost: 14902767.461729225
+BARON 24.5.8 (2024.05.08): 21 iterations, optimal within tolerances.
+Objective 14896325.2
+total_cost: 14896325.202315519
+solve_time: 2.366056
