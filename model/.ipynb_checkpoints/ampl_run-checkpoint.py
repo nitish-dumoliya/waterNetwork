@@ -41,7 +41,9 @@ ampl.option["ipopt_options"] = "outlev = 6 expect_infeasible_problem = yes bound
 
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
 # ampl.eval("option gurobi_auxfiles rc;")
-ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+# ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 networkalg = 1 networkcuts = 1 seed 5 varbranch = 3 cuts = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+
 ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 2 lsolver = conopt lpsolver = cplex" # lsolver = conopt
 ampl.option["scip_options"] = "outlev  1 timelimit 3600 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
 ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"

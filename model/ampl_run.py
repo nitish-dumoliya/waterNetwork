@@ -37,11 +37,14 @@ ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_b
 # ampl.option["solver"] = "/home/nitishdumoliya/dist/bin/ipopt"
 #ampl.option["ipopt_options"] = "print_level 3"
 # ampl.set_option("ipopt_options", "outlev = 1 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes")   #max_iter = 1000
-ampl.option["ipopt_options"] = "outlev = 6 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling = gradient-based warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes"
+#ampl.option["ipopt_options"] = "outlev = 6 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling = gradient-based warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes"
 
+ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
 # ampl.eval("option gurobi_auxfiles rc;")
-ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+# ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 networkalg = 1 networkcuts = 1 seed 5 varbranch = 3 cuts = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+
 ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 2 lsolver = conopt lpsolver = cplex" # lsolver = conopt
 ampl.option["scip_options"] = "outlev  1 timelimit 3600 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
 ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"

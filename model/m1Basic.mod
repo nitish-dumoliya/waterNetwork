@@ -21,7 +21,7 @@ param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4;
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 param Q_max = sum{k in nodes diff Source} D[k];
 
-param eps default 1e-6;  # Small smoothing parameter
+param eps default 1e-15;  # Small smoothing parameter
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
