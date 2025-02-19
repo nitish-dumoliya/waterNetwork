@@ -814,18 +814,15 @@ class WaterNetworkOptimizer:
                            sum(10.67 * ampl.getValue(f"l[{i},{j},{k}]") / ((ampl.getParameter("R")[k] ** 1.852) *
                                                                            ((ampl.getParameter("d")[k] / 1000) ** 4.87))
                                for k in ampl.getSet("pipes"))
-            original_value = abs(original_lhs - original_rhs)
+            original_value = original_rhs
     
             # Approximated constraint value using provided values
             approx_lhs = approx_solution['h'][i] - approx_solution['h'][j]
-            approx_rhs = approx_solution['q'][i, j] * (abs(approx_solution['q'][i, j])) ** 0.852 * (0.001 ** 1.852) * \
-                         sum(10.67 * approx_solution['l'][i, j, k] / ((ampl.getParameter("R")[k] ** 1.852) *
-                                                                      ((ampl.getParameter("d")[k] / 1000) ** 4.87))
-                             for k in ampl.getSet("pipes"))
-            approx_value = abs(approx_lhs - approx_rhs)
+            approx_rhs = approx_solution['q'][i, j] * ((abs(approx_solution['q'][i, j])+1000*epsilon) ** 0.852) *(abs(approx_solution['q'][i,j])/(abs(approx_solution['q'][i,j]) + 852*epsilon)) * (0.001 ** 1.852) *  sum(10.67 * approx_solution['l'][i, j, k] / ((ampl.getParameter("R")[k] ** 1.852) * ((ampl.getParameter("d")[k] / 1000) ** 4.87)) for k in ampl.getSet("pipes"))
+            approx_value = approx_rhs
     
             # Compute relative gap
-            relative_gap = abs(original_value - approx_value) / (abs(original_value) + epsilon)
+            relative_gap = (original_value - approx_value) / (original_value+epsilon)
             relative_gaps[f"con2_{i},{j}"] = relative_gap
     
         # Display relative gaps
@@ -874,7 +871,7 @@ class WaterNetworkOptimizer:
                         delta_arc[u, v] =  abs(self.q[v,u])
 
         # print("self.sorted_nodes:",self.sorted_nodes,"\n")
-        
+
         for node in  self.sorted_nodes:
             node_arcs = [(u, v) for (u, v) in self.network_graph.in_edges(node) if (u, v) in delta_arc]
             edge = max(node_arcs, key=lambda arc: abs(delta_arc[arc]))  # Pick the arc with max absolute delta_arc
@@ -921,9 +918,9 @@ class WaterNetworkOptimizer:
                     print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
                       f"{self.format_indian_number(round(current_cost)):<14}"
                       f"{self.format_indian_number(round(self.total_cost)):<14}"
-                      f"{round(self.ampl.get_value('_solve_elapsed_time'), 2):<12}"
+                      f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
                       f"{self.solve_result:<14}{'Yes':<10}"
-                      f"{round(time.time() - self.start_time, 2):<12}")
+                      f"{round(time.time() - self.start_time, 2)}s")
                     current_cost = self.total_cost
                     improved = True
                     self.network_graph = self.generate_random_acyclic_from_solution(q)
@@ -963,9 +960,9 @@ class WaterNetworkOptimizer:
                     print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
                       f"{self.format_indian_number(round(current_cost)):<14}"
                       f"{self.format_indian_number(round(self.total_cost)):<14}"
-                      f"{round(self.ampl.get_value('_solve_elapsed_time'), 2):<12}"
+                      f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
                       f"{self.solve_result:<14}{'No':<10}"
-                      f"{round(time.time() - self.start_time, 2):<12}")
+                      f"{round(time.time() - self.start_time, 2)}s")
             else:
                 self.visited_nodes.append(node)
                 self.visited_arc.append(edge)
@@ -973,9 +970,9 @@ class WaterNetworkOptimizer:
                 print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
                   f"{self.format_indian_number(round(current_cost)):<14}"
                   f"{self.format_indian_number(round(self.total_cost)):<14}"
-                  f"{round(self.ampl.get_value('_solve_elapsed_time'), 2):<12}"
+                  f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
                   f"{self.solve_result:<14}{'No':<10}"
-                  f"{round(time.time() - self.start_time, 2):<12}")
+                  f"{round(time.time() - self.start_time, 2)}s")
                                              
             # print(" ")
             # if improved:
@@ -1091,7 +1088,7 @@ class WaterNetworkOptimizer:
             # self.ampl.option["scip_options"] = "outlev  1 timelimit 20 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0" #cvt/pre/all = 0
             # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
             # self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive tol = 1e-4 dual_inf_tol=1e-6 ")   #max_iter = 1000
-            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             # self.ampl.set_option("ipopt_options", """outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo halt_on_ampl_error = yes max_iter = 700""")   #max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
@@ -1114,7 +1111,7 @@ class WaterNetworkOptimizer:
             # self.ampl.option["loqo_options"]="maxit 10000"
             # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
             # self.ampl.set_option("snopt_options", "meminc = 1 major_iterations_limit = 200")
-            self.ampl.set_option("ipopt_options", "outlev = 5 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.01 nlp_scaling_method = none  warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = monotone mu_oracle = loqo  warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9 max_iter = 600 mu_init=0.0001")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", "outlev = 5 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive mu_oracle = loqo max_iter = 600")   #max_iter = 1000
             # self.ampl.set_option("ipopt_options", """outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo  halt_on_ampl_error = yes max_iter = 400""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1

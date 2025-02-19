@@ -1,30 +1,33 @@
-Artelys Knitro 14.0.0: maxtime_real = 3600
+Artelys Knitro 14.2.0: maxtime_real = 3600
 outlev = 4
 threads=8
 feastol = 1.0e-7
 feastol_abs = 1.0e-7
 ms_enable = 1
 ms_maxsolves = 10
+WARNING:  Option 'threads' is deprecated, please use 'numthreads'.
 
 =======================================
           Commercial License
-         Artelys Knitro 14.0.0
+         Artelys Knitro 14.2.0
 =======================================
 
 No start point provided -- Knitro computing one.
 
 Knitro presolve eliminated 0 variables and 0 constraints.
 
-concurrent_evals:        0
-datacheck:               0
-feastol:                 1e-07
-feastol_abs:             1e-07
-hessian_no_f:            1
-maxtime_real:            3600
-ms_enable:               1
-ms_maxsolves:            10
-numthreads:              8
-outlev:                  4
+concurrent_evals         0
+datacheck                0
+feastol                  1e-07
+feastol_abs              1e-07
+findiff_numthreads       1
+hessian_no_f             1
+hessopt                  1
+maxtime_real             3600
+ms_enable                1
+ms_maxsolves             10
+numthreads               8
+outlev                   4
 
 Problem Characteristics                                 (   Presolved)
 -----------------------
@@ -49,49 +52,59 @@ Number of constraints:                              185 (         185)
 Number of nonzeros in Jacobian:                    1105 (        1105)
 Number of nonzeros in Hessian:                      392 (         392)
 
-Multistart will generate 10 start points as follows:
-    458 variables will vary within their upper and lower bounds
-     61 variables will vary over a range of 1000
-
 Knitro parallel multistart will run with 8 threads.
 
- Solve #  ThreadID  Status     Objective     FeasError   OptError   Real Time 
---------  --------  ------  --------------  ----------  ---------- ----------
-       6         6       0    1.242466e+07   2.957e-08   3.654e-05     36.131
-       7         1       0    1.213675e+07   4.795e-08   3.482e-06     46.412
-       8         2       0    1.226883e+07   7.054e-09   1.778e-08     49.192
-       1         0       0    1.232814e+07   5.365e-10   3.489e-07     51.213
-       2         5       0    1.222889e+07   9.830e-09   6.027e-06     55.093
-       5         3       0    1.227476e+07   2.394e-10   2.466e-09     56.899
-       3         4       0    1.226883e+07   5.088e-10   4.191e-09     58.561
-      10         1       0    1.255235e+07   1.649e-10   3.054e-08     37.189
-       4         7       0    1.227690e+07   5.289e-11   4.012e-09     91.120
-       9         6       0    1.250611e+07   2.355e-10   5.509e-08     61.033
-Multistart stopping, reached ms_maxsolves limit.
+Return codes description
+------------------------
+  0:  The final solution satisfies the termination conditions for verifying optimality.
+  -100 to -199:  A feasible approximate solution was found.
+  -200 to -299:  Knitro terminated at an infeasible point.
+  -300 to -301:  The problem was determined to be unbounded.
+  -400 to -499:  Knitro terminated because it reached a pre-defined limit.
+    -400 to -409:  A feasible point was found.
+    -410 to -419:  No feasible point was found.
+  -500 to -599:  Knitro terminated with an input error or some non-standard error.
+A more detailed description of individual return codes and their corresponding
+termination messages is provided at
+https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
+
+ Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
+--------  --------  ------  --------------   ----------   ----------  ----------
+      0          6       0     1.21482e+07  7.23985e-09  8.68644e-07     0.197711
+      1          2       0     1.25766e+07  8.10239e-10  1.49550e-07     0.233110
+      9          2       0     1.23076e+07  3.30877e-08  3.54478e-06     0.209648
+      4          4       0     1.20696e+07  2.20268e-12  2.23054e-10     0.330349
+      6          5       0     1.23017e+07  4.74001e-09  5.08158e-08     0.452479
+      5          3       0     1.20744e+07  1.48042e-10  1.70772e-08     0.476115
+      2          0       0     1.23524e+07  7.21201e-12  2.08036e-09     0.576617
+      3          1       0     1.25441e+07  8.91215e-09  5.65051e-08     0.712827
+      8          6       0     1.24107e+07  3.39111e-09  2.88668e-08     0.697194
+      7          7       0     1.25010e+07  3.05765e-10  8.08912e-07      1.09937
 
 MULTISTART: Best locally optimal solution is returned.
 EXIT: Locally optimal solution found.
 
 Final Statistics
 ----------------
-Final objective value               =   1.21367451739067e+07
-Final feasibility error (abs / rel) =   4.80e-08 / 7.04e-13
-Final optimality error  (abs / rel) =   3.48e-06 / 3.48e-08
-# of iterations                     =       4423 
-# of CG iterations                  =       2570 
-# of function evaluations           =       5203
-# of gradient evaluations           =       4434
-# of Hessian evaluations            =       4433
-Total program time (secs)           =      97.24719 (    93.786 CPU time)
+Final objective value               =   1.20695640622071e+07
+Final feasibility error (abs / rel) =   2.20e-12 / 2.08e-16
+Final optimality error  (abs / rel) =   2.23e-10 / 2.23e-12
+# of iterations                     =       4100 
+# of CG iterations                  =          0 
+# of function evaluations           =       4681
+# of gradient evaluations           =       4110
+# of Hessian evaluations            =       4112
+Total program time (secs)           =       1.10607 (     4.923 CPU time)
 
 ===============================================================================
 
-Knitro 14.0.0: Locally optimal or satisfactory solution.
-objective 12136745.17; feasibility error 4.8e-08
-4423 iterations; 5203 function evaluations
+Knitro 14.2.0: Locally optimal or satisfactory solution.
+objective 12069564.06; feasibility error 2.2e-12
+4100 iterations; 4681 function evaluations
 
 suffix feaserror OUT;
 suffix opterror OUT;
 suffix numfcevals OUT;
 suffix numiters OUT;
-total_cost: 12136745.173906691
+total_cost: 12069564.062207095
+solve_time: 1.126342

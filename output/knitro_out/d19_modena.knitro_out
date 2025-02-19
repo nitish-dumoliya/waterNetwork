@@ -1,14 +1,15 @@
-Artelys Knitro 14.0.0: maxtime_real = 3600
+Artelys Knitro 14.2.0: maxtime_real = 3600
 outlev = 4
 threads=8
 feastol = 1.0e-7
 feastol_abs = 1.0e-7
 ms_enable = 1
 ms_maxsolves = 10
+WARNING:  Option 'threads' is deprecated, please use 'numthreads'.
 
 =======================================
           Commercial License
-         Artelys Knitro 14.0.0
+         Artelys Knitro 14.2.0
 =======================================
 
 No start point provided -- Knitro computing one.
@@ -31,11 +32,11 @@ Final optimality error  (abs / rel) =   1.80e+308 / 1.80e+308
 # of function evaluations           =          1
 # of gradient evaluations           =          1
 # of Hessian evaluations            =          0
-Total program time (secs)           =       0.12991 (     0.023 CPU time)
+Total program time (secs)           =       0.00970 (     0.058 CPU time)
 
 ===============================================================================
 
-Knitro 14.0.0: Problem determined to be infeasible with respect to variable bounds.
+Knitro 14.2.0: Problem determined to be infeasible with respect to variable bounds.
 objective 68936394.15; feasibility error 6.03e+03
 0 iterations; 1 function evaluations
 
@@ -44,3 +45,4 @@ suffix opterror OUT;
 suffix numfcevals OUT;
 suffix numiters OUT;
 total_cost: 68936394.14808038
+solve_time: 0.11443699999999998

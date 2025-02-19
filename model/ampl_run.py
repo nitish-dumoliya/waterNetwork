@@ -19,16 +19,49 @@ ampl = AMPL()
 # OBJ = []
 # csv_data = []
 # for data in data_list:
+            
+ipopt_run = sys.argv[4]
+
+if ipopt_run == 1:
+            ampl.reset()
+            # ampl.read("non_convex_multiple1.mod")
+            ampl.read(sys.argv[1])
+            ampl.read_data(sys.argv[3])
+            # ampl.read_data(f"/home/nitishdumoliya/minotaur/examples/water-network/Data/{data}")
+            #ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
+            # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build-d/bin/mqg"
+            # ampl.set_option("mqg_options","--presolve 1,--log_level 6, --nlp_engine IPOPT, --eval_within_bnds 1")
+
+            # Set solver to IPOPT and solve
+            ampl.option["solver"] = "ipopt"
+
+            ampl.set_option("ipopt_options", "outlev = 0")   #max_iter = 1000
+
+            ampl.solve()
+
+            total_cost = ampl.getObjective("total_cost").value()
+            print("total_cost:", total_cost, "\n")
+            print("*******************************************************************************")
+
+
+            l_init = ampl.getVariable('l').getValues().to_dict()
+            q_init = ampl.getVariable('q').getValues().to_dict()
+            h_init = ampl.getVariable('h').getValues().to_dict()
+
 ampl.reset()
 # ampl.read("non_convex_multiple1.mod")
 ampl.read(sys.argv[1])
 ampl.read_data(sys.argv[3])
-# ampl.read_data(f"/home/nitishdumoliya/minotaur/examples/water-network/Data/{data}")
-#ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
-# ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build-d/bin/mqg"
-# ampl.set_option("mqg_options","--presolve 1,--log_level 6, --nlp_engine IPOPT, --eval_within_bnds 1")
-ampl.option["solver"]= sys.argv[2]
+
+if ipopt_run == 1:
+            ampl.getVariable("q").setValues(q_init)
+            ampl.getVariable("h").setValues(h_init)
+            ampl.getVariable("l").setValues(l_init)
+
+
 # ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
+
+ampl.option["solver"]= sys.argv[2]
 ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 #ampl.option["gurobi_options"] = "outlev 1"
 # ampl.option["presolve_eps"] = "1.09e-12"
@@ -42,15 +75,30 @@ ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_b
 ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
 # ampl.eval("option gurobi_auxfiles rc;")
-# ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
-ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 networkalg = 1 networkcuts = 1 seed 5 varbranch = 3 cuts = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iisfind = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 " #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+#ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 NumericFocus = 1 iisfind = 1 iismethod 0 networkalg = 1 networkcuts = 1 seed 5 varbranch = 3 cuts = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
 
-ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 2 lsolver = conopt lpsolver = cplex" # lsolver = conopt
+ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 2 lpsolver = cplex lsolver = conopt" # lsolver = conopt
 ampl.option["scip_options"] = "outlev  1 timelimit 3600 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
 ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
 #ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 1  feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 0 ms_maxsolves = 0"
 ampl.option["presolve"] = "1"
 ampl.option["presolve_eps"] = "8.53e-15"
+
+
+
+# Provide initial values
+#for (i, j), value in q_init.items():
+#    ampl.getVariable("q").setValues({(i, j): value})
+
+#for i, value in h_init.items():
+#    ampl.getVariable("h").setValues({i: value})
+
+#for (i, j, k), value in l_init.items():
+#    ampl.getVariable("l").setValues({(i, j, k): value})
+
+
+
 ampl.solve()
 
 
@@ -111,11 +159,6 @@ ampl.solve()
 # ampl.eval("display {(i,j) in arcs}: q1[i,j]+q2[i,j];")
 # ampl.eval("display h;")
 # ampl.eval("display total_cost;")
-solve_time = ampl.get_value('_solve_elapsed_time')
-
-total_cost = ampl.getObjective("total_cost").value()
-print("total_cost:", total_cost)
-print("solve_time:", solve_time)
 # ampl.eval("display x;")
 # df2 = ampl.get_variable("q")
 # print("Flow Values : ",df2.get_values())
@@ -128,3 +171,63 @@ print("solve_time:", solve_time)
 # ampl.eval("display {(i,j) in arcs} 1000*q[i,j]/((3.14/4)*((sum{k in pipes} d[k]*l[i,j,k])/L[i,j])^2);")
 
 # ampl.eval("display {(i,j) in arcs }: vmax[i,j]*(sum{k in pipes } (3.14/4)*(d[k])^2);")
+
+def constraint_relative_gap(data_file, q_values, h_values, l_values):
+    ampl = AMPL()
+
+    ampl.read("original-nlp.mod")
+    ampl.readData(sys.argv[3])
+
+    approx_solution = {
+        'q': q_values,  
+        'h': h_values,  
+        'l': l_values,  
+    }
+
+    for (i, j), value in approx_solution['q'].items():
+        ampl.getVariable("q").setValues({(i, j): value})
+
+    for i, value in approx_solution['h'].items():
+        ampl.getVariable("h").setValues({i: value})
+
+    for (i, j, k), value in approx_solution['l'].items():
+        ampl.getVariable("l").setValues({(i, j, k): value})
+
+    relative_gaps = {}
+
+    epsilon = 1e-6  # Small value to prevent division by zero
+
+    for (i, j) in ampl.getSet("arcs"):
+        # Original constraint value from AMPL
+        original_lhs = ampl.getValue(f"h[{i}]") - ampl.getValue(f"h[{j}]")
+        original_rhs = ampl.getValue(f"q[{i},{j}]") * (abs(ampl.getValue(f"q[{i},{j}]"))) ** 0.852 * (0.001 ** 1.852) * \
+                       sum(10.67 * ampl.getValue(f"l[{i},{j},{k}]") / ((ampl.getParameter("R")[k] ** 1.852) *
+                                                                       ((ampl.getParameter("d")[k] / 1000) ** 4.87))
+                           for k in ampl.getSet("pipes"))
+        original_value = original_rhs
+
+        # Approximated constraint value using provided values
+        approx_lhs = approx_solution['h'][i] - approx_solution['h'][j]
+        
+        approx_rhs = approx_solution['q'][i, j] * ((abs(approx_solution['q'][i, j])+1000*epsilon) ** 0.852) *(abs(approx_solution['q'][i,j])/(abs(approx_solution['q'][i,j]) + 852*epsilon)) * (0.001 ** 1.852) *  sum(10.67 * approx_solution['l'][i, j, k] / ((ampl.getParameter("R")[k] ** 1.852) * ((ampl.getParameter("d")[k] / 1000) ** 4.87)) for k in ampl.getSet("pipes"))
+        approx_value = approx_rhs
+
+        # Compute relative gap
+        relative_gap = (original_value - approx_value) / (original_value + epsilon)
+        relative_gaps[f"con2_{i},{j}"] = relative_gap
+
+    # Display relative gaps
+    for constraint, gap in relative_gaps.items():
+        print(f"{constraint}: {gap:.6f}")
+
+l = ampl.getVariable('l').getValues().to_dict()
+q = ampl.getVariable('q').getValues().to_dict()
+h = ampl.getVariable('h').getValues().to_dict()
+        
+#constraint_relative_gap(sys.argv[3], q, h, l)
+
+solve_time = ampl.get_value('_solve_elapsed_time')
+total_cost = ampl.getObjective("total_cost").value()
+print("total_cost:", total_cost)
+print("solve_time:", solve_time)
+

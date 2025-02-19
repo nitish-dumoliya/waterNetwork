@@ -21,7 +21,7 @@ param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4;
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 param Q_max = sum{k in nodes diff Source} D[k];
 
-param eps default 1e-15;  # Small smoothing parameter
+param eps default 1e-9;  # Small smoothing parameter
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
@@ -53,7 +53,7 @@ subject to con1{j in nodes}:
 
 #f_first_order_approx3
 subject to con2{(i,j) in arcs}: 
-     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+eps)^0.852) / (abs(q[i,j]) + 0.852*eps)) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps)^0.852) / (abs(q[i,j]) + 852*eps)) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 #f_second_order_approx
 #subject to con2{(i,j) in arcs}:
