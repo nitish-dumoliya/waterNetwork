@@ -226,10 +226,7 @@ def BonminInstanceOutput(instance, output):
     # time = sum(T)
     return Objective, time
 
-
-
-
-def GurobiInstanceOutput(instance, output):
+def GurobiInstanceOutput1(instance, output):
     obj_pattern = re.search(r'Optimal objective\s+([-\d\.eE]+)', output)
     time_pattern = re.search(r'Solved in\s+([\d\.]+)\s+seconds', output)
 
@@ -238,7 +235,45 @@ def GurobiInstanceOutput(instance, output):
 
     return objective, solver_time
 
+def GurobiInstanceOutput(instance, output):
+    # Match best objective using a robust regex pattern
+    #obj_match = re.search(r'Best objective\s+([-\d\.eE]+)', output)
+    obj_match = re.search(r'Best objective\s+([-]?\d+\.\d+e[+-]?\d+)', output)
 
+    # Alternative objective format from "optimal solution" line
+    obj_alt_match = re.search(r'optimal solution; objective\s+([-\d\.eE]+)', output, re.IGNORECASE)
+
+    # Extract objective safely
+    objective = None
+    extracted_obj = obj_match.group(1) if obj_match else (obj_alt_match.group(1) if obj_alt_match else None)
+
+    no_feasible_solution = "Solution count 0" in output
+    
+    if no_feasible_solution:
+        objective = 'no feasible'
+    if extracted_obj:
+        try:
+            # Ensure no truncation and remove any extra spaces or unwanted characters
+            extracted_obj = extracted_obj.strip().replace(",", "")
+            objective = float(extracted_obj)  # Convert to float
+        except ValueError:
+            print(f"Warning: Could not convert extracted objective '{extracted_obj}' to float.")
+
+    # Match solver time (ensure correct extraction)
+    time_match = re.search(r'solve_time:\s*([\d\.]+)', output)
+
+    time_limit_reached = "Time limit reached" in output
+
+    solver_time = None
+    if time_limit_reached:
+        solver_time = 3600
+    elif time_match:
+        try:
+            solver_time = float(time_match.group(1).strip())
+        except ValueError:
+            print(f"Warning: Could not convert solver time '{time_match.group(1)}' to float.")
+
+    return objective, solver_time
 
 def HeuristicInstanceOutput(instance, output):
     file_data = output.read().split('\n')
@@ -335,6 +370,7 @@ for ins in data_list:
         print(" ")
         Ipopt_Objective.append(obj)
         Ipopt_Time_taken.append(time)
+
 print("**********************Results of BONMIN Solver *********************************")
         
 for ins in data_list:
@@ -351,8 +387,9 @@ for ins in data_list:
 print("**********************Results of GUROBI Solver *********************************")
         
 for ins in data_list:
-    with open(f"../output/bonmin_out/{ins}.gurobi_out") as output:
+    with open(f"../output/gurobi_out/1-hour/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
+        output = output.read()
         obj, time = GurobiInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
@@ -360,9 +397,8 @@ for ins in data_list:
         Gurobi_Objective.append(obj)
         Gurobi_Time_taken.append(time)
 
-
 print("**********************Results of Heuristic *********************************")
-        
+
 for ins in data_list:
     with open(f"../output/heuristic_out/{ins}.heuristic_out") as output:
         print("Model Name:",ins)
@@ -379,10 +415,14 @@ filename = "mmultistart_results.csv"
 
 with open(filename, 'w') as csvfile:
     csvwriter = csv.writer(csvfile)
-    # csvwriter.writerow(Solver_name)
+    #csvwriter.writerow(Solver_name)
     csvwriter.writerow(fields)
 
+
 import pandas as pd
+
+pd = pd.DataFrame()
+
 csv_input = pd.read_csv(filename)
 csv_input['Instances'] = Ins
 csv_input['Mmultistart Objective'] = Mmultistart_Objective
@@ -402,10 +442,10 @@ csv_input['Heuristic time taken'] = Heuristic_Time_taken
 
 csv_input.to_csv('output.csv', index=False)
 
-df = pd.read_csv("output.csv")
+#df = pd.read_csv("output.csv")
 
-excel_file = pd.ExcelWriter('output.xlsx')
-df.to_excel(excel_file, index = False)
+#excel_file = pd.ExcelWriter('output.xlsx')
+#df.to_excel(excel_file, index = False)
 
 # excel_file.save()
 # excel_file = pd.ExcelWriter('output.xlsx')
