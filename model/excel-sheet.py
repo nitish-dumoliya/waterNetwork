@@ -226,6 +226,20 @@ def BonminInstanceOutput(instance, output):
     # time = sum(T)
     return Objective, time
 
+
+
+
+def GurobiInstanceOutput(instance, output):
+    obj_pattern = re.search(r'Optimal objective\s+([-\d\.eE]+)', output)
+    time_pattern = re.search(r'Solved in\s+([\d\.]+)\s+seconds', output)
+
+    objective = float(obj_pattern.group(1)) if obj_pattern else None
+    solver_time = float(time_pattern.group(1)) if time_pattern else None
+
+    return objective, solver_time
+
+
+
 def HeuristicInstanceOutput(instance, output):
     file_data = output.read().split('\n')
     time = 0
@@ -269,6 +283,8 @@ Ipopt_Objective = []
 Ipopt_Time_taken = []
 Bonmin_Objective = []
 Bonmin_Time_taken = []
+Gurobi_Objective = []
+Gurobi_Time_taken = []
 Heuristic_Objective = []
 Heuristic_Time_taken = []
 print("****************************Results of Mmultistart Solver *********************************")
@@ -332,6 +348,19 @@ for ins in data_list:
         Bonmin_Time_taken.append(time)
 # Solver_name = [" ","mmultistart", " ", "Baron", " ", "Knitro "," "]
 
+print("**********************Results of GUROBI Solver *********************************")
+        
+for ins in data_list:
+    with open(f"../output/bonmin_out/{ins}.gurobi_out") as output:
+        print("Model Name:",ins)
+        obj, time = GurobiInstanceOutput(ins,output)
+        print("Objective :",obj)
+        print("Time :",time)
+        print(" ")
+        Gurobi_Objective.append(obj)
+        Gurobi_Time_taken.append(time)
+
+
 print("**********************Results of Heuristic *********************************")
         
 for ins in data_list:
@@ -344,7 +373,7 @@ for ins in data_list:
         Heuristic_Objective.append(obj)
         Heuristic_Time_taken.append(time)
 
-fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken", "Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken" ]
+fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken", "Gurobi Objective","Gurobi time taken","Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken" ]
 
 filename = "mmultistart_results.csv"
 
@@ -360,6 +389,8 @@ csv_input['Mmultistart Objective'] = Mmultistart_Objective
 csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
 csv_input['Baron Objective'] = Baron_Objective
 csv_input['Baron time taken'] = Baron_Time_taken
+csv_input['Gurobi Objective'] = Gurobi_Objective
+csv_input['Gurobi time taken'] = Gurobi_Time_taken
 csv_input['Knitro Objective'] = Knitro_Objective
 csv_input['Knitro time taken'] = Knitro_Time_taken
 csv_input['Ipopt Objective'] = Ipopt_Objective
