@@ -250,7 +250,7 @@ def GurobiInstanceOutput(instance, output):
     no_feasible_solution = "Solution count 0" in output
     
     if no_feasible_solution:
-        objective = 'no feasible'
+        objective = 'no feasible solution'
     if extracted_obj:
         try:
             # Ensure no truncation and remove any extra spaces or unwanted characters
@@ -413,41 +413,31 @@ fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Ob
 
 filename = "mmultistart_results.csv"
 
+with open(filename, 'w') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    # csvwriter.writerow(Solver_name)
+    csvwriter.writerow(fields)
 
-# Create CSV if it doesn't exist
-if not os.path.exists(filename):
-    with open(filename, 'w', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(fields)  # Write header only if file doesn't exist
+import pandas as pd
+csv_input = pd.read_csv(filename)
+csv_input['Instances'] = Ins
+csv_input['Mmultistart Objective'] = Mmultistart_Objective
+csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
+csv_input['Baron Objective'] = Baron_Objective
+csv_input['Baron time taken'] = Baron_Time_taken
+csv_input['Gurobi Objective'] = Gurobi_Objective
+csv_input['Gurobi time taken'] = Gurobi_Time_taken
+csv_input['Knitro Objective'] = Knitro_Objective
+csv_input['Knitro time taken'] = Knitro_Time_taken
+csv_input['Ipopt Objective'] = Ipopt_Objective
+csv_input['Ipopt time taken'] = Ipopt_Time_taken
+csv_input['Bonmin Objective'] = Bonmin_Objective
+csv_input['Bonmin time taken'] = Bonmin_Time_taken
+csv_input['Heuristic Objective'] = Heuristic_Objective
+csv_input['Heuristic time taken'] = Heuristic_Time_taken
 
-# Read existing CSV
-df = pd.read_csv(filename)
+csv_input.to_csv('output.csv', index=False)
 
-# Assuming your variables (Ins, Mmultistart_Objective, etc.) are defined as lists or single values
-data = pd.DataFrame([{
-    "Instances": Ins,
-    "Mmultistart Objective": Mmultistart_Objective,
-    "Mmultistart time taken": Mmultistart_Time_taken,
-    "Baron Objective": Baron_Objective,
-    "Baron time taken": Baron_Time_taken,
-    "Gurobi Objective": Gurobi_Objective,
-    "Gurobi time taken": Gurobi_Time_taken,
-    "Knitro Objective": Knitro_Objective,
-    "Knitro time taken": Knitro_Time_taken,
-    "Ipopt Objective": Ipopt_Objective,
-    "Ipopt time taken": Ipopt_Time_taken,
-    "Bonmin Objective": Bonmin_Objective,
-    "Bonmin time taken": Bonmin_Time_taken,
-    "Heuristic Objective": Heuristic_Objective,
-    "Heuristic time taken": Heuristic_Time_taken
-}])
-
-# ✅ Replace .append() with pd.concat()
-df = pd.concat([df, data], ignore_index=True)
-
-# Save updated DataFrame
-df.to_csv(filename, index=False)
-print(f"Data saved to '{filename}' successfully.")
 #df = pd.read_csv("output.csv")
 
 #excel_file = pd.ExcelWriter('output.xlsx')
