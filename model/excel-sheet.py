@@ -189,9 +189,9 @@ def KnitroInstanceOutput(instance, output):
 def IpoptInstanceOutput(instance, output):
     file_data = output.read().split('\n')
     time = 0
-    find, time = find_float(file_data, "solve_time", time)
+    find, time = find_float(file_data, "solve_time:", time)
     Objective = 0
-    find, Objective = find_float(file_data, "total_cost", Objective)
+    find, Objective = find_float(file_data, "total_cost:", Objective)
     return Objective, time
 
 def BonminInstanceOutput(instance, output):

@@ -3,7 +3,7 @@ from amplpy import AMPL
 ampl = AMPL()
 
             
-ipopt_run = 1
+ipopt_run = 0
 
 if ipopt_run == 1:
             ampl.read(sys.argv[1])
@@ -36,7 +36,7 @@ if ipopt_run == 1:
 ampl.option["solver"]= sys.argv[2]
 ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 
-ampl.option["ipopt_options"] = "outlev = 6 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling = gradient-based warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes"
+ampl.option["ipopt_options"] = "outlev = 3 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes"
 
 #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "

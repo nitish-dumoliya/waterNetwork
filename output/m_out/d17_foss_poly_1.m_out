@@ -1,5 +1,5 @@
 Environment: User provided options:
-  problem_file = /tmp/at1054024
+  problem_file = /tmp/at1101952
   ampl = 1
 Environment: End of user provided options.
 
@@ -82,22 +82,20 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit https://github.com/coin-or/Ipopt
 ******************************************************************************
 
-IpoptEngine: error reported.
-IpoptEngine: EngineUnknownStatus
 MsProcessor: engine hit iteration limit, continuing in node 0
  
 ----------------------------------------------------------------------------------------------
  Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
 ----------------------------------------------------------------------------------------------
      0         0             -inf          inf         inf              0             0      0
-    24        22              inf   2.0825e+04    0.00e+00              1             0      1
-    24        22              inf   2.0825e+04    0.00e+00              1             0      1
+    22        22              inf   2.1222e+04    0.00e+00              1             0      1
+    22        22              inf   2.1222e+04    0.00e+00              1             0      1
 ----------------------------------------------------------------------------------------------
  
 BranchAndBound: stopping branch-and-bound
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 23.63
+BranchAndBound: time taken      = 22.49
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
 MsProcessor: nodes processed     = 1
@@ -109,8 +107,8 @@ MsProcessor: nodes with problems = 1
 MaxVio brancher: times called = 0
 MaxVio brancher: time in brancher = 0.00
 SolutionPool: Number of solutions found = 1
-SolutionPool: Time first solution found = 23.58
-SolutionPool: Time best solution found  = 23.58
+SolutionPool: Time first solution found = 22.50
+SolutionPool: Time best solution found  = 22.50
 Ipopt: total calls            = 0
 Ipopt: calls to Optimize      = 0
 Ipopt: calls to ReOptimize    = 0
@@ -147,70 +145,70 @@ NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
  
-MultiStart: best solution value = 20825.2408
+MultiStart: best solution value = 21221.8476
 MultiStart: best bound estimate from remaining nodes = inf
 MultiStart: gap = 0.0000
 MultiStart: gap percentage = 0.0000
-MultiStart: time used (s) = 23.63
+MultiStart: time used (s) = 22.50
 MultiStart: status of branch-and-bound: Optimal solution found
-MultiStart: wall clock time used (s) = 22.20
+MultiStart: wall clock time used (s) = 21.53
 con2_1,17: 0.00000003
 con2_1,31: 0.00000000
-con2_2,3: 0.00001642
-con2_2,18: 0.00000006
-con2_3,4: 0.00025351
-con2_3,11: 0.00000007
-con2_4,5: 0.00002229
+con2_2,3: 0.00000009
+con2_2,18: 0.00000002
+con2_3,4: 0.00004586
+con2_3,11: 0.00000337
+con2_4,5: 0.00000102
 con2_5,6: 0.00001136
-con2_5,13: 0.00000025
-con2_6,7: 0.00000742
-con2_7,24: 0.00000047
-con2_8,28: 0.00000148
-con2_9,36: 0.00000015
+con2_5,13: 0.00000066
+con2_6,7: 0.00000009
+con2_7,24: 0.00000005
+con2_8,28: 0.00000446
+con2_9,36: 0.00000016
 con2_10,11: 0.00000000
 con2_10,32: 0.00000000
 con2_11,19: 0.00000000
 con2_11,26: 0.00000000
-con2_12,4: 0.00000009
-con2_12,13: 0.00000025
-con2_13,14: 0.00000005
-con2_14,20: 0.00000001
-con2_14,21: 0.00000002
-con2_15,16: 0.00000628
-con2_15,22: 0.00000080
+con2_12,4: 0.00000005
+con2_12,13: 0.00000003
+con2_13,14: 0.00002366
+con2_14,20: 0.00000032
+con2_14,21: 0.00000297
+con2_15,16: 0.00000359
+con2_15,22: 0.00000425
 con2_16,25: 0.00000000
-con2_16,29: 0.00000007
-con2_17,2: 0.00000987
-con2_17,18: 0.00052980
-con2_18,10: 0.00000001
+con2_16,29: 0.00000010
+con2_17,2: 0.00001016
+con2_17,18: 0.00195709
+con2_18,10: 0.00000000
 con2_19,12: 0.00000001
-con2_19,20: 0.00052175
-con2_20,15: 0.00000000
-con2_21,6: 0.00000011
-con2_21,22: 0.00002019
-con2_22,7: 0.00025332
-con2_22,23: 0.00000012
-con2_23,25: 0.00000002
-con2_24,8: 0.00000010
-con2_24,23: 0.00000116
-con2_25,8: 0.00000002
-con2_26,15: 0.00000000
-con2_26,27: 0.00001008
+con2_19,20: 0.00000745
+con2_20,15: 0.00000004
+con2_21,6: 0.00280704
+con2_21,22: 0.00000005
+con2_22,7: 0.00013890
+con2_22,23: 0.00000001
+con2_23,25: 0.00000001
+con2_24,8: 0.00000002
+con2_24,23: 0.00000897
+con2_25,8: 0.00000001
+con2_26,15: 0.00000001
+con2_26,27: 0.00000464
 con2_27,16: 0.00000000
-con2_28,9: 0.00005649
-con2_28,29: 0.00001627
-con2_29,30: 0.00000043
-con2_29,33: 0.00000350
-con2_30,9: 0.00000841
-con2_30,35: 0.00001278
+con2_28,9: 0.00007944
+con2_28,29: 0.00000263
+con2_29,30: 0.00000244
+con2_29,33: 0.00000408
+con2_30,9: 0.00001661
+con2_30,35: 0.00000062
 con2_31,10: 0.00000000
-con2_31,34: 0.00000002
+con2_31,34: 0.00000000
 con2_32,27: 0.00000000
-con2_32,33: 0.00026912
-con2_33,34: 0.00000008
-con2_34,35: 0.00000053
-con2_35,36: 0.00000008
-con2_36,1: 0.00000002
+con2_32,33: 0.00006112
+con2_33,34: 0.00000007
+con2_34,35: 0.00000001
+con2_35,36: 0.00000007
+con2_36,1: 0.00000208
 con2_37,1: 0.00000000
-total_cost: 20825.24029217167
-solve_time: 22.219424
+total_cost: 21221.84706450729
+solve_time: 21.544090999999998
