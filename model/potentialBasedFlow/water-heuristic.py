@@ -48,6 +48,7 @@ class WaterNetworkOptimizer:
         self.R = self.ampl.getParameter('R').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
+        self.eps = self.ampl.getParameter('eps').to_list()[0]
         
         self.delta = 0.1
         self.p = 1.852
@@ -737,98 +738,34 @@ class WaterNetworkOptimizer:
                     network_graph.add_edge(u, v)
         return acyclic_arc
 
-    def constraint_violation(self):
-        from amplpy import AMPL
-        ampl = AMPL()
-        
-        ampl.read("../original-nlp.mod")
-        ampl.readData(f"/home/nitishdumoliya/waterNetwork/data/{self.data_list[self.data_number]}.dat")
-        
-        approx_solution = {
-            'q': self.q,  
-            'h': self.h,  
-            'l': self.l,  
-        }
-        
-        for (i, j), value in approx_solution['q'].items():
-            ampl.getVariable("q").setValues({(i, j): value})
-        
-        for i, value in approx_solution['h'].items():
-            ampl.getVariable("h").setValues({i: value})
-        
-        for (i, j, k), value in approx_solution['l'].items():
-            ampl.getVariable("l").setValues({(i, j, k): value})
-        
-        violations = {}
-        
-        # for j in ampl.getSet("nodes"):
-        #     lhs = sum(ampl.getValue(f"q[{i},{j}]") for i in ampl.getSet("nodes") if (i, j) in ampl.getSet("arcs"))
-        #     rhs = sum(ampl.getValue(f"q[{j},{i}]") for i in ampl.getSet("nodes") if (j, i) in ampl.getSet("arcs"))
-        #     violations[f"con1_{j}"] = abs(lhs - rhs - ampl.getParameter("D")[j])
-        
-        for (i, j) in ampl.getSet("arcs"):
-            lhs = ampl.getValue(f"h[{i}]") - ampl.getValue(f"h[{j}]")
-            rhs = ampl.getValue(f"q[{i},{j}]") * (abs(ampl.getValue(f"q[{i},{j}]"))) ** 0.852 * (0.001 ** 1.852) * \
-                  sum(10.67*ampl.getValue(f"l[{i},{j},{k}]") / ((ampl.getParameter("R")[k] ** 1.852) * ((ampl.getParameter("d")[k] / 1000) ** 4.87)) for k in ampl.getSet("pipes"))
-            violations[f"con2_{i},{j}"] = abs(lhs - rhs)
-        
-        # for i in ampl.getSet("nodes"):
-        #     if i not in ampl.getSet("Source"):
-        #         lhs = ampl.getValue(f"h[{i}]")
-        #         rhs = ampl.getValue(f"E[{i}]") + ampl.getValue(f"P[{i}]")
-        #         violations[f"con6_{i}"] = max(0, rhs - lhs)
-        
-        # Display violations
-        for constraint, violation in violations.items():
-            print(f"{constraint}: {violation}")
-    
-    def constraint_relative_gap(self):
-        from amplpy import AMPL
-        ampl = AMPL()
-    
-        ampl.read("../original-nlp.mod")
-        ampl.readData(f"/home/nitishdumoliya/waterNetwork/data/{self.data_list[self.data_number]}.dat")
-    
-        approx_solution = {
-            'q': self.q,  
-            'h': self.h,  
-            'l': self.l,  
-        }
-    
-        for (i, j), value in approx_solution['q'].items():
-            ampl.getVariable("q").setValues({(i, j): value})
-    
-        for i, value in approx_solution['h'].items():
-            ampl.getVariable("h").setValues({i: value})
-    
-        for (i, j, k), value in approx_solution['l'].items():
-            ampl.getVariable("l").setValues({(i, j, k): value})
-    
+    def constraint_relative_gap(self, q_values, h_values, l_values, R_values, d_values, pipes, epsilon):
         relative_gaps = {}
-        epsilon = 1e-6  # Small value to prevent division by zero
     
-        for (i, j) in ampl.getSet("arcs"):
-            # Original constraint value from AMPL
-            original_lhs = ampl.getValue(f"h[{i}]") - ampl.getValue(f"h[{j}]")
-            original_rhs = ampl.getValue(f"q[{i},{j}]") * (abs(ampl.getValue(f"q[{i},{j}]"))) ** 0.852 * (0.001 ** 1.852) * \
-                           sum(10.67 * ampl.getValue(f"l[{i},{j},{k}]") / ((ampl.getParameter("R")[k] ** 1.852) *
-                                                                           ((ampl.getParameter("d")[k] / 1000) ** 4.87))
-                               for k in ampl.getSet("pipes"))
+        for (i, j) in q_values.keys():
+            # Original constraint value
+            original_lhs = h_values[i] - h_values[j]
+            original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) * \
+                         sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                             for k in pipes)
             original_value = original_rhs
     
-            # Approximated constraint value using provided values
-            approx_lhs = approx_solution['h'][i] - approx_solution['h'][j]
-            approx_rhs = approx_solution['q'][i, j] * ((abs(approx_solution['q'][i, j])+1000*epsilon) ** 0.852) *(abs(approx_solution['q'][i,j])/(abs(approx_solution['q'][i,j]) + 852*epsilon)) * (0.001 ** 1.852) *  sum(10.67 * approx_solution['l'][i, j, k] / ((ampl.getParameter("R")[k] ** 1.852) * ((ampl.getParameter("d")[k] / 1000) ** 4.87)) for k in ampl.getSet("pipes"))
+            # Approximated constraint value
+            approx_lhs = h_values[i] - h_values[j]
+            approx_rhs = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
+                       (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) * \
+                       sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                           for k in pipes)
             approx_value = approx_rhs
     
             # Compute relative gap
-            relative_gap = (original_value - approx_value) / (original_value+epsilon)
+            relative_gap = (original_value - approx_value) / (original_value + 1e-10)
             relative_gaps[f"con2_{i},{j}"] = relative_gap
     
         # Display relative gaps
         for constraint, gap in relative_gaps.items():
-            print(f"{constraint}: {gap:.6f}")
+              print(f"{constraint}: {gap:.8f}")
     
+ 
     def iterate_arc(self, iteration, improved, current_cost, best_arc):
         improved = False
         self.network_graph = self.best_acyclic_flow.copy()
@@ -1033,7 +970,7 @@ class WaterNetworkOptimizer:
         print("\n**********************************Final best results******************************************\n")
         print("Water Network:", self.data_list[self.data_number])
         # self.constraint_violation()
-        self.constraint_relative_gap()
+        self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         print(f"Final best objective: {current_cost}")
 
         print("Number of nlp problem solved:", self.number_of_nlp)

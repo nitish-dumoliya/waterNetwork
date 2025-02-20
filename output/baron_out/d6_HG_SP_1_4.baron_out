@@ -1,11 +1,29 @@
+Ipopt 3.14.13: outlev = 0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 3807590.067442999 
+
+*******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-iisfind = 2
-lsolver = conopt
+iisfind = 5
 lpsolver = cplex
+lsolver = conopt
+threads = 8
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -18,281 +36,217 @@ lpsolver = cplex
  INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: ILOG CPLEX                                      
+ For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
+ Starting solution is feasible with a value of  0.380759E+07      
  Doing local search
+ Preprocessing found feasible solution with value 0.355359E+07
  Solving bounding LP
  Starting multi-start local search
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1203 in bounds file "boundsfile.2":
-	L = 15
-	x = 4839202966891.625
+/opt/ampl/conopt: bad bound triple 1216 in bounds file "boundsfile.2":
+	L = 18
+	x = 1097649665926.2782
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.374767E+07
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1203 in bounds file "boundsfile.7":
-	L = 15
-	x = 4839202966891.625
+/opt/ampl/conopt: bad bound triple 1216 in bounds file "boundsfile.6":
+	L = 18
+	x = 1097649665926.2782
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-          1             1             3.58      0.00000         0.374767E+07             
+          1           6.07    16MB     0.00000        0.355359E+07    0.00%
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1296 in bounds file "boundsfile.11":
-	L = -492.70609999999994
-	x = -492.7061
-	U = 492.71423
-Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1209 in bounds file "boundsfile.13":
+/opt/ampl/conopt: bad bound triple 1209 in bounds file "boundsfile.10":
 	L = 14
-	x = 14582064910464.152
+	x = 9661215273097.105
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1209 in bounds file "boundsfile.15":
+/opt/ampl/conopt: bad bound triple 1209 in bounds file "boundsfile.12":
 	L = 14
-	x = 14582064910464.152
+	x = 9661215273097.105
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+*        92          27.43    24MB     786997.        0.355359E+07   15.71%
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1219 in bounds file "boundsfile.19":
+/opt/ampl/conopt: bad bound triple 1209 in bounds file "boundsfile.15":
+	L = 14
+	x = 9661215273097.105
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+       1229          60.37    34MB     786997.        0.355359E+07   15.76%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+
+/opt/ampl/conopt: bad bound triple 1202 in bounds file "boundsfile.17":
+	L = 11
+	x = 13861623251308.268
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       3189          90.38    63MB     786997.        0.355359E+07   15.80%
+       5220         120.38    82MB     786997.        0.355359E+07   15.82%
+       7924         150.39    92MB     786997.        0.355359E+07   15.82%
+      10704         180.41    92MB     786997.        0.355359E+07   15.82%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+      13657         210.42    92MB     786997.        0.355359E+07   15.82%
+      16502         242.20    92MB     786997.        0.355359E+07   15.82%
+      18270         272.20   102MB     786997.        0.355359E+07   15.82%
+      19478         302.20   102MB     786997.        0.355359E+07   15.82%
+
+/opt/ampl/conopt: bad bound triple 1250 in bounds file "boundsfile.21":
 	L = 17
-	x = 4394867130916.267
+	x = 7105528148122.822
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+      20792         332.23   102MB     786997.        0.355359E+07   15.82%
+      22052         362.23   102MB     786997.        0.355359E+07   15.82%
+      23188         392.24   102MB     786997.        0.355359E+07   15.83%
+      25545         422.24   102MB     786997.        0.355359E+07   15.83%
+      27338         452.24   121MB     786997.        0.355359E+07   15.84%
+      29892         482.24   121MB     786997.        0.355359E+07   15.84%
+      32181         512.25   151MB     786997.        0.355359E+07   15.85%
+      34470         542.27   160MB     786997.        0.355359E+07   15.85%
+      36794         572.28   180MB     786997.        0.355359E+07   15.86%
+      38762         602.70   200MB     786997.        0.355359E+07   15.87%
+      41058         632.70   229MB     786997.        0.355359E+07   15.87%
+      42656         662.71   248MB     786997.        0.355359E+07   15.88%
+      43022         910.85   248MB     786997.        0.355359E+07   15.88%
+      45259         940.85   268MB     786997.        0.355359E+07   15.88%
+      46975         970.87   268MB     786997.        0.355359E+07   15.88%
+      48363        1000.88   278MB     786997.        0.355359E+07   15.89%
+      50095        1030.96   297MB     786997.        0.355359E+07   15.89%
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1219 in bounds file "boundsfile.21":
-	L = 17
-	x = 4394867130916.267
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1219 in bounds file "boundsfile.23":
-	L = 17
-	x = 4394867130916.267
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-         77            34            30.17      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-        975            45            57.22      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       1661           102            86.41      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       2375           100           115.73      786997.         0.374767E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1238 in bounds file "boundsfile.47":
-	L = 14
-	x = 510905170757.2897
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       3041            98           145.27      786997.         0.374767E+07             
-       3743            99           175.01      786997.         0.374767E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1238 in bounds file "boundsfile.49":
-	L = 14
-	x = 176700729391.2115
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       4420            97           204.70      786997.         0.374767E+07             
-       5146            99           234.40      786997.         0.374767E+07             
-       5801            99           264.22      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       6482            98           293.63      786997.         0.374767E+07             
-       7185           101           323.35      786997.         0.374767E+07             
-       7842           102           353.13      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       8479            97           382.46      786997.         0.374767E+07             
-       9155            97           411.79      786997.         0.374767E+07             
-       9836            97           441.63      786997.         0.374767E+07             
-      10548           100           471.51      786997.         0.374767E+07             
-      11228           100           501.24      786997.         0.374767E+07             
-      11912           100           531.09      786997.         0.374767E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1361 in bounds file "boundsfile.55":
-	L = -492.71423
-	x = 492.71423000000004
-	U = 492.71423
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      12581            99           560.63      786997.         0.374767E+07             
-      13212           100           590.34      786997.         0.374767E+07             
-      13838           101           620.17      786997.         0.374767E+07             
-      14500            98           650.11      786997.         0.374767E+07             
-      15177            98           679.88      786997.         0.374767E+07             
-      15822            98           709.73      786997.         0.374767E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1238 in bounds file "boundsfile.57":
-	L = 14
-	x = 510905170999.06915
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      16478           100           739.40      786997.         0.374767E+07             
-      17192           100           769.24      786997.         0.374767E+07             
-      17876           101           799.09      786997.         0.374767E+07             
-      18578            96           828.91      786997.         0.374767E+07             
-      19276           103           858.69      786997.         0.374767E+07             
-      19950            99           888.50      786997.         0.374767E+07             
-      20653            97           918.29      786997.         0.374767E+07             
-      21370           101           948.13      786997.         0.374767E+07             
-      22050            97           977.84      786997.         0.374767E+07             
-      22723           100          1007.40      786997.         0.374767E+07             
-      23408            97          1037.18      786997.         0.374767E+07             
-      24111            99          1067.06      786997.         0.374767E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1361 in bounds file "boundsfile.59":
-	L = -492.71423
-	x = 492.71423000000004
-	U = 492.71423
-Surprise errno 4 ==> Interrupted system call
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      24739            95          1096.79      786997.         0.374767E+07             
-      25410           100          1126.62      786997.         0.374767E+07             
-      26106            97          1156.47      786997.         0.374767E+07             
-      26785            96          1186.29      786997.         0.374767E+07             
-      27478            98          1216.02      786997.         0.374767E+07             
-      28178            97          1245.83      786997.         0.374767E+07             
-      28880            98          1275.66      786997.         0.374767E+07             
-      29531           100          1305.44      786997.         0.374767E+07             
-      30219            98          1335.28      786997.         0.374767E+07             
-      30936            97          1365.15      786997.         0.374767E+07             
-      31626            97          1394.92      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      32297            98          1424.49      786997.         0.374767E+07             
-      32966            99          1454.32      786997.         0.374767E+07             
-      33643            97          1483.97      786997.         0.374767E+07             
-      34331           100          1513.77      786997.         0.374767E+07             
-      35002            97          1543.57      786997.         0.374767E+07             
-      35677            96          1573.23      786997.         0.374767E+07             
-      36388            95          1602.90      786997.         0.374767E+07             
-      37038            97          1632.72      786997.         0.374767E+07             
-      37744           100          1662.46      786997.         0.374767E+07             
-      38459            98          1692.20      786997.         0.374767E+07             
-      39186            97          1722.01      786997.         0.374767E+07             
-      39881            98          1751.83      786997.         0.374767E+07             
-      40594            98          1781.64      786997.         0.374767E+07             
-      41274            96          1811.55      786997.         0.374767E+07             
-      42001            97          1841.43      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      42694            98          1870.72      786997.         0.374767E+07             
-      43258           153          1900.51      786997.         0.374767E+07             
-      43652           156          1930.26      786997.         0.374767E+07             
-      44133           242          1960.08      786997.         0.374767E+07             
-      44669           334          1989.88      786997.         0.374767E+07             
-      45301           371          2019.63      786997.         0.374767E+07             
-      45761           433          2049.39      786997.         0.374767E+07             
-      46052           476          2079.21      786997.         0.374767E+07             
-      46574           524          2109.08      786997.         0.374767E+07             
-      47226           526          2138.64      786997.         0.374767E+07             
-      47841           521          2168.28      786997.         0.374767E+07             
-      48467           527          2197.99      786997.         0.374767E+07             
-      49063           524          2227.82      786997.         0.374767E+07             
-      49619           525          2257.72      786997.         0.374767E+07             
-      50183           528          2287.59      786997.         0.374767E+07             
-      50782           525          2317.32      786997.         0.374767E+07             
-      51396           524          2347.13      786997.         0.374767E+07             
-objective _sobj[1]: Initial function value too large = 3.2E+10
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      52017           525          2376.68      786997.         0.374767E+07             
-      52724           526          2406.59      786997.         0.374767E+07             
-      53316           525          2436.48      786997.         0.374767E+07             
-      53920           524          2466.17      786997.         0.374767E+07             
-      54516           525          2496.03      786997.         0.374767E+07             
-      55136           526          2525.87      786997.         0.374767E+07             
-      55712           524          2555.80      786997.         0.374767E+07             
-      56320           521          2585.73      786997.         0.374767E+07             
-      56885           524          2615.45      786997.         0.374767E+07             
-      57508           522          2645.41      786997.         0.374767E+07             
-      58158           527          2675.29      786997.         0.374767E+07             
-      58802           525          2705.13      786997.         0.374767E+07             
-      59441           523          2735.03      786997.         0.374767E+07             
-      60077           524          2764.79      786997.         0.374767E+07             
-      60697           525          2794.69      786997.         0.374767E+07             
-      61299           521          2824.42      786997.         0.374767E+07             
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      61900           525          2853.79      786997.         0.374767E+07             
-      62504           525          2883.72      786997.         0.374767E+07             
-      63071           526          2913.53      786997.         0.374767E+07             
-      63724           521          2943.50      786997.         0.374767E+07             
-      64360           522          2973.38      786997.         0.374767E+07             
-      64968           527          3003.21      786997.         0.374767E+07             
-      65632           523          3032.84      786997.         0.374767E+07             
-      66224           519          3062.52      786997.         0.374767E+07             
-      66861           522          3092.27      786997.         0.374767E+07             
-      67532           524          3121.98      786997.         0.374767E+07             
-      68177           525          3151.77      786997.         0.374767E+07             
-      68822           526          3181.42      786997.         0.374767E+07             
-      69456           526          3211.09      786997.         0.374767E+07             
-      70073           525          3240.76      786997.         0.374767E+07             
-      70739           523          3270.52      786997.         0.374767E+07             
-      71371           526          3300.40      786997.         0.374767E+07             
-      72024           523          3330.18      786997.         0.374767E+07             
-objective _sobj[1]: Initial function value too large = 3.2E+10
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      72665           525          3359.50      786997.         0.374767E+07             
-      73279           520          3388.87      786997.         0.374767E+07             
-      73924           523          3418.56      786997.         0.374767E+07             
-      74599           523          3448.38      786997.         0.374767E+07             
-      75244           523          3477.99      786997.         0.374767E+07             
-      75902           523          3507.61      786997.         0.374767E+07             
-      76567           520          3537.37      786997.         0.374767E+07             
-      77177           523          3567.06      786997.         0.374767E+07             
-      77816           523          3596.64      786997.         0.374767E+07             
-      77892           522          3600.00      786997.         0.374767E+07             
+      52016        1060.97   297MB     786997.        0.355359E+07   15.89%
+      54116        1090.97   297MB     786997.        0.355359E+07   15.89%
+      55534        1125.20   317MB     786997.        0.355359E+07   15.90%
+      56057        3612.15   317MB     786997.        0.355359E+07   15.90%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3651.34
- Total CPU time used:              3600.00
+ Wall clock time:                  3612.15
+ Total CPU time used:              3605.87
 
- Total no. of BaR iterations:   77892
- Best solution found at node:      -1
- Max. no. of nodes in memory:     534
+ Total no. of BaR iterations:   56057
+ Best solution found at node:      92
+ Max. no. of nodes in memory:    6600
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 77892 iterations, CPU time limit reached.
-Objective 3747665.435
-total_cost: 3747665.434518977
-solve_time: 3651.431158
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 56057 iterations, CPU time limit reached.
+Objective 3553592.093
+con2_1,30: 0.00000000
+con2_2,7: 0.00000000
+con2_2,14: 0.00000000
+con2_3,11: -0.00000000
+con2_3,53: 0.00000000
+con2_4,11: 0.00000000
+con2_5,41: -0.00000000
+con2_5,42: 0.00000000
+con2_6,1: 0.00000002
+con2_7,40: 0.00000000
+con2_7,60: 0.00000000
+con2_8,17: 0.00000000
+con2_8,29: -0.00000000
+con2_9,46: 0.00000001
+con2_10,32: 0.00000000
+con2_10,61: 0.00000000
+con2_11,8: -0.00000000
+con2_12,24: 0.00000000
+con2_13,5: 0.00000001
+con2_14,3: 0.00000000
+con2_15,33: 0.00000000
+con2_16,59: 0.00000000
+con2_16,60: 0.00000000
+con2_17,29: -0.00000000
+con2_18,43: 0.00000000
+con2_19,22: 0.00000000
+con2_20,30: -0.00000000
+con2_21,26: 0.00000000
+con2_22,1: -0.00000000
+con2_23,36: 0.00000000
+con2_24,19: 0.00000000
+con2_25,52: 0.00000000
+con2_26,12: 0.00000000
+con2_27,69: -0.00000000
+con2_28,49: 0.00000000
+con2_29,60: -0.00000000
+con2_30,56: -0.00000000
+con2_31,28: 0.00000000
+con2_31,58: 0.00000000
+con2_32,47: 0.00000000
+con2_33,55: -0.00000000
+con2_34,54: 0.00000000
+con2_34,62: 0.00000002
+con2_34,76: 0.00000000
+con2_35,51: 0.00000000
+con2_36,20: 0.00000000
+con2_37,15: 0.00000000
+con2_37,33: 0.00000000
+con2_38,3: 0.00000000
+con2_39,24: 0.00000000
+con2_40,16: 0.00000000
+con2_40,43: 0.00000000
+con2_41,17: 0.00000000
+con2_42,41: 0.00000000
+con2_43,7: 0.00000000
+con2_44,77: 0.00000000
+con2_45,24: 0.00000000
+con2_45,32: 0.00000000
+con2_45,74: 0.00000000
+con2_46,28: 0.00000000
+con2_47,26: 0.00000000
+con2_48,66: 0.00000000
+con2_49,59: 0.00000000
+con2_50,22: 0.00000000
+con2_50,39: 0.00000000
+con2_51,5: -0.00000000
+con2_52,35: 0.00000000
+con2_53,4: 0.00000000
+con2_54,14: 0.00000000
+con2_54,18: 0.00000000
+con2_55,36: 0.00000000
+con2_56,22: -0.00000000
+con2_57,23: 0.00000000
+con2_58,49: 0.00000000
+con2_58,57: 0.00000000
+con2_59,33: 0.00000000
+con2_59,37: 0.00000000
+con2_60,37: 0.00000000
+con2_61,70: -0.00000000
+con2_62,64: 0.00000002
+con2_63,73: 0.00000000
+con2_64,78: 0.00000000
+con2_65,75: 0.00000000
+con2_66,77: 0.00000000
+con2_67,71: 0.00000000
+con2_68,52: -0.00000000
+con2_69,61: -0.00000000
+con2_70,36: -0.00000000
+con2_70,58: 0.00000000
+con2_71,75: 0.00000000
+con2_72,34: 0.00000000
+con2_73,44: 0.00000000
+con2_74,26: 0.00000000
+con2_75,27: -0.00000000
+con2_76,38: -0.00000000
+con2_77,63: 0.00000000
+con2_77,68: -0.00000000
+con2_78,14: -0.00000000
+con2_78,38: 0.00000000
+con2_78,54: 0.00000000
+total_cost: 3553592.092511298
+solve_time: 3612.216909

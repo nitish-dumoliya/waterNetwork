@@ -70,41 +70,72 @@ https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
 
  Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
 --------  --------  ------  --------------   ----------   ----------  ----------
-      4          6       0     9.23312e+06  3.85974e-08  8.81969e-07  9.80720e-02
-      2          3       0     9.28782e+06  2.25680e-08  3.30453e-07     0.175453
-      9          3       0     1.04887e+07  2.04963e-10  1.28782e-08     0.144312
-      0          0       0     9.39067e+06  3.93755e-08  2.88249e-07     0.313926
-      3          5       0     9.12029e+06  9.77704e-09  4.60290e-08     0.408517
-      1          1       0     9.09733e+06  1.10845e-11  3.39311e-08     0.435297
-      5          4       0     9.72449e+06  7.89271e-11  1.29245e-09     0.518145
-      6          2       0     9.16381e+06  8.29573e-10  1.23454e-08     0.574265
-      8          6       0     9.23250e+06  4.73221e-12  2.86067e-09     0.460951
-      7          7    -103     9.25188e+06  2.84217e-14  3.30829e-02     0.558469
+      0          6       0     9.29096e+06  3.90514e-11  7.80333e-09      1.29489
+      1          0       0     9.30208e+06  9.12648e-08  2.22498e-06      1.82237
+      7          5       0     9.21120e+06  4.40205e-09  4.99866e-08      1.84542
+      2          3       0     9.46368e+06  1.13687e-13  9.68498e-13      2.11401
+      9          0       0     9.41663e+06  1.92342e-09  3.64145e-09     0.713852
+      8          6       0     9.23262e+06  9.73130e-08  6.26528e-06      1.20729
+      4          1       0     9.62353e+06  7.55580e-08  1.52812e-07      2.23740
+      6          2       0     9.12537e+06  1.91832e-10  8.68933e-08      2.20447
+      5          7       0     9.02619e+06  1.40997e-09  2.10524e-09      2.22923
+      3          4       0     9.05702e+06  6.26699e-11  4.89873e-09      2.38742
 
 MULTISTART: Best locally optimal solution is returned.
 EXIT: Locally optimal solution found.
 
 Final Statistics
 ----------------
-Final objective value               =   9.09732662906504e+06
-Final feasibility error (abs / rel) =   1.11e-11 / 3.66e-15
-Final optimality error  (abs / rel) =   3.39e-08 / 3.39e-10
-# of iterations                     =       3163 
+Final objective value               =   9.02619461867634e+06
+Final feasibility error (abs / rel) =   1.41e-09 / 4.65e-13
+Final optimality error  (abs / rel) =   2.11e-09 / 2.11e-11
+# of iterations                     =       3656 
 # of CG iterations                  =          0 
-# of function evaluations           =       4130
-# of gradient evaluations           =       3173
-# of Hessian evaluations            =       3171
-Total program time (secs)           =       0.58788 (     3.687 CPU time)
+# of function evaluations           =       4391
+# of gradient evaluations           =       3666
+# of Hessian evaluations            =       3666
+Total program time (secs)           =       2.56602 (    10.273 CPU time)
 
 ===============================================================================
 
 Knitro 14.2.0: Locally optimal or satisfactory solution.
-objective 9097326.629; feasibility error 1.11e-11
-3163 iterations; 4130 function evaluations
+objective 9026194.619; feasibility error 1.41e-09
+3656 iterations; 4391 function evaluations
 
 suffix feaserror OUT;
 suffix opterror OUT;
 suffix numfcevals OUT;
 suffix numiters OUT;
-total_cost: 9097326.629065039
-solve_time: 0.603425
+con2_1,6: 0.00000018
+con2_2,1: 0.00000000
+con2_3,2: 0.00000000
+con2_4,3: 0.00000000
+con2_4,5: 0.00000000
+con2_6,11: 0.00000000
+con2_7,2: 0.00000000
+con2_7,6: 0.00000000
+con2_7,12: 0.00000000
+con2_8,3: 0.00000000
+con2_8,7: 0.00000000
+con2_8,13: 0.00000000
+con2_9,4: 0.00000000
+con2_9,8: 0.00000000
+con2_9,14: 0.00000000
+con2_10,5: 0.00000000
+con2_10,9: 0.00000000
+con2_11,15: 0.00000000
+con2_11,16: 0.00000000
+con2_12,11: 0.00000001
+con2_12,17: 0.00000000
+con2_13,12: 0.00000000
+con2_13,18: 0.00000000
+con2_14,13: 0.00000000
+con2_14,19: 0.00000000
+con2_15,16: 0.00000000
+con2_17,16: 0.00000000
+con2_18,17: 0.00000000
+con2_19,18: 0.00000000
+con2_19,20: 0.00000000
+con2_20,10: 0.00000000
+total_cost: 9026194.61867634
+solve_time: 2.611167

@@ -1,0 +1,390 @@
+Ipopt 3.14.13: outlev = 0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 9477548.253753949 
+
+*******************************************************************************
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 534 rows, 4165 columns and 3586 nonzeros
+Model fingerprint: 0x24529108
+Model has 179 simple general constraints
+  179 ABS
+Model has 179 general nonlinear constraints (10740 nonlinear terms)
+Variable types: 4165 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e-11, 2e+01]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [9e-02, 7e+09]
+  RHS range        [2e-03, 1e+03]
+Warning: Model contains large bounds
+
+User MIP start did not produce a new incumbent solution
+
+Presolve model has 179 nlconstr
+Added 5191 variables to disaggregate expressions.
+Presolve added 501 rows and 0 columns
+Presolve removed 0 rows and 541 columns
+Presolve time: 0.10s
+Presolved: 15355 rows, 8995 columns, 40650 nonzeros
+Presolved model has 358 SOS constraint(s)
+Presolved model has 2685 bilinear constraint(s)
+Presolved model has 179 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 8637 continuous, 358 integer (358 binary)
+
+Concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 12723 rows, 5936 columns, 35855 nonzeros
+
+
+Solved with primal simplex
+
+Root relaxation: objective 1.622384e+06, 9507 iterations, 0.88 seconds (0.10 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1622384.35    0  942          - 1622384.35      -     -    5s
+     0     0 1622384.35    0  897          - 1622384.35      -     -    5s
+     0     0 1622384.35    0 1343          - 1622384.35      -     -    6s
+     0     0 1622384.35    0 1317          - 1622384.35      -     -    6s
+     0     0 1622384.35    0  934          - 1622384.35      -     -    7s
+     0     0 1622384.35    0  981          - 1622384.35      -     -    7s
+     0     0 1622384.35    0  939          - 1622384.35      -     -    8s
+     0     0 1622384.35    0 1241          - 1622384.35      -     -    8s
+     0     0 1622384.35    0  910          - 1622384.35      -     -    9s
+     0     0 1622384.35    0  815          - 1622384.35      -     -    9s
+     0     0 1622384.35    0 1232          - 1622384.35      -     -    9s
+     0     0 1622384.35    0  869          - 1622384.35      -     -   10s
+     0     0 1622384.35    0  890          - 1622384.35      -     -   10s
+     0     2 1622384.35    0  912          - 1622384.35      -     -   11s
+    15    32 1622384.35    4 1266          - 1622384.35      -  1516   15s
+    63    96 1622384.35    6 1296          - 1622384.35      -  1635   21s
+    95   170 1622384.35    7 1291          - 1622384.35      -  1574   61s
+   171   462 1622384.35    8 1278          - 1622384.35      -  1373   81s
+   467  1220 1622384.35   13 1300          - 1622384.35      -  1088  113s
+  1245  2709 1622384.35   15 1116          - 1622384.35      -   796  196s
+  2984  4696 1622384.35   21 1055          - 1622384.35      -   670  334s
+  5417  6233 1622384.50   56  906          - 1622384.35      -   604  418s
+  7538  7736 1622384.35   13  928          - 1622384.35      -   587  503s
+  9513  9132 1622384.35   39  917          - 1622384.35      -   572  600s
+
+Cutting planes:
+  Cover: 205
+  Implied bound: 2397
+  Clique: 27
+  MIR: 18
+  Flow cover: 133
+  RLT: 1277
+  Relax-and-lift: 152
+
+Explored 11417 nodes (6448021 simplex iterations) in 660.71 seconds (91.24 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+
+Computing Irreducible Inconsistent Subsystem (IIS)...
+
+           Constraints          |            Bounds           |  Runtime
+      Min       Max     Guess   |   Min       Max     Guess   |
+--------------------------------------------------------------------------
+        0       892         -         0      8176         -           0s
+        0       892         -         0      8176         -        3600s
+        0       892         -         0      8176         -        3600s
+
+Non-minimal IIS computed: 892 constraints, 8176 bounds
+IIS runtime: 3600.13 seconds (1447.61 work units)
+Gurobi 12.0.1: infeasible problem
+6.44802e+06 simplex iterations
+11417 branching nodes
+
+suffix iis symbolic OUT;
+
+option iis_table '\
+0	non	not in the iis\
+1	low	lower bound in the iis\
+2	fix	both bounds in the iis\
+3	upp	upper bound in the iis\
+4	mem	member\
+5	pmem	possible member\
+6	plow	possibly lower bound\
+7	pupp	possibly upper bound\
+8	bug\
+';
+suffix dunbdd OUT;
+con2_1,65: 0.00000001
+con2_2,40: 0.00374167
+con2_2,86: 0.00007754
+con2_3,106: 0.00006631
+con2_3,115: 0.00006690
+con2_4,1: 0.00000000
+con2_5,85: 0.00000003
+con2_6,55: 0.00000004
+con2_7,1: 0.00000001
+con2_8,11: 0.00000001
+con2_9,81: 0.00000002
+con2_9,141: 0.00000008
+con2_9,151: 0.00000949
+con2_10,54: 0.00013264
+con2_11,26: 0.00000001
+con2_12,100: 0.00102638
+con2_13,49: 0.00000005
+con2_14,112: 0.00005825
+con2_15,132: 0.00000005
+con2_15,150: 0.00000005
+con2_16,95: 0.00006111
+con2_17,10: 0.30426480
+con2_18,20: 0.00000004
+con2_18,111: 0.00005342
+con2_19,78: 0.00000004
+con2_20,7: 0.00000001
+con2_20,113: 0.00011617
+con2_21,5: 0.00000017
+con2_22,54: 0.00000011
+con2_23,56: 0.00000000
+con2_24,10: 0.00013492
+con2_24,22: 0.00014003
+con2_25,91: 0.00000001
+con2_26,22: 0.00000010
+con2_26,54: 0.00000001
+con2_27,107: 0.00000004
+con2_28,20: 0.00000005
+con2_29,75: 0.00000005
+con2_30,98: 0.00011436
+con2_31,53: 0.00006033
+con2_32,142: 0.00043123
+con2_33,122: 0.00011218
+con2_34,5: 0.00000029
+con2_34,52: 0.00000011
+con2_35,93: 0.00000002
+con2_36,100: 0.00004204
+con2_37,105: 0.00000004
+con2_38,16: 0.00029567
+con2_39,16: 0.00002999
+con2_39,121: 0.00003033
+con2_40,34: 0.00000004
+con2_41,79: 0.00000001
+con2_42,94: 0.00000001
+con2_43,79: 0.00000002
+con2_44,49: 0.00000671
+con2_44,134: 0.00005157
+con2_45,7: 0.00007288
+con2_46,109: 0.12589751
+con2_47,63: 0.00000002
+con2_48,44: 0.00001631
+con2_49,140: 0.00000004
+con2_50,123: 0.00007994
+con2_50,129: 0.00008464
+con2_51,37: 0.00001112
+con2_52,2: 0.00006194
+con2_52,14: 0.00005815
+con2_53,85: 0.00005997
+con2_54,42: 0.00000001
+con2_55,102: 0.00000004
+con2_56,86: 0.00000000
+con2_57,127: 0.00001079
+con2_57,132: 0.00003168
+con2_58,5: 0.00000004
+con2_58,21: 0.00006978
+con2_58,146: 0.00017622
+con2_59,25: 0.00000002
+con2_59,108: 0.00000010
+con2_60,103: 0.15415735
+con2_61,106: 0.22043570
+con2_62,128: 0.00083863
+con2_63,76: 0.00006177
+con2_64,42: 0.00000541
+con2_64,136: 0.00000764
+con2_65,40: 0.00000001
+con2_65,45: 0.00007319
+con2_66,102: 0.00021379
+con2_67,80: 0.00004262
+con2_68,12: 0.18046742
+con2_69,31: 0.00006058
+con2_70,38: 0.00028696
+con2_70,58: 0.00000004
+con2_71,155: 0.00002080
+con2_72,25: 0.00005973
+con2_72,91: 0.00005909
+con2_73,24: 0.09858949
+con2_74,134: 0.19382104
+con2_75,13: 0.00000005
+con2_75,32: 0.00003238
+con2_76,36: 0.00004246
+con2_77,37: 0.00000004
+con2_78,18: 0.00000004
+con2_79,23: 0.00000001
+con2_79,112: 0.00000001
+con2_80,8: 0.00000001
+con2_80,12: 0.00091388
+con2_81,47: 0.00000002
+con2_82,27: 0.00161758
+con2_82,51: 0.00005158
+con2_82,89: 0.00177131
+con2_83,145: 0.00000029
+con2_84,4: 0.00008274
+con2_85,40: 0.00000003
+con2_86,4: 0.00000000
+con2_87,98: 0.25661914
+con2_88,149: 0.00032422
+con2_88,154: 0.00026985
+con2_89,27: 0.00152218
+con2_90,41: 0.00000256
+con2_90,110: 0.00000001
+con2_91,118: 0.00000001
+con2_92,108: 0.19536458
+con2_93,43: 0.00000002
+con2_94,136: 0.00000001
+con2_95,69: 0.00006070
+con2_96,114: 0.20136636
+con2_97,55: 0.27281521
+con2_98,33: 0.00011292
+con2_99,64: 0.00019746
+con2_99,136: 0.00019185
+con2_100,137: 0.00006212
+con2_101,11: 0.26058558
+con2_102,28: 0.00000005
+con2_103,19: 0.00000005
+con2_103,133: 0.00002287
+con2_104,99: 0.32061446
+con2_105,70: 0.00000004
+con2_106,48: 0.00001651
+con2_107,77: 0.00000004
+con2_108,25: 0.00000010
+con2_109,103: 0.00000004
+con2_110,146: 0.00000001
+con2_111,66: 0.00021071
+con2_111,102: 0.00020884
+con2_112,23: 0.00000002
+con2_112,52: 0.00000011
+con2_113,30: 0.00011506
+con2_114,73: 0.11843926
+con2_115,106: 0.00006586
+con2_116,63: 0.00000003
+con2_116,76: 0.00131268
+con2_116,117: 0.00000003
+con2_117,59: 0.00000001
+con2_118,90: 0.00000001
+con2_119,86: 0.31776308
+con2_120,143: 0.00001026
+con2_121,6: 0.00000004
+con2_122,7: 0.00002433
+con2_122,84: 0.00008220
+con2_123,125: 0.00026492
+con2_123,147: 0.00003388
+con2_124,51: 0.00003997
+con2_124,130: 0.00003423
+con2_125,109: 0.00017786
+con2_126,3: 0.00002483
+con2_127,120: 0.00001033
+con2_128,3: 0.00058610
+con2_129,71: 0.00002050
+con2_129,123: 0.00006785
+con2_130,82: 0.00003167
+con2_131,125: 0.01202104
+con2_132,117: 0.00000005
+con2_133,19: 0.00002053
+con2_134,32: 0.00005836
+con2_135,67: 0.00004480
+con2_135,154: 0.00010921
+con2_136,41: 0.00000001
+con2_137,8: 0.00005516
+con2_138,62: 0.00113611
+con2_139,152: 0.00385806
+con2_140,121: 0.00000004
+con2_141,83: 0.00000029
+con2_141,145: 0.00000001
+con2_142,13: 0.00040855
+con2_143,124: 0.00000977
+con2_144,126: 0.00031045
+con2_144,148: 0.00267752
+con2_145,80: 0.00000001
+con2_146,21: 0.00000019
+con2_146,35: 0.00000002
+con2_147,19: 0.00002902
+con2_148,27: 0.00000005
+con2_148,126: 0.00005133
+con2_149,9: 0.00000001
+con2_150,57: 0.00000439
+con2_151,154: 0.00000005
+con2_152,149: 0.00000004
+con2_153,109: 0.00000005
+con2_153,135: 0.00002803
+con2_154,141: 0.00000001
+con2_155,29: 0.00000005
+total_cost: 9477548.253753949
+solve_time: 4261.059539

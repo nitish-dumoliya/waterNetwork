@@ -4,63 +4,101 @@ Solve the original nonconvex optimization problem using IPOPT
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-Objective:  20459.04845823193
+Objective:  20359.807899041996
 Solve_result:  solved
-Solve_time: 5.563038 
+Solve_time: 1.2192120000000002 
 
 
 **********************************************************************************************
 Iteration : 1 
 
-self.sorted_nodes: [18, 26, 13, 35, 15, 2, 32, 3, 22, 21, 20, 4, 6, 24, 5, 29, 30, 28, 7] 
+self.sorted_nodes: [18, 26, 13, 35, 15, 2, 32, 3, 21, 20, 23, 4, 6, 24, 5, 29, 30, 28, 7] 
 
-Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
-(10, 18)  True      20,459         21,438         1.68        solved         No        7.37        
-(11, 26)  True      20,459         21,368         3.65        solved         No        11.08       
-(14, 13)  True      20,459         21,264         4.11        solved         No        15.24       
-(34, 35)  True      20,459         20,462         2.7         solved         No        18.0        
-(26, 15)  True      20,459         20,819         2.51        solved         No        20.56       
-(18, 2)   True      20,459         20,728         2.24        solved         No        22.85       
-(10, 32)  True      20,459         21,044         2.53        solved         No        25.42       
-(11, 3)   True      20,459         21,363         1.98        solved         No        27.45       
-(15, 22)  True      20,459         20,699         1.7         solved         No        29.21       
-(14, 21)  True      20,459         20,544         0.84        solved         No        30.11       
-(15, 20)  True      20,459         21,528         4.61        solved         No        34.77       
-(12, 4)   True      20,459         21,072         0.36        solved         No        35.18       
-(21, 6)   True      20,459         20,646         0.8         solved         No        36.03       
-(23, 24)  True      20,459         20,332         0.45        solved         Yes       36.52       
-
-visited_nodes: [18, 26, 13, 35, 15, 2, 32, 3, 22, 21, 20, 4, 6, 24]
-
-**********************************************************************************************
-Iteration : 2 
-
-self.sorted_nodes: [23, 5, 29, 30, 28, 7] 
-
-Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
-(22, 23)  True      20,332         21,364         0.31        solved         No        36.88       
-(13, 5)   True      20,332         20,698         1.38        solved         No        38.31       
-(16, 29)  True      20,332         20,379         0.43        solved         No        38.78       
-(29, 30)  True      20,332         20,382         0.89        solved         No        39.74       
-(9, 28)   True      20,332         20,420         0.3         solved         No        40.09       
-(24, 7)   True      20,332         20,237         0.38        solved         Yes       40.51       
-
-visited_nodes: [18, 26, 13, 35, 15, 2, 32, 3, 22, 21, 20, 4, 6, 24, 23, 5, 29, 30, 28, 7]
-
-**********************************************************************************************
-Iteration : 3 
-
-self.sorted_nodes: [17] 
-
-Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
-(18, 17)  True      20,237         20,247         0.39        solved         No        40.95       
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(10, 18)  True    20,360        21,344        0.12s       solved        No        1.4s
+(11, 26)  True    20,360        21,299        0.24s       solved        No        1.67s
+(14, 13)  True    20,360        21,077        0.23s       solved        No        1.93s
+(34, 35)  True    20,360        20,497        0.09s       solved        No        2.06s
+(26, 15)  True    20,360        20,830        0.62s       solved        No        2.71s
+(18, 2)   True    20,360        20,607        0.12s       solved        No        2.86s
+(10, 32)  True    20,360        21,075        0.86s       solved        No        3.75s
+(11, 3)   True    20,360        21,210        0.69s       solved        No        4.47s
+(14, 21)  True    20,360        20,476        0.95s       solved        No        5.45s
+(15, 20)  True    20,360        21,694        0.76s       solved        No        6.25s
+(25, 23)  True    20,360        20,753        0.12s       solved        No        6.4s
+(12, 4)   True    20,360        20,874        0.87s       solved        No        7.3s
+(21, 6)   True    20,360        20,549        0.7s        solved        No        8.03s
+(8, 24)   True    20,360        20,435        0.65s       solved        No        8.71s
+(13, 5)   True    20,360        20,664        0.7s        solved        No        9.45s
+(16, 29)  True    20,360        20,407        0.19s       solved        No        9.67s
+(29, 30)  True    20,360        20,456        0.17s       solved        No        9.86s
+(9, 28)   True    20,360        20,404        0.14s       solved        No        10.03s
+(24, 7)   True    20,360        20,685        0.22s       solved        No        10.28s
 
 **********************************Final best results******************************************
 
 Water Network: d17_foss_poly_1
-Final best objective: 20237.39942220891
-Number of nlp problem solved: 22
-Total number of iteration: 3
-Solver_time: 39.80 seconds
-Heuristic elapsed time: 40.95 seconds
+con2_1,17: 0.00000003
+con2_1,31: 0.00000000
+con2_2,3: 0.00001913
+con2_2,18: 0.00000006
+con2_3,4: 0.00004865
+con2_3,11: 0.00000006
+con2_4,5: 0.00003462
+con2_5,6: 0.00001136
+con2_5,13: 0.00000024
+con2_6,7: 0.00000742
+con2_7,24: 0.00000060
+con2_8,28: 0.00000457
+con2_9,36: 0.00000010
+con2_10,11: 0.00000000
+con2_10,32: 0.00000000
+con2_11,19: 0.00000000
+con2_11,26: 0.00000000
+con2_12,4: 0.00000009
+con2_12,13: 0.00003526
+con2_13,14: 0.00000002
+con2_14,20: 0.00000000
+con2_14,21: 0.00000002
+con2_15,16: 0.00002586
+con2_15,22: 0.00000005
+con2_16,25: 0.00000001
+con2_16,29: 0.00000412
+con2_17,2: 0.00000990
+con2_17,18: 0.00044592
+con2_18,10: 0.00000001
+con2_19,12: 0.00000002
+con2_19,20: 0.00006622
+con2_20,15: 0.00000000
+con2_21,6: 0.00000011
+con2_21,22: 0.00002035
+con2_22,7: 0.00008172
+con2_22,23: 0.00006956
+con2_23,25: 0.00000009
+con2_24,8: 0.00000006
+con2_24,23: 0.00158073
+con2_25,8: 0.00000002
+con2_26,15: 0.00000000
+con2_26,27: 0.00002138
+con2_27,16: 0.00000000
+con2_28,9: 0.00000392
+con2_28,29: 0.00001908
+con2_29,30: 0.00000049
+con2_29,33: 0.00000008
+con2_30,9: 0.00000493
+con2_30,35: 0.00001278
+con2_31,10: 0.00000000
+con2_31,34: 0.00000001
+con2_32,27: 0.00000000
+con2_32,33: 0.00002880
+con2_33,34: 0.00000002
+con2_34,35: 0.00000014
+con2_35,36: 0.00000021
+con2_36,1: 0.00000002
+con2_37,1: 0.00000000
+Final best objective: 20359.807899041996
+Number of nlp problem solved: 20
+Total number of iteration: 1
+Solver_time: 9.66 seconds
+Heuristic elapsed time: 10.28 seconds
 

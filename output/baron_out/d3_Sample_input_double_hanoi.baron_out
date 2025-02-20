@@ -1,11 +1,29 @@
+Ipopt 3.14.13: outlev = 0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 12068983.881600212 
+
+*******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-iisfind = 2
-lsolver = conopt
+iisfind = 5
 lpsolver = cplex
+lsolver = conopt
+threads = 8
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -18,295 +36,124 @@ lpsolver = cplex
  INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: ILOG CPLEX                                      
+ For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
+ Starting solution is feasible with a value of  0.120690E+08      
+ Preprocessing found feasible solution with value 0.120690E+08
  Doing local search
+ Preprocessing found feasible solution with value 0.120644E+08
  Solving bounding LP
  Starting multi-start local search
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 404 in bounds file "boundsfile.2":
-	L = 30
-	x = 18810276983799.168
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.120717E+08
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             1             2.03      0.00000         0.120717E+08             
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.65    13MB    0.359900E+07    0.120644E+08    NA
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 404 in bounds file "boundsfile.7":
+/opt/ampl/conopt: bad bound triple 449 in bounds file "boundsfile.7":
 	L = 30
-	x = 18810276983799.168
+	x = 16821502327491.883
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 404 in bounds file "boundsfile.9":
+/opt/ampl/conopt: bad bound triple 441 in bounds file "boundsfile.9":
 	L = 30
-	x = 18810276983799.168
+	x = 12143640900511.895
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+objective _sobj[1]: Initial function value too large = 3.1E+11
+       1469          30.65    15MB    0.359900E+07    0.120644E+08    2.98%
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.10":
+/opt/ampl/conopt: bad bound triple 435 in bounds file "boundsfile.17":
 	L = 30
-	x = 213297668846067.34
+	x = 54221489273192.81
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 404 in bounds file "boundsfile.12":
-	L = 30
-	x = 18810276983799.168
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.14":
-	L = 30
-	x = 196746615499256
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.16":
-	L = 30
-	x = 196746615499256
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 287 in bounds file "boundsfile.18":
-	L = 0
-	x = -1.1368683772161603e-13
-	U = 850
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.20":
-	L = 30
-	x = 441205863869.2048
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 420 in bounds file "boundsfile.22":
-	L = 30
-	x = 179808483823513.9
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 420 in bounds file "boundsfile.24":
-	L = 30
-	x = 396422725008.8674
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 420 in bounds file "boundsfile.26":
-	L = 30
-	x = 73208904656458.08
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 426 in bounds file "boundsfile.28":
-	L = 30
-	x = 8846054996715.469
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.30":
-	L = 30
-	x = 204839207223173.84
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-        495            50            29.67     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 420 in bounds file "boundsfile.34":
-	L = 30
-	x = 17662095092503.125
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.36":
-	L = 30
-	x = 41635685197622.09
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-        934            87            58.68     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.38":
-	L = 30
-	x = 48060473705028.56
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       1360           109            88.24     0.359900E+07     0.120717E+08             
-       1687           134           117.81     0.359900E+07     0.120717E+08             
-       1996           149           147.54     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 410 in bounds file "boundsfile.42":
-	L = 30
-	x = 277450024937.49445
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       2420           161           177.31     0.359900E+07     0.120717E+08             
-       2771           191           207.02     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 277 in bounds file "boundsfile.44":
-	L = 0
-	x = 1300.0000000000016
-	U = 1300
-Surprise errno 4 ==> Interrupted system call
-       3168           212           236.70     0.359900E+07     0.120717E+08             
-       3533           233           266.48     0.359900E+07     0.120717E+08             
-       3939           237           296.30     0.359900E+07     0.120717E+08             
-       4367           254           326.16     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.46":
-	L = 30
-	x = 6274209477532.104
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       4806           269           355.91     0.359900E+07     0.120717E+08             
-       5231           275           385.72     0.359900E+07     0.120717E+08             
-       5566           293           415.44     0.359900E+07     0.120717E+08             
-       6030           296           444.83     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.48":
-	L = 30
-	x = 9144771652137.062
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       6398           297           474.68     0.359900E+07     0.120717E+08             
-       6752           307           504.52     0.359900E+07     0.120717E+08             
-       7133           314           534.35     0.359900E+07     0.120717E+08             
-       7440           329           564.06     0.359900E+07     0.120717E+08             
-       7757           331           593.88     0.359900E+07     0.120717E+08             
-       8074           339           623.58     0.359900E+07     0.120717E+08             
-       8395           347           653.34     0.359900E+07     0.120717E+08             
-       8657           358           683.15     0.359900E+07     0.120717E+08             
-       8964           368           712.95     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.50":
-	L = 30
-	x = 40744412541245.055
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       9334           382           742.64     0.359900E+07     0.120717E+08             
-       9640           388           772.40     0.359900E+07     0.120717E+08             
-       9958           394           802.25     0.359900E+07     0.120717E+08             
-      10239           399           832.09     0.359900E+07     0.120717E+08             
-      10597           398           861.81     0.359900E+07     0.120717E+08             
-      10960           399           891.58     0.359900E+07     0.120717E+08             
-      11249           415           921.35     0.359900E+07     0.120717E+08             
-      11633           423           951.24     0.359900E+07     0.120717E+08             
-      11982           431           981.06     0.359900E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.52":
-	L = 30
-	x = 5945540133017.09
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      12302           437          1010.72     0.359900E+07     0.120717E+08             
-      12643           445          1040.45     0.359901E+07     0.120717E+08             
-      13030           447          1070.36     0.384058E+07     0.120717E+08             
-      13263           449          1100.28     0.384058E+07     0.120717E+08             
-      13525           439          1130.03     0.384058E+07     0.120717E+08             
-      13808           443          1159.85     0.384204E+07     0.120717E+08             
-      14176           457          1189.61     0.384204E+07     0.120717E+08             
-      14405           467          1219.26     0.384204E+07     0.120717E+08             
-      14790           477          1249.10     0.384204E+07     0.120717E+08             
-      15141           479          1278.97     0.384204E+07     0.120717E+08             
-      15453           482          1308.64     0.384204E+07     0.120717E+08             
-      15764           475          1338.48     0.384206E+07     0.120717E+08             
-      16089           481          1368.21     0.384206E+07     0.120717E+08             
-      16358           482          1398.10     0.385408E+07     0.120717E+08             
-      16654           486          1427.82     0.412711E+07     0.120717E+08             
-      16935           499          1457.71     0.428052E+07     0.120717E+08             
-      17195           496          1487.27     0.431294E+07     0.120717E+08             
-      17525           491          1516.95     0.433290E+07     0.120717E+08             
-      17788           500          1546.77     0.433921E+07     0.120717E+08             
-      18066           496          1576.59     0.435103E+07     0.120717E+08             
-      18365           501          1606.19     0.439674E+07     0.120717E+08             
-      18613           504          1636.03     0.442360E+07     0.120717E+08             
-      18881           495          1665.75     0.447909E+07     0.120717E+08             
-      19189           494          1695.30     0.448319E+07     0.120717E+08             
-      19482           498          1725.12     0.448319E+07     0.120717E+08             
-      19793           498          1755.06     0.448319E+07     0.120717E+08             
-      20084           503          1784.86     0.448450E+07     0.120717E+08             
-      20338           501          1814.54     0.448733E+07     0.120717E+08             
-      20622           502          1844.37     0.450941E+07     0.120717E+08             
-      20892           490          1874.14     0.452974E+07     0.120717E+08             
-      21139           492          1903.85     0.463722E+07     0.120717E+08             
-      21401           501          1933.61     0.472966E+07     0.120717E+08             
-      21664           494          1963.55     0.478986E+07     0.120717E+08             
-      21936           490          1993.35     0.489752E+07     0.120717E+08             
-      22171           495          2023.06     0.490558E+07     0.120717E+08             
-      22476           494          2052.99     0.490558E+07     0.120717E+08             
-      22724           489          2082.75     0.490558E+07     0.120717E+08             
-      22967           489          2112.51     0.490586E+07     0.120717E+08             
-      23214           482          2142.22     0.490586E+07     0.120717E+08             
-      23453           485          2171.81     0.490586E+07     0.120717E+08             
-      23715           481          2201.29     0.490586E+07     0.120717E+08             
-      23994           476          2231.11     0.492895E+07     0.120717E+08             
-      24263           478          2261.08     0.495637E+07     0.120717E+08             
-      24460           492          2290.87     0.495637E+07     0.120717E+08             
-      24653           508          2320.67     0.496278E+07     0.120717E+08             
-      24891           513          2350.60     0.499377E+07     0.120717E+08             
-      25139           507          2380.28     0.502581E+07     0.120717E+08             
-      25387           506          2410.22     0.503687E+07     0.120717E+08             
-      25644           501          2440.15     0.508325E+07     0.120717E+08             
-      25872           503          2470.02     0.513869E+07     0.120717E+08             
-      26119           502          2499.78     0.515654E+07     0.120717E+08             
-      26342           509          2529.65     0.516481E+07     0.120717E+08             
-      26605           507          2559.57     0.517925E+07     0.120717E+08             
-      26884           507          2589.45     0.523069E+07     0.120717E+08             
-      27136           514          2619.05     0.532990E+07     0.120717E+08             
-      27401           509          2648.88     0.533908E+07     0.120717E+08             
-      27640           510          2678.77     0.538132E+07     0.120717E+08             
-      27915           509          2708.56     0.540131E+07     0.120717E+08             
-      28175           516          2738.50     0.544927E+07     0.120717E+08             
-      28405           522          2768.46     0.547637E+07     0.120717E+08             
-      28729           515          2798.27     0.549714E+07     0.120717E+08             
-      28964           509          2828.16     0.554190E+07     0.120717E+08             
-      29170           521          2858.10     0.561171E+07     0.120717E+08             
-      29437           521          2888.00     0.564814E+07     0.120717E+08             
-      29651           521          2917.76     0.567729E+07     0.120717E+08             
-      29908           517          2947.60     0.571585E+07     0.120717E+08             
-      30141           515          2977.49     0.580627E+07     0.120717E+08             
-      30372           515          3007.40     0.583330E+07     0.120717E+08             
-      30645           515          3037.04     0.592070E+07     0.120717E+08             
-      30902           508          3066.90     0.595183E+07     0.120717E+08             
-      31146           503          3096.62     0.598397E+07     0.120717E+08             
-      31406           512          3126.37     0.605831E+07     0.120717E+08             
-      31654           514          3156.11     0.608677E+07     0.120717E+08             
-      31842           514          3185.85     0.613620E+07     0.120717E+08             
-      32044           511          3215.65     0.620948E+07     0.120717E+08             
-      32307           510          3245.45     0.622480E+07     0.120717E+08             
-      32539           519          3275.25     0.628928E+07     0.120717E+08             
-      32765           518          3305.00     0.630213E+07     0.120717E+08             
-      33030           516          3334.84     0.632762E+07     0.120717E+08             
-      33314           520          3364.62     0.638799E+07     0.120717E+08             
-      33577           529          3394.47     0.642719E+07     0.120717E+08             
-      33805           530          3424.09     0.646317E+07     0.120717E+08             
-      34059           538          3453.62     0.649593E+07     0.120717E+08             
-      34299           548          3483.31     0.652054E+07     0.120717E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 437 in bounds file "boundsfile.60":
-	L = 30
-	x = 1009706317348.8556
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      34536           563          3512.94     0.661225E+07     0.120717E+08             
-      34760           569          3542.64     0.665859E+07     0.120717E+08             
-      35021           580          3572.39     0.668267E+07     0.120717E+08             
-      35251           579          3600.00     0.670480E+07     0.120717E+08             
+       2843          60.67    25MB    0.359900E+07    0.120644E+08    3.62%
+       2863         182.08    25MB    0.359900E+07    0.120644E+08    3.62%
+       2872        4330.64    25MB    0.359900E+07    0.120644E+08    3.62%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3634.50
- Total CPU time used:              3600.00
+ Wall clock time:                  4330.64
+ Total CPU time used:              4328.94
 
- Total no. of BaR iterations:   35251
- Best solution found at node:      -1
- Max. no. of nodes in memory:     583
+ Total no. of BaR iterations:    2872
+ Best solution found at node:       1
+ Max. no. of nodes in memory:     450
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 35251 iterations, CPU time limit reached.
-Objective 12071678.01
-total_cost: 12071678.007563343
-solve_time: 3634.580703
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 2872 iterations, CPU time limit reached.
+Objective 12064445.12
+con2_1,2: 0.00000000
+con2_2,3: 0.00000000
+con2_2,33: 0.00000000
+con2_3,4: 0.00000000
+con2_3,19: 0.00000000
+con2_3,20: 0.00000000
+con2_4,5: 0.00000000
+con2_5,6: 0.00000000
+con2_6,7: 0.00000000
+con2_7,8: 0.00000000
+con2_8,9: 0.00000000
+con2_9,10: 0.00000000
+con2_10,11: 0.00000000
+con2_10,14: 0.00000000
+con2_11,12: 0.00000000
+con2_12,13: 0.00000000
+con2_14,15: 0.00000000
+con2_15,16: 0.00000000
+con2_16,27: 0.00000000
+con2_17,16: 0.00000000
+con2_18,17: 0.00000000
+con2_19,18: 0.00000000
+con2_20,21: 0.00000000
+con2_20,23: 0.00000000
+con2_21,22: 0.00000000
+con2_23,24: 0.00000000
+con2_23,28: 0.00000000
+con2_24,25: -0.00000000
+con2_25,32: 0.00000000
+con2_26,25: -0.00000000
+con2_27,26: -0.00000000
+con2_28,29: 0.00000000
+con2_29,30: 0.00000000
+con2_30,31: -0.00000000
+con2_32,31: -0.00000000
+con2_33,34: 0.00000000
+con2_33,49: 0.00000000
+con2_33,50: 0.00000000
+con2_34,35: 0.00000000
+con2_35,36: 0.00000000
+con2_36,37: 0.00000000
+con2_37,38: 0.00000000
+con2_38,39: 0.00000000
+con2_39,40: 0.00000000
+con2_40,41: 0.00000000
+con2_40,44: 0.00000000
+con2_41,42: 0.00000000
+con2_42,43: 0.00000000
+con2_44,45: 0.00000000
+con2_45,46: 0.00000000
+con2_46,57: -0.00000000
+con2_47,46: 0.00000000
+con2_48,47: 0.00000000
+con2_49,48: 0.00000000
+con2_50,51: 0.00000000
+con2_50,53: 0.00000000
+con2_51,52: 0.00000000
+con2_53,54: 0.00000000
+con2_53,58: 0.00000000
+con2_54,55: -0.00000000
+con2_55,62: 0.00000000
+con2_56,55: -0.00000000
+con2_57,56: -0.00000000
+con2_58,59: 0.00000000
+con2_59,60: 0.00000000
+con2_60,61: -0.00000000
+con2_62,61: -0.00000000
+total_cost: 12064445.116465785
+solve_time: 4330.674628

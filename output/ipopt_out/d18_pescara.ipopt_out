@@ -1,54 +1,113 @@
-Ipopt 3.12.13: outlev = 4
+Ipopt 3.14.13: outlev = 6
 expect_infeasible_problem = yes
 bound_push = 0.01
 bound_frac = 0.01
+Unknown keyword "nlp_scaling"
+Unknown keyword ""
+Unknown keyword "gradient-based"
 warm_start_init_point = yes
 max_iter = 3000
 halt_on_ampl_error = yes
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit http://projects.coin-or.org/Ipopt
-******************************************************************************
-
-Total number of variables............................:     1447
-                     variables with only lower bounds:       68
-                variables with lower and upper bounds:     1379
-                     variables with only upper bounds:        0
-Total number of equality constraints.................:      262
-Total number of inequality constraints...............:        0
-        inequality constraints with only lower bounds:        0
-   inequality constraints with lower and upper bounds:        0
-        inequality constraints with only upper bounds:        0
-
-
-Number of Iterations....: 1467
-
-                                   (scaled)                 (unscaled)
-Objective...............:   1.4463349619298698e+06    5.6566160361077208e+06
-Dual infeasibility......:   1.0000004189912336e+02    3.9110016386747145e+02
-Constraint violation....:   7.6681929379793843e+00    7.6681929379793843e+00
-Complementarity.........:   1.7555365605464538e-09    6.8659034882971810e-09
-Overall NLP error.......:   1.0000004189912336e+02    3.9110016386747145e+02
-
-
-Number of objective function evaluations             = 1488
-Number of objective gradient evaluations             = 4
-Number of equality constraint evaluations            = 1488
-Number of inequality constraint evaluations          = 0
-Number of equality constraint Jacobian evaluations   = 1469
-Number of inequality constraint Jacobian evaluations = 0
-Number of Lagrangian Hessian evaluations             = 1468
-Total CPU secs in IPOPT (w/o function evaluations)   =     26.274
-Total CPU secs in NLP function evaluations           =      0.429
-
-EXIT: Converged to a point of local infeasibility. Problem may be infeasible.
- 
-Ipopt 3.12.13: Converged to a locally infeasible point. Problem may be infeasible.
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-total_cost: 5656616.036107717
-solve_time: 26.926804999999998
+exit value 1
+<BREAK>
+con2_1,2: 0.00000000
+con2_2,4: 0.00000000
+con2_3,1: 0.00000000
+con2_3,4: 0.00000000
+con2_3,5: 0.00000000
+con2_4,59: 0.00000000
+con2_5,86: 0.00000000
+con2_6,7: 0.00000000
+con2_6,8: 0.00000000
+con2_8,29: 0.00000000
+con2_9,6: 0.00000000
+con2_9,40: 0.00000000
+con2_10,11: 0.00000000
+con2_12,39: 0.00000000
+con2_13,17: 0.00000000
+con2_14,24: 0.00000000
+con2_15,14: 0.00000000
+con2_18,13: 0.00000000
+con2_18,19: 0.00000000
+con2_19,20: 0.00000000
+con2_19,38: 0.00000000
+con2_20,18: 0.00000000
+con2_20,27: 0.00000000
+con2_21,20: 0.00000000
+con2_21,22: 0.00000000
+con2_22,23: 0.00000000
+con2_22,85: 0.00000000
+con2_23,21: 0.00000000
+con2_24,17: 0.00000000
+con2_24,25: 0.00000000
+con2_25,12: 0.00000000
+con2_26,17: 0.00000000
+con2_26,27: 0.00000000
+con2_26,83: 0.00000000
+con2_27,23: 0.00000000
+con2_28,29: 0.00000000
+con2_28,30: 0.00000000
+con2_29,35: 0.00000000
+con2_30,28: 0.00000000
+con2_30,33: 0.00000000
+con2_31,11: 0.00000000
+con2_31,32: 0.00000000
+con2_32,49: 0.00000000
+con2_33,9: 0.00000000
+con2_34,30: 0.00000000
+con2_34,41: 0.00000000
+con2_35,25: 0.00000000
+con2_35,36: 0.00000000
+con2_37,31: 0.00000000
+con2_37,38: 0.00000000
+con2_39,34: 0.00000000
+con2_40,39: 0.00000000
+con2_40,41: 0.00000000
+con2_41,33: 0.00000000
+con2_42,11: 0.00000000
+con2_43,42: 0.00000000
+con2_43,87: 0.00000000
+con2_44,42: 0.00000000
+con2_44,57: 0.00000000
+con2_45,46: 0.00000000
+con2_45,52: 0.00000000
+con2_46,32: 0.00000000
+con2_47,48: 0.00000000
+con2_48,49: 0.00000000
+con2_49,50: 0.00000000
+con2_50,46: 0.00000000
+con2_50,51: 0.00000000
+con2_51,48: 0.00000000
+con2_51,53: 0.00000000
+con2_52,50: 0.00000000
+con2_52,53: 0.00000000
+con2_54,55: 0.00000000
+con2_54,84: 0.00000000
+con2_55,61: 0.00000000
+con2_55,86: 0.00000000
+con2_55,88: 0.00000000
+con2_55,89: 0.00000000
+con2_56,44: 0.00000000
+con2_56,47: 0.00000000
+con2_57,56: 0.00000000
+con2_58,57: 0.00000000
+con2_58,60: 0.00000000
+con2_59,60: 0.00000000
+con2_59,62: 0.00000000
+con2_60,61: 0.00000000
+con2_61,5: 0.00000000
+con2_62,2: 0.00000000
+con2_62,58: 0.00000000
+con2_65,6: 0.00000000
+con2_65,76: 0.00000000
+con2_76,8: 0.00000000
+con2_82,83: 0.00000000
+con2_82,85: 0.00000000
+con2_83,85: 0.00000000
+con2_84,88: 0.00000000
+con2_86,45: 0.00000000
+con2_88,51: 0.00000000
+con2_88,89: 0.00000000
+con2_89,53: 0.00000000
+total_cost: 0.0
+solve_time: 0.004396000000000001

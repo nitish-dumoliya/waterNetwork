@@ -1,9 +1,9 @@
 Environment: User provided options:
-  problem_file = /tmp/at1524423
+  problem_file = /tmp/at1053383
   ampl = 1
 Environment: End of user provided options.
 
-MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-52-g0ae7849
+MultiStart: Minotaur version 0.4 patch 1 git revision v0.4-50-g456fd8cc
 MultiStart: Multistart NLP-based branch-and-bound solver for nonconvex MINLP
 Environment: User provided options:
   presolve = 1
@@ -22,7 +22,7 @@ Presolver: Presolving ...
 Presolver: Finished presolving.
 LinearHandler: Statistics for presolve by Linear Handler:
 LinearHandler: Number of iterations           = 7
-LinearHandler: Time taken in initial presolve = 0.01
+LinearHandler: Time taken in initial presolve = 0.00
 LinearHandler: Time taken in node presolves   = 0.00
 LinearHandler: Number of variables deleted    = 0
 LinearHandler: Number of constraints deleted  = 0
@@ -48,7 +48,7 @@ NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
 LinearHandler: Statistics for presolve by Linear Handler:
 LinearHandler: Number of iterations           = 7
-LinearHandler: Time taken in initial presolve = 0.01
+LinearHandler: Time taken in initial presolve = 0.00
 LinearHandler: Time taken in node presolves   = 0.00
 LinearHandler: Number of variables deleted    = 0
 LinearHandler: Number of constraints deleted  = 0
@@ -82,76 +82,207 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit https://github.com/coin-or/Ipopt
 ******************************************************************************
 
- 
-----------------------------------------------------------------------------------------------
- Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
-----------------------------------------------------------------------------------------------
-     0         0             -inf          inf         inf              0             0      0
-   100       102              inf   1.0742e+07    0.00e+00              1             0      1
-   100       102              inf   1.0742e+07    0.00e+00              1             0      1
-----------------------------------------------------------------------------------------------
- 
-BranchAndBound: stopping branch-and-bound
-BranchAndBound: nodes processed = 1
-BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 100.15
-BranchAndBound: nodes processed = 1
-BranchAndBound: nodes created   = 1
-MsProcessor: nodes processed     = 1
-MsProcessor: nodes branched      = 0
-MsProcessor: nodes infeasible    = 0
-MsProcessor: nodes optimal       = 1
-MsProcessor: nodes hit ub        = 0
-MsProcessor: nodes with problems = 0
-MaxVio brancher: times called = 0
-MaxVio brancher: time in brancher = 0.00
-SolutionPool: Number of solutions found = 1
-SolutionPool: Time first solution found = 100.18
-SolutionPool: Time best solution found  = 100.18
-Ipopt: total calls            = 0
-Ipopt: calls to Optimize      = 0
-Ipopt: calls to ReOptimize    = 0
-Ipopt: strong branching calls = 0
-Ipopt: total time in solving  = 0.00
-Ipopt: total time in presolve = 0.00
-Ipopt: time in str branching  = 0.00
-Ipopt: total iterations       = 0
-Ipopt: strong br iterations   = 0
-LinearHandler: Statistics for presolve by Linear Handler:
-LinearHandler: Number of iterations           = 0
-LinearHandler: Time taken in initial presolve = 0.00
-LinearHandler: Time taken in node presolves   = 0.00
-LinearHandler: Number of variables deleted    = 0
-LinearHandler: Number of constraints deleted  = 0
-LinearHandler: Number of vars set to binary   = 0
-LinearHandler: Number of vars set to integer  = 0
-LinearHandler: Times variables tightened      = 0
-LinearHandler: Times constraints tightened    = 0
-LinearHandler: Times coefficients improved    = 0
-LinearHandler: Times binary variable relaxed  = 0
-LinearHandler: Changes in nodes               = 0
-NlPresHandler: Statistics for presolve by NlPresHandler:
-NlPresHandler: Number of iterations           = 0
-NlPresHandler: Time taken in initial presolve = 0.00
-NlPresHandler: Time taken in node presolves   = 0.00
-NlPresHandler: Number of variables deleted    = 0
-NlPresHandler: Number of constraints deleted  = 0
-NlPresHandler: Number of constraints relaxed  = 0
-NlPresHandler: Number of perspective reform.  = 0
-NlPresHandler: Times variables tightened      = 0
-NlPresHandler: Times constraints tightened    = 0
-NlPresHandler: Times coefficients improved    = 0
-NlPresHandler: Times quad. changed to conic   = 0
-NlPresHandler: Changes in nodes               = 0
- 
-MultiStart: best solution value = 10741512.9606
-MultiStart: best bound estimate from remaining nodes = inf
-MultiStart: gap = 0.0000
-MultiStart: gap percentage = 0.0000
-MultiStart: time used (s) = 100.21
-MultiStart: status of branch-and-bound: Optimal solution found
-MultiStart: wall clock time used (s) = 102.18
-Error executing "solve" command:
-Solution obtained using an unauthorized or unknown solver. Please contact support@ampl.com.
+MsProcessor: engine hit iteration limit, continuing in node 0
+error running mmultistart:
+	termination code 11
 <BREAK>
+con2_1,25: 0.00000000
+con2_2,18: 0.00000000
+con2_3,111: 0.00000000
+con2_4,43: 0.00000000
+con2_5,89: 0.00000000
+con2_6,101: 0.00000000
+con2_7,39: 0.00000000
+con2_8,85: 0.00000000
+con2_9,92: 0.00000000
+con2_10,126: 0.00000000
+con2_11,59: 0.00000000
+con2_12,125: 0.00000000
+con2_13,66: 0.00000000
+con2_14,149: 0.00000000
+con2_15,103: 0.00000000
+con2_16,96: 0.00000000
+con2_17,152: 0.00000000
+con2_18,96: 0.00000000
+con2_19,68: 0.00000000
+con2_20,115: 0.00000000
+con2_21,121: 0.00000000
+con2_22,2: 0.00000000
+con2_23,94: 0.00000000
+con2_24,26: 0.00000000
+con2_25,65: 0.00000000
+con2_26,116: 0.00000000
+con2_27,159: 0.00000000
+con2_27,165: 0.00000000
+con2_28,135: 0.00000000
+con2_29,43: 0.00000000
+con2_30,77: 0.00000000
+con2_30,105: 0.00000000
+con2_31,83: 0.00000000
+con2_32,3: 0.00000000
+con2_32,41: 0.00000000
+con2_33,114: 0.00000000
+con2_34,11: 0.00000000
+con2_35,48: 0.00000000
+con2_36,154: 0.00000000
+con2_37,7: 0.00000000
+con2_37,147: 0.00000000
+con2_38,30: 0.00000000
+con2_39,1: 0.00000000
+con2_40,62: 0.00000000
+con2_41,19: 0.00000000
+con2_42,146: 0.00000000
+con2_43,158: 0.00000000
+con2_44,79: 0.00000000
+con2_45,6: 0.00000000
+con2_45,101: 0.00000000
+con2_46,133: 0.00000000
+con2_47,93: 0.00000000
+con2_48,117: 0.00000000
+con2_49,25: 0.00000000
+con2_50,44: 0.00000000
+con2_51,42: 0.00000000
+con2_52,118: 0.00000000
+con2_53,35: 0.00000000
+con2_54,92: 0.00000000
+con2_55,10: 0.00000000
+con2_56,112: 0.00000000
+con2_57,16: 0.00000000
+con2_58,91: 0.00000000
+con2_59,40: 0.00000000
+con2_60,97: 0.00000000
+con2_60,100: 0.00000000
+con2_61,34: 0.00000000
+con2_61,153: 0.00000000
+con2_62,14: 0.00000000
+con2_63,33: 0.00000000
+con2_63,120: 0.00000000
+con2_64,155: 0.00000000
+con2_65,49: 0.00000000
+con2_65,75: 0.00000000
+con2_66,132: 0.00000000
+con2_67,13: 0.00000000
+con2_68,30: 0.00000000
+con2_69,70: 0.00000000
+con2_69,131: 0.00000000
+con2_70,73: 0.00000000
+con2_71,73: 0.00000000
+con2_72,7: 0.00000000
+con2_73,131: 0.00000000
+con2_74,72: 0.00000000
+con2_74,93: 0.00000000
+con2_75,49: 0.00000000
+con2_76,55: 0.00000000
+con2_76,108: 0.00000000
+con2_77,35: 0.00000000
+con2_78,99: 0.00000000
+con2_78,141: 0.00000000
+con2_79,6: 0.00000000
+con2_80,106: 0.00000000
+con2_81,15: 0.00000000
+con2_82,83: 0.00000000
+con2_82,115: 0.00000000
+con2_83,123: 0.00000000
+con2_84,88: 0.00000000
+con2_85,87: 0.00000000
+con2_86,3: 0.00000000
+con2_87,22: 0.00000000
+con2_87,36: 0.00000000
+con2_88,145: 0.00000000
+con2_89,67: 0.00000000
+con2_90,88: 0.00000000
+con2_91,74: 0.00000000
+con2_92,113: 0.00000000
+con2_93,72: 0.00000000
+con2_94,15: 0.00000000
+con2_94,150: 0.00000000
+con2_95,121: 0.00000000
+con2_96,2: 0.00000000
+con2_96,122: 0.00000000
+con2_97,81: 0.00000000
+con2_97,145: 0.00000000
+con2_98,29: 0.00000000
+con2_99,36: 0.00000000
+con2_100,144: 0.00000000
+con2_101,110: 0.00000000
+con2_102,65: 0.00000000
+con2_103,45: 0.00000000
+con2_103,52: 0.00000000
+con2_104,127: 0.00000000
+con2_105,77: 0.00000000
+con2_106,20: 0.00000000
+con2_107,37: 0.00000000
+con2_107,85: 0.00000000
+con2_108,116: 0.00000000
+con2_109,61: 0.00000000
+con2_110,5: 0.00000000
+con2_111,32: 0.00000000
+con2_112,4: 0.00000000
+con2_113,100: 0.00000000
+con2_113,101: 0.00000000
+con2_114,119: 0.00000000
+con2_115,83: 0.00000000
+con2_115,128: 0.00000000
+con2_116,60: 0.00000000
+con2_117,35: 0.00000000
+con2_117,92: 0.00000000
+con2_118,79: 0.00000000
+con2_119,77: 0.00000000
+con2_120,19: 0.00000000
+con2_121,104: 0.00000000
+con2_122,11: 0.00000000
+con2_122,14: 0.00000000
+con2_123,21: 0.00000000
+con2_124,47: 0.00000000
+con2_124,82: 0.00000000
+con2_125,124: 0.00000000
+con2_126,108: 0.00000000
+con2_127,9: 0.00000000
+con2_128,46: 0.00000000
+con2_129,7: 0.00000000
+con2_129,72: 0.00000000
+con2_130,82: 0.00000000
+con2_131,56: 0.00000000
+con2_131,112: 0.00000000
+con2_132,102: 0.00000000
+con2_133,21: 0.00000000
+con2_134,142: 0.00000000
+con2_135,134: 0.00000000
+con2_136,8: 0.00000000
+con2_136,140: 0.00000000
+con2_137,51: 0.00000000
+con2_138,160: 0.00000000
+con2_139,114: 0.00000000
+con2_140,8: 0.00000000
+con2_140,141: 0.00000000
+con2_141,8: 0.00000000
+con2_142,70: 0.00000000
+con2_142,86: 0.00000000
+con2_143,78: 0.00000000
+con2_143,141: 0.00000000
+con2_144,45: 0.00000000
+con2_145,26: 0.00000000
+con2_146,86: 0.00000000
+con2_147,58: 0.00000000
+con2_148,27: 0.00000000
+con2_148,166: 0.00000000
+con2_149,103: 0.00000000
+con2_150,84: 0.00000000
+con2_151,80: 0.00000000
+con2_152,24: 0.00000000
+con2_153,1: 0.00000000
+con2_154,57: 0.00000000
+con2_155,75: 0.00000000
+con2_156,138: 0.00000000
+con2_157,161: 0.00000000
+con2_158,90: 0.00000000
+con2_159,12: 0.00000000
+con2_160,151: 0.00000000
+con2_161,162: 0.00000000
+con2_162,139: 0.00000000
+con2_163,12: 0.00000000
+con2_164,138: 0.00000000
+con2_165,164: 0.00000000
+con2_166,136: 0.00000000
 total_cost: 0.0
+solve_time: 48.159485

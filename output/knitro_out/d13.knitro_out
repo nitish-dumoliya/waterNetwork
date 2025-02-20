@@ -70,41 +70,51 @@ https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
 
  Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
 --------  --------  ------  --------------   ----------   ----------  ----------
-      0          1       0     1.48963e+07  2.72848e-12  2.39424e-10  6.49240e-02
-      3          3       0     1.48963e+07  2.91338e-08  2.40385e-06  6.61680e-02
-      7          6       0     1.48963e+07  4.95845e-10  5.15436e-06  6.45470e-02
-      6          7       0     1.48963e+07  3.82130e-09  2.61467e-05  6.67150e-02
-      1          5       0     1.48963e+07  7.27596e-12  3.53478e-09  5.48370e-02
-      4          0       0     1.48963e+07  5.56611e-10  1.81739e-07  5.79330e-02
-      5          2       0     1.48963e+07  1.69132e-09  2.45558e-05  7.02050e-02
-      8          1       0     1.48963e+07  1.84741e-10  9.20040e-07  1.34480e-02
-      9          3       0     1.48963e+07  1.47293e-08  3.54065e-06  1.75990e-02
-      2          4       0     1.48963e+07  4.68763e-08  1.38016e-05     0.118198
+      3          0       0     1.48963e+07  3.95812e-08  2.92110e-06  3.39750e-02
+      0          4       0     1.48963e+07  2.72848e-12  2.38515e-10  3.17600e-02
+      8          0       0     1.48963e+07  1.84571e-10  9.20039e-07  6.64800e-03
+      7          5       0     1.48963e+07  4.73790e-10  4.89686e-06  4.75590e-02
+      9          4       0     1.48963e+07  1.48639e-08  3.53863e-06  1.99630e-02
+      1          1       0     1.48963e+07  7.27596e-12  3.53584e-09  5.34150e-02
+      5          2       0     1.48963e+07  8.03936e-10  1.25900e-05  5.92630e-02
+      4          6       0     1.48963e+07  5.58430e-10  1.81740e-07  1.42890e-02
+      2          3       0     1.48963e+07  1.81899e-12  1.32786e-10  9.87380e-02
+      6          7       0     1.48963e+07  9.09495e-13  1.00014e-08     0.100698
 
 MULTISTART: Best locally optimal solution is returned.
 EXIT: Locally optimal solution found.
 
 Final Statistics
 ----------------
-Final objective value               =   1.48963252142357e+07
+Final objective value               =   1.48963252063063e+07
 Final feasibility error (abs / rel) =   2.73e-12 / 6.75e-17
 Final optimality error  (abs / rel) =   2.39e-10 / 2.39e-12
-# of iterations                     =        343 
+# of iterations                     =        401 
 # of CG iterations                  =          0 
-# of function evaluations           =        353
-# of gradient evaluations           =        353
-# of Hessian evaluations            =        343
-Total program time (secs)           =       0.12880 (     0.490 CPU time)
+# of function evaluations           =        411
+# of gradient evaluations           =        411
+# of Hessian evaluations            =        401
+Total program time (secs)           =       0.16341 (     0.305 CPU time)
 
 ===============================================================================
 
 Knitro 14.2.0: Locally optimal or satisfactory solution.
 objective 14896325.21; feasibility error 2.73e-12
-343 iterations; 353 function evaluations
+401 iterations; 411 function evaluations
 
 suffix feaserror OUT;
 suffix opterror OUT;
 suffix numfcevals OUT;
 suffix numiters OUT;
-total_cost: 14896325.214235738
-solve_time: 0.302738
+con2_2,4: 0.00000000
+con2_2,6: 0.00000003
+con2_3,7: 0.00000000
+con2_3,10: 0.00000000
+con2_4,6: 0.00000001
+con2_4,11: 0.00000000
+con2_8,9: 0.00000000
+con2_9,3: 0.00000000
+con2_10,2: 0.00000000
+con2_11,1: 0.00000000
+total_cost: 14896325.206306316
+solve_time: 0.21428000000000005

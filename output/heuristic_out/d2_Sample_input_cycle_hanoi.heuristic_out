@@ -4,9 +4,9 @@ Solve the original nonconvex optimization problem using IPOPT
 fix_arc_set: {(1, 2), (10, 11), (12, 13), (21, 22), (2, 3), (11, 12), (20, 21)}
 super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20)] 
 
-Objective:  6055935.776574206
+Objective:  6055935.776583404
 Solve_result:  solved
-Solve_time: 1.590494 
+Solve_time: 0.335227 
 
 
 **********************************************************************************************
@@ -14,17 +14,51 @@ Iteration : 1
 
 self.sorted_nodes: [27, 29, 16] 
 
-Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
-(26, 27)  True      60,55,936      61,05,880      0.11        solved         No        1.79        
-(28, 29)  True      60,55,936      63,32,528      0.19        solved         No        2.02        
-(15, 16)  True      60,55,936      60,60,731      0.11        solved         No        2.17        
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(26, 27)  True    60,55,936     61,05,880     0.04s       solved        No        0.4s
+(28, 29)  True    60,55,936     63,32,528     0.06s       solved        No        0.47s
+(15, 16)  True    60,55,936     60,60,731     0.04s       solved        No        0.51s
 
 **********************************Final best results******************************************
 
 Water Network: d2_Sample_input_cycle_hanoi
-Final best objective: 6055935.776574206
+con2_1,2: 0.00000000
+con2_2,3: 0.00000000
+con2_3,4: 0.00000000
+con2_3,19: 0.00000000
+con2_3,20: 0.00000000
+con2_4,5: 0.00000000
+con2_5,6: 0.00000000
+con2_6,7: 0.00000000
+con2_7,8: 0.00000000
+con2_8,9: 0.00000000
+con2_9,10: 0.00000000
+con2_10,11: 0.00000000
+con2_10,14: 0.00000000
+con2_11,12: 0.00000000
+con2_12,13: 0.00000000
+con2_14,15: 0.00000000
+con2_15,16: 0.00000000
+con2_16,27: 0.00000000
+con2_17,16: 0.00000000
+con2_18,17: 0.00000000
+con2_19,18: 0.00000000
+con2_20,21: 0.00000000
+con2_20,23: 0.00000000
+con2_21,22: 0.00000000
+con2_23,24: 0.00000000
+con2_23,28: 0.00000000
+con2_24,25: 0.00000000
+con2_25,32: 0.00000000
+con2_26,25: 0.00000000
+con2_27,26: 0.00000000
+con2_28,29: 0.00000000
+con2_29,30: 0.00000000
+con2_30,31: 0.00000000
+con2_32,31: 0.00000000
+Final best objective: 6055935.776583404
 Number of nlp problem solved: 4
 Total number of iteration: 1
-Solver_time: 1.99 seconds
-Heuristic elapsed time: 2.17 seconds
+Solver_time: 0.47 seconds
+Heuristic elapsed time: 0.51 seconds
 

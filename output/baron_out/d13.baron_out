@@ -1,11 +1,29 @@
+Ipopt 3.14.13: outlev = 0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 14896324.021274148 
+
+*******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-iisfind = 2
-lsolver = conopt
+iisfind = 5
 lpsolver = cplex
+lsolver = conopt
+threads = 8
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -18,43 +36,49 @@ lpsolver = cplex
  INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: ILOG CPLEX                                      
+ For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
+ Preprocessing found feasible solution with value 0.148963E+08
  Solving bounding LP
  Starting multi-start local search
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 131 in bounds file "boundsfile.2":
-	L = 449
-	x = 58154297039.172165
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.148963E+08
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.30    11MB    0.131729E+08    0.148963E+08    0.00%
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 131 in bounds file "boundsfile.8":
-	L = 449
-	x = 20503799680.10638
+/opt/ampl/conopt: bad bound triple 135 in bounds file "boundsfile.11":
+	L = 397
+	x = 22366989868.0261
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-          1             1             0.45     0.131729E+08     0.148963E+08             
-         21             0             2.02     0.148963E+08     0.148963E+08             
+        165           1.43    12MB    0.148963E+08    0.148963E+08  100.00%
 
                          *** Normal completion ***            
 
- Wall clock time:                     2.33
- Total CPU time used:                 2.02
+ Wall clock time:                     1.43
+ Total CPU time used:                 1.40
 
- Total no. of BaR iterations:      21
+ Total no. of BaR iterations:     165
  Best solution found at node:       1
- Max. no. of nodes in memory:       2
+ Max. no. of nodes in memory:       4
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 21 iterations, optimal within tolerances.
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 165 iterations, optimal within tolerances.
 Objective 14896325.2
-total_cost: 14896325.202315519
-solve_time: 2.366056
+con2_2,4: 0.00000000
+con2_2,6: 0.00000000
+con2_3,7: 0.00000000
+con2_3,10: 0.00000000
+con2_4,6: 0.00000000
+con2_4,11: 0.00000000
+con2_8,9: 0.00000000
+con2_9,3: 0.00000000
+con2_10,2: 0.00000000
+con2_11,1: 0.00000000
+total_cost: 14896325.202315262
+solve_time: 1.46162

@@ -1,11 +1,25 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+	
+	Please report any bugs at: https://github.com/ampl/amplpy
+	
+	For support/feedback go to https://discuss.ampl.com or e-mail <support@ampl.com>
+	
+total_cost: 0.0 
+
+*******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-iisfind = 2
-lsolver = conopt
+iisfind = 5
 lpsolver = cplex
+lsolver = conopt
+threads = 8
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -18,323 +32,202 @@ lpsolver = cplex
  INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: ILOG CPLEX                                      
+ For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
+ Preprocessing found feasible solution with value 0.666527E+08
  Solving bounding LP
  Starting multi-start local search
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.2":
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.2":
 	L = 104.4
-	x = 21952744331.800297
+	x = 68692619176.11766
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.666616E+08
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-*         1             1             1.99     0.579164E+08     0.663997E+08             
-          1             1             3.83     0.579164E+08     0.663997E+08             
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.7":
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.6":
 	L = 104.4
-	x = 14024879210.79183
+	x = 68692619176.11766
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+          1           0.75    13MB     0.00000        0.666527E+08    0.00%
+*         6           2.73    15MB     0.00000        0.663997E+08    1.00%
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.9":
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.7":
 	L = 104.4
-	x = 21920545219.10596
+	x = 29867754175.46708
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.10":
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.9":
 	L = 104.4
-	x = 21920545219.10596
+	x = 45260581204.67148
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+*        12           3.13    15MB     0.00000        0.663997E+08    6.79%
+*        16           3.52    15MB     0.00000        0.663997E+08    6.79%
+constraint _scon[11]: Initial function value too large = 3.0E+13
+constraint _scon[15]: Initial function value too large = 1.9E+17
+constraint _scon[20]: Initial function value too large = 3.7E+17
+constraint _scon[21]: Initial function value too large = 1.9E+17
+constraint _scon[22]: Initial function value too large = 1.1E+17
+constraint _scon[26]: Initial function value too large = 1.6E+18
+constraint _scon[27]: Initial function value too large = 4.5E+17
+constraint _scon[28]: Initial function value too large = 8.0E+17
+constraint _scon[33]: Initial function value too large = 1.5E+17
+constraint _scon[35]: Initial function value too large = 3.0E+17
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.12":
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.12":
 	L = 104.4
-	x = 21920545219.10596
+	x = 29867754175.412853
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.14":
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.14":
 	L = 104.4
-	x = 29867754175.412704
+	x = 67139002617.06115
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-constraint _scon[20]: Initial function value too large = 3.0E+12
-constraint _scon[22]: Initial function value too large = 9.2E+15
-constraint _scon[29]: Initial function value too large = 2.1E+16
-constraint _scon[34]: Initial function value too large = 5.4E+15
-constraint _scon[36]: Initial function value too large = 2.7E+16
-constraint _scon[20]: Initial function value too large = 3.0E+12
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.19":
-	L = 102.64
-	x = 824891608847.2642
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-constraint _scon[20]: Initial function value too large = 3.0E+12
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.21":
-	L = 102.64
-	x = 197112669029.47232
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-constraint _scon[20]: Initial function value too large = 3.0E+12
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 425 in bounds file "boundsfile.23":
-	L = 102.9
-	x = 385044855520.53076
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-constraint _scon[20]: Initial function value too large = 3.0E+12
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 425 in bounds file "boundsfile.25":
-	L = 102.9
-	x = 385044855519.16974
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 422 in bounds file "boundsfile.26":
-	L = 104.3
-	x = 15086395959.209723
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 425 in bounds file "boundsfile.27":
-	L = 102.9
-	x = 373684856420.9364
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-constraint _scon[10]: Initial function value too large = 7.9E+16
-constraint _scon[11]: Initial function value too large = 9.6E+16
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.29":
-	L = 102.64
-	x = 180160089650.81982
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-        493            50            32.74     0.579164E+08     0.663997E+08             
-constraint _scon[16]: Initial function value too large = 1.6E+17
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.31":
-	L = 102.64
-	x = 180160089655.6595
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       1014            51            62.58     0.579164E+08     0.663997E+08             
-constraint _scon[10]: Initial function value too large = 7.9E+16
-constraint _scon[11]: Initial function value too large = 9.6E+16
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.33":
-	L = 102.64
-	x = 180160089651.61978
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       1601            46            92.38     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.35":
-	L = 102.64
-	x = 180160089655.94965
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       2067            53           122.06     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.37":
-	L = 102.64
-	x = 180160089652.6942
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       2630            53           151.88     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 344 in bounds file "boundsfile.38":
-	L = 0
-	x = 149.05000000000004
-	U = 149.05
-Surprise errno 4 ==> Interrupted system call
-       3355            77           181.63     0.579164E+08     0.663997E+08             
-       3921           151           211.51     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.41":
-	L = 102.64
-	x = 180160089653.0376
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       4485           191           241.32     0.579164E+08     0.663997E+08             
-       5024           298           271.19     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 418 in bounds file "boundsfile.43":
-	L = 102.64
-	x = 180160089657.35016
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       5597           304           301.05     0.579164E+08     0.663997E+08             
-       6165           426           330.89     0.579164E+08     0.663997E+08             
-       6561           536           360.58     0.579164E+08     0.663997E+08             
-       7009           639           390.42     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 428 in bounds file "boundsfile.44":
-	L = 103.9
-	x = 14389292805.452074
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       7468           744           420.08     0.579164E+08     0.663997E+08             
-       8157           913           449.89     0.579164E+08     0.663997E+08             
-       8801          1057           479.80     0.579164E+08     0.663997E+08             
-constraint _scon[29]: Initial function value too large = 1.8E+14
-constraint _scon[30]: Initial function value too large = 1.3E+14
-constraint _scon[37]: Initial function value too large = 1.2E+15
-       9284          1155           509.56     0.579164E+08     0.663997E+08             
-       9815          1231           539.43     0.579164E+08     0.663997E+08             
-      10461          1389           569.27     0.579164E+08     0.663997E+08             
-      11184          1515           599.19     0.579164E+08     0.663997E+08             
-      11676          1573           629.10     0.579164E+08     0.663997E+08             
-      12265          1695           658.81     0.579164E+08     0.663997E+08             
-      12812          1848           688.50     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 408 in bounds file "boundsfile.48":
-	L = 104.4
-	x = 28990070875.50539
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      13425          1976           718.29     0.579164E+08     0.663997E+08             
-      14012          2093           748.09     0.579164E+08     0.663997E+08             
-      14499          2168           777.56     0.579164E+08     0.663997E+08             
-      15026          2211           807.38     0.579164E+08     0.663997E+08             
-      15599          2306           837.22     0.579164E+08     0.663997E+08             
-      16162          2345           867.08     0.579164E+08     0.663997E+08             
-      16655          2416           896.91     0.579164E+08     0.663997E+08             
-      17219          2536           926.47     0.579164E+08     0.663997E+08             
-      17691          2635           956.22     0.579164E+08     0.663997E+08             
-      18230          2664           986.07     0.579164E+08     0.663997E+08             
-      18823          2819          1015.94     0.579164E+08     0.663997E+08             
-      19433          2941          1045.61     0.579164E+08     0.663997E+08             
-      19879          3047          1075.34     0.579164E+08     0.663997E+08             
-      20274          3100          1105.06     0.579164E+08     0.663997E+08             
-      20730          3183          1134.65     0.579164E+08     0.663997E+08             
-      21355          3307          1164.37     0.579164E+08     0.663997E+08             
-      21877          3407          1194.07     0.579164E+08     0.663997E+08             
-constraint _scon[24]: Initial function value too large = 5.9E+16
-      22406          3490          1223.49     0.579164E+08     0.663997E+08             
-      22808          3562          1252.65     0.579164E+08     0.663997E+08             
-      23169          3639          1282.12     0.579164E+08     0.663997E+08             
-      23637          3745          1311.96     0.579164E+08     0.663997E+08             
-      24287          3833          1341.85     0.579164E+08     0.663997E+08             
-      24892          3824          1371.62     0.579164E+08     0.663997E+08             
-      25455          3975          1401.47     0.579164E+08     0.663997E+08             
-      25946          4101          1431.29     0.579164E+08     0.663997E+08             
-      26308          4188          1461.15     0.579164E+08     0.663997E+08             
-      26782          4304          1490.97     0.579164E+08     0.663997E+08             
-constraint _scon[24]: Initial function value too large = 5.9E+16
-      27466          4412          1520.56     0.579164E+08     0.663997E+08             
-      27909          4503          1550.05     0.579164E+08     0.663997E+08             
-      28411          4586          1579.77     0.579164E+08     0.663997E+08             
-      28967          4711          1609.58     0.579164E+08     0.663997E+08             
-      29520          4843          1639.20     0.579164E+08     0.663997E+08             
-      30080          4967          1669.06     0.579164E+08     0.663997E+08             
-      30575          5061          1698.53     0.579164E+08     0.663997E+08             
-      31110          5165          1728.36     0.579164E+08     0.663997E+08             
-      31599          5258          1757.96     0.579164E+08     0.663997E+08             
-      32013          5326          1787.67     0.579164E+08     0.663997E+08             
-      32589          5454          1817.34     0.579164E+08     0.663997E+08             
-      33148          5594          1846.82     0.579164E+08     0.663997E+08             
-      33859          5780          1876.35     0.579164E+08     0.663997E+08             
-      34398          5891          1906.03     0.579164E+08     0.663997E+08             
-      34874          5981          1935.61     0.579164E+08     0.663997E+08             
-      35287          6073          1965.29     0.579164E+08     0.663997E+08             
-      35744          6125          1994.86     0.579164E+08     0.663997E+08             
-      36248          6184          2024.30     0.579164E+08     0.663997E+08             
-      36862          6274          2053.63     0.579164E+08     0.663997E+08             
-      37762          6325          2083.26     0.579164E+08     0.663997E+08             
-      38285          6426          2112.50     0.579164E+08     0.663997E+08             
-      38730          6538          2140.80     0.579164E+08     0.663997E+08             
-      39169          6655          2170.52     0.579164E+08     0.663997E+08             
-      39563          6743          2200.39     0.579164E+08     0.663997E+08             
-      40084          6846          2230.08     0.579164E+08     0.663997E+08             
-      40674          6909          2259.84     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 432 in bounds file "boundsfile.60":
-	L = 103.4
-	x = 13639011373.83032
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      41120          7020          2289.29     0.579164E+08     0.663997E+08             
-      41636          7150          2319.02     0.579164E+08     0.663997E+08             
-      42104          7271          2348.75     0.579164E+08     0.663997E+08             
-      42556          7372          2378.66     0.579164E+08     0.663997E+08             
-      43144          7452          2408.39     0.579164E+08     0.663997E+08             
-      43639          7559          2438.19     0.579164E+08     0.663997E+08             
-      44182          7708          2468.03     0.579164E+08     0.663997E+08             
-      44585          7773          2497.70     0.579164E+08     0.663997E+08             
-      45059          7844          2527.61     0.579164E+08     0.663997E+08             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 358 in bounds file "boundsfile.62":
-	L = 0
-	x = 144.44000000000182
-	U = 144.44
-Surprise errno 4 ==> Interrupted system call
-      45468          7881          2557.37     0.579164E+08     0.663997E+08             
-      45864          7976          2587.25     0.579164E+08     0.663997E+08             
-      46356          8051          2617.04     0.579164E+08     0.663997E+08             
-      46829          8150          2646.93     0.579164E+08     0.663997E+08             
-      47291          8239          2676.85     0.579164E+08     0.663997E+08             
-      47838          8242          2706.71     0.579164E+08     0.663997E+08             
-      48367          8243          2736.49     0.579164E+08     0.663997E+08             
-      48950          8365          2766.23     0.579164E+08     0.663997E+08             
-      49391          8440          2796.16     0.579164E+08     0.663997E+08             
-      49882          8541          2826.04     0.579164E+08     0.663997E+08             
-constraint _scon[9]: Initial function value too large = 2.6E+16
-constraint _scon[17]: Initial function value too large = 2.4E+16
-constraint _scon[21]: Initial function value too large = 5.4E+14
-constraint _scon[24]: Initial function value too large = 1.2E+17
-constraint _scon[25]: Initial function value too large = 1.2E+16
-      50434          8642          2855.70     0.579164E+08     0.663997E+08             
-      50861          8700          2885.54     0.579164E+08     0.663997E+08             
-      51369          8756          2915.28     0.579164E+08     0.663997E+08             
-      51827          8869          2944.88     0.579164E+08     0.663997E+08             
-      52250          8967          2974.67     0.579164E+08     0.663997E+08             
-      52742          9072          3004.53     0.579164E+08     0.663997E+08             
-      53247          9153          3034.17     0.579164E+08     0.663997E+08             
-      53738          9248          3064.05     0.579164E+08     0.663997E+08             
-      54193          9329          3093.88     0.579164E+08     0.663997E+08             
-      54650          9426          3123.65     0.579164E+08     0.663997E+08             
-constraint _scon[33]: Initial function value too large = 1.1E+17
-constraint _scon[36]: Initial function value too large = 2.5E+16
-      55037          9498          3153.29     0.579164E+08     0.663997E+08             
-      55602          9606          3182.99     0.579164E+08     0.663997E+08             
-      56126          9696          3212.89     0.579164E+08     0.663997E+08             
-      56551          9782          3242.67     0.579164E+08     0.663997E+08             
-      56911          9812          3272.60     0.579164E+08     0.663997E+08             
-      57280          9819          3302.41     0.579164E+08     0.663997E+08             
-      57743          9821          3332.27     0.579164E+08     0.663997E+08             
-      58194          9826          3362.08     0.579164E+08     0.663997E+08             
-      58628          9822          3391.94     0.579164E+08     0.663997E+08             
-      59051          9825          3421.83     0.579164E+08     0.663997E+08             
-      59499          9822          3451.66     0.579164E+08     0.663997E+08             
-      59943          9819          3481.28     0.579164E+08     0.663997E+08             
-      60342          9822          3509.88     0.579164E+08     0.663997E+08             
-      60774          9824          3539.38     0.579164E+08     0.663997E+08             
-      61254          9822          3569.28     0.579164E+08     0.663997E+08             
-      61692          9832          3598.99     0.579164E+08     0.663997E+08             
-      61704          9835          3600.00     0.579164E+08     0.663997E+08             
+constraint _scon[9]: Initial function value too large = 1.4E+17
+constraint _scon[10]: Initial function value too large = 1.5E+17
+constraint _scon[11]: Initial function value too large = 1.8E+17
+constraint _scon[12]: Initial function value too large = 1.2E+17
+constraint _scon[13]: Initial function value too large = 2.2E+17
+constraint _scon[14]: Initial function value too large = 7.9E+16
+constraint _scon[15]: Initial function value too large = 1.9E+17
+constraint _scon[16]: Initial function value too large = 5.1E+17
+constraint _scon[17]: Initial function value too large = 1.7E+17
+constraint _scon[18]: Initial function value too large = 1.0E+17
+       1446          33.54    15MB    0.579164E+08    0.663997E+08    7.06%
+constraint _scon[28]: Initial function value too large = 2.3E+14
+       2835          63.55    25MB    0.579164E+08    0.663997E+08    7.15%
+       4296          93.57    25MB    0.579164E+08    0.663997E+08    7.18%
+       5724         123.58    25MB    0.579164E+08    0.663997E+08    7.20%
+constraint _scon[11]: Initial function value too large = 7.2E+13
+       7187         153.59    25MB    0.579164E+08    0.663997E+08    7.26%
+       8775         183.61    25MB    0.579164E+08    0.663997E+08    7.29%
+      10244         213.62    25MB    0.579164E+08    0.663997E+08    7.35%
+      11869         243.63    34MB    0.579164E+08    0.663997E+08    7.38%
+      13468         273.64    34MB    0.579164E+08    0.663997E+08    7.48%
+      14989         303.64    44MB    0.579164E+08    0.663997E+08    7.52%
+      16624         333.66    44MB    0.579164E+08    0.663997E+08    7.60%
+      18074         363.68    44MB    0.579164E+08    0.663997E+08    7.61%
+      19489         393.68    44MB    0.579164E+08    0.663997E+08    7.62%
+      20846         423.68    44MB    0.579164E+08    0.663997E+08    7.62%
+      22152         453.71    44MB    0.579164E+08    0.663997E+08    7.63%
+      23456         483.72    44MB    0.579164E+08    0.663997E+08    7.66%
+      24774         513.72    54MB    0.579164E+08    0.663997E+08    7.68%
+      26197         543.72    54MB    0.579164E+08    0.663997E+08    7.71%
+      27708         573.72    54MB    0.579164E+08    0.663997E+08    7.71%
+constraint _scon[9]: Initial function value too large = 2.3E+15
+constraint _scon[10]: Initial function value too large = 2.5E+15
+constraint _scon[11]: Initial function value too large = 3.0E+15
+constraint _scon[12]: Initial function value too large = 1.9E+15
+constraint _scon[14]: Initial function value too large = 2.9E+16
+constraint _scon[19]: Initial function value too large = 9.2E+14
+constraint _scon[20]: Initial function value too large = 2.8E+15
+constraint _scon[21]: Initial function value too large = 1.5E+15
+constraint _scon[23]: Initial function value too large = 1.6E+16
+constraint _scon[25]: Initial function value too large = 1.4E+15
+      29427         603.72    54MB    0.579164E+08    0.663997E+08    7.74%
+      31087         633.74    54MB    0.579164E+08    0.663997E+08    7.74%
+      32928         663.81    64MB    0.579164E+08    0.663997E+08    7.76%
+      34508         693.81    64MB    0.579164E+08    0.663997E+08    7.80%
+      35797         723.81    64MB    0.579164E+08    0.663997E+08    7.82%
+      37266         753.82    74MB    0.579164E+08    0.663997E+08    7.85%
+      38539         783.82    83MB    0.579164E+08    0.663997E+08    7.88%
+constraint _scon[10]: Initial function value too large = 1.0E+18
+constraint _scon[11]: Initial function value too large = 3.4E+17
+constraint _scon[12]: Initial function value too large = 1.3E+17
+constraint _scon[13]: Initial function value too large = 2.4E+17
+constraint _scon[15]: Initial function value too large = 3.3E+17
+constraint _scon[17]: Initial function value too large = 4.2E+15
+constraint _scon[18]: Initial function value too large = 1.2E+17
+constraint _scon[19]: Initial function value too large = 5.4E+17
+constraint _scon[20]: Initial function value too large = 1.7E+18
+constraint _scon[21]: Initial function value too large = 3.5E+16
+      39820         813.83    83MB    0.579164E+08    0.663997E+08    7.90%
+      41258         843.83    93MB    0.579164E+08    0.663997E+08    7.91%
+      41562        1091.43    93MB    0.579164E+08    0.663997E+08    7.91%
+      42360        1124.73    93MB    0.579164E+08    0.663997E+08    7.91%
+      42785        3613.21    93MB    0.579164E+08    0.663997E+08    7.91%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3637.42
- Total CPU time used:              3600.00
+ Wall clock time:                  3613.21
+ Total CPU time used:              3612.76
 
- Total no. of BaR iterations:   61704
- Best solution found at node:       8
- Max. no. of nodes in memory:    9836
+ Total no. of BaR iterations:   42785
+ Best solution found at node:      16
+ Max. no. of nodes in memory:    2856
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 61704 iterations, CPU time limit reached.
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 42785 iterations, CPU time limit reached.
 Objective 66399736.22
-total_cost: 66399736.21904696
-solve_time: 3637.5167069999998
+con2_1,17: 0.00000000
+con2_1,31: 0.00000000
+con2_2,3: 0.00000000
+con2_2,18: 0.00000000
+con2_3,4: 0.00000000
+con2_3,11: 0.00000000
+con2_4,5: 0.00000000
+con2_5,6: 0.00000000
+con2_5,13: 0.00000000
+con2_6,7: 0.00000000
+con2_7,24: 0.00000000
+con2_8,28: 0.00000000
+con2_9,36: 0.00000000
+con2_10,11: 0.00000000
+con2_10,32: 0.00000000
+con2_11,19: 0.00000000
+con2_11,26: 0.00000000
+con2_12,4: 0.00000000
+con2_12,13: 0.00000000
+con2_13,14: 0.00000000
+con2_14,20: 0.00000000
+con2_14,21: 0.00000000
+con2_15,16: 0.00000000
+con2_15,22: 0.00000000
+con2_16,25: 0.00000000
+con2_16,29: 0.00000000
+con2_17,2: 0.00000000
+con2_17,18: 0.00000000
+con2_18,10: 0.00000000
+con2_19,12: 0.00000000
+con2_19,20: 0.00000000
+con2_20,15: 0.00000000
+con2_21,6: 0.00000000
+con2_21,22: 0.00000000
+con2_22,7: 0.00000000
+con2_22,23: 0.00000000
+con2_23,25: 0.00000000
+con2_24,8: 0.00000000
+con2_24,23: 0.00000000
+con2_25,8: 0.00000000
+con2_26,15: 0.00000000
+con2_26,27: 0.00000000
+con2_27,16: 0.00000000
+con2_28,9: 0.00000000
+con2_28,29: 0.00000000
+con2_29,30: 0.00000000
+con2_29,33: 0.00000000
+con2_30,9: 0.00000000
+con2_30,35: 0.00000000
+con2_31,10: 0.00000000
+con2_31,34: 0.00000000
+con2_32,27: 0.00000000
+con2_32,33: 0.00000000
+con2_33,34: 0.00000000
+con2_34,35: 0.00000000
+con2_35,36: 0.00000000
+con2_36,1: 0.00000000
+con2_37,1: 0.00000000
+total_cost: 66399736.21906658
+solve_time: 3613.256282

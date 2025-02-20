@@ -1,11 +1,29 @@
+Ipopt 3.14.13: outlev = 0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 6913543.600517535 
+
+*******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
-iisfind = 2
-lsolver = conopt
+iisfind = 5
 lpsolver = cplex
+lsolver = conopt
+threads = 8
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -18,342 +36,200 @@ lpsolver = cplex
  INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
- For LP/MIP/QP: ILOG CPLEX                                      
+ For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
+ Starting solution is feasible with a value of  0.691354E+07      
  Doing local search
  Solving bounding LP
  Starting multi-start local search
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.2":
+/opt/ampl/conopt: bad bound triple 1189 in bounds file "boundsfile.2":
 	L = 17
-	x = 21512647287567.97
+	x = 20309385672182.344
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
- Preprocessing found feasible solution with value 0.692346E+07
- Preprocessing found feasible solution with value 0.692189E+07
- Preprocessing found feasible solution with value 0.688789E+07
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.7":
+/opt/ampl/conopt: bad bound triple 1206 in bounds file "boundsfile.5":
+	L = 18
+	x = 3387856271437.378
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 1206 in bounds file "boundsfile.7":
+	L = 18
+	x = 3387856271437.3774
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 1206 in bounds file "boundsfile.9":
+	L = 18
+	x = 3387856271437.3774
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 757 in bounds file "boundsfile.10":
+	L = 0
+	x = 27.980000000000004
+	U = 27.98
+Surprise errno 4 ==> Interrupted system call
+          1           6.64    22MB     775980.        0.691354E+07    10.00%
+
+/opt/ampl/conopt: bad bound triple 100 in bounds file "boundsfile.11":
+	L = 0
+	x = 15.580000000000002
+	U = 15.58
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 349 in bounds file "boundsfile.12":
+	L = 0
+	x = 60.38000000000001
+	U = 60.38
+Surprise errno 4 ==> Interrupted system call
+*         7          10.06    22MB     775980.        0.688789E+07   16.11%
+
+/opt/ampl/conopt: bad bound triple 1189 in bounds file "boundsfile.14":
 	L = 17
-	x = 21512647287567.97
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-          1             1             7.57      0.00000         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1202 in bounds file "boundsfile.9":
-	L = 18.999895184417987
-	x = 26872690769504.41
+	x = 19954410099072.79
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.11":
+/opt/ampl/conopt: bad bound triple 1252 in bounds file "boundsfile.16":
+	L = 14
+	x = 5267484820090.751
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+       1577          40.06    32MB     775980.        0.688789E+07   26.54%
+       3667          71.33    52MB     775980.        0.688789E+07   26.57%
+       5483         101.34    52MB     775980.        0.688789E+07   26.57%
+       5650         351.05    52MB     775980.        0.688789E+07   26.57%
+
+/opt/ampl/conopt: bad bound triple 1189 in bounds file "boundsfile.24":
 	L = 17
-	x = 21512647287567.97
+	x = 12735312040895.14
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.13":
-	L = 17
-	x = 21512647287567.97
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.15":
-	L = 17
-	x = 21512647287567.97
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.17":
-	L = 17
-	x = 17789705120833.023
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.19":
-	L = 13
-	x = 12513794667351.834
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.21":
-	L = 13
-	x = 12513794667351.834
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1191 in bounds file "boundsfile.23":
-	L = 11
-	x = 12471554388595.303
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1191 in bounds file "boundsfile.25":
-	L = 11
-	x = 12471554388595.303
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.27":
-	L = 13
-	x = 73691776788.1183
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.29":
-	L = 13
-	x = 73691776788.1183
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1199 in bounds file "boundsfile.31":
-	L = 15
-	x = 27689768903.64263
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.33":
-	L = 13
-	x = 12513794667351.834
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.35":
-	L = 13
-	x = 72518160961.22668
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-        306            75            31.11      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.37":
-	L = 17
-	x = 12788230816199.857
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.39":
-	L = 17
-	x = 2233709061102.3223
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1199 in bounds file "boundsfile.41":
-	L = 15
-	x = 27689768903.639656
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-        761           149            59.90      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.43":
-	L = 17
-	x = 18880739485.947937
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       1525           170            89.22      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.45":
-	L = 17
-	x = 18880740569.181835
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       2301           167           118.72      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1199 in bounds file "boundsfile.47":
-	L = 15
-	x = 525611660200.0693
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       3008           168           148.17      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1221 in bounds file "boundsfile.49":
-	L = 15
-	x = 1106009434565.029
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       3765           195           177.81      775980.         0.688789E+07             
-       4711           191           207.60      775980.         0.688789E+07             
-       5654           192           237.23      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1221 in bounds file "boundsfile.51":
-	L = 15
-	x = 1106009432992.29
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       6604           193           266.83      775980.         0.688789E+07             
-       7516           190           296.65      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1221 in bounds file "boundsfile.53":
-	L = 15
-	x = 1106009408649.8105
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       8410           190           326.36      775980.         0.688789E+07             
-       9215           190           356.20      775980.         0.688789E+07             
-       9995           190           385.80      775980.         0.688789E+07             
-      10787           191           414.93      775980.         0.688789E+07             
-      11689           192           444.51      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1200 in bounds file "boundsfile.55":
-	L = 8
-	x = 2252628523736.718
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      12635           192           474.16      775980.         0.688789E+07             
-      13566           193           503.94      775980.         0.688789E+07             
-      14463           190           533.76      775980.         0.688789E+07             
-      15390           190           563.51      775980.         0.688789E+07             
-      16305           189           593.33      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1221 in bounds file "boundsfile.57":
-	L = 15
-	x = 1106009408649.8105
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      17250           192           622.98      775980.         0.688789E+07             
-      18146           190           652.76      775980.         0.688789E+07             
-      19217           190           682.42      775980.         0.688789E+07             
-      19870           256           712.24      775980.         0.688789E+07             
-      20268           328           742.04      775980.         0.688789E+07             
-      20821           430           771.96      775980.         0.688789E+07             
-      21526           431           801.84      775980.         0.688789E+07             
-      22213           432           831.58      775980.         0.688789E+07             
-      22863           433           861.41      775980.         0.688789E+07             
-      23561           434           891.32      775980.         0.688789E+07             
-      24252           429           921.26      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1200 in bounds file "boundsfile.59":
-	L = 8
-	x = 226116889658.08755
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      24904           432           950.91      775980.         0.688789E+07             
-      25585           432           980.53      775980.         0.688789E+07             
-      26248           431          1010.17      775980.         0.688789E+07             
-      26848           474          1040.06      775980.         0.688789E+07             
-      27195           498          1069.86      775980.         0.688789E+07             
-      27551           497          1099.73      775980.         0.688789E+07             
-      27916           554          1129.59      775980.         0.688789E+07             
-      28226           598          1159.35      775980.         0.688789E+07             
-      29251           634          1189.23      775980.         0.688789E+07             
-      30451           632          1218.88      775980.         0.688789E+07             
-      31564           644          1248.68      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1189 in bounds file "boundsfile.61":
-	L = 17
-	x = 3290676120184.8867
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      32543           642          1278.13      775980.         0.688789E+07             
-      33549           646          1307.79      775980.         0.688789E+07             
-      34687           645          1337.61      775980.         0.688789E+07             
-      35765           646          1367.38      775980.         0.688789E+07             
-      36665           646          1397.22      775980.         0.688789E+07             
-      37667           651          1427.01      775980.         0.688789E+07             
-      38253           658          1456.75      775980.         0.688789E+07             
-      38842           654          1486.38      775980.         0.688789E+07             
-      39444           654          1516.01      775980.         0.688789E+07             
-      40037           656          1545.77      775980.         0.688789E+07             
-      40619           651          1575.21      775980.         0.688789E+07             
-      41186           655          1604.93      775980.         0.688789E+07             
-      41748           654          1634.60      775980.         0.688789E+07             
-      42311           653          1664.45      775980.         0.688789E+07             
-      42872           654          1694.21      775980.         0.688789E+07             
-      43440           657          1723.87      775980.         0.688789E+07             
-      44012           656          1753.69      775980.         0.688789E+07             
-      44611           656          1783.51      775980.         0.688789E+07             
-      45171           654          1813.29      775980.         0.688789E+07             
-      45750           654          1843.06      775980.         0.688789E+07             
-      46363           654          1872.80      775980.         0.688789E+07             
-      46961           657          1902.56      775980.         0.688789E+07             
-      47557           657          1932.31      775980.         0.688789E+07             
-constraint _scon[143]: Initial function value too large = 3.6E+10
-objective _sobj[1]: Initial function value too large = 2.6E+11
-      48083           657          1961.88      775980.         0.688789E+07             
-      48572           655          1991.60      775980.         0.688789E+07             
-      49108           654          2021.37      775980.         0.688789E+07             
-      49648           655          2051.18      775980.         0.688789E+07             
-      50169           655          2080.70      775980.         0.688789E+07             
-      50695           659          2110.47      775980.         0.688789E+07             
-      51262           653          2140.23      775980.         0.688789E+07             
-      51848           653          2169.72      775980.         0.688789E+07             
-      52459           657          2199.37      775980.         0.688789E+07             
-      53022           658          2229.14      775980.         0.688789E+07             
-      53609           659          2259.00      775980.         0.688789E+07             
-      54155           659          2288.89      775980.         0.688789E+07             
-      54720           658          2318.34      775980.         0.688789E+07             
-      55325           663          2348.13      775980.         0.688789E+07             
-      55944           658          2377.99      775980.         0.688789E+07             
-      56562           656          2407.80      775980.         0.688789E+07             
-      57214           658          2437.73      775980.         0.688789E+07             
-      57827           662          2467.50      775980.         0.688789E+07             
-      58472           657          2497.42      775980.         0.688789E+07             
-      59059           659          2527.23      775980.         0.688789E+07             
-      59638           660          2557.02      775980.         0.688789E+07             
-      60244           659          2586.92      775980.         0.688789E+07             
-      60847           678          2616.50      775980.         0.688789E+07             
-      61172           689          2646.40      775980.         0.688789E+07             
-      61435           688          2676.29      775980.         0.688789E+07             
-      61926           764          2706.18      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1194 in bounds file "boundsfile.69":
-	L = 13
-	x = 43881731240.86514
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      62429           807          2735.90      775980.         0.688789E+07             
-      62916           876          2765.69      775980.         0.688789E+07             
-      63310           900          2795.56      775980.         0.688789E+07             
-      63698           907          2825.46      775980.         0.688789E+07             
-      64070           904          2855.39      775980.         0.688789E+07             
-      64443           906          2885.26      775980.         0.688789E+07             
-      64790           907          2915.12      775980.         0.688789E+07             
-      65149           906          2944.89      775980.         0.688789E+07             
-      65492           905          2974.81      775980.         0.688789E+07             
-      65826           907          3004.70      775980.         0.688789E+07             
-      66199           901          3034.60      775980.         0.688789E+07             
-      66624           926          3064.32      775980.         0.688789E+07             
-      67041           927          3094.19      775980.         0.688789E+07             
-      67490           925          3124.01      775980.         0.688789E+07             
-      67932           930          3153.92      775980.         0.688789E+07             
-      68336           931          3183.63      775980.         0.688789E+07             
-      68760           928          3213.29      775980.         0.688789E+07             
-      69147          1002          3242.90      775980.         0.688789E+07             
-      69886          1023          3272.60      775980.         0.688789E+07             
-      70687          1055          3302.43      775980.         0.688789E+07             
-      71202          1140          3332.28      775980.         0.688789E+07             
-
-/home/nitishdumoliya/ampl.linux-intel64/conopt: bad bound triple 1190 in bounds file "boundsfile.71":
-	L = 16
-	x = 8090696792279.626
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      71516          1211          3361.56      775980.         0.688789E+07             
-      71910          1256          3391.27      775980.         0.688789E+07             
-      72307          1293          3420.95      775980.         0.688789E+07             
-      72883          1302          3450.75      775980.         0.688789E+07             
-      73246          1356          3480.42      775980.         0.688789E+07             
-      73547          1417          3510.07      775980.         0.688789E+07             
-      73806          1464          3539.92      775980.         0.688789E+07             
-      74091          1469          3569.61      775980.         0.688789E+07             
-      74409          1467          3599.32      775980.         0.688789E+07             
-      74416          1467          3600.00      775980.         0.688789E+07             
+       6265         507.81    52MB     775980.        0.688789E+07   26.57%
+       6996         758.77    52MB     775980.        0.688789E+07   26.57%
+       8856         788.79    52MB     775980.        0.688789E+07   26.57%
+       9508        4061.41    52MB     775980.        0.688789E+07   26.57%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3641.65
- Total CPU time used:              3600.00
+ Wall clock time:                  4061.41
+ Total CPU time used:              4059.63
 
- Total no. of BaR iterations:   74416
- Best solution found at node:      -1
- Max. no. of nodes in memory:    1475
+ Total no. of BaR iterations:    9508
+ Best solution found at node:       7
+ Max. no. of nodes in memory:     871
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 74416 iterations, CPU time limit reached.
-Objective 6887885.766
-total_cost: 6887885.766225444
-solve_time: 3641.832917
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 9508 iterations, CPU time limit reached.
+Objective 6887885.767
+con2_1,62: 0.00000000
+con2_2,63: 0.00000000
+con2_3,2: -0.00000000
+con2_4,65: -0.00000000
+con2_4,66: 0.00000000
+con2_5,20: 0.00000000
+con2_6,36: 0.00000001
+con2_7,48: 0.00000000
+con2_8,47: 0.00000000
+con2_9,82: 0.00000000
+con2_10,81: 0.00000000
+con2_11,37: 0.00000000
+con2_12,49: -0.00000000
+con2_13,76: 0.00000000
+con2_14,45: 0.00000000
+con2_15,57: 0.00000000
+con2_16,18: -0.00000000
+con2_17,45: -0.00000000
+con2_18,75: 0.00000000
+con2_19,64: 0.00000000
+con2_20,50: 0.00000000
+con2_21,7: 0.00000000
+con2_21,27: 0.00000000
+con2_21,48: -0.00000000
+con2_22,62: 0.00000000
+con2_23,34: -0.00000000
+con2_24,3: 0.00000000
+con2_24,69: 0.00000000
+con2_24,78: 0.00000000
+con2_25,43: 0.00000000
+con2_26,59: 0.00000000
+con2_26,63: -0.00000000
+con2_27,66: 0.00000000
+con2_28,31: 0.00000000
+con2_29,11: 0.00000000
+con2_30,52: 0.00000000
+con2_31,58: -0.00000000
+con2_32,77: -0.00000000
+con2_33,40: -0.00000000
+con2_34,32: 0.00000000
+con2_35,16: -0.00000000
+con2_36,43: 0.00000000
+con2_37,5: 0.00000000
+con2_38,60: -0.00000000
+con2_39,16: -0.00000000
+con2_39,35: 0.00000000
+con2_40,13: -0.00000000
+con2_41,35: -0.00000000
+con2_41,60: 0.00000000
+con2_42,32: 0.00000000
+con2_42,77: -0.00000000
+con2_43,14: 0.00000000
+con2_44,26: 0.00000000
+con2_45,55: -0.00000000
+con2_46,21: -0.00000000
+con2_47,55: 0.00000000
+con2_48,66: -0.00000000
+con2_49,31: -0.00000000
+con2_50,22: 0.00000000
+con2_51,41: -0.00000000
+con2_51,76: 0.00000000
+con2_52,39: -0.00000000
+con2_52,56: 0.00000000
+con2_53,25: 0.00000001
+con2_54,64: 0.00000000
+con2_55,62: -0.00000000
+con2_56,30: 0.00000000
+con2_56,41: 0.00000000
+con2_57,51: 0.00000000
+con2_57,72: 0.00000000
+con2_58,4: -0.00000000
+con2_59,19: 0.00000000
+con2_59,64: 0.00000000
+con2_60,16: -0.00000000
+con2_61,50: 0.00000000
+con2_62,17: 0.00000000
+con2_63,40: -0.00000000
+con2_64,42: 0.00000000
+con2_65,23: -0.00000000
+con2_66,58: 0.00000000
+con2_67,46: -0.00000000
+con2_68,80: 0.00000000
+con2_69,54: 0.00000000
+con2_70,12: -0.00000000
+con2_71,68: 0.00000000
+con2_72,51: 0.00000000
+con2_72,56: -0.00000000
+con2_73,57: 0.00000000
+con2_74,67: 0.00000000
+con2_75,17: -0.00000000
+con2_76,38: -0.00000000
+con2_77,33: -0.00000000
+con2_78,26: 0.00000000
+con2_78,44: 0.00000000
+con2_79,69: 0.00000000
+con2_80,67: -0.00000000
+con2_81,3: 0.00000000
+con2_82,81: 0.00000000
+con2_83,70: 0.00000000
+total_cost: 6887885.766515671
+solve_time: 4061.455658

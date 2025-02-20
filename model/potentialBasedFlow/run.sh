@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define number of parallel jobs
-NUM_JOBS=8
+NUM_JOBS=16
 
 # Create log directory
 LOG_DIR="$HOME/parallel_logs"

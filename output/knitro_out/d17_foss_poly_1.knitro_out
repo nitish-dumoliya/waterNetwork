@@ -70,41 +70,99 @@ https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
 
  Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
 --------  --------  ------  --------------   ----------   ----------  ----------
-      0          2       0         21295.2  2.65217e-10  5.57495e-07      4.00851
-      4          5       0         25630.8  2.18463e-10  1.93783e-07      4.76089
-      6          3       0         27719.1  6.89003e-09  1.83423e-05      5.04043
-      2          6       0         24732.8  3.35547e-10  5.56017e-09      5.67935
-      5          7       0         23096.5  1.99634e-10  1.80841e-08      2.22587
-      8          7       0         32022.1  1.81924e-10  7.40659e-09      2.27747
-      7          0       0         25171.3  1.44636e-11  2.67230e-11      4.68440
-      3          1       0         28146.2  1.27730e-09  2.64947e-05      5.83319
-      9          2       0         23670.7  2.38710e-08  2.91551e-06      3.83669
-      1          4       0         23767.0  1.99717e-08  1.42438e-06      6.10493
+      0          2       0         20599.0  2.95540e-08  3.54440e-05      8.86561
+      8          2       0         21144.2  1.89694e-09  4.68666e-07      6.25219
+      7          7       0         25213.2  1.06711e-10  7.03143e-10      13.3754
+      5          3       0         22452.5  7.32881e-08  2.27796e-05      12.6359
+      6          1       0         22912.1  1.12131e-08  2.04994e-05      12.2206
+      4          6       0         27258.8  7.75913e-11  2.89349e-09      13.2554
+      2          5       0         22819.1  5.50173e-08  2.43136e-06      15.0430
+      1          0       0         26792.1  5.10713e-08  2.43121e-05      14.5387
+      9          1       0         21017.5  4.50256e-08  1.91524e-06      6.62320
+      3          4       0         26993.1  1.00485e-10  4.02133e-08      15.3889
 
 MULTISTART: Best locally optimal solution is returned.
 EXIT: Locally optimal solution found.
 
 Final Statistics
 ----------------
-Final objective value               =   2.12951702574261e+04
-Final feasibility error (abs / rel) =   2.65e-10 / 7.05e-14
-Final optimality error  (abs / rel) =   5.57e-07 / 5.57e-09
-# of iterations                     =       9343 
+Final objective value               =   2.05990213621913e+04
+Final feasibility error (abs / rel) =   2.96e-08 / 7.86e-12
+Final optimality error  (abs / rel) =   3.54e-05 / 3.54e-07
+# of iterations                     =       9403 
 # of CG iterations                  =          0 
-# of function evaluations           =      11072
-# of gradient evaluations           =       9353
-# of Hessian evaluations            =       9370
-Total program time (secs)           =       7.86657 (    44.366 CPU time)
+# of function evaluations           =      10572
+# of gradient evaluations           =       9413
+# of Hessian evaluations            =       9430
+Total program time (secs)           =      18.87272 (    65.781 CPU time)
 
 ===============================================================================
 
 Knitro 14.2.0: Locally optimal or satisfactory solution.
-objective 21295.17026; feasibility error 2.65e-10
-9343 iterations; 11072 function evaluations
+objective 20599.02136; feasibility error 2.96e-08
+9403 iterations; 10572 function evaluations
 
 suffix feaserror OUT;
 suffix opterror OUT;
 suffix numfcevals OUT;
 suffix numiters OUT;
-total_cost: 21295.17025742606
-solve_time: 8.006807
+con2_1,17: 0.00000004
+con2_1,31: 0.00000000
+con2_2,3: 0.00001642
+con2_2,18: 0.00000006
+con2_3,4: 0.00002214
+con2_3,11: 0.00000008
+con2_4,5: 0.00234225
+con2_5,6: 0.01483099
+con2_5,13: 0.00000016
+con2_6,7: 0.00000742
+con2_7,24: 0.00596705
+con2_8,28: 0.00086311
+con2_9,36: 0.00000011
+con2_10,11: 0.00000000
+con2_10,32: 0.00000000
+con2_11,19: 0.00000000
+con2_11,26: 0.00000000
+con2_12,4: 0.00000008
+con2_12,13: 0.00019228
+con2_13,14: 0.00000002
+con2_14,20: 0.00000000
+con2_14,21: 0.00000003
+con2_15,16: 0.00005229
+con2_15,22: 0.00000003
+con2_16,25: 0.00000001
+con2_16,29: 0.00002646
+con2_17,2: 0.00000842
+con2_17,18: 0.00002247
+con2_18,10: 0.00000001
+con2_19,12: 0.00000002
+con2_19,20: 0.00016862
+con2_20,15: 0.00000000
+con2_21,6: 0.00000013
+con2_21,22: 0.00000757
+con2_22,7: 0.00000052
+con2_22,23: 0.00000801
+con2_23,25: 0.00000010
+con2_24,8: 0.00000015
+con2_24,23: 0.00029640
+con2_25,8: 0.00000004
+con2_26,15: 0.00000000
+con2_26,27: 0.00014980
+con2_27,16: 0.00000000
+con2_28,9: 0.00001406
+con2_28,29: 0.00000107
+con2_29,30: 0.00000066
+con2_29,33: 0.00000005
+con2_30,9: 0.00000237
+con2_30,35: 0.00001278
+con2_31,10: 0.00000000
+con2_31,34: 0.00000000
+con2_32,27: 0.00000000
+con2_32,33: 0.00003574
+con2_33,34: 0.00000002
+con2_34,35: 0.00000006
+con2_35,36: 0.00000116
+con2_36,1: 0.00000003
+con2_37,1: 0.00000000
+total_cost: 20599.021362191263
+solve_time: 18.989416000000002

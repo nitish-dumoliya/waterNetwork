@@ -4,9 +4,9 @@ Solve the original nonconvex optimization problem using IPOPT
 fix_arc_set: {(11, 1), (9, 3), (3, 7), (3, 10), (8, 9), (4, 11), (10, 2)}
 super_source_out_arc: [(8, 9), (9, 3), (3, 7), (3, 10), (10, 2), (2, 6), (2, 4)] 
 
-Objective:  14896324.022231866
+Objective:  14896324.01334475
 Solve_result:  solved
-Solve_time: 0.180064 
+Solve_time: 0.061192 
 
 
 **********************************************************************************************
@@ -14,15 +14,25 @@ Iteration : 1
 
 self.sorted_nodes: [6] 
 
-Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
-(4, 6)    True      1,48,96,324    1,51,76,153    0.08        solved         No        0.32        
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(4, 6)    True    1,48,96,324   1,51,76,153   0.03s       solved        No        0.11s
 
 **********************************Final best results******************************************
 
 Water Network: d13
-Final best objective: 14896324.022231866
+con2_2,4: 0.00000000
+con2_2,6: 0.00000003
+con2_3,7: 0.00000000
+con2_3,10: 0.00000000
+con2_4,6: 0.00000001
+con2_4,11: 0.00000000
+con2_8,9: 0.00000000
+con2_9,3: 0.00000000
+con2_10,2: 0.00000000
+con2_11,1: 0.00000000
+Final best objective: 14896324.01334475
 Number of nlp problem solved: 2
 Total number of iteration: 1
-Solver_time: 0.26 seconds
-Heuristic elapsed time: 0.32 seconds
+Solver_time: 0.09 seconds
+Heuristic elapsed time: 0.11 seconds
 
