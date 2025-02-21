@@ -12,7 +12,7 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 6058195.192676095 
+total_cost: 6058195.192673194 
 
 *******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
@@ -47,104 +47,41 @@ threads = 8
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.75    13MB    0.210133E+07    0.605820E+07    0.00%
 
-/opt/ampl/conopt: bad bound triple 233 in bounds file "boundsfile.5":
-	L = 30
-	x = 11775706530394.156
-	U = 1e+10
+/opt/ampl/conopt: bad bound triple 254 in bounds file "boundsfile.11":
+	L = -5538.8658
+	x = 5186.0888
+	U = 5186.0887999999995
 Surprise errno 4 ==> Interrupted system call
-
-/opt/ampl/conopt: bad bound triple 233 in bounds file "boundsfile.7":
-	L = 30
-	x = 11775706530394.156
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-          1           0.97    13MB    0.210133E+07    0.605820E+07    0.00%
-
-/opt/ampl/conopt: bad bound triple 233 in bounds file "boundsfile.9":
-	L = 30
-	x = 11661363404882.256
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-*        22           2.52    13MB    0.210133E+07    0.605594E+07    5.08%
-
-/opt/ampl/conopt: bad bound triple 219 in bounds file "boundsfile.13":
-	L = 30
-	x = 49186269297.188225
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-*        48           2.90    13MB    0.210133E+07    0.605594E+07    5.80%
-
-/opt/ampl/conopt: bad bound triple 222 in bounds file "boundsfile.18":
-	L = 30
-	x = 1059441822677.7935
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-*       342           6.62    13MB    0.212153E+07    0.605594E+07    9.41%
-       2616          36.62    13MB    0.346898E+07    0.605594E+07   16.11%
-
-/opt/ampl/conopt: bad bound triple 226 in bounds file "boundsfile.22":
-	L = 30
-	x = 269196746135.16602
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-       4853          66.63    13MB    0.357905E+07    0.605594E+07   18.19%
-       7155          96.63    13MB    0.362511E+07    0.605594E+07   19.01%
-       9542         126.63    22MB    0.363813E+07    0.605594E+07   19.98%
-      11743         156.63    22MB    0.365070E+07    0.605594E+07   20.71%
-      13946         186.64    23MB    0.366560E+07    0.605594E+07   21.38%
-      16471         216.65    23MB    0.368038E+07    0.605594E+07   21.97%
-      19340         246.65    23MB    0.368763E+07    0.605594E+07   22.53%
-
-/opt/ampl/conopt: bad bound triple 221 in bounds file "boundsfile.26":
-	L = 30
-	x = 2590170885310.01
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      22181         276.65    32MB    0.368920E+07    0.605594E+07   22.94%
-      24903         306.66    32MB    0.369546E+07    0.605594E+07   23.17%
-      27606         336.67    32MB    0.369634E+07    0.605594E+07   23.40%
-      28689         389.99    32MB    0.369727E+07    0.605594E+07   23.46%
-      29409         477.78    32MB    0.369930E+07    0.605594E+07   23.50%
-      31659         507.78    32MB    0.370897E+07    0.605594E+07   23.69%
-      33970         537.78    42MB    0.372015E+07    0.605594E+07   23.88%
-      36349         567.79    42MB    0.372546E+07    0.605594E+07   24.07%
-      38696         597.79    42MB    0.373103E+07    0.605594E+07   24.29%
-      41196         627.80    42MB    0.373686E+07    0.605594E+07   24.47%
-      43827         657.80    42MB    0.374685E+07    0.605594E+07   24.65%
-      46232         687.80    52MB    0.375590E+07    0.605594E+07   24.79%
-      48676         717.80    52MB    0.376315E+07    0.605594E+07   24.94%
-      48733         842.90    52MB    0.376448E+07    0.605594E+07   24.94%
-
-/opt/ampl/conopt: bad bound triple 221 in bounds file "boundsfile.28":
-	L = 30
-	x = 2590170885310.01
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      51012         872.90    52MB    0.377203E+07    0.605594E+07   25.05%
-      51267         962.09    52MB    0.377258E+07    0.605594E+07   25.06%
-      53487        1031.51    52MB    0.377373E+07    0.605594E+07   25.13%
-      56201        1061.52    62MB    0.377531E+07    0.605594E+07   25.23%
-      56292        1116.34    62MB    0.377531E+07    0.605594E+07   25.23%
-      58963        1146.34    62MB    0.377713E+07    0.605594E+07   25.34%
-      61402        3626.09    62MB    0.377828E+07    0.605594E+07   25.40%
+objective _sobj[1]: Initial function value too large = 2.4E+11
+*        38           2.82    13MB    0.210133E+07    0.605594E+07    9.89%
+*        48           3.13    13MB    0.210133E+07    0.605594E+07    9.89%
+objective _sobj[1]: Initial function value too large = 4.5E+10
+       1059         120.28    13MB    0.252830E+07    0.605594E+07   14.75%
+       3385         150.28    13MB    0.256916E+07    0.605594E+07   17.38%
+       5812         180.28    13MB    0.260281E+07    0.605594E+07   19.42%
+       8454         210.29    13MB    0.266916E+07    0.605594E+07   21.29%
+       9110         308.56    23MB    0.268896E+07    0.605594E+07   21.79%
+      12343         338.56    23MB    0.270100E+07    0.605594E+07   23.19%
+      14654        3636.30    23MB    0.270346E+07    0.605594E+07   24.12%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3626.09
- Total CPU time used:              3625.82
+ Wall clock time:                  3636.30
+ Total CPU time used:              3635.68
 
- Total no. of BaR iterations:   61402
- Best solution found at node:     342
- Max. no. of nodes in memory:    3972
+ Total no. of BaR iterations:   14654
+ Best solution found at node:      55
+ Max. no. of nodes in memory:     898
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 61402 iterations, CPU time limit reached.
+BARON 24.5.8 (2024.05.08): 14654 iterations, CPU time limit reached.
 Objective 6055935.812
-con2_1,2: -0.00000000
+con2_1,2: 0.00000000
 con2_2,3: 0.00000000
 con2_3,4: 0.00000000
 con2_3,19: 0.00000000
@@ -153,7 +90,7 @@ con2_4,5: 0.00000000
 con2_5,6: 0.00000000
 con2_6,7: 0.00000000
 con2_7,8: 0.00000000
-con2_8,9: -0.00000000
+con2_8,9: 0.00000000
 con2_9,10: 0.00000000
 con2_10,11: 0.00000000
 con2_10,14: 0.00000000
@@ -168,15 +105,15 @@ con2_19,18: 0.00000000
 con2_20,21: 0.00000000
 con2_20,23: 0.00000000
 con2_21,22: 0.00000000
-con2_23,24: -0.00000000
+con2_23,24: 0.00000000
 con2_23,28: 0.00000000
 con2_24,25: 0.00000000
 con2_25,32: 0.00000000
-con2_26,25: -0.00000000
-con2_27,26: -0.00000000
+con2_26,25: 0.00000000
+con2_27,26: 0.00000000
 con2_28,29: 0.00000000
 con2_29,30: 0.00000000
-con2_30,31: -0.00000000
+con2_30,31: 0.00000000
 con2_32,31: 0.00000000
-total_cost: 6055935.81186896
-solve_time: 3626.1250769999997
+total_cost: 6055935.811866456
+solve_time: 3636.33275

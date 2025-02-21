@@ -12,7 +12,7 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 3807590.067442999 
+total_cost: 3798996.067840533 
 
 *******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
@@ -39,214 +39,213 @@ threads = 8
  For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
- Starting solution is feasible with a value of  0.380759E+07      
+ Starting solution is feasible with a value of  0.379900E+07      
  Doing local search
- Preprocessing found feasible solution with value 0.355359E+07
+ Preprocessing found feasible solution with value 0.358013E+07
  Solving bounding LP
  Starting multi-start local search
 
-/opt/ampl/conopt: bad bound triple 1216 in bounds file "boundsfile.2":
-	L = 18
-	x = 1097649665926.2782
+/opt/ampl/conopt: bad bound triple 1201 in bounds file "boundsfile.2":
+	L = 16
+	x = 62080863485.0795
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
 
-/opt/ampl/conopt: bad bound triple 1216 in bounds file "boundsfile.6":
-	L = 18
-	x = 1097649665926.2782
+/opt/ampl/conopt: bad bound triple 1201 in bounds file "boundsfile.6":
+	L = 16
+	x = 57900676605.42248
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-          1           6.07    16MB     0.00000        0.355359E+07    0.00%
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+*         1           1.38    16MB     786997.        0.355359E+07    10.00%
+          1           9.72    24MB     786997.        0.355359E+07   10.90%
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
-/opt/ampl/conopt: bad bound triple 1209 in bounds file "boundsfile.10":
-	L = 14
-	x = 9661215273097.105
+/opt/ampl/conopt: bad bound triple 1203 in bounds file "boundsfile.8":
+	L = 15
+	x = 18699902004.37597
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
-/opt/ampl/conopt: bad bound triple 1209 in bounds file "boundsfile.12":
-	L = 14
-	x = 9661215273097.105
+/opt/ampl/conopt: bad bound triple 1201 in bounds file "boundsfile.10":
+	L = 16
+	x = 30624001424.718674
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-*        92          27.43    24MB     786997.        0.355359E+07   15.71%
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 
-/opt/ampl/conopt: bad bound triple 1209 in bounds file "boundsfile.15":
-	L = 14
-	x = 9661215273097.105
+/opt/ampl/conopt: bad bound triple 1201 in bounds file "boundsfile.12":
+	L = 16
+	x = 21799403877.853844
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-       1229          60.37    34MB     786997.        0.355359E+07   15.76%
-variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+*        63          22.70    24MB     786997.        0.355359E+07   26.39%
 
-/opt/ampl/conopt: bad bound triple 1202 in bounds file "boundsfile.17":
-	L = 11
-	x = 13861623251308.268
+/opt/ampl/conopt: bad bound triple 1201 in bounds file "boundsfile.13":
+	L = 16
+	x = 21799403492.9862
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-       3189          90.38    63MB     786997.        0.355359E+07   15.80%
-       5220         120.38    82MB     786997.        0.355359E+07   15.82%
-       7924         150.39    92MB     786997.        0.355359E+07   15.82%
-      10704         180.41    92MB     786997.        0.355359E+07   15.82%
+objective _sobj[1]: Initial function value too large = 5.4E+12
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       1264          52.71    34MB     786997.        0.355359E+07   26.46%
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      13657         210.42    92MB     786997.        0.355359E+07   15.82%
-      16502         242.20    92MB     786997.        0.355359E+07   15.82%
-      18270         272.20   102MB     786997.        0.355359E+07   15.82%
-      19478         302.20   102MB     786997.        0.355359E+07   15.82%
-
-/opt/ampl/conopt: bad bound triple 1250 in bounds file "boundsfile.21":
-	L = 17
-	x = 7105528148122.822
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-      20792         332.23   102MB     786997.        0.355359E+07   15.82%
-      22052         362.23   102MB     786997.        0.355359E+07   15.82%
-      23188         392.24   102MB     786997.        0.355359E+07   15.83%
-      25545         422.24   102MB     786997.        0.355359E+07   15.83%
-      27338         452.24   121MB     786997.        0.355359E+07   15.84%
-      29892         482.24   121MB     786997.        0.355359E+07   15.84%
-      32181         512.25   151MB     786997.        0.355359E+07   15.85%
-      34470         542.27   160MB     786997.        0.355359E+07   15.85%
-      36794         572.28   180MB     786997.        0.355359E+07   15.86%
-      38762         602.70   200MB     786997.        0.355359E+07   15.87%
-      41058         632.70   229MB     786997.        0.355359E+07   15.87%
-      42656         662.71   248MB     786997.        0.355359E+07   15.88%
-      43022         910.85   248MB     786997.        0.355359E+07   15.88%
-      45259         940.85   268MB     786997.        0.355359E+07   15.88%
-      46975         970.87   268MB     786997.        0.355359E+07   15.88%
-      48363        1000.88   278MB     786997.        0.355359E+07   15.89%
-      50095        1030.96   297MB     786997.        0.355359E+07   15.89%
+       3277          82.72    43MB     786997.        0.355359E+07   26.47%
+*      5024         108.86    43MB     786997.        0.355280E+07   26.47%
+       7062         142.41    43MB     786997.        0.355280E+07   26.47%
 variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
-      52016        1060.97   297MB     786997.        0.355359E+07   15.89%
-      54116        1090.97   297MB     786997.        0.355359E+07   15.89%
-      55534        1125.20   317MB     786997.        0.355359E+07   15.90%
-      56057        3612.15   317MB     786997.        0.355359E+07   15.90%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       9394         172.43    43MB     786997.        0.355280E+07   26.47%
+      11283         202.43    43MB     786997.        0.355280E+07   26.47%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+      13358         232.45    43MB     786997.        0.355280E+07   26.48%
+      15765         262.48    43MB     786997.        0.355280E+07   26.48%
+      18011         292.50    43MB     786997.        0.355280E+07   26.48%
+      19827         322.52    43MB     786997.        0.355280E+07   26.49%
+      22023         352.53    43MB     786997.        0.355280E+07   26.49%
+      24154         382.66    43MB     786997.        0.355280E+07   26.50%
+      26249         412.67    63MB     786997.        0.355280E+07   26.50%
+      28455         442.68    63MB     786997.        0.355280E+07   26.51%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+      30015         472.69    82MB     786997.        0.355280E+07   26.52%
+      32372         502.69    82MB     786997.        0.355280E+07   26.53%
+      34665         532.70    92MB     786997.        0.355280E+07   26.54%
+      36841         562.70    92MB     786997.        0.355280E+07   26.54%
+      39159         592.72    92MB     786997.        0.355280E+07   26.54%
+      41418         622.73   112MB     786997.        0.355280E+07   26.54%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+      43554         652.75   121MB     786997.        0.355280E+07   26.55%
+      45259         682.78   121MB     786997.        0.355280E+07   26.55%
+      47093         712.80   121MB     786997.        0.355280E+07   26.55%
+      48856         742.82   121MB     786997.        0.355280E+07   26.55%
+      50631         772.85   121MB     786997.        0.355280E+07   26.55%
+      52142         802.86   121MB     786997.        0.355280E+07   26.55%
+      53801         832.88   121MB     786997.        0.355280E+07   26.55%
+      55499         862.88   121MB     786997.        0.355280E+07   26.55%
+      57205         892.88   121MB     786997.        0.355280E+07   26.55%
+      58818         922.89   121MB     786997.        0.355280E+07   26.55%
+      59095        3845.84   121MB     786997.        0.355280E+07   26.55%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3612.15
- Total CPU time used:              3605.87
+ Wall clock time:                  3845.84
+ Total CPU time used:              3843.69
 
- Total no. of BaR iterations:   56057
- Best solution found at node:      92
- Max. no. of nodes in memory:    6600
+ Total no. of BaR iterations:   59095
+ Best solution found at node:    5024
+ Max. no. of nodes in memory:    2201
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 56057 iterations, CPU time limit reached.
-Objective 3553592.093
+BARON 24.5.8 (2024.05.08): 59095 iterations, CPU time limit reached.
+Objective 3552797.879
 con2_1,30: 0.00000000
 con2_2,7: 0.00000000
 con2_2,14: 0.00000000
-con2_3,11: -0.00000000
+con2_3,11: 0.00000000
 con2_3,53: 0.00000000
 con2_4,11: 0.00000000
-con2_5,41: -0.00000000
+con2_5,41: 0.00000000
 con2_5,42: 0.00000000
-con2_6,1: 0.00000002
-con2_7,40: 0.00000000
+con2_6,1: 0.01151472
+con2_7,40: 0.00000001
 con2_7,60: 0.00000000
-con2_8,17: 0.00000000
-con2_8,29: -0.00000000
-con2_9,46: 0.00000001
+con2_8,17: 0.00000002
+con2_8,29: 0.00000000
+con2_9,46: 0.00403693
 con2_10,32: 0.00000000
 con2_10,61: 0.00000000
-con2_11,8: -0.00000000
+con2_11,8: 0.00000000
 con2_12,24: 0.00000000
-con2_13,5: 0.00000001
+con2_13,5: 0.00875281
 con2_14,3: 0.00000000
 con2_15,33: 0.00000000
 con2_16,59: 0.00000000
-con2_16,60: 0.00000000
-con2_17,29: -0.00000000
+con2_16,60: 0.00000004
+con2_17,29: 0.00000000
 con2_18,43: 0.00000000
 con2_19,22: 0.00000000
-con2_20,30: -0.00000000
-con2_21,26: 0.00000000
-con2_22,1: -0.00000000
+con2_20,30: 0.00000000
+con2_21,26: 0.00125459
+con2_22,1: 0.00000000
 con2_23,36: 0.00000000
 con2_24,19: 0.00000000
-con2_25,52: 0.00000000
+con2_25,52: 0.00024282
 con2_26,12: 0.00000000
-con2_27,69: -0.00000000
-con2_28,49: 0.00000000
-con2_29,60: -0.00000000
-con2_30,56: -0.00000000
-con2_31,28: 0.00000000
-con2_31,58: 0.00000000
+con2_27,69: 0.00000000
+con2_28,49: 0.00000009
+con2_29,60: 0.00000000
+con2_30,56: 0.00000000
+con2_31,28: 0.00000008
+con2_31,58: 0.00000008
 con2_32,47: 0.00000000
-con2_33,55: -0.00000000
-con2_34,54: 0.00000000
-con2_34,62: 0.00000002
-con2_34,76: 0.00000000
+con2_33,55: 0.00000000
+con2_34,54: 0.00000001
+con2_34,62: 0.00190378
+con2_34,76: 0.00000001
 con2_35,51: 0.00000000
 con2_36,20: 0.00000000
 con2_37,15: 0.00000000
 con2_37,33: 0.00000000
 con2_38,3: 0.00000000
-con2_39,24: 0.00000000
+con2_39,24: 0.00000001
 con2_40,16: 0.00000000
-con2_40,43: 0.00000000
+con2_40,43: 0.00000001
 con2_41,17: 0.00000000
 con2_42,41: 0.00000000
-con2_43,7: 0.00000000
-con2_44,77: 0.00000000
-con2_45,24: 0.00000000
-con2_45,32: 0.00000000
-con2_45,74: 0.00000000
-con2_46,28: 0.00000000
+con2_43,7: 0.00000002
+con2_44,77: 0.00000112
+con2_45,24: 0.00000001
+con2_45,32: 0.00000001
+con2_45,74: 0.00000034
+con2_46,28: 0.00017347
 con2_47,26: 0.00000000
-con2_48,66: 0.00000000
-con2_49,59: 0.00000000
-con2_50,22: 0.00000000
-con2_50,39: 0.00000000
-con2_51,5: -0.00000000
+con2_48,66: 0.00015739
+con2_49,59: 0.00000002
+con2_50,22: 0.00000001
+con2_50,39: 0.00000001
+con2_51,5: 0.00000000
 con2_52,35: 0.00000000
 con2_53,4: 0.00000000
-con2_54,14: 0.00000000
+con2_54,14: 0.00000001
 con2_54,18: 0.00000000
 con2_55,36: 0.00000000
-con2_56,22: -0.00000000
+con2_56,22: 0.00000000
 con2_57,23: 0.00000000
-con2_58,49: 0.00000000
+con2_58,49: 0.00000004
 con2_58,57: 0.00000000
-con2_59,33: 0.00000000
-con2_59,37: 0.00000000
+con2_59,33: 0.00000001
+con2_59,37: 0.00000004
 con2_60,37: 0.00000000
-con2_61,70: -0.00000000
-con2_62,64: 0.00000002
-con2_63,73: 0.00000000
-con2_64,78: 0.00000000
-con2_65,75: 0.00000000
-con2_66,77: 0.00000000
-con2_67,71: 0.00000000
-con2_68,52: -0.00000000
-con2_69,61: -0.00000000
-con2_70,36: -0.00000000
-con2_70,58: 0.00000000
-con2_71,75: 0.00000000
-con2_72,34: 0.00000000
-con2_73,44: 0.00000000
-con2_74,26: 0.00000000
-con2_75,27: -0.00000000
-con2_76,38: -0.00000000
-con2_77,63: 0.00000000
-con2_77,68: -0.00000000
-con2_78,14: -0.00000000
-con2_78,38: 0.00000000
-con2_78,54: 0.00000000
-total_cost: 3553592.092511298
-solve_time: 3612.216909
+con2_61,70: 0.00000000
+con2_62,64: 0.00190374
+con2_63,73: 0.00003062
+con2_64,78: 0.00000230
+con2_65,75: 0.00000217
+con2_66,77: 0.00000175
+con2_67,71: 0.00000158
+con2_68,52: 0.00000000
+con2_69,61: 0.00000000
+con2_70,36: 0.00000000
+con2_70,58: 0.00000001
+con2_71,75: 0.00000031
+con2_72,34: 0.00000525
+con2_73,44: 0.00000166
+con2_74,26: 0.00000046
+con2_75,27: 0.00000000
+con2_76,38: 0.00000000
+con2_77,63: 0.00000136
+con2_77,68: 0.00000000
+con2_78,14: 0.00000000
+con2_78,38: 0.00000001
+con2_78,54: 0.00000001
+total_cost: 3552797.878979311
+solve_time: 3845.891064

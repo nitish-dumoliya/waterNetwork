@@ -12,7 +12,7 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 12068983.881600212 
+total_cost: 12068983.881595785 
 
 *******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
@@ -45,48 +45,76 @@ threads = 8
  Preprocessing found feasible solution with value 0.120644E+08
  Solving bounding LP
  Starting multi-start local search
+
+/opt/ampl/conopt: bad bound triple 404 in bounds file "boundsfile.2":
+	L = 30
+	x = 18810278492.031048
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
-          1           0.65    13MB    0.359900E+07    0.120644E+08    NA
 
-/opt/ampl/conopt: bad bound triple 449 in bounds file "boundsfile.7":
+/opt/ampl/conopt: bad bound triple 404 in bounds file "boundsfile.6":
 	L = 30
-	x = 16821502327491.883
+	x = 18810278492.031055
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+          1           0.41    13MB    0.359900E+07    0.120644E+08   10.00%
+
+/opt/ampl/conopt: bad bound triple 404 in bounds file "boundsfile.8":
+	L = 30
+	x = 18810278492.03106
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/opt/ampl/conopt: bad bound triple 441 in bounds file "boundsfile.9":
+/opt/ampl/conopt: bad bound triple 407 in bounds file "boundsfile.10":
 	L = 30
-	x = 12143640900511.895
+	x = 12879418799.087257
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-objective _sobj[1]: Initial function value too large = 3.1E+11
-       1469          30.65    15MB    0.359900E+07    0.120644E+08    2.98%
 
-/opt/ampl/conopt: bad bound triple 435 in bounds file "boundsfile.17":
+/opt/ampl/conopt: bad bound triple 404 in bounds file "boundsfile.12":
 	L = 30
-	x = 54221489273192.81
+	x = 18810278492.03106
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-       2843          60.67    25MB    0.359900E+07    0.120644E+08    3.62%
-       2863         182.08    25MB    0.359900E+07    0.120644E+08    3.62%
-       2872        4330.64    25MB    0.359900E+07    0.120644E+08    3.62%
+
+/opt/ampl/conopt: bad bound triple 408 in bounds file "boundsfile.14":
+	L = 30
+	x = 96415063203.18405
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 425 in bounds file "boundsfile.16":
+	L = 30
+	x = 11782797293.668337
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+       1319          30.41    15MB    0.359900E+07    0.120644E+08   26.81%
+objective _sobj[1]: Initial function value too large = 1.1E+12
+       2987          60.42    25MB    0.359900E+07    0.120644E+08   27.18%
+       3831         147.88    25MB    0.359900E+07    0.120644E+08   27.38%
+       4311         217.21    34MB    0.359900E+07    0.120644E+08   27.47%
+       6192         247.22    34MB    0.359900E+07    0.120644E+08   27.84%
+       6576         341.17    44MB    0.359900E+07    0.120644E+08   27.87%
+objective _sobj[1]: Initial function value too large = 1.3E+11
+       7550        3617.23    44MB    0.359900E+07    0.120644E+08   27.99%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  4330.64
- Total CPU time used:              4328.94
+ Wall clock time:                  3617.23
+ Total CPU time used:              3616.63
 
- Total no. of BaR iterations:    2872
- Best solution found at node:       1
- Max. no. of nodes in memory:     450
+ Total no. of BaR iterations:    7550
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:    1244
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 2872 iterations, CPU time limit reached.
+BARON 24.5.8 (2024.05.08): 7550 iterations, CPU time limit reached.
 Objective 12064445.12
 con2_1,2: 0.00000000
 con2_2,3: 0.00000000
@@ -115,14 +143,14 @@ con2_20,23: 0.00000000
 con2_21,22: 0.00000000
 con2_23,24: 0.00000000
 con2_23,28: 0.00000000
-con2_24,25: -0.00000000
+con2_24,25: 0.00000000
 con2_25,32: 0.00000000
-con2_26,25: -0.00000000
-con2_27,26: -0.00000000
+con2_26,25: 0.00000000
+con2_27,26: 0.00000000
 con2_28,29: 0.00000000
 con2_29,30: 0.00000000
-con2_30,31: -0.00000000
-con2_32,31: -0.00000000
+con2_30,31: 0.00000000
+con2_32,31: 0.00000000
 con2_33,34: 0.00000000
 con2_33,49: 0.00000000
 con2_33,50: 0.00000000
@@ -138,7 +166,7 @@ con2_41,42: 0.00000000
 con2_42,43: 0.00000000
 con2_44,45: 0.00000000
 con2_45,46: 0.00000000
-con2_46,57: -0.00000000
+con2_46,57: 0.00000000
 con2_47,46: 0.00000000
 con2_48,47: 0.00000000
 con2_49,48: 0.00000000
@@ -147,13 +175,13 @@ con2_50,53: 0.00000000
 con2_51,52: 0.00000000
 con2_53,54: 0.00000000
 con2_53,58: 0.00000000
-con2_54,55: -0.00000000
+con2_54,55: 0.00000000
 con2_55,62: 0.00000000
-con2_56,55: -0.00000000
-con2_57,56: -0.00000000
+con2_56,55: 0.00000000
+con2_57,56: 0.00000000
 con2_58,59: 0.00000000
 con2_59,60: 0.00000000
-con2_60,61: -0.00000000
-con2_62,61: -0.00000000
-total_cost: 12064445.116465785
-solve_time: 4330.674628
+con2_60,61: 0.00000000
+con2_62,61: 0.00000000
+total_cost: 12064445.116459494
+solve_time: 3617.2709670000004

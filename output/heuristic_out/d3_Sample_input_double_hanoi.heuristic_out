@@ -4,9 +4,9 @@ Solve the original nonconvex optimization problem using IPOPT
 fix_arc_set: {(1, 2), (10, 11), (41, 42), (12, 13), (21, 22), (50, 51), (11, 12), (51, 52), (40, 41), (42, 43), (20, 21)}
 super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (2, 33), (33, 34), (33, 49), (33, 50)] 
 
-Objective:  12064445.008240324
+Objective:  12064445.008241244
 Solve_result:  solved
-Solve_time: 0.819383 
+Solve_time: 0.434523 
 
 
 **********************************************************************************************
@@ -15,12 +15,12 @@ Iteration : 1
 self.sorted_nodes: [27, 57, 29, 59, 16, 46] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(26, 27)  True    1,20,64,445   1,21,14,386   0.05s       solved        No        0.9s
-(56, 57)  True    1,20,64,445   1,21,14,386   0.05s       solved        No        0.97s
-(28, 29)  True    1,20,64,445   1,23,41,023   0.11s       solved        No        1.1s
-(58, 59)  True    1,20,64,445   1,23,41,023   0.05s       solved        No        1.17s
-(15, 16)  True    1,20,64,445   1,20,71,525   0.08s       solved        No        1.27s
-(45, 46)  True    1,20,64,445   1,20,69,256   0.08s       solved        No        1.37s
+(26, 27)  True    1,20,64,445   1,21,14,386   0.06s       solved        No        0.53s
+(56, 57)  True    1,20,64,445   1,21,14,386   0.03s       solved        No        0.58s
+(28, 29)  True    1,20,64,445   1,23,41,023   0.04s       solved        No        0.63s
+(58, 59)  True    1,20,64,445   1,23,41,023   0.04s       solved        No        0.69s
+(15, 16)  True    1,20,64,445   1,20,69,256   0.03s       solved        No        0.74s
+(45, 46)  True    1,20,64,445   1,20,69,256   0.03s       solved        No        0.78s
 
 **********************************Final best results******************************************
 
@@ -92,9 +92,9 @@ con2_58,59: 0.00000000
 con2_59,60: 0.00000000
 con2_60,61: 0.00000000
 con2_62,61: 0.00000000
-Final best objective: 12064445.008240324
+Final best objective: 12064445.008241244
 Number of nlp problem solved: 7
 Total number of iteration: 1
-Solver_time: 1.24 seconds
-Heuristic elapsed time: 1.37 seconds
+Solver_time: 0.67 seconds
+Heuristic elapsed time: 0.78 seconds
 

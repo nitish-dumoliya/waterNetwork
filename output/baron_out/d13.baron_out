@@ -12,7 +12,7 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 14896324.021274148 
+total_cost: 14896324.013344765 
 
 *******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
@@ -46,39 +46,33 @@ threads = 8
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
-          1           0.30    11MB    0.131729E+08    0.148963E+08    0.00%
-
-/opt/ampl/conopt: bad bound triple 135 in bounds file "boundsfile.11":
-	L = 397
-	x = 22366989868.0261
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-        165           1.43    12MB    0.148963E+08    0.148963E+08  100.00%
+          1           0.18    11MB    0.131729E+08    0.148963E+08    0.00%
+         23           1.26    12MB    0.148963E+08    0.148963E+08  100.00%
 
                          *** Normal completion ***            
 
- Wall clock time:                     1.43
- Total CPU time used:                 1.40
+ Wall clock time:                     1.26
+ Total CPU time used:                 1.24
 
- Total no. of BaR iterations:     165
- Best solution found at node:       1
- Max. no. of nodes in memory:       4
+ Total no. of BaR iterations:      23
+ Best solution found at node:      14
+ Max. no. of nodes in memory:       3
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 165 iterations, optimal within tolerances.
-Objective 14896325.2
+BARON 24.5.8 (2024.05.08): 23 iterations, optimal within tolerances.
+Objective 14896325.19
 con2_2,4: 0.00000000
-con2_2,6: 0.00000000
+con2_2,6: 0.00000003
 con2_3,7: 0.00000000
 con2_3,10: 0.00000000
-con2_4,6: 0.00000000
+con2_4,6: 0.00000001
 con2_4,11: 0.00000000
 con2_8,9: 0.00000000
 con2_9,3: 0.00000000
 con2_10,2: 0.00000000
 con2_11,1: 0.00000000
-total_cost: 14896325.202315262
-solve_time: 1.46162
+total_cost: 14896325.194386113
+solve_time: 1.296524

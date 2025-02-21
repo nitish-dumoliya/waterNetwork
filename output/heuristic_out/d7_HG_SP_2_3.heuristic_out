@@ -4,9 +4,9 @@ Solve the original nonconvex optimization problem using IPOPT
 fix_arc_set: {(14, 52), (44, 19), (46, 55), (77, 7), (74, 64), (57, 38), (15, 64), (64, 70), (28, 56), (2, 11), (67, 8)}
 super_source_out_arc: [(1, 56), (1, 59)] 
 
-Objective:  3400783.573567903
+Objective:  3400783.5735678
 Solve_result:  solved
-Solve_time: 0.920477 
+Solve_time: 0.636198 
 
 
 **********************************************************************************************
@@ -15,9 +15,9 @@ Iteration : 1
 self.sorted_nodes: [75, 76, 78, 68, 70, 8, 3, 7, 50, 17, 19, 29, 11, 12, 30, 32, 9, 5, 48] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(65, 75)  True    34,00,784     35,20,268     0.2s        solved        No        1.19s
-(62, 76)  True    34,00,784     42,62,305     0.53s       solved        No        1.76s
-(68, 78)  True    34,00,784     33,94,356     0.17s       solved        Yes       1.96s
+(65, 75)  True    34,00,784     35,20,513     0.12s       solved        No        0.82s
+(62, 76)  True    34,00,784     42,60,631     0.53s       solved        No        1.39s
+(68, 78)  True    34,00,784     33,94,356     0.2s        solved        Yes       1.61s
 
 visited_nodes: [75, 76, 78]
 
@@ -27,22 +27,22 @@ Iteration : 2
 self.sorted_nodes: [68, 70, 8, 3, 7, 50, 17, 19, 29, 27, 11, 30, 32, 9, 48, 53] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(63, 68)  True    33,94,356     34,62,171     0.31s       solved        No        2.31s
-(10, 70)  True    33,94,356     34,68,524     0.32s       solved        No        2.67s
-(3, 8)    True    33,94,356     42,20,989     1.83s       limit         No        4.53s
-(22, 3)   True    33,94,356     35,78,998     0.61s       solved        No        5.18s
-(4, 7)    True    33,94,356     93,75,575     1.45s       limit         No        6.66s
-(36, 50)  True    33,94,356     62,96,309     1.34s       limit         No        8.04s
-(35, 17)  True    33,94,356     34,16,739     0.48s       solved        No        8.55s
-(11, 19)  True    33,94,356     34,58,651     0.34s       solved        No        8.93s
-(5, 29)   True    33,94,356     34,02,911     0.35s       solved        No        9.31s
-(12, 27)  True    33,94,356     33,99,698     0.55s       solved        No        9.89s
-(6, 11)   True    33,94,356     34,13,596     0.43s       solved        No        10.35s
-(9, 30)   True    33,94,356     33,98,019     0.16s       solved        No        10.55s
-(42, 32)  True    33,94,356     66,16,961     1.06s       limit         No        11.64s
-(27, 9)   True    33,94,356     33,99,253     0.34s       solved        No        12.01s
-(53, 48)  True    33,94,356     33,95,394     0.28s       solved        No        12.32s
-(5, 53)   True    33,94,356     33,94,503     0.22s       solved        No        12.58s
+(63, 68)  True    33,94,356     34,63,412     0.23s       solved        No        1.88s
+(10, 70)  True    33,94,356     34,70,260     0.22s       solved        No        2.13s
+(3, 8)    True    33,94,356     52,51,724     1.11s       limit         No        3.27s
+(22, 3)   True    33,94,356     35,74,116     0.31s       solved        No        3.61s
+(4, 7)    True    33,94,356     95,21,161     1.08s       limit         No        4.72s
+(36, 50)  True    33,94,356     67,68,115     1.01s       limit         No        5.76s
+(35, 17)  True    33,94,356     34,19,293     0.26s       solved        No        6.05s
+(11, 19)  True    33,94,356     34,52,105     0.31s       solved        No        6.39s
+(5, 29)   True    33,94,356     34,01,842     0.29s       solved        No        6.71s
+(12, 27)  True    33,94,356     33,95,653     0.14s       solved        No        6.88s
+(6, 11)   True    33,94,356     34,13,985     0.3s        solved        No        7.2s
+(9, 30)   True    33,94,356     34,02,335     0.23s       solved        No        7.46s
+(42, 32)  True    33,94,356     62,28,926     1.02s       limit         No        8.51s
+(27, 9)   True    33,94,356     33,99,253     0.15s       solved        No        8.68s
+(53, 48)  True    33,94,356     33,97,190     0.13s       solved        No        8.85s
+(5, 53)   True    33,94,356     34,00,855     0.16s       solved        No        9.03s
 
 **********************************Final best results******************************************
 
@@ -147,9 +147,9 @@ con2_76,68: 0.00000001
 con2_76,78: 0.00000000
 con2_77,7: 0.00000000
 con2_78,65: 0.00000000
-Final best objective: 3394355.789225668
+Final best objective: 3394355.7905977145
 Number of nlp problem solved: 20
 Total number of iteration: 2
-Solver_time: 11.88 seconds
-Heuristic elapsed time: 12.58 seconds
+Solver_time: 8.43 seconds
+Heuristic elapsed time: 9.03 seconds
 

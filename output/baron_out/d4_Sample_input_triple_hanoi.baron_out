@@ -12,7 +12,7 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 18369652.94289411 
+total_cost: 18371956.032077104 
 
 *******************************************************************************
 BARON 24.5.8 (2024.05.08): maxtime = 3600
@@ -39,60 +39,92 @@ threads = 8
  For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
- Starting solution is feasible with a value of  0.183697E+08      
+ Starting solution is feasible with a value of  0.183720E+08      
+ Preprocessing found feasible solution with value 0.183720E+08
  Doing local search
  Solving bounding LP
  Starting multi-start local search
+
+/opt/ampl/conopt: bad bound triple 602 in bounds file "boundsfile.3":
+	L = 30
+	x = 3251654761931.471
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
-          1           1.85    17MB    0.544054E+07    0.183697E+08    NA
 
-/opt/ampl/conopt: bad bound triple 625 in bounds file "boundsfile.11":
+/opt/ampl/conopt: bad bound triple 602 in bounds file "boundsfile.5":
 	L = 30
-	x = 2699087121741.26
+	x = 3251654761931.471
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+          1           0.87    17MB     0.00000        0.183720E+08    NA
+
+/opt/ampl/conopt: bad bound triple 602 in bounds file "boundsfile.7":
+	L = 30
+	x = 3251654761931.4717
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/opt/ampl/conopt: bad bound triple 655 in bounds file "boundsfile.13":
+/opt/ampl/conopt: bad bound triple 602 in bounds file "boundsfile.11":
 	L = 30
-	x = 2252298320603.722
+	x = 728050324552.2076
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
 
-/opt/ampl/conopt: bad bound triple 652 in bounds file "boundsfile.15":
+/opt/ampl/conopt: bad bound triple 602 in bounds file "boundsfile.15":
 	L = 30
-	x = 1452190252209.7434
+	x = 860195753317.3994
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
+        826          33.81    17MB    0.544054E+07    0.183720E+08   16.20%
+        863         139.65    17MB    0.544054E+07    0.183720E+08   16.22%
 
-/opt/ampl/conopt: bad bound triple 655 in bounds file "boundsfile.17":
+/opt/ampl/conopt: bad bound triple 619 in bounds file "boundsfile.19":
 	L = 30
-	x = 2590900967958.6055
+	x = 372832444772.56946
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-        513        3615.39    17MB    0.544054E+07    0.183697E+08    0.86%
+       1790         169.65    27MB    0.544054E+07    0.183720E+08   16.45%
+
+/opt/ampl/conopt: bad bound triple 633 in bounds file "boundsfile.21":
+	L = 30
+	x = 689532720661.3616
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+       3310         199.69    27MB    0.544054E+07    0.183720E+08   16.69%
+       4595         229.81    37MB    0.544054E+07    0.183720E+08   16.87%
+       4928         467.44    37MB    0.544054E+07    0.183720E+08   16.90%
+       6023         497.44    47MB    0.544054E+07    0.183720E+08   17.00%
+       7520         527.46    56MB    0.544054E+07    0.183720E+08   17.10%
+constraint _scon[253]: Initial function value too large = 1.6E+10
+objective _sobj[1]: Initial function value too large = 3.4E+12
+       8340         637.06    56MB    0.544054E+07    0.183720E+08   17.15%
+       8387         779.12    56MB    0.544054E+07    0.183720E+08   17.15%
+       9378         809.15    66MB    0.544054E+07    0.183720E+08   17.22%
+       9880        3612.10    66MB    0.544054E+07    0.183720E+08   17.25%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3615.39
- Total CPU time used:              3615.17
+ Wall clock time:                  3612.10
+ Total CPU time used:              3611.36
 
- Total no. of BaR iterations:     513
+ Total no. of BaR iterations:    9880
  Best solution found at node:      -1
- Max. no. of nodes in memory:     115
+ Max. no. of nodes in memory:    1537
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 513 iterations, CPU time limit reached.
-Objective 18369652.94
+BARON 24.5.8 (2024.05.08): 9880 iterations, CPU time limit reached.
+Objective 18371956.03
 con2_1,2: 0.00000000
-con2_2,3: -0.00000000
+con2_2,3: 0.00000000
 con2_2,33: 0.00000000
 con2_2,63: 0.00000000
-con2_3,4: -0.00000000
+con2_3,4: 0.00000000
 con2_3,19: 0.00000000
 con2_3,20: 0.00000000
 con2_4,5: 0.00000000
@@ -107,12 +139,12 @@ con2_11,12: 0.00000000
 con2_12,13: 0.00000000
 con2_14,15: 0.00000000
 con2_15,16: 0.00000000
-con2_16,27: -0.00000000
+con2_16,27: 0.00000000
 con2_17,16: 0.00000000
 con2_18,17: 0.00000000
 con2_19,18: 0.00000000
 con2_20,21: 0.00000000
-con2_20,23: -0.00000000
+con2_20,23: 0.00000000
 con2_21,22: 0.00000000
 con2_23,24: 0.00000000
 con2_23,28: 0.00000000
@@ -150,11 +182,11 @@ con2_53,54: 0.00000000
 con2_53,58: 0.00000000
 con2_54,55: 0.00000000
 con2_55,62: 0.00000000
-con2_56,55: -0.00000000
-con2_57,56: -0.00000000
+con2_56,55: 0.00000000
+con2_57,56: 0.00000000
 con2_58,59: 0.00000000
 con2_59,60: 0.00000000
-con2_60,61: -0.00000000
+con2_60,61: 0.00000000
 con2_62,61: 0.00000000
 con2_63,64: 0.00000000
 con2_63,79: 0.00000000
@@ -164,7 +196,7 @@ con2_65,66: 0.00000000
 con2_66,67: 0.00000000
 con2_67,68: 0.00000000
 con2_68,69: 0.00000000
-con2_69,70: -0.00000000
+con2_69,70: 0.00000000
 con2_70,71: 0.00000000
 con2_70,74: 0.00000000
 con2_71,72: 0.00000000
@@ -182,11 +214,11 @@ con2_83,84: 0.00000000
 con2_83,88: 0.00000000
 con2_84,85: 0.00000000
 con2_85,92: 0.00000000
-con2_86,85: -0.00000000
-con2_87,86: -0.00000000
+con2_86,85: 0.00000000
+con2_87,86: 0.00000000
 con2_88,89: 0.00000000
 con2_89,90: 0.00000000
-con2_90,91: -0.00000000
+con2_90,91: 0.00000000
 con2_92,91: 0.00000000
-total_cost: 18369652.942884456
-solve_time: 3615.43184
+total_cost: 18371956.032061826
+solve_time: 3612.141694

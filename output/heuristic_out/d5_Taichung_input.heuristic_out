@@ -4,52 +4,43 @@ Solve the original nonconvex optimization problem using IPOPT
 fix_arc_set: set()
 super_source_out_arc: [(20, 10), (20, 19)] 
 
-Objective:  8907015.1590032
+Objective:  8849370.787973205
 Solve_result:  solved
-Solve_time: 0.5880669999999999 
+Solve_time: 0.17202 
 
 
 **********************************************************************************************
 Iteration : 1 
 
-self.sorted_nodes: [13, 14, 3, 4, 12, 15, 6, 11] 
+self.sorted_nodes: [13, 14, 1, 2, 4, 12, 15, 11] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(8, 13)   True    89,07,015     90,89,586     0.07s       solved        No        0.69s
-(19, 14)  True    89,07,015     90,00,679     0.04s       solved        No        0.74s
-(4, 3)    True    89,07,015     89,78,839     0.05s       solved        No        0.81s
-(5, 4)    True    89,07,015     88,49,511     0.05s       solved        Yes       0.88s
+(8, 13)   True    88,49,371     90,87,594     0.11s       solved        No        0.31s
+(19, 14)  True    88,49,371     89,37,639     0.04s       solved        No        0.37s
+(6, 1)    True    88,49,371     88,32,891     0.09s       solved        Yes       0.47s
 
-visited_nodes: [13, 14, 3, 4]
+visited_nodes: [13, 14, 1]
 
 **********************************************************************************************
 Iteration : 2 
 
-self.sorted_nodes: [1, 5, 12, 15, 11] 
+self.sorted_nodes: [3, 4, 12, 15, 6, 11] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(2, 1)    True    88,49,511     89,00,985     0.05s       solved        No        0.95s
-(4, 5)    True    88,49,511     88,27,702     0.03s       solved        Yes       1.0s
-
-visited_nodes: [13, 14, 3, 4, 1, 5]
-
-**********************************************************************************************
-Iteration : 3 
-
-self.sorted_nodes: [12, 15, 11] 
-
-Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(7, 12)   True    88,27,702     91,05,472     0.11s       solved        No        1.12s
-(11, 15)  True    88,27,702     89,22,189     0.05s       solved        No        1.18s
-(6, 11)   True    88,27,702     90,15,509     0.09s       solved        No        1.29s
+(2, 3)    True    88,32,891     88,41,108     0.03s       solved        No        0.51s
+(5, 4)    True    88,32,891     91,17,007     0.06s       solved        No        0.58s
+(7, 12)   True    88,32,891     90,69,604     0.07s       solved        No        0.67s
+(11, 15)  True    88,32,891     89,04,291     0.05s       solved        No        0.73s
+(1, 6)    True    88,32,891     88,46,818     0.04s       solved        No        0.78s
+(6, 11)   True    88,32,891     90,17,773     0.12s       solved        No        0.91s
 
 **********************************Final best results******************************************
 
 Water Network: d5_Taichung_input
-con2_1,6: 0.00000002
+con2_1,6: 0.00000000
 con2_2,1: 0.00000000
-con2_3,2: 0.00000000
-con2_4,3: 0.00000000
+con2_3,2: 0.00000002
+con2_4,3: 0.00000014
 con2_4,5: 0.00000000
 con2_6,11: 0.00000000
 con2_7,2: 0.00000000
@@ -77,9 +68,9 @@ con2_18,17: 0.00000000
 con2_19,18: 0.00000000
 con2_19,20: 0.00000000
 con2_20,10: 0.00000000
-Final best objective: 8827701.713692088
+Final best objective: 8832891.417341271
 Number of nlp problem solved: 10
-Total number of iteration: 3
-Solver_time: 1.14 seconds
-Heuristic elapsed time: 1.29 seconds
+Total number of iteration: 2
+Solver_time: 0.78 seconds
+Heuristic elapsed time: 0.91 seconds
 

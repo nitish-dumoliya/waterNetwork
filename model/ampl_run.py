@@ -2,8 +2,7 @@ import sys
 from amplpy import AMPL
 ampl = AMPL()
 
-            
-ipopt_run = 0
+ipopt_run = 1
 
 if ipopt_run == 1:
             ampl.read(sys.argv[1])
@@ -92,6 +91,7 @@ nodes = ampl.getSet('nodes')
 source = ampl.getSet('Source')
 arcs = ampl.getSet('arcs')
 pipes = ampl.getSet('pipes')
+
 L = ampl.getParameter('L').to_dict()
 D = ampl.getParameter('D').to_dict()
 C = ampl.getParameter('C').to_dict()
@@ -100,6 +100,7 @@ R = ampl.getParameter('R').to_dict()
 E = ampl.getParameter('E').to_dict()
 d = ampl.getParameter('d').to_dict()
 eps = ampl.getParameter('eps').getValues().to_list()[0]
+
 constraint_relative_gap(q, h, l, R, d, pipes, eps)
 
 solve_time = ampl.get_value('_solve_elapsed_time')
