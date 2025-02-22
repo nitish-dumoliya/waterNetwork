@@ -1,0 +1,64 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+total_cost: 0.0 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 171743.
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           4.61    15MB     166436.         171743.       64.96%
+*         3          10.87    18MB     166436.         171724.       64.98%
+        189          40.88    18MB     166436.         171724.       64.98%
+       1211          70.88    18MB     166436.         171724.       64.98%
+       1851         101.12    18MB     166436.         171724.       64.98%
+       2601         131.14    18MB     166436.         171724.       64.98%
+       3262         161.17    18MB     166436.         171724.       64.98%
+       4407         191.17    18MB     166436.         171724.       64.98%
+       6080         221.21    18MB     166436.         171724.       64.98%
+       6458         251.24    18MB     166436.         171724.       64.98%
+       6846         281.25    18MB     166436.         171724.       64.98%
+       9024         311.25    18MB     166436.         171724.       64.98%
+      11965         341.31    18MB     166436.         171724.       64.98%
+      12694         371.31    18MB     166436.         171724.       64.98%
+      13198         401.38    18MB     166436.         171724.       64.98%
+      13395         431.39    18MB     166436.         171724.       64.98%
+      13556         461.67    18MB     166436.         171724.       64.98%
+      13599+        491.85    18MB     166436.         171724.       64.98%
+      13651         521.92    18MB     166436.         171724.       64.98%
+      13713         551.93    18MB     166436.         171724.       64.98%
+      13848         582.03    18MB     166436.         171724.       64.98%
+      14002         612.06    18MB     166436.         171724.       64.98%
+      14316+        642.08    18MB     166436.         171724.       64.98%
+      14409+        672.13    18MB     166436.         171724.       64.98%
+      14482+        702.24    18MB     166436.         171724.       64.98%

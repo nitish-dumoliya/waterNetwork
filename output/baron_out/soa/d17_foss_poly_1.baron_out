@@ -1,0 +1,214 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+total_cost: 0.0 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 21042.0
+ Solving bounding LP
+ Starting multi-start local search
+constraint _scon[24]: Initial function value too large = 7.7E+12
+constraint _scon[25]: Initial function value too large = 1.0E+13
+constraint _scon[26]: Initial function value too large = 7.6E+12
+constraint _scon[27]: Initial function value too large = 2.7E+13
+constraint _scon[30]: Initial function value too large = 7.5E+12
+constraint _scon[31]: Initial function value too large = 2.6E+12
+constraint _scon[32]: Initial function value too large = 9.7E+11
+constraint _scon[34]: Initial function value too large = 1.4E+12
+constraint _scon[35]: Initial function value too large = 1.1E+13
+constraint _scon[36]: Initial function value too large = 1.1E+13
+constraint _scon[24]: Initial function value too large = 3.5E+12
+constraint _scon[25]: Initial function value too large = 4.2E+12
+constraint _scon[26]: Initial function value too large = 8.7E+12
+constraint _scon[27]: Initial function value too large = 1.8E+13
+constraint _scon[30]: Initial function value too large = 3.9E+12
+constraint _scon[31]: Initial function value too large = 8.3E+12
+constraint _scon[32]: Initial function value too large = 1.1E+12
+constraint _scon[33]: Initial function value too large = 3.0E+12
+constraint _scon[34]: Initial function value too large = 2.0E+12
+constraint _scon[35]: Initial function value too large = 8.8E+12
+constraint _scon[24]: Initial function value too large = 3.6E+12
+constraint _scon[25]: Initial function value too large = 4.2E+12
+constraint _scon[26]: Initial function value too large = 9.3E+12
+constraint _scon[27]: Initial function value too large = 1.8E+13
+constraint _scon[30]: Initial function value too large = 4.2E+12
+constraint _scon[31]: Initial function value too large = 8.1E+12
+constraint _scon[32]: Initial function value too large = 1.1E+12
+constraint _scon[33]: Initial function value too large = 2.7E+12
+constraint _scon[34]: Initial function value too large = 2.3E+12
+constraint _scon[35]: Initial function value too large = 9.1E+12
+constraint _scon[24]: Initial function value too large = 3.3E+12
+constraint _scon[25]: Initial function value too large = 3.9E+12
+constraint _scon[26]: Initial function value too large = 9.5E+12
+constraint _scon[27]: Initial function value too large = 1.8E+13
+constraint _scon[30]: Initial function value too large = 3.8E+12
+constraint _scon[31]: Initial function value too large = 8.0E+12
+constraint _scon[32]: Initial function value too large = 1.0E+12
+constraint _scon[33]: Initial function value too large = 2.8E+12
+constraint _scon[34]: Initial function value too large = 1.8E+12
+constraint _scon[35]: Initial function value too large = 8.9E+12
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+constraint _scon[24]: Initial function value too large = 3.5E+12
+constraint _scon[25]: Initial function value too large = 1.4E+12
+constraint _scon[26]: Initial function value too large = 4.9E+12
+constraint _scon[27]: Initial function value too large = 1.6E+13
+constraint _scon[28]: Initial function value too large = 1.5E+12
+constraint _scon[29]: Initial function value too large = 4.4E+12
+constraint _scon[30]: Initial function value too large = 4.2E+12
+constraint _scon[31]: Initial function value too large = 2.0E+12
+constraint _scon[32]: Initial function value too large = 9.0E+11
+constraint _scon[33]: Initial function value too large = 1.3E+11
+          1           3.52    16MB     3195.72         21042.0        NA
+constraint _scon[24]: Initial function value too large = 2.6E+12
+constraint _scon[25]: Initial function value too large = 3.5E+12
+constraint _scon[26]: Initial function value too large = 7.7E+12
+constraint _scon[27]: Initial function value too large = 1.5E+13
+constraint _scon[30]: Initial function value too large = 2.5E+12
+constraint _scon[31]: Initial function value too large = 6.2E+12
+constraint _scon[32]: Initial function value too large = 6.8E+11
+constraint _scon[33]: Initial function value too large = 2.1E+12
+constraint _scon[34]: Initial function value too large = 1.6E+12
+constraint _scon[35]: Initial function value too large = 6.9E+12
+constraint _scon[24]: Initial function value too large = 4.3E+11
+constraint _scon[26]: Initial function value too large = 3.8E+12
+constraint _scon[27]: Initial function value too large = 1.8E+12
+constraint _scon[28]: Initial function value too large = 1.3E+11
+constraint _scon[29]: Initial function value too large = 5.3E+10
+constraint _scon[30]: Initial function value too large = 3.3E+10
+constraint _scon[31]: Initial function value too large = 1.6E+12
+constraint _scon[32]: Initial function value too large = 3.7E+11
+constraint _scon[33]: Initial function value too large = 1.2E+12
+constraint _scon[34]: Initial function value too large = 9.1E+11
+constraint _scon[24]: Initial function value too large = 2.8E+12
+constraint _scon[25]: Initial function value too large = 3.2E+12
+constraint _scon[26]: Initial function value too large = 7.4E+12
+constraint _scon[27]: Initial function value too large = 1.6E+13
+constraint _scon[30]: Initial function value too large = 2.5E+12
+constraint _scon[31]: Initial function value too large = 6.1E+12
+constraint _scon[32]: Initial function value too large = 7.5E+11
+constraint _scon[33]: Initial function value too large = 2.2E+12
+constraint _scon[34]: Initial function value too large = 1.6E+12
+constraint _scon[35]: Initial function value too large = 7.2E+12
+constraint _scon[26]: Initial function value too large = 1.5E+12
+constraint _scon[27]: Initial function value too large = 1.1E+12
+constraint _scon[28]: Initial function value too large = 1.3E+12
+constraint _scon[29]: Initial function value too large = 3.8E+11
+constraint _scon[30]: Initial function value too large = 4.2E+11
+constraint _scon[31]: Initial function value too large = 1.8E+12
+constraint _scon[33]: Initial function value too large = 6.2E+11
+constraint _scon[34]: Initial function value too large = 2.0E+11
+constraint _scon[35]: Initial function value too large = 1.4E+11
+constraint _scon[36]: Initial function value too large = 1.6E+12
+constraint _scon[24]: Initial function value too large = 2.3E+12
+constraint _scon[25]: Initial function value too large = 1.9E+12
+constraint _scon[26]: Initial function value too large = 2.8E+12
+constraint _scon[27]: Initial function value too large = 1.2E+13
+constraint _scon[30]: Initial function value too large = 1.7E+12
+constraint _scon[31]: Initial function value too large = 2.4E+12
+constraint _scon[32]: Initial function value too large = 5.0E+11
+constraint _scon[33]: Initial function value too large = 1.6E+12
+constraint _scon[34]: Initial function value too large = 6.1E+11
+constraint _scon[35]: Initial function value too large = 5.6E+12
+constraint _scon[24]: Initial function value too large = 4.7E+10
+constraint _scon[25]: Initial function value too large = 3.9E+10
+constraint _scon[26]: Initial function value too large = 2.0E+12
+constraint _scon[27]: Initial function value too large = 4.5E+12
+constraint _scon[28]: Initial function value too large = 3.6E+11
+constraint _scon[31]: Initial function value too large = 1.8E+12
+constraint _scon[32]: Initial function value too large = 1.7E+11
+constraint _scon[33]: Initial function value too large = 1.5E+12
+constraint _scon[34]: Initial function value too large = 4.9E+11
+constraint _scon[35]: Initial function value too large = 1.4E+12
+         76          33.53    24MB     3195.72         21042.0        0.10%
+*        89          37.62    24MB     3195.72         20481.9        0.14%
+constraint _scon[27]: Initial function value too large = 4.1E+10
+constraint _scon[31]: Initial function value too large = 4.2E+10
+constraint _scon[46]: Initial function value too large = 7.4E+10
+constraint _scon[27]: Initial function value too large = 3.7E+10
+constraint _scon[31]: Initial function value too large = 1.9E+10
+constraint _scon[27]: Initial function value too large = 3.8E+10
+       1207          69.66    24MB     3195.72         20481.9        0.40%
+constraint _scon[24]: Initial function value too large = 7.6E+11
+constraint _scon[25]: Initial function value too large = 5.4E+10
+constraint _scon[26]: Initial function value too large = 9.3E+11
+constraint _scon[27]: Initial function value too large = 3.0E+11
+constraint _scon[28]: Initial function value too large = 1.3E+11
+constraint _scon[29]: Initial function value too large = 6.1E+11
+constraint _scon[30]: Initial function value too large = 8.4E+11
+constraint _scon[31]: Initial function value too large = 1.3E+12
+constraint _scon[33]: Initial function value too large = 7.1E+11
+constraint _scon[34]: Initial function value too large = 2.3E+11
+constraint _scon[24]: Initial function value too large = 2.3E+12
+constraint _scon[25]: Initial function value too large = 3.1E+12
+constraint _scon[26]: Initial function value too large = 2.2E+12
+constraint _scon[27]: Initial function value too large = 8.8E+12
+constraint _scon[30]: Initial function value too large = 1.9E+12
+constraint _scon[31]: Initial function value too large = 5.2E+12
+constraint _scon[32]: Initial function value too large = 5.3E+11
+constraint _scon[33]: Initial function value too large = 1.8E+12
+constraint _scon[34]: Initial function value too large = 5.8E+11
+constraint _scon[35]: Initial function value too large = 4.1E+12
+constraint _scon[57]: Initial function value too large = 2.8E+11
+       2430          99.67    34MB     3195.72         20481.9        0.54%
+       4067         129.67    34MB     3195.72         20481.9        0.62%
+       6401         159.69    44MB     3195.72         20481.9        0.63%
+constraint _scon[24]: Initial function value too large = 2.9E+12
+constraint _scon[25]: Initial function value too large = 3.4E+12
+constraint _scon[26]: Initial function value too large = 5.0E+12
+constraint _scon[27]: Initial function value too large = 1.3E+13
+constraint _scon[30]: Initial function value too large = 1.6E+12
+constraint _scon[31]: Initial function value too large = 6.2E+12
+constraint _scon[32]: Initial function value too large = 7.3E+11
+constraint _scon[33]: Initial function value too large = 2.2E+12
+constraint _scon[34]: Initial function value too large = 8.4E+11
+constraint _scon[35]: Initial function value too large = 5.8E+12
+       8730         189.70    44MB     3195.72         20481.9        0.64%
+constraint _scon[40]: Initial function value too large = 4.4E+10
+      10451         219.74    54MB     3195.72         20481.9        0.66%
+      11695         249.75    54MB     3195.72         20481.9        0.70%
+      12886         279.78    63MB     3195.72         20481.9        0.74%
+      14081         309.78    73MB     3195.72         20481.9        0.76%
+      15151         339.80    83MB     3195.72         20481.9        0.79%
+      16370         369.81    83MB     3195.72         20481.9        0.80%
+      17532         399.84    93MB     3195.72         20481.9        0.82%
+      18435         429.84   102MB     3195.72         20481.9        0.84%
+      19497         459.84   112MB     3195.72         20481.9        0.85%
+      21210         489.87   112MB     3195.72         20481.9        0.86%
+      22502         519.87   122MB     3195.72         20481.9        0.87%
+      23743         549.90   132MB     3195.72         20481.9        0.88%
+      24658         579.90   132MB     3195.72         20481.9        0.90%
+      25620         609.91   141MB     3195.72         20481.9        0.91%
+      26559         639.95   151MB     3195.72         20481.9        0.92%
+      27388         669.95   161MB     3195.72         20481.9        0.94%
+      28812         699.95   171MB     3195.72         20481.9        0.95%
+      29918         730.00   180MB     3195.72         20481.9        0.96%
+      31019         760.05   180MB     3195.72         20481.9        0.97%

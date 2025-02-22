@@ -1,0 +1,222 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 14896324.037059313 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 0.148963E+08
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.44    12MB    0.131729E+08    0.148963E+08    NA
+         29           2.26    12MB    0.148963E+08    0.148963E+08  100.00%
+
+                         *** Normal completion ***            
+
+ Wall clock time:                     2.26
+ Total CPU time used:                 2.17
+
+ Total no. of BaR iterations:      29
+ Best solution found at node:       6
+ Max. no. of nodes in memory:       4
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 29 iterations, optimal within tolerances.
+Objective 14896325.22
+eps: 1e-06
+con2_2,4: -0.00000000
+con2_2,6: -0.00000007
+con2_3,7: -0.00000000
+con2_3,10: -0.00000000
+con2_4,6: -0.00000003
+con2_4,11: -0.00000001
+con2_8,9: -0.00000000
+con2_9,3: -0.00000000
+con2_10,2: -0.00000000
+con2_11,1: -0.00000001
+l [2,*,*] (tr)
+:       4        6      :=
+0       0       3491
+1       0          0
+2       0          0
+3       0          0
+4    1475.81       0
+5     966.186      0
+6       0          0
+7       0          0
+8       0          0
+9       0          0
+10      0          0
+11      0          0
+12      0          0
+
+ [3,*,*] (tr)
+:       7      10     :=
+0       0        0
+1       0        0
+2       0        0
+3    4346.51     0
+4    2998.49     0
+5       0        0
+6       0      924
+7       0        0
+8       0        0
+9       0        0
+10      0        0
+11      0        0
+12      0        0
+
+ [4,*,*] (tr)
+:     6    11     :=
+0    318     0
+1      0     0
+2      0     0
+3      0   485
+4      0     0
+5      0     0
+6      0     0
+7      0     0
+8      0     0
+9      0     0
+10     0     0
+11     0     0
+12     0     0
+
+ [8,*,*] (tr)
+:       9        :=
+0       0
+1       0
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8     914.215
+9    1771.79
+10      0
+11      0
+12      0
+
+ [9,*,*] (tr)
+:       3       :=
+0       0
+1       0
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8    1697.45
+9     245.55
+10      0
+11      0
+12      0
+
+ [10,*,*] (tr)
+:     2      :=
+0       0
+1       0
+2       0
+3       0
+4       0
+5    4808
+6       0
+7       0
+8       0
+9       0
+10      0
+11      0
+12      0
+
+ [11,*,*] (tr)
+:       1        :=
+0       0
+1     793.818
+2    3472.18
+3       0
+4       0
+5       0
+6       0
+7       0
+8       0
+9       0
+10      0
+11      0
+12      0
+;
+
+q :=
+2  4     9.90908
+2  6     1.39092
+3  7     5.2
+3  10   12.9
+4  6     2.20908
+4  11    4.2
+8  9    24.9
+9  3    24.9
+10 2    12.9
+11 1     4.2
+;
+
+h [*] :=
+ 1  449
+ 2  491.188
+ 3  518.489
+ 4  480.014
+ 6  476.961
+ 7  500
+ 8  530
+ 9  524.126
+10  516
+11  479
+;
+
+total_cost: 14896325.218100606
+solve_time: 2.3323650000000002

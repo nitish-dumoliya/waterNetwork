@@ -1,0 +1,152 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 6142802.6508728005 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.614280E+07      
+ Preprocessing found feasible solution with value 0.614280E+07
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 0.606105E+07
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.60    12MB    0.210133E+07    0.606105E+07    NA
+*         2           0.64    13MB    0.210133E+07    0.605942E+07    0.00%
+*         7           2.20    13MB    0.210133E+07    0.605594E+07    0.27%
+
+/opt/ampl/conopt: bad bound triple 226 in bounds file "boundsfile.11":
+	L = 30
+	x = 3827390265576.907
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 226 in bounds file "boundsfile.13":
+	L = 30
+	x = 3827390265580.747
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 226 in bounds file "boundsfile.15":
+	L = 30
+	x = 3827390265732.7085
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+*        89          10.71    13MB    0.210133E+07    0.605594E+07    1.27%
+
+/opt/ampl/conopt: bad bound triple 226 in bounds file "boundsfile.19":
+	L = 30
+	x = 3827390265584.705
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 226 in bounds file "boundsfile.21":
+	L = 30
+	x = 3827390265576.9634
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+       3615          40.73    13MB    0.325370E+07    0.605594E+07   11.02%
+       7184          70.73    13MB    0.363039E+07    0.605594E+07   14.00%
+      10558         100.73    22MB    0.367855E+07    0.605594E+07   16.27%
+      14372         130.74    22MB    0.369666E+07    0.605594E+07   17.37%
+      17344         160.74    32MB    0.371466E+07    0.605594E+07   17.95%
+      21589         190.75    32MB    0.371568E+07    0.605594E+07   18.09%
+      25942         220.75    32MB    0.371599E+07    0.605594E+07   18.20%
+      28837         250.75    42MB    0.371725E+07    0.605594E+07   18.50%
+      31611         280.76    52MB    0.371838E+07    0.605594E+07   18.70%
+      32176         350.01    52MB    0.371965E+07    0.605594E+07   18.76%
+      34578         380.01    62MB    0.372132E+07    0.605594E+07   18.91%
+      34953        3639.18    62MB    0.372136E+07    0.605594E+07   18.94%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3639.18
+ Total CPU time used:              3638.91
+
+ Total no. of BaR iterations:   34953
+ Best solution found at node:     114
+ Max. no. of nodes in memory:    3929
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 34953 iterations, CPU time limit reached.
+Objective 6055935.812
+con2_1,2: -0.00000000
+con2_2,3: -0.00000000
+con2_3,4: -0.00000000
+con2_3,19: -0.00000000
+con2_3,20: -0.00000000
+con2_4,5: -0.00000000
+con2_5,6: -0.00000000
+con2_6,7: -0.00000000
+con2_7,8: -0.00000000
+con2_8,9: -0.00000000
+con2_9,10: -0.00000000
+con2_10,11: -0.00000000
+con2_10,14: -0.00000000
+con2_11,12: -0.00000000
+con2_12,13: -0.00000000
+con2_14,15: -0.00000000
+con2_15,16: -0.00000000
+con2_16,27: -0.00000000
+con2_17,16: -0.00000000
+con2_18,17: -0.00000000
+con2_19,18: -0.00000000
+con2_20,21: -0.00000000
+con2_20,23: -0.00000000
+con2_21,22: -0.00000000
+con2_23,24: -0.00000000
+con2_23,28: -0.00000000
+con2_24,25: -0.00000000
+con2_25,32: -0.00000000
+con2_26,25: -0.00000000
+con2_27,26: -0.00000000
+con2_28,29: -0.00000000
+con2_29,30: -0.00000000
+con2_30,31: -0.00000000
+con2_32,31: -0.00000000
+total_cost: 6055935.811888074
+solve_time: 3639.2221520000003

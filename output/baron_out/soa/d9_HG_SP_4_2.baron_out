@@ -1,0 +1,112 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 8944723.250547903 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.894472E+07      
+ Doing local search
+ Preprocessing found feasible solution with value 0.892052E+07
+ Solving bounding LP
+ Starting multi-start local search
+objective _sobj[1]: Initial function value too large = 2.7E+10
+objective _sobj[1]: Initial function value too large = 2.7E+10
+objective _sobj[1]: Initial function value too large = 2.7E+10
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1          14.66    22MB    0.134197E+07    0.892052E+07    0.00%
+          5          52.75    51MB    0.134197E+07    0.892052E+07    0.00%
+objective _sobj[1]: Initial function value too large = 2.2E+10
+objective _sobj[1]: Initial function value too large = 2.3E+10
+         30          82.87    51MB    0.134197E+07    0.892052E+07    0.00%
+         31         187.91    51MB    0.134197E+07    0.892052E+07    0.00%
+objective _sobj[1]: Initial function value too large = 2.1E+10
+         55         218.00    51MB    0.134197E+07    0.892052E+07    0.01%
+         96         249.17    51MB    0.134197E+07    0.892052E+07    0.01%
+        129         300.34    51MB    0.134197E+07    0.892052E+07    0.01%
+        201         330.57    51MB    0.134197E+07    0.892052E+07    0.03%
+        304         360.63    51MB    0.134197E+07    0.892052E+07    0.03%
+        401         390.67    51MB    0.134197E+07    0.892052E+07    0.03%
+        544         420.97    51MB    0.134197E+07    0.892052E+07    0.04%
+        677         450.99    51MB    0.134197E+07    0.892052E+07    0.06%
+        785         481.73    51MB    0.134197E+07    0.892052E+07    0.07%
+        822         512.83    51MB    0.134197E+07    0.892052E+07    0.07%
+        865         543.28    61MB    0.134197E+07    0.892052E+07    0.07%
+        914         573.63    61MB    0.134197E+07    0.892052E+07    0.07%
+        993         603.68    61MB    0.134197E+07    0.892052E+07    0.09%
+       1043         634.03    61MB    0.134197E+07    0.892052E+07    0.10%
+       1070         664.61    61MB    0.134197E+07    0.892052E+07    0.10%
+       1111         695.34    61MB    0.134197E+07    0.892052E+07    0.10%
+       1179         726.30    71MB    0.134197E+07    0.892052E+07    0.10%
+       1218         757.03    71MB    0.134197E+07    0.892052E+07    0.10%
+       1284         787.39    71MB    0.134197E+07    0.892052E+07    0.10%
+       1357         817.51    71MB    0.134197E+07    0.892052E+07    0.10%
+       1424         847.87    71MB    0.134197E+07    0.892052E+07    0.11%
+       1459         878.36    71MB    0.134197E+07    0.892052E+07    0.11%
+       1496         908.44    71MB    0.134197E+07    0.892052E+07    0.11%
+       1537         938.68    71MB    0.134197E+07    0.892052E+07    0.11%
+       1614         969.30    81MB    0.134197E+07    0.892052E+07    0.11%
+       1711        1000.17    81MB    0.134197E+07    0.892052E+07    0.12%
+       1778        1030.31    81MB    0.134197E+07    0.892052E+07    0.12%
+       1850        1060.80    81MB    0.134197E+07    0.892052E+07    0.12%
+       1938        1091.10    81MB    0.134197E+07    0.892052E+07    0.12%
+       2038        1121.38    81MB    0.134197E+07    0.892052E+07    0.12%
+       2138        1151.53    81MB    0.134197E+07    0.892052E+07    0.12%
+       2186        1181.99    81MB    0.134197E+07    0.892052E+07    0.12%
+       2296        1212.64    81MB    0.134197E+07    0.892052E+07    0.12%
+       2423        1243.42    81MB    0.134197E+07    0.892052E+07    0.13%
+       2484        1273.96    81MB    0.134197E+07    0.892052E+07    0.13%
+       2556        1304.30    81MB    0.134197E+07    0.892052E+07    0.13%
+       2640        1334.53    81MB    0.134197E+07    0.892052E+07    0.13%
+       2724        1364.71    81MB    0.134197E+07    0.892052E+07    0.13%
+       2748        1396.21    81MB    0.134197E+07    0.892052E+07    0.13%
+       2754        1426.61    81MB    0.134197E+07    0.892052E+07    0.13%
+       2760        1468.30    81MB    0.134197E+07    0.892052E+07    0.13%
+       2764        1513.31    81MB    0.134197E+07    0.892052E+07    0.13%
+       2769        1551.62    81MB    0.134197E+07    0.892052E+07    0.13%
+       2815        1583.31    81MB    0.134197E+07    0.892052E+07    0.13%
+       2833        1618.66    81MB    0.134197E+07    0.892052E+07    0.13%
+       2838        1656.94    81MB    0.134197E+07    0.892052E+07    0.13%
+       2840        1692.23    81MB    0.134197E+07    0.892052E+07    0.13%
+       2845        1727.19    81MB    0.134197E+07    0.892052E+07    0.13%
+       2850        1767.55    81MB    0.134197E+07    0.892052E+07    0.13%

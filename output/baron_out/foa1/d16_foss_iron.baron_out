@@ -1,0 +1,125 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+total_cost: 0.0 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 171743.
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+*         1           1.46    14MB     166436.         171724.       64.98%
+          1           1.94    14MB     166436.         171724.       64.98%
+        330          31.97    17MB     166436.         171724.       64.98%
+       1307          62.00    17MB     166436.         171724.       64.98%
+       2298          92.00    17MB     166436.         171724.       64.98%
+       3205         122.06    17MB     166436.         171724.       64.98%
+       4291         152.07    17MB     166436.         171724.       64.98%
+       5443         182.08    17MB     166436.         171724.       64.98%
+       6627         212.11    17MB     166436.         171724.       64.98%
+       6789        3613.42    17MB     166436.         171724.       64.98%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3613.42
+ Total CPU time used:              3611.74
+
+ Total no. of BaR iterations:    6789
+ Best solution found at node:     380
+ Max. no. of nodes in memory:      85
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 6789 iterations, CPU time limit reached.
+Objective 171724.3327
+con2_1,17: -0.00000000
+con2_1,31: -0.00000000
+con2_2,3: -0.00000002
+con2_2,18: -0.00000003
+con2_3,4: -0.00000002
+con2_3,11: -0.00000005
+con2_4,5: -0.00000026
+con2_5,6: -0.00000089
+con2_5,13: -0.00000383
+con2_6,7: -0.00000007
+con2_7,24: -0.00000009
+con2_8,28: -0.00000001
+con2_9,36: -0.00000001
+con2_10,11: -0.00000000
+con2_10,32: -0.00000001
+con2_11,19: -0.00000001
+con2_11,26: -0.00000001
+con2_12,4: -0.00000016
+con2_12,13: -0.00000025
+con2_13,14: -0.00000022
+con2_14,20: -0.00000005
+con2_14,21: -0.00018462
+con2_15,16: -0.00000002
+con2_15,22: -0.00000003
+con2_16,25: -0.00000001
+con2_16,29: -0.00000001
+con2_17,2: -0.00000003
+con2_17,18: -0.00000003
+con2_18,10: -0.00000002
+con2_19,12: -0.00000010
+con2_19,20: -0.00000043
+con2_20,15: -0.00000002
+con2_21,6: -0.00000446
+con2_21,22: -0.00000006
+con2_22,7: -0.00000052
+con2_22,23: -0.00000007
+con2_23,25: -0.00000002
+con2_24,8: -0.00000003
+con2_24,23: -0.00051472
+con2_25,8: -0.00000021
+con2_26,15: -0.00000001
+con2_26,27: -0.00000003
+con2_27,16: -0.00000001
+con2_28,9: -0.00000002
+con2_28,29: -0.00000003
+con2_29,30: -0.00000002
+con2_29,33: -0.00000001
+con2_30,9: -0.00000412
+con2_30,35: -0.00000001
+con2_31,10: -0.00000000
+con2_31,34: -0.00000000
+con2_32,27: -0.00000000
+con2_32,33: -0.00000000
+con2_33,34: -0.00000000
+con2_34,35: -0.00000001
+con2_35,36: -0.00000024
+con2_36,1: -0.00000001
+con2_37,1: -0.00000000
+total_cost: 171724.3326804901
+solve_time: 3613.457712

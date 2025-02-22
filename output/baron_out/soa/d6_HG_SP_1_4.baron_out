@@ -1,0 +1,116 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 3596111.04122253 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.359611E+07      
+ Doing local search
+ Preprocessing found feasible solution with value 0.355359E+07
+ Solving bounding LP
+ Starting multi-start local search
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+          1           8.88    16MB     786997.        0.355359E+07    0.00%
+*         2          10.25    17MB     786997.        0.355359E+07    0.00%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+         22          41.93    25MB     786997.        0.355359E+07    0.00%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+
+/opt/ampl/conopt: bad bound triple 1208 in bounds file "boundsfile.11":
+	L = 20
+	x = 1024262792953.7866
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+        179          71.97    25MB     786997.        0.355359E+07    0.80%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+        379         102.00    25MB     786997.        0.355359E+07    0.97%
+        692         132.02    34MB     786997.        0.355359E+07    1.26%
+        991         162.12    34MB     786997.        0.355359E+07    1.43%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       1319         192.19    44MB     786997.        0.355359E+07    1.64%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       1581         222.27    44MB     786997.        0.355359E+07    1.68%
+       1891         252.28    54MB     786997.        0.355359E+07    1.83%
+       2183         282.45    54MB     786997.        0.355359E+07    1.88%
+       2480         312.46    64MB     786997.        0.355359E+07    1.94%
+       2776         342.48    64MB     786997.        0.355359E+07    2.00%
+       3011         372.49    64MB     786997.        0.355359E+07    2.02%
+       3350         402.49    73MB     786997.        0.355359E+07    2.06%
+       3729         432.51    73MB     786997.        0.355359E+07    2.11%
+       4089         462.58    83MB     786997.        0.355359E+07    2.18%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       4452         494.64    93MB     786997.        0.355359E+07    2.26%
+       4803         524.81    93MB     786997.        0.355359E+07    2.29%
+       5084         554.84    93MB     786997.        0.355359E+07    2.33%
+       5427         584.91   103MB     786997.        0.355359E+07    2.37%
+       5721         615.03   103MB     786997.        0.355359E+07    2.42%
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[1205]: Variable considered fixed at Lower Bound and Initial value is moved.
+       6028         645.06   112MB     786997.        0.355359E+07    2.47%
+       6368         675.07   112MB     786997.        0.355359E+07    2.50%
+       6693         705.12   122MB     786997.        0.355359E+07    2.52%
+       7044         735.20   122MB     786997.        0.355359E+07    2.55%
+       7333         765.21   132MB     786997.        0.355359E+07    2.57%
+       7634         795.29   132MB     786997.        0.355359E+07    2.59%
+       7954         825.31   141MB     786997.        0.355359E+07    2.61%
+       8282         855.43   141MB     786997.        0.355359E+07    2.64%
+       8619         885.48   151MB     786997.        0.355359E+07    2.66%
+       8963         915.49   151MB     786997.        0.355359E+07    2.69%
+       9306         945.61   161MB     786997.        0.355359E+07    2.72%
+       9632         975.63   161MB     786997.        0.355359E+07    2.74%
+       9939        1005.66   171MB     786997.        0.355359E+07    2.76%
+      10268        1035.67   171MB     786997.        0.355359E+07    2.78%
+      10593        1065.72   180MB     786997.        0.355359E+07    2.80%
+      10899        1095.74   180MB     786997.        0.355359E+07    2.82%

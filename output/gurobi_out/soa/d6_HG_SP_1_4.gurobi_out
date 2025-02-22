@@ -1,0 +1,169 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 3676905.228787117 
+
+*******************************************************************************
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+  alg:basis = 1
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 263 rows, 2297 columns and 1832 nonzeros
+Model fingerprint: 0x715f0f71
+Model has 85 simple general constraints
+  85 ABS
+Model has 85 general nonlinear constraints (7140 nonlinear terms)
+Variable types: 2297 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [5e-11, 2e+01]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [9e-07, 9e+04]
+  RHS range        [2e-03, 5e+02]
+
+User MIP start did not produce a new incumbent solution
+
+Presolve model has 85 nlconstr
+Added 2975 variables to disaggregate expressions.
+Presolve added 305 rows and 0 columns
+Presolve removed 0 rows and 587 columns
+Presolve time: 0.05s
+Presolved: 8473 rows, 4686 columns, 22502 nonzeros
+Presolved model has 1275 bilinear constraint(s)
+Presolved model has 255 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 4606 continuous, 80 integer (80 binary)
+Concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Solved with primal simplex
+
+Root relaxation: objective 7.869968e+05, 5072 iterations, 0.24 seconds (0.06 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 786996.780    0  498          - 786996.780      -     -    1s
+     0     0 786996.780    0  504          - 786996.780      -     -    1s
+     0     0 786996.780    0  504          - 786996.780      -     -    1s
+     0     0 786996.780    0  503          - 786996.780      -     -    1s
+     0     0 786996.780    0  512          - 786996.780      -     -    2s
+     0     0 786996.780    0  536          - 786996.780      -     -    3s
+     0     0 786996.780    0  534          - 786996.780      -     -    3s
+     0     0 786996.780    0  515          - 786996.780      -     -    4s
+     0     0 786996.780    0  529          - 786996.780      -     -    4s
+     0     0 786996.780    0  520          - 786996.780      -     -    6s
+     0     0 786996.780    0  555          - 786996.780      -     -    6s
+     0     0 786996.780    0  512          - 786996.780      -     -    7s
+     0     0 786996.780    0  522          - 786996.780      -     -    8s
+     0     2 786996.780    0  519          - 786996.780      -     -   11s
+    95   180 1097792.45    7  560          - 788980.813      -   580   15s
+   552   590 1097806.50   17  511          - 788980.813      -   303   20s
+   972   997 1330729.28   26  454          - 788980.813      -   327   26s
+  1406  1441 1548115.47   40  490          - 788980.813      -   341   65s
+  1484  1523 1548109.79   41  492          - 788980.813      -   337   73s
+  1567  1628 1509466.57   44  512          - 788980.813      -   332   77s
+  1672  1722 1526529.69   48  508          - 788980.813      -   325   84s
+  1775  1820 1518815.17   48  539          - 788980.813      -   319   86s
+  1986  2029 1522397.72   50  537          - 788980.813      -   311   90s
+  2254  2275 1786800.87   53  472          - 788980.813      -   296   95s
+  2750  2648 2040705.09   67  482          - 788980.813      -   273  101s
+  3300  2992 1097483.55    8  525          - 789302.681      -   257  107s
+  3643  3255 1176337.63   18  479          - 789787.904      -   259  111s
+  4053  3501 1119310.61   23  500          - 789787.904      -   256  116s
+  4522  3838 1139079.65   34  500          - 789787.904      -   252  122s
+  4986  4096 1191831.53   40  519          - 789787.904      -   252  128s
+  5137  4294 1191833.70   41  527          - 790176.452      -   253  132s
+  5383  4497 1259744.89   47  547          - 790176.452      -   256  135s
+  6035  4959 2184461.24   53  525          - 790998.746      -   252  142s
+  NLP heuristic elapsed time = 5.00s
+  NLP heuristic elapsed time = 10.03s
+  6344  4961 1388415.83   60   39          - 790998.746      -   251  156s
+  6345  4961 1255022.65   56    4          - 790998.746      -   251  160s
+  6352  4966 1269351.29   15   10          - 790998.746      -   250  166s
+  6353  4967 1834652.27   46    9          - 790998.746      -   250  174s
+  NLP heuristic elapsed time = 5.01s
+  6356  4970 1089138.59   23   39          - 790998.746      -   252  180s
+  6360  4972 1330729.27   23    4          - 790998.746      -   252  186s
+  6363  4974 1411895.41   18    6          - 790998.746      -   252  231s
+  NLP heuristic elapsed time = 5.01s
+  NLP heuristic elapsed time = 10.02s
+  6364  4975 1228906.71   46    6          - 790998.746      -   252  247s
+  6365  4979 793357.264   27  493          - 790998.746      -   253  296s
+  6379  5002 1123777.04   30  456          - 790998.746      -   253  301s
+  6459  5101 1348592.53   33  487          - 790998.746      -   254  306s
+  6645  5185 1904179.13   36  476          - 790998.746      -   251  310s
+  6957  5304 1348637.69   42  487          - 790998.746      -   250  339s
+  7048  5387 1348604.81   44  480          - 790998.746      -   250  341s
+  7404  5578 1348884.33   47  476          - 790998.746      -   248  345s
+  7795  5846 1349038.36   53  469          - 790998.746      -   245  350s
+  8287  6094 1359907.69   61  474          - 790998.746      -   241  355s
+  8775  6400 1385913.68   68  501          - 790998.746      -   242  361s
+  9257  6593 1468051.70   74  476          - 792393.928      -   240  367s
+  9558  6731 1474344.18   80  476          - 792393.928      -   241  371s
+  9921  6942 1512339.37   86  494          - 792393.928      -   240  375s
+ 10576  7205 1517930.91   93  494          - 793503.989      -   237  382s
+ 11056  7432 2349108.99   99  488          - 795198.181      -   236  386s
+ 11552  7631 795426.894   41  474          - 795198.181      -   235  391s
+ 12051  7947 839381.150   44  462          - 795198.542      -   235  396s
+ 12627  8198 1156626.17   49  450          - 795198.542      -   234  401s
+ 13257  8504 1097100.43   58  438          - 795198.542      -   234  407s
+ 13635  8682 1097106.00   69  437          - 795198.542      -   233  410s
+ 14370  9084 1201222.06   82  430          - 795198.542      -   231  417s
+ 14748  9232 1241126.18   87  446          - 795198.542      -   230  420s
+ 15470  9494 1276874.97   95  473          - 795198.542      -   231  426s

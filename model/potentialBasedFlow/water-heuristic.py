@@ -758,7 +758,7 @@ class WaterNetworkOptimizer:
             approx_value = approx_rhs
     
             # Compute relative gap
-            relative_gap = (original_value - approx_value) / (original_value + 1e-10)
+            relative_gap = 100*(original_value - approx_value) / (original_value + 1e-16)
             relative_gaps[f"con2_{i},{j}"] = relative_gap
     
         # Display relative gaps
@@ -1153,6 +1153,6 @@ if __name__ == "__main__":
     data_number = int(sys.argv[1]) -1
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
     print("Water Network:", data_list[(data_number)],"\n")
-    optimizer = WaterNetworkOptimizer("../m1Basic.mod", input_data_file, data_number, data_list)
+    optimizer = WaterNetworkOptimizer("../water-nlp2.mod", input_data_file, data_number, data_list)
     # optimizer = WaterNetworkOptimizer(sys.argv[1], sys.argv[2], sys.argv[3])
     optimizer.run()

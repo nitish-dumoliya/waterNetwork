@@ -1,0 +1,141 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+total_cost: 0.0 
+
+*******************************************************************************
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+  alg:basis = 1
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 152 rows, 1474 columns and 1053 nonzeros
+Model fingerprint: 0x9458fa4c
+Model has 57 simple general constraints
+  57 ABS
+Model has 57 general nonlinear constraints (5187 nonlinear terms)
+Variable types: 1474 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [3e-05, 2e+00]
+  Objective range  [2e+01, 2e+02]
+  Bounds range     [6e-08, 1e+03]
+  RHS range        [3e-01, 4e+02]
+
+User MIP start did not produce a new incumbent solution
+User MIP start violates constraint R0 by 33.420000000
+
+Presolve model has 57 nlconstr
+Added 2109 variables to disaggregate expressions.
+Presolve added 227 rows and 0 columns
+Presolve removed 0 rows and 343 columns
+Presolve time: 0.04s
+Presolved: 5965 rows, 3241 columns, 15759 nonzeros
+Presolved model has 912 bilinear constraint(s)
+Presolved model has 171 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 3184 continuous, 57 integer (57 binary)
+Concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Solved with dual simplex
+
+Root relaxation: objective 1.664360e+05, 1945 iterations, 0.29 seconds (0.06 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 166436.028    0  344          - 166436.028      -     -    1s
+     0     0 166436.028    0  344          - 166436.028      -     -    2s
+     0     0 166436.028    0  344          - 166436.028      -     -    2s
+     0     0 166436.028    0  343          - 166436.028      -     -    2s
+     0     0 166436.028    0  341          - 166436.028      -     -    2s
+     0     0 166436.028    0  344          - 166436.028      -     -    3s
+     0     0 166436.028    0  342          - 166436.028      -     -    3s
+     0     0 166436.028    0  342          - 166436.028      -     -    3s
+     0     0 166436.028    0  335          - 166436.028      -     -    3s
+     0     0 166436.028    0  320          - 166436.028      -     -    3s
+     0     0 166436.028    0  336          - 166436.028      -     -    3s
+     0     0 166436.028    0  332          - 166436.028      -     -    4s
+     0     2 166436.028    0  332          - 166436.028      -     -    9s
+     3     8 166436.028    2  271          - 166436.028      -   686   10s
+    95   198 166436.028    7  203          - 166436.028      -  1267   27s
+   198   518 166436.028    9  246          - 166436.028      -  1268   32s
+   526  1144 166436.028   14  251          - 166436.028      -   918   36s
+  1174  2001 166436.028   26  249          - 166436.028      -   717   42s
+  2059  3144 167472.477   40  234          - 166436.028      -   614   49s
+  3299  4740 173339.866   53  270          - 166436.028      -   514   54s
+  5055  6060 180691.216   96  263          - 166436.028      -   414   58s
+  6781  7201 267422.840  152  293          - 166436.028      -   357   62s
+  8180  8361 infeasible  208               - 166436.028      -   333   67s
+  9498  9388 174038.780   36  226          - 166436.028      -   320   72s
+ 10757 10450 174162.660   54  288          - 166436.028      -   311   77s
+ 12075 11321 178048.839   69  302          - 166436.028      -   302   83s
+ 13162 12510 180262.252   80  322          - 166436.028      -   302   91s
+ 14503 12514 166448.307   31    0          - 166436.028      -   296   95s
+ 14511 12520 166473.698   24    1          - 166436.028      -   296  100s
+ 14519 12525 188861.441   82    5          - 166436.028      -   296  111s
+ 14520 12526 167361.534   31    5          - 166436.028      -   296  117s
+ 14521 12529 166436.028   15  271          - 166436.028      -   297  152s
+ 14527 12539 166436.028   17  289          - 166436.028      -   297  155s
+ 14615 12695 166436.028   21  279          - 166436.028      -   298  161s
+ 14720 12749 166436.028   24  272          - 166436.028      -   299  165s
+ 14925 12845 166436.028   28  237          - 166436.028      -   305  189s
+ 14973 13099 166436.028   29  257          - 166436.028      -   306  193s
+ 15243 13510 166436.028   35  269          - 166436.028      -   317  199s
+ 15752 14078 170960.384   49  269          - 166436.028      -   335  209s
+ 16516 14795 188760.613   60  290          - 166436.028      -   356  222s
+ 17562 15649 219262.909   80  303          - 166436.028      -   366  234s
+ 18878 16218 235100.679  115  291          - 166436.028      -   367  244s
+ 20072 16667 166436.028   38  238          - 166436.028      -   366  255s
+ 21221 16881 167580.511   56  263          - 166436.028      -   365  265s
+ 21968 17344 169518.950   71  313          - 166436.028      -   374  276s
+ 22804 18122 170687.741   78  326          - 166436.028      -   381  290s
+ 24017 18475 170955.492   93  322          - 166436.028      -   380  304s
+ 24950 18998 infeasible   95               - 166436.028      -   385  318s
+ 26072 19919 195814.148  104  354          - 166436.028      -   386  332s
+ 27601 20583 infeasible  117               - 166436.028      -   382  345s
+ 29063 21154 infeasible  123               - 166436.028      -   378  360s
+ 30433 21704 infeasible  123               - 166436.028      -   378  376s
+ 31764 22336 194271.451   43  295          - 166436.028      -   380  392s

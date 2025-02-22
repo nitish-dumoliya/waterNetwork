@@ -1,0 +1,77 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 3402369.0214430834 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.340237E+07      
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 0.339358E+07
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+*         1           6.32    17MB     878915.        0.339358E+07    0.04%
+          1           6.80    17MB     878915.        0.339358E+07    0.05%
+*        28          25.39    25MB     878915.        0.339258E+07    0.81%
+        176          55.47    25MB     878915.        0.339258E+07    1.45%
+        491          85.53    25MB     878915.        0.339258E+07    1.57%
+        785         115.55    35MB     878915.        0.339258E+07    1.72%
+       1119         145.61    35MB     878915.        0.339258E+07    1.84%
+       1422         175.64    35MB     878915.        0.339258E+07    1.90%
+       1728         205.73    44MB     878915.        0.339258E+07    1.97%
+       2069         235.78    44MB     878915.        0.339258E+07    2.00%
+       2382         265.89    44MB     878915.        0.339258E+07    2.04%
+       2709         296.01    54MB     878915.        0.339258E+07    2.07%
+       2984         326.02    54MB     878915.        0.339258E+07    2.13%
+       3278         356.07    64MB     878915.        0.339258E+07    2.19%
+objective _sobj[1]: Initial function value too large = 3.4E+10
+       3511         386.23    64MB     878915.        0.339258E+07    2.20%
+       3789         416.28    64MB     878915.        0.339258E+07    2.23%
+       4069         446.29    74MB     878915.        0.339258E+07    2.27%
+       4368         476.30    74MB     878915.        0.339258E+07    2.29%
+       4660         506.36    83MB     878915.        0.339258E+07    2.31%
+       4966         536.36    83MB     878915.        0.339258E+07    2.33%
+       5264         566.43    83MB     878915.        0.339258E+07    2.36%
+       5547         596.53    93MB     878915.        0.339258E+07    2.38%
+       5840         626.61    93MB     878915.        0.339258E+07    2.40%

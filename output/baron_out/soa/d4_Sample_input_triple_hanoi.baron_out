@@ -1,0 +1,61 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 18369652.942910112 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.183697E+08      
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           1.88    18MB    0.544054E+07    0.183697E+08    NA
+        135          32.01    18MB    0.544927E+07    0.183697E+08    4.26%
+        457          62.02    18MB    0.544927E+07    0.183697E+08    4.88%
+        825          92.03    18MB    0.545000E+07    0.183697E+08    5.29%
+       1190         122.28    28MB    0.545453E+07    0.183697E+08    5.54%
+       1638         152.34    28MB    0.545668E+07    0.183697E+08    5.75%
+       2088         182.44    38MB    0.545668E+07    0.183697E+08    5.87%
+       2244         212.46    38MB    0.545668E+07    0.183697E+08    5.91%
+       2666         242.60    38MB    0.545668E+07    0.183697E+08    5.98%

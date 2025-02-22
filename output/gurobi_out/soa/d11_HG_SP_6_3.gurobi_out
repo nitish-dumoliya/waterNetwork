@@ -1,0 +1,130 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 10725597.83783605 
+
+*******************************************************************************
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+  alg:basis = 1
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 531 rows, 4545 columns and 3642 nonzeros
+Model fingerprint: 0x5d4e1e18
+Model has 167 simple general constraints
+  167 ABS
+Model has 167 general nonlinear constraints (14028 nonlinear terms)
+Variable types: 4545 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [4e-11, 6e+01]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [2e-06, 9e+05]
+  RHS range        [1e-03, 1e+03]
+
+User MIP start did not produce a new incumbent solution
+
+Presolve model has 167 nlconstr
+Added 5845 variables to disaggregate expressions.
+Presolve added 460 rows and 0 columns
+Presolve removed 0 rows and 981 columns
+Presolve time: 0.11s
+Presolved: 16522 rows, 9410 columns, 43959 nonzeros
+Presolved model has 334 SOS constraint(s)
+Presolved model has 2505 bilinear constraint(s)
+Presolved model has 501 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 9076 continuous, 334 integer (334 binary)
+
+Concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 13445 rows, 5958 columns, 37580 nonzeros
+
+
+Solved with primal simplex
+
+Root relaxation: objective 1.332106e+06, 5216 iterations, 0.48 seconds (0.09 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1332106.30    0 1060          - 1332106.30      -     -    3s
+     0     0 1332106.30    0 1061          - 1332106.30      -     -    3s
+     0     0 1332106.30    0 1210          - 1332106.30      -     -    4s
+     0     0 1332106.30    0 1177          - 1332106.30      -     -    4s
+     0     0 1332106.30    0 1178          - 1332106.30      -     -    4s
+     0     0 1332106.30    0 1197          - 1332106.30      -     -    5s
+     0     0 1332106.30    0  862          - 1332106.30      -     -    8s
+     0     0 1332106.30    0  984          - 1332106.30      -     -    8s
+     0     0 1332106.30    0  777          - 1332106.30      -     -   12s
+     0     0 1332106.30    0  986          - 1332106.30      -     -   14s
+     0     0 1332106.30    0  804          - 1332106.30      -     -   15s
+     0     0 1332106.30    0 1171          - 1332106.30      -     -   16s
+     0     0 1332106.30    0  848          - 1332106.30      -     -   22s
+     0     0 1332106.30    0 1260          - 1332106.30      -     -   23s
+     0     0 1332106.30    0  889          - 1332106.30      -     -   28s
+     0     0 1332106.30    0  878          - 1332106.30      -     -   32s
+     0     2 1332106.30    0  878          - 1332106.30      -     -   40s
+    15    32 1332106.30    4 1315          - 1332106.30      -  3602   47s
+    31    64 1332106.30    5 1380          - 1332106.30      -  3683   59s
+    63    96 1332106.30    6 1374          - 1332106.30      -  3607   63s
+    95   169 1332106.30    7 1360          - 1332106.30      -  3367   88s
+   168   240 1332106.30    8 1364          - 1332106.30      -  2786   92s
+   239   364 1332106.30   10 1326          - 1332106.30      -  2626   99s
+   366   544 1332106.30   13 1335          - 1332106.30      -  2386  108s
+   555   993 1332106.30   21 1183          - 1332106.30      -  2242  124s
+  1020  2071 1342943.22   39 1111          - 1332106.30      -  1984  154s

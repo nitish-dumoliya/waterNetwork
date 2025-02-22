@@ -1,0 +1,76 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 9500765.619159257 
+
+*******************************************************************************
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+user parameter file <scip.set> not found - using default parameters
+read problem </tmp/at1635310.nl>
+============
+
+original problem has 2733 variables (0 bin, 0 int, 0 impl, 2733 cont) and 534 constraints
+
+solve problem
+=============
+
+1/1 feasible solution given by solution candidate storage, new primal bound 9.500766e+06
+
+presolving:
+(round 1, fast)       79 del vars, 65 del conss, 0 add conss, 146 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2, fast)       115 del vars, 71 del conss, 0 add conss, 220 chg bounds, 14 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 3, fast)       184 del vars, 79 del conss, 0 add conss, 227 chg bounds, 15 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 4, fast)       219 del vars, 87 del conss, 0 add conss, 231 chg bounds, 16 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 5, fast)       225 del vars, 91 del conss, 0 add conss, 231 chg bounds, 16 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 6, fast)       225 del vars, 91 del conss, 0 add conss, 231 chg bounds, 20 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 7, fast)       269 del vars, 95 del conss, 0 add conss, 231 chg bounds, 23 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.5s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.5s) no symmetry present
+presolving (8 rounds: 8 fast, 1 medium, 1 exhaustive):
+ 269 deleted vars, 95 deleted constraints, 0 added constraints, 231 tightened bounds, 0 added holes, 23 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 2464 variables (0 bin, 0 int, 0 impl, 2464 cont) and 439 constraints
+    260 constraints of type <linear>
+    179 constraints of type <nonlinear>
+Presolving Time: 0.50
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  1.4s|     1 |     0 | 11557 |     - |    83M |   0 |8857 | 439 |  13k|   0 |  0 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+  7.2s|     1 |     0 | 29087 |     - |    93M |   0 |8857 | 439 |  13k| 669 |  1 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 10.8s|     1 |     0 | 49156 |     - |    94M |   0 |8857 | 439 |  15k|2015 |  2 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 19.3s|     1 |     0 | 86275 |     - |    95M |   0 |8857 | 439 |  16k|3107 |  3 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 24.2s|     1 |     0 |109341 |     - |    95M |   0 |8857 | 439 |  17k|3895 |  4 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 31.1s|     1 |     0 |133211 |     - |    95M |   0 |8857 | 439 |  17k|4574 |  5 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 40.6s|     1 |     0 |175360 |     - |    95M |   0 |8857 | 439 |  18k|5141 |  6 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 46.7s|     1 |     0 |200439 |     - |    95M |   0 |8857 | 439 |  18k|5576 |  7 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 57.5s|     1 |     0 |249779 |     - |    95M |   0 |8857 | 439 |  19k|5960 |  8 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 63.6s|     1 |     0 |275009 |     - |    96M |   0 |8857 | 439 |  19k|6276 |  9 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown
+ 70.5s|     1 |     0 |303349 |     - |    96M |   0 |8857 | 439 |  19k|6524 | 10 |   0 |   0 | 1.622384e+06 | 9.500766e+06 | 485.61%| unknown

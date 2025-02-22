@@ -1,0 +1,248 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 14896324.029204782 
+
+*******************************************************************************
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+user parameter file <scip.set> not found - using default parameters
+read problem </tmp/at1634610.nl>
+============
+
+original problem has 142 variables (0 bin, 0 int, 0 impl, 142 cont) and 23 constraints
+
+solve problem
+=============
+
+1/1 feasible solution given by solution candidate storage, new primal bound 1.489632e+07
+
+presolving:
+(round 1, fast)       2 del vars, 3 del conss, 0 add conss, 16 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2, fast)       2 del vars, 3 del conss, 0 add conss, 29 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 3, fast)       2 del vars, 3 del conss, 0 add conss, 48 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 4, exhaustive) 2 del vars, 3 del conss, 0 add conss, 50 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) no symmetry present
+presolving (5 rounds: 5 fast, 2 medium, 2 exhaustive):
+ 2 deleted vars, 3 deleted constraints, 0 added constraints, 50 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 140 variables (0 bin, 0 int, 0 impl, 140 cont) and 20 constraints
+     17 constraints of type <linear>
+      3 constraints of type <nonlinear>
+Presolving Time: 0.01
+transformed 1/1 original solutions to the transformed problem space
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.0s|     1 |     0 |   177 |     - |  3432k |   0 | 279 |  20 | 300 |   0 |  0 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.1s|     1 |     0 |   256 |     - |  3492k |   0 | 279 |  20 | 339 |  39 |  1 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.1s|     1 |     0 |   286 |     - |  3492k |   0 | 279 |  20 | 359 |  59 |  2 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.1s|     1 |     0 |   292 |     - |  3492k |   0 | 279 |  20 | 362 |  62 |  3 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6382 |     - |  3562k |   0 | 279 |  20 | 362 |  62 |  5 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6433 |     - |  3562k |   0 | 279 |  20 | 370 |  70 |  6 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6582 |     - |  3562k |   0 | 279 |  20 | 374 |  74 |  7 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6721 |     - |  3562k |   0 | 279 |  20 | 380 |  80 |  8 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6809 |     - |  3682k |   0 | 279 |  20 | 385 |  85 |  9 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6813 |     - |  3682k |   0 | 279 |  20 | 388 |  88 | 10 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6814 |     - |  3682k |   0 | 279 |  20 | 389 |  89 | 11 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6815 |     - |  3682k |   0 | 279 |  20 | 390 |  90 | 12 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6816 |     - |  3682k |   0 | 279 |  20 | 391 |  91 | 13 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6817 |     - |  3682k |   0 | 279 |  20 | 126 |  92 | 14 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.2s|     1 |     0 |  6818 |     - |  3682k |   0 | 279 |  20 | 127 |  93 | 15 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.3s|     1 |     0 |  7068 |     - |  3716k |   0 | 279 |  20 | 203 | 169 | 16 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.3s|     1 |     0 |  7104 |     - |  3716k |   0 | 279 |  20 | 230 | 196 | 17 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.3s|     1 |     0 |  7124 |     - |  3716k |   0 | 279 |  20 | 168 | 217 | 18 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.3s|     1 |     0 |  7135 |     - |  3716k |   0 | 279 |  20 | 172 | 221 | 19 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.3s|     1 |     0 |  7136 |     - |  3716k |   0 | 279 |  20 | 173 | 222 | 20 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.3s|     1 |     0 |  7137 |     - |  3716k |   0 | 279 |  20 | 174 | 223 | 21 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.3s|     1 |     2 |  7137 |     - |  3732k |   0 | 279 |  20 | 174 | 223 | 22 |   0 |   0 | 1.317288e+07 | 1.489632e+07 |  13.08%| unknown
+  0.6s|   100 |    11 | 10664 |  96.8 |  4259k |  26 | 279 |  20 | 347 |2044 |  2 |   0 |   0 | 1.489521e+07 | 1.489632e+07 |   0.01%|  99.95%
+  0.7s|   200 |     1 | 11003 |  49.9 |  4351k |  35 | 279 |  20 | 348 |2211 |  0 |   0 |   0 | 1.489631e+07 | 1.489632e+07 |   0.00%| 100.00%
+
+SCIP Status        : problem is solved [optimal solution found]
+Solving Time (sec) : 0.68
+Solving Nodes      : 201
+Primal Bound       : +1.48963240292048e+07 (1 solutions)
+Dual Bound         : +1.48963240292048e+07
+Gap                : 0.00 %
+optimal solution found
+eps: 1e-06
+con2_2,4: -0.00000000
+con2_2,6: -0.00000003
+con2_3,7: -0.00000000
+con2_3,10: -0.00000000
+con2_4,6: -0.00000001
+con2_4,11: -0.00000000
+con2_8,9: -0.00000000
+con2_9,3: -0.00000000
+con2_10,2: -0.00000000
+con2_11,1: -0.00000000
+l [2,*,*] (tr)
+:          4                6           :=
+0      -9.99001e-09   3491
+1      -9.97409e-09     -8.43978e-09
+2      -9.9168e-09      -9.29236e-09
+3      -9.38131e-09     -9.6598e-09
+4    1475.81            -9.78537e-09
+5     966.186           -9.8412e-09
+6      -9.29529e-09     -9.8861e-09
+7      -9.72945e-09     -9.91352e-09
+8      -9.82854e-09     -9.92838e-09
+9      -9.90185e-09     -9.94592e-09
+10     -9.93262e-09     -9.95695e-09
+11     -9.95279e-09     -9.96625e-09
+12     -9.96609e-09     -9.97366e-09
+
+ [3,*,*] (tr)
+:          7               10          :=
+0      -9.97974e-09    -9.99813e-09
+1      -9.94429e-09    -9.99547e-09
+2      -9.7837e-09     -9.988e-09
+3    4346.51           -9.95942e-09
+4    2998.49           -9.89503e-09
+5      -8.74021e-09    -9.65457e-09
+6      -9.63344e-09   924
+7      -9.80955e-09    -5.58657e-09
+8      -9.86692e-09    -9.23548e-09
+9      -9.91634e-09    -9.79906e-09
+10     -9.93994e-09    -9.89215e-09
+11     -9.95656e-09    -9.93501e-09
+12     -9.96809e-09    -9.95756e-09
+
+ [4,*,*] (tr)
+:          6              11          :=
+0    318              -9.94906e-09
+1     -9.14225e-09    -9.84541e-09
+2     -9.54904e-09    -9.10676e-09
+3     -9.74226e-09   485
+4     -9.8228e-09     -8.97527e-09
+5     -9.86308e-09    -9.56176e-09
+6     -9.89798e-09    -9.78016e-09
+7     -9.9206e-09     -9.86166e-09
+8     -9.93333e-09    -9.89554e-09
+9     -9.9488e-09     -9.9289e-09
+10    -9.9588e-09     -9.94678e-09
+11    -9.9674e-09     -9.96028e-09
+12    -9.97437e-09    -9.97016e-09
+
+ [8,*,*] (tr)
+:          9           :=
+0      -9.99965e-09
+1      -9.99917e-09
+2      -9.99793e-09
+3      -9.99409e-09
+4      -9.9879e-09
+5      -9.97554e-09
+6      -9.93418e-09
+7      -9.78045e-09
+8     894.846
+9    1791.15
+10     -9.58263e-09
+11     -9.86321e-09
+12     -9.93231e-09
+
+ [9,*,*] (tr)
+:          3           :=
+0      -9.99965e-09
+1      -9.99917e-09
+2      -9.99793e-09
+3      -9.99409e-09
+4      -9.9879e-09
+5      -9.97554e-09
+6      -9.93418e-09
+7      -9.78045e-09
+8    1716.82
+9     226.178
+10     -9.58263e-09
+11     -9.86321e-09
+12     -9.93231e-09
+
+ [10,*,*] (tr)
+:          2           :=
+0      -9.99457e-09
+1      -9.98641e-09
+2      -9.96059e-09
+3      -9.81973e-09
+4      -9.22764e-09
+5    4808
+6      -8.27232e-09
+7      -9.59275e-09
+8      -9.77192e-09
+9      -9.8838e-09
+10     -9.92418e-09
+11     -9.94868e-09
+12     -9.96399e-09
+
+ [11,*,*] (tr)
+:          1           :=
+0      -9.10351e-09
+1     793.818
+2    3472.18
+3      -9.15917e-09
+4      -9.64473e-09
+5      -9.77308e-09
+6      -9.85421e-09
+7      -9.89614e-09
+8      -9.91681e-09
+9      -9.93955e-09
+10     -9.95301e-09
+11     -9.96387e-09
+12     -9.97224e-09
+;
+
+q :=
+2  4     9.90908
+2  6     1.39092
+3  7     5.2
+3  10   12.9
+4  6     2.20908
+4  11    4.2
+8  9    24.9
+9  3    24.9
+10 2    12.9
+11 1     4.2
+;
+
+h [*] :=
+ 1  449
+ 2  491.188
+ 3  518.489
+ 4  480.014
+ 6  476.961
+ 7  500
+ 8  530
+ 9  524.152
+10  516
+11  479
+;
+
+total_cost: 14896324.029204782
+solve_time: 0.703771

@@ -1,0 +1,152 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+total_cost: 0.0 
+
+*******************************************************************************
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+  alg:basis = 1
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 152 rows, 1996 columns and 1584 nonzeros
+Model fingerprint: 0xcb6a5bf0
+Model has 57 simple general constraints
+  57 ABS
+Model has 57 general nonlinear constraints (8778 nonlinear terms)
+Variable types: 1996 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 1e+03]
+  Objective range  [4e-01, 2e+02]
+  Bounds range     [6e-08, 6e+05]
+  RHS range        [3e-01, 4e+02]
+
+User MIP start did not produce a new incumbent solution
+User MIP start violates constraint R0 by 33.420000000
+
+Presolve model has 57 nlconstr
+Added 3135 variables to disaggregate expressions.
+Presolve added 228 rows and 0 columns
+Presolve removed 0 rows and 342 columns
+Presolve time: 0.03s
+Presolved: 8531 rows, 4790 columns, 22959 nonzeros
+Presolved model has 1425 bilinear constraint(s)
+Presolved model has 171 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 4733 continuous, 57 integer (57 binary)
+Concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Solved with primal simplex
+
+Root relaxation: objective 3.195719e+03, 4634 iterations, 0.73 seconds (0.09 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3195.71879    0  336          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  340          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  340          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  333          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  334          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  324          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  324          - 3195.71879      -     -    2s
+     0     0 3195.71879    0  318          - 3195.71879      -     -    3s
+     0     0 3195.71879    0  317          - 3195.71879      -     -    3s
+     0     0 3195.71879    0  339          - 3195.71879      -     -    4s
+     0     2 3195.71879    0  339          - 3195.71879      -     -   20s
+   183   234 3195.71879   10  300          - 3195.71879      -   914   25s
+   332   425 4296.72630   13  280          - 3195.71879      -  1061   31s
+   779   962 4296.82193   28  250          - 3195.71879      -   994   38s
+   965  1104 4296.82193   32  235          - 3195.71879      -  1012   42s
+  1107  1312 4298.48007   33  261          - 3195.71879      -  1015   48s
+  1321  2072 4296.88139   33  231          - 3195.71879      -   997   56s
+  2119  3337 11968.6320   54  240          - 3195.71879      -   795   65s
+  3456  4140 21895.1893   96  265          - 3195.71879      -   591   74s
+  4373  5130 36713.7686  135  255          - 3195.71879      -   528   83s
+  5541  6032 infeasible  178               - 3195.71879      -   463   93s
+  6635  6727 infeasible  219               - 3195.71879      -   424   99s
+  7450  7325 65111.9763  253  285          - 3195.71879      -   409  106s
+  8212  7925 87625.9277  289  246          - 3195.71879      -   400  112s
+  8998  8399 129766.438  323  311          - 3195.71879      -   389  118s
+  9634  8993 3195.72217   21  267          - 3195.71879      -   388  125s
+ 10406  9579 4979.94503   33  241          - 3195.71879      -   382  132s
+ 11164 10087 9425.69827   38  280          - 3195.71879      -   379  139s
+ 11838 10647 5727.30158   49  315          - 3195.71879      -   378  146s
+ 12550 11307 13352.0695   52  266          - 3195.71879      -   377  154s
+ 13350 11959 12495.0928   60  306          - 3195.71879      -   373  161s
+ 14160 12594 17500.4169   69  325          - 3195.71879      -   368  168s
+ 14988 12595 33741.2126   90   29          - 3195.71879      -   366  174s
+  NLP heuristic elapsed time = 5.00s
+ 14989 12596 7016.27899   61   29          - 3195.71879      -   366  182s
+ 14991 12597 15026.4489   57    8          - 3195.71879      -   366  185s
+ 14997 12601 3222.60501   20    1          - 3195.71879      -   365  190s
+ 15003 12605 6561.16318   39    0          - 3195.71879      -   365  195s
+ 15010 12610 6381.47313   41    0          - 3195.71879      -   365  210s
+  NLP heuristic elapsed time = 5.02s
+  NLP heuristic elapsed time = 10.01s
+ 15011 12610 3856.14335   42    0          - 3195.71879      -   365  225s
+ 15012 12614 3195.71879   10  295          - 3195.71879      -   367  270s
+ 15074 12685 3195.71879   15  299          - 3195.71879      -   369  275s
+ 15198 12790 3195.71879   18  301          - 3195.71879      -   369  282s
+ 15252 12822 3195.71879   18  292          - 3195.71879      -   371  285s
+ 15373 12990 3195.71879   19  316          - 3195.71879      -   373  292s
+ 15510 13031 3195.71879   20  323          - 3195.71879      -   375  325s
+ 15597 13263 6279.04258   21  312          - 3195.71879      -   376  331s
+ 15858 13509 3305.86317   26  303          - 3195.71879      -   383  337s
+ 16193 13728 4467.18634   32  279          - 3195.71879      -   391  343s
+ 16524 13882 6780.36046   43  271          - 3195.71879      -   395  348s
+ 16792 14058 5777.34900   48  281          - 3195.71879      -   401  354s
+ 17065 14230 5859.53328   56  279          - 3195.71879      -   405  359s
+ 17330 14366 5863.90718   67  250          - 3195.71879      -   411  365s
+ 17559 14518 5864.85192   73  243          - 3195.71879      -   416  370s
+ 17797 14689 6108.37677   79  263          - 3195.71879      -   421  378s
+ 18049 14787 6239.68684   86  291          - 3195.71879      -   425  383s
+ 18259 14929 9443.14899   98  324          - 3195.71879      -   430  390s
+ 18501 15039 3455.88747   25  325          - 3195.71879      -   435  395s
+ 18706 15154 4616.28441   28  323          - 3195.71879      -   440  402s
+ 18937 15245 3866.79367   36  310          - 3195.71879      -   446  409s
+ 19133 15479 3868.23498   42  302          - 3195.71879      -   451  415s
+ 19473 15587 3868.23498   46  332          - 3195.71879      -   452  421s

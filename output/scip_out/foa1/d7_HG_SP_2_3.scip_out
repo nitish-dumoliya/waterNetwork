@@ -1,0 +1,82 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 3403315.5426272773 
+
+*******************************************************************************
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+user parameter file <scip.set> not found - using default parameters
+read problem </tmp/at1635166.nl>
+============
+
+original problem has 1366 variables (0 bin, 0 int, 0 impl, 1366 cont) and 267 constraints
+
+solve problem
+=============
+
+1/1 feasible solution given by solution candidate storage, new primal bound 3.403316e+06
+
+presolving:
+(round 1, fast)       39 del vars, 32 del conss, 0 add conss, 81 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2, fast)       72 del vars, 36 del conss, 0 add conss, 102 chg bounds, 7 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 3, fast)       99 del vars, 41 del conss, 0 add conss, 106 chg bounds, 7 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 4, fast)       111 del vars, 43 del conss, 0 add conss, 107 chg bounds, 7 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 5, fast)       111 del vars, 44 del conss, 0 add conss, 107 chg bounds, 7 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.2s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.2s) no symmetry present
+presolving (6 rounds: 6 fast, 1 medium, 1 exhaustive):
+ 111 deleted vars, 44 deleted constraints, 0 added constraints, 107 tightened bounds, 0 added holes, 7 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 1255 variables (0 bin, 0 int, 0 impl, 1255 cont) and 223 constraints
+    134 constraints of type <linear>
+     89 constraints of type <nonlinear>
+Presolving Time: 0.24
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.5s|     1 |     0 |  3520 |     - |    44M |   0 |4424 | 223 |6459 |   0 |  0 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  3.0s|     1 |     0 | 12731 |     - |    51M |   0 |4424 | 223 |6965 | 507 |  1 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  3.7s|     1 |     0 | 23678 |     - |    51M |   0 |4424 | 223 |7598 |1142 |  2 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  4.8s|     1 |     0 | 34980 |     - |    51M |   0 |4424 | 223 |8050 |1596 |  3 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  5.8s|     1 |     0 | 46388 |     - |    51M |   0 |4424 | 223 |8412 |1960 |  4 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  6.8s|     1 |     0 | 57767 |     - |    51M |   0 |4424 | 223 |8678 |2227 |  5 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  8.0s|     1 |     0 | 69422 |     - |    51M |   0 |4424 | 223 |8871 |2423 |  6 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+  9.2s|     1 |     0 | 80269 |     - |    51M |   0 |4424 | 223 |9000 |2552 |  7 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+ 10.4s|     1 |     0 | 92762 |     - |    51M |   0 |4424 | 223 |9121 |2673 |  8 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+ 11.1s|     1 |     0 |101800 |     - |    51M |   0 |4424 | 223 |9226 |2778 |  9 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+ 12.5s|     1 |     0 |113417 |     - |    51M |   0 |4424 | 223 |9336 |2888 | 10 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+ 13.5s|     1 |     0 |124880 |     - |    51M |   0 |4424 | 223 |5088 |2950 | 11 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+ 22.9s|     1 |     2 |188253 |     - |    53M |   0 |4424 | 223 |5088 |2950 | 11 |   0 |   0 | 8.759972e+05 | 3.403316e+06 | 288.51%| unknown
+ 1990s|   100 |    83 | 17829k|178837.2 |    61M |  27 |4424 | 223 |6008 |  50k| 10 |   0 |   0 | 9.777594e+05 | 3.403316e+06 | 248.07%| unknown
+ 3142s|   200 |   151 | 27900k|139575.8 |    65M |  27 |4424 | 223 |5862 |  77k|  4 |   0 |   0 | 9.777594e+05 | 3.403316e+06 | 248.07%|   4.40%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 3961s|   300 |   231 | 34510k|115002.7 |    69M |  35 |4424 | 223 |7196 |  96k|  7 |   0 |   0 | 9.777594e+05 | 3.403316e+06 | 248.07%|   4.47%
+ 5140s|   400 |   315 | 44788k|111938.2 |    74M |  36 |4424 | 223 |6626 | 123k| 17 |   0 |   0 | 9.777594e+05 | 3.403316e+06 | 248.07%|   4.47%
+ 6419s|   500 |   385 | 55883k|111740.6 |    79M |  36 |4424 | 223 |6351 | 151k| 11 |   0 |   0 | 9.777594e+05 | 3.403316e+06 | 248.07%|   4.63%

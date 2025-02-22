@@ -1,0 +1,183 @@
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 3442400.7492441903 
+
+*******************************************************************************
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+  alg:basis = 1
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 259 rows, 2304 columns and 1860 nonzeros
+Model fingerprint: 0xf3673507
+Model has 85 simple general constraints
+  85 ABS
+Model has 85 general nonlinear constraints (7140 nonlinear terms)
+Variable types: 2304 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e-10, 2e+02]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [9e-07, 1e+05]
+  RHS range        [4e-03, 7e+02]
+Warning: Model contains large matrix coefficient range
+
+User MIP start did not produce a new incumbent solution
+
+Presolve model has 85 nlconstr
+Added 2975 variables to disaggregate expressions.
+Presolve added 325 rows and 0 columns
+Presolve removed 0 rows and 553 columns
+Presolve time: 0.03s
+Presolved: 8489 rows, 4727 columns, 22604 nonzeros
+Presolved model has 1275 bilinear constraint(s)
+Presolved model has 255 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 4642 continuous, 85 integer (85 binary)
+Concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+
+Solved with primal simplex
+
+Root relaxation: objective 9.719815e+05, 5284 iterations, 0.32 seconds (0.05 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 971981.485    0  514          - 971981.485      -     -    2s
+     0     0 975432.773    0  537          - 975432.773      -     -    2s
+     0     0 975432.773    0  546          - 975432.773      -     -    3s
+     0     0 975432.773    0  554          - 975432.773      -     -    3s
+     0     0 975432.773    0  536          - 975432.773      -     -    3s
+     0     0 977269.041    0  509          - 977269.041      -     -    5s
+     0     0 977269.041    0  532          - 977269.041      -     -    5s
+     0     0 977428.033    0  554          - 977428.033      -     -    6s
+     0     0 977428.034    0  542          - 977428.034      -     -    6s
+     0     0 977983.243    0  544          - 977983.243      -     -    6s
+     0     0 977983.243    0  541          - 977983.243      -     -    6s
+     0     0 977983.243    0  534          - 977983.243      -     -    6s
+     0     0 977983.243    0  537          - 977983.243      -     -    6s
+     0     0 977983.243    0  504          - 977983.243      -     -    7s
+     0     0 977983.243    0  548          - 977983.243      -     -    7s
+     0     0 977983.243    0  513          - 977983.243      -     -    8s
+     0     0 977983.243    0  531          - 977983.243      -     -    8s
+     0     0 977983.243    0  489          - 977983.243      -     -    9s
+     0     0 977983.243    0  508          - 977983.243      -     -    9s
+     0     0 977983.243    0  495          - 977983.243      -     -   10s
+     0     0 979387.750    0  503          - 979387.750      -     -   11s
+     0     2 979387.750    0  503          - 979387.750      -     -   18s
+     7    14 979833.316    3  515          - 979387.766      -   490   20s
+   171   246 1099971.50    9  516          - 979953.426      -   697   25s
+   544   589 1099946.74   17  499          - 979953.426      -   433   30s
+  1193  1203 1112184.08   34  491          - 979953.426      -   318   35s
+  1576  1580 1128780.34   43  540          - 979953.426      -   293   40s
+  1805  1795 1128780.54   44  539          - 979953.426      -   279   68s
+  1925  1915 1128780.61   45  538          - 979953.426      -   272   80s
+  2071  2018 1128790.17   51  526          - 979953.426      -   263   85s
+  2208  2140 1522735.80   54  507          - 979953.426      -   257   92s
+  2471  2372 1503637.40   61  560          - 979953.426      -   246   97s
+  2658  2515 infeasible   62               - 979953.426      -   240  100s
+  3379  3026 2037991.83   68  556          - 979953.426      -   225  106s
+  3710  3265 2073863.78   70  557          - 979953.426      -   224  110s
+  4237  3603 2243396.74   80  489          - 979953.426      -   226  117s
+  4419  3720 infeasible   82               - 979953.426      -   229  120s
+  5095  4218 2244157.08   88  496          - 979953.426      -   225  126s
+  5671  4562 2438880.54   93  484          - 979953.426      -   221  133s
+  5948  4726 infeasible   95               - 979953.583      -   222  135s
+  6807  5306 997387.635   27  522          - 979953.584      -   224  141s
+  7136  5504 2871408.65   34  514          - 979954.984      -   223  146s
+  7734  5909 2884919.19   49  510          - 979956.042      -   226  152s
+  8019  6108 2904741.97   50  463          - 979956.042      -   228  155s
+  8690  6642 3450012.81   59  538          - 979956.042      -   232  163s
+  9094  6884 3802183.95   77  495          - 979956.042      -   231  166s
+  9834  7374 993677.202   26  479          - 979956.854      -   233  173s
+ 10243  7375 1122979.57   33   43          - 979956.854      -   234  176s
+  NLP heuristic elapsed time = 5.02s
+ 10244  7376 1316856.53   33   43          - 979956.854      -   234  186s
+ 10246  7377 1121839.58   36   46          - 979956.854      -   234  190s
+ 10252  7381 1108637.23   35    6          - 979956.854      -   234  195s
+ 10256  7384 1448310.14   35    9          - 979956.854      -   234  200s
+ 10260  7386 2251452.45   60   11          - 979956.854      -   234  206s
+ 10263  7388 1695141.21   71   36          - 979956.854      -   234  210s
+ 10265  7390 1393193.47   50    5          - 979956.854      -   234  224s
+  NLP heuristic elapsed time = 5.03s
+  NLP heuristic elapsed time = 10.00s
+ 10266  7390 1163611.62   44    5          - 979956.854      -   233  239s
+ 10267  7394 1015977.19   10  509          - 979956.854      -   236  296s
+ 10281  7417 1076389.89   13  505          - 979956.854      -   237  300s
+ 10361  7517 1076389.89   16  515          - 979956.854      -   243  306s
+ 10423  7545 1076389.89   17  525          - 979956.854      -   245  311s
+ 10472  7567 1076389.89   18  529          - 979956.854      -   248  339s
+ 10510  7622 1076389.89   18  528          - 979956.854      -   251  341s
+ 10578  7679 1076389.89   19  521          - 979956.854      -   253  345s
+ 10735  7796 1076734.68   20  518          - 979956.854      -   257  350s
+ 10908  7882 1113730.03   22  484          - 979956.854      -   265  355s
+ 11134  8035 1180876.13   24  486          - 979956.854      -   274  362s
+ 11302  8161 1180876.13   26  510          - 979956.854      -   278  367s
+ 11526  8298 1180876.13   30  496          - 979956.854      -   281  372s
+ 11759  8437 1462788.97   33  526          - 979956.854      -   285  377s
+ 11885  8504 infeasible   37               - 979956.854      -   286  380s
+ 12137  8631 979956.854   16  479          - 979956.854      -   292  386s
+ 12400  8780 1031802.19   23  496          - 979956.854      -   297  391s
+ 12539  8852 1032389.05   24  471          - 979956.854      -   299  395s
+ 12830  8999 1031802.19   27  498          - 979956.854      -   305  403s
+ 12987  9074 1051531.40   29  508          - 979956.854      -   308  407s
+ 13239  9143 1033139.53   29  506          - 979956.854      -   308  411s
+ 13470  9230 1051784.44   29  509          - 979956.854      -   308  415s
+ 13960  9416 1053188.24   33  503          - 979956.854      -   309  423s
+ 14225  9506 1840843.13   36  500          - 979956.854      -   310  427s
