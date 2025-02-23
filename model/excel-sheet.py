@@ -275,6 +275,50 @@ def GurobiInstanceOutput(instance, output):
 
     return objective, solver_time
 
+def SCIPInstanceOutput(instance, output):
+    # Match best objective using a robust regex pattern
+    #obj_match = re.search(r'Best objective\s+([-\d\.eE]+)', output)
+    obj_match = re.search(r"Primal Bound\s*:\s*([+-]?\d+\.\d+e[+-]?\d+)", output)
+    lp_error = re.search(r"SCIP Error \(-6\): error in LP solver", output)
+
+
+    # Extract objective safely
+    objective = None
+
+    #no_feasible_solution = "Solution count 0" in output
+    
+    if lp_error:
+        objective = 'LP error'
+    if obj_match:
+        try:
+            # Ensure no truncation and remove any extra spaces or unwanted characters
+            objective = float(obj_match.group(1))
+        except ValueError:
+            print(f"Warning: Could not convert extracted objective '{extracted_obj}' to float.")
+
+    # Match solver time (ensure correct extraction)
+    #time_match = re.search(r"Solving Time \(sec\)\s*:\s*([\d\.]+)", output)
+    #time_match = re.search(r'Solving Time (sec) :\s*([\d\.]+)', output)
+
+    time_match = re.search(r'solve_time:\s*([\d\.]+)', output)
+    
+    time_limit_reached = "time limit reached" in output
+
+    solver_time = None
+
+    if time_match:
+        try:
+            solver_time = float(time_match.group(1).strip())
+        except ValueError:
+            print(f"Warning: Could not convert solver time '{time_match.group(1)}' to float.")
+    elif time_limit_reached:
+        solver_time = 3600
+    
+    return objective, solver_time
+
+
+
+
 def HeuristicInstanceOutput(instance, output):
     file_data = output.read().split('\n')
     time = 0
@@ -320,8 +364,13 @@ Bonmin_Objective = []
 Bonmin_Time_taken = []
 Gurobi_Objective = []
 Gurobi_Time_taken = []
+Scip_Objective = []
+Scip_Time_taken = []
 Heuristic_Objective = []
 Heuristic_Time_taken = []
+
+approx_folder = "foa1"
+
 print("****************************Results of Mmultistart Solver *********************************")
 
 for ins in data_list:
@@ -338,7 +387,7 @@ for ins in data_list:
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../output/baron_out/{ins}.baron_out") as output:
+    with open(f"../output/baron_out/{approx_folder}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         obj, time= BaronInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -387,7 +436,7 @@ for ins in data_list:
 print("**********************Results of GUROBI Solver *********************************")
         
 for ins in data_list:
-    with open(f"../output/gurobi_out/1-hour/{ins}.gurobi_out") as output:
+    with open(f"../output/gurobi_out/{approx_folder}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, time = GurobiInstanceOutput(ins,output)
@@ -396,6 +445,20 @@ for ins in data_list:
         print(" ")
         Gurobi_Objective.append(obj)
         Gurobi_Time_taken.append(time)
+
+print("**********************Results of SCIP Solver *********************************")
+        
+for ins in data_list:
+    with open(f"../output/scip_out/{approx_folder}/{ins}.scip_out") as output:
+        print("Model Name:",ins)
+        output = output.read()
+        obj, time = SCIPInstanceOutput(ins,output)
+        print("Objective :",obj)
+        print("Time :",time)
+        print(" ")
+        Scip_Objective.append(obj)
+        Scip_Time_taken.append(time)
+
 
 print("**********************Results of Heuristic *********************************")
 
@@ -409,7 +472,7 @@ for ins in data_list:
         Heuristic_Objective.append(obj)
         Heuristic_Time_taken.append(time)
 
-fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken", "Gurobi Objective","Gurobi time taken","Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken" ]
+fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken", "Gurobi Objective","Gurobi time taken", "Scip Objective","Scip time taken""Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken" ]
 
 filename = "mmultistart_results.csv"
 
@@ -427,6 +490,8 @@ csv_input['Baron Objective'] = Baron_Objective
 csv_input['Baron time taken'] = Baron_Time_taken
 csv_input['Gurobi Objective'] = Gurobi_Objective
 csv_input['Gurobi time taken'] = Gurobi_Time_taken
+csv_input['Scip Objective'] = Scip_Objective
+csv_input['Scip time taken'] = Scip_Time_taken
 csv_input['Knitro Objective'] = Knitro_Objective
 csv_input['Knitro time taken'] = Knitro_Time_taken
 csv_input['Ipopt Objective'] = Ipopt_Objective
@@ -438,10 +503,23 @@ csv_input['Heuristic time taken'] = Heuristic_Time_taken
 
 csv_input.to_csv('output.csv', index=False)
 
-#df = pd.read_csv("output.csv")
+from googleapiclient.http import MediaFileUpload
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 
-#excel_file = pd.ExcelWriter('output.xlsx')
-#df.to_excel(excel_file, index = False)
+# Load credentials from the JSON key file
+SERVICE_ACCOUNT_FILE = "credentials.json"  # Ensure this file is in the same directory
 
-# excel_file.save()
-# excel_file = pd.ExcelWriter('output.xlsx')
+SCOPES = ["https://drive.google.com/file/d/1nDIsrSl_JhvciyTIt06J9A71UY1pRlIU/view?usp=sharing"]
+creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+# Create the Drive API service
+drive_service = build("drive", "v3", credentials=creds)
+
+# Upload the file
+file_metadata = {"name": "output.csv"}  # Change name if needed
+media = MediaFileUpload("output.csv", mimetype="text/csv")
+
+file = drive_service.files().create(body=file_metadata, media_body=media, fields="id").execute()
+print(f"File uploaded successfully! File ID: {file.get('id')}")
+
