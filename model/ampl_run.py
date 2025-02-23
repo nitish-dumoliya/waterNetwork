@@ -2,6 +2,13 @@ import sys
 from amplpy import AMPL
 ampl = AMPL()
 
+print("Water Network:", sys.argv[3],"\n")
+
+#print("Results of first order approximation function 1 of head loss constraint\n")
+#print("Results of first order approximation function 2 of head loss constraint\n")
+print("Results of second order approximation of head loss constraint\n")
+
+
 ipopt_run = 1
 
 if ipopt_run == 1:
@@ -11,13 +18,13 @@ if ipopt_run == 1:
 
             ampl.set_option("ipopt_options", "outlev = 0  expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based ")   #max_iter = 1000
 
+            ampl.option["presolve_eps"] = "8.53e-15"
             ampl.solve()
 
             total_cost = ampl.getObjective("total_cost").value()
             print("total_cost:", total_cost, "\n")
             print("*******************************************************************************")
 
-            eps = ampl.getParameter('eps').getValues().to_list()[0]
             l_init = ampl.getVariable('l').getValues().to_dict()
             q_init = ampl.getVariable('q').getValues().to_dict()
             h_init = ampl.getVariable('h').getValues().to_dict()
@@ -26,6 +33,10 @@ if ipopt_run == 1:
 ampl = AMPL()
 ampl.read(sys.argv[1])
 ampl.read_data(sys.argv[3])
+
+eps = ampl.getParameter('eps').getValues().to_list()[0]
+print("eps:",eps, "\n")
+
 
 if ipopt_run == 1:
             ampl.getVariable("q").setValues(q_init)
@@ -85,7 +96,7 @@ def constraint_relative_gap(q_values, h_values, l_values, R_values, d_values, pi
 
 
         
-        approx_value = approx_rhs3
+        approx_value = approx_rhs3 
 
         # Compute relative gap
         relative_gap = (original_value - approx_value) / (original_value + 1e-10)
@@ -111,10 +122,6 @@ P = ampl.getParameter('P').to_dict()
 R = ampl.getParameter('R').to_dict()
 E = ampl.getParameter('E').to_dict()
 d = ampl.getParameter('d').to_dict()
-eps = ampl.getParameter('eps').getValues().to_list()[0]
-
-print("eps:",eps)
-
 constraint_relative_gap(q, h, l, R, d, pipes, eps)
 
 ampl.eval("display l;")
@@ -127,3 +134,5 @@ print("total_cost:", total_cost)
 print("solve_time:", solve_time)
 
 ampl.close()
+
+

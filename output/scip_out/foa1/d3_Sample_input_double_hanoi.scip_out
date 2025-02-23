@@ -33,8 +33,13 @@ External libraries:
   bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
   Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
 
-user parameter file <scip.set> not found - using default parameters
-read problem </tmp/at1635027.nl>
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 3600
+lp/initalgorithm = b
+
+read problem </tmp/at1671059.nl>
 ============
 
 original problem has 519 variables (0 bin, 0 int, 0 impl, 519 cont) and 185 constraints
@@ -55,15 +60,14 @@ presolving (3 rounds: 3 fast, 1 medium, 1 exhaustive):
 presolved problem has 476 variables (0 bin, 0 int, 0 impl, 476 cont) and 142 constraints
      86 constraints of type <linear>
      56 constraints of type <nonlinear>
-Presolving Time: 0.10
+Presolving Time: 0.11
 transformed 1/1 original solutions to the transformed problem space
 
  time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
   0.2s|     1 |     0 |   717 |     - |    19M |   0 |1832 | 142 |2526 |   0 |  0 |   0 |   0 | 3.598998e+06 | 1.206445e+07 | 235.22%| unknown
 (node 1) unresolved numerical troubles in LP 5 -- using pseudo solution instead (loop 1)
 (node 1) forcing the solution of an LP (last LP 5)...
-  0.9s|     1 |     0 |  4967 |     - |    21M |   0 |1832 | 142 |2734 | 208 |  1 |   0 |   0 | 3.598998e+06 | 1.206445e+07 | 235.22%| unknown
-[solve.c:3916] ERROR: (node 1) unresolved numerical troubles in LP 9 cannot be dealt with
+[solve.c:3916] ERROR: (node 1) unresolved numerical troubles in LP 5 cannot be dealt with
 [solve.c:4197] ERROR: Error <-6> in function call
 [solve.c:4993] ERROR: Error <-6> in function call
 [scip_solve.c:2780] ERROR: Error <-6> in function call
@@ -762,4 +766,4 @@ h [*] :=
 ;
 
 total_cost: 12064445.008253388
-solve_time: 0.938628
+solve_time: 0.90006

@@ -33,8 +33,13 @@ External libraries:
   bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
   Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
 
-user parameter file <scip.set> not found - using default parameters
-read problem </tmp/at1635237.nl>
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 3600
+lp/initalgorithm = b
+
+read problem </tmp/at1671336.nl>
 ============
 
 original problem has 775 variables (0 bin, 0 int, 0 impl, 775 cont) and 276 constraints
@@ -48,8 +53,8 @@ presolving:
 (round 1, fast)       63 del vars, 63 del conss, 0 add conss, 127 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
 (round 2, fast)       63 del vars, 63 del conss, 0 add conss, 142 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
    (0.1s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
-   (0.2s) symmetry computation finished: 1 generators found (max: 1500, log10 of symmetry group size: 0.3)
-   (0.2s) no symmetry on binary variables present.
+   (0.1s) symmetry computation finished: 1 generators found (max: 1500, log10 of symmetry group size: 0.3)
+   (0.1s) no symmetry on binary variables present.
 (round 3, exhaustive) 63 del vars, 63 del conss, 1 add conss, 142 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
 presolving (4 rounds: 4 fast, 2 medium, 2 exhaustive):
  63 deleted vars, 63 deleted constraints, 1 added constraints, 142 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
@@ -57,12 +62,12 @@ presolving (4 rounds: 4 fast, 2 medium, 2 exhaustive):
 presolved problem has 712 variables (0 bin, 0 int, 0 impl, 712 cont) and 214 constraints
     130 constraints of type <linear>
      84 constraints of type <nonlinear>
-Presolving Time: 0.19
+Presolving Time: 0.16
 transformed 1/1 original solutions to the transformed problem space
 
 (node 1) unresolved numerical troubles in LP 1 -- using pseudo solution instead (loop 1)
 (node 1) forcing the solution of an LP (last LP 1)...
-[solve.c:3916] ERROR: (node 1) unresolved numerical troubles in LP 2 cannot be dealt with
+[solve.c:3916] ERROR: (node 1) unresolved numerical troubles in LP 1 cannot be dealt with
 [solve.c:4197] ERROR: Error <-6> in function call
 [solve.c:4993] ERROR: Error <-6> in function call
 [scip_solve.c:2780] ERROR: Error <-6> in function call
@@ -1076,4 +1081,4 @@ h [*] :=
 ;
 
 total_cost: 18369652.942871485
-solve_time: 0.349118
+solve_time: 0.308117

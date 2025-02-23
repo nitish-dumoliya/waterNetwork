@@ -1,0 +1,445 @@
+Water Network: ../data/d2_Sample_input_cycle_hanoi.dat 
+
+Results of second order approximation of head loss constraint
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = gradient-based
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 6055935.834539209 
+
+*******************************************************************************
+eps: 0.0001 
+
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 3600
+lp/initalgorithm = b
+
+read problem </tmp/at1690235.nl>
+============
+
+original problem has 262 variables (0 bin, 0 int, 0 impl, 262 cont) and 93 constraints
+
+solve problem
+=============
+
+1/1 feasible solution given by solution candidate storage, new primal bound 6.055936e+06
+
+presolving:
+(round 1, fast)       21 del vars, 21 del conss, 0 add conss, 65 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2, fast)       21 del vars, 21 del conss, 0 add conss, 78 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 3, fast)       21 del vars, 21 del conss, 0 add conss, 89 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 4, fast)       21 del vars, 21 del conss, 0 add conss, 92 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.1s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.1s) no symmetry present
+presolving (5 rounds: 5 fast, 1 medium, 1 exhaustive):
+ 21 deleted vars, 21 deleted constraints, 0 added constraints, 92 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 241 variables (0 bin, 0 int, 0 impl, 241 cont) and 72 constraints
+     45 constraints of type <linear>
+     27 constraints of type <nonlinear>
+Presolving Time: 0.09
+transformed 1/1 original solutions to the transformed problem space
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.1s|     1 |     0 |   791 |     - |    14M |   0 |1240 |  72 |2432 |   0 |  0 |   0 |   0 | 2.101326e+06 | 6.055936e+06 | 188.20%| unknown
+  0.7s|     1 |     0 |  3599 |     - |    16M |   0 |1240 |  72 |2643 | 211 |  1 |   0 |   0 | 2.101326e+06 | 6.055936e+06 | 188.20%| unknown
+  0.9s|     1 |     0 |  7197 |     - |    16M |   0 |1240 |  72 |2825 | 393 |  2 |   0 |   0 | 2.101326e+06 | 6.055936e+06 | 188.20%| unknown
+(node 1) unresolved numerical troubles in LP 6 -- using pseudo solution instead (loop 1)
+(node 1) forcing the solution of an LP (last LP 6)...
+[solve.c:3916] ERROR: (node 1) unresolved numerical troubles in LP 7 cannot be dealt with
+[solve.c:4197] ERROR: Error <-6> in function call
+[solve.c:4993] ERROR: Error <-6> in function call
+[scip_solve.c:2780] ERROR: Error <-6> in function call
+[scipshell.c:221] ERROR: Error <-6> in function call
+[scipshell.c:272] ERROR: Error <-6> in function call
+[scipshell.c:559] ERROR: Error <-6> in function call
+SCIP Error (-6): error in LP solver
+exit value 255
+<BREAK>
+con2_1,2: -0.00000000
+con2_2,3: -0.00000000
+con2_3,4: -0.00000000
+con2_3,19: -0.00000000
+con2_3,20: -0.00000000
+con2_4,5: -0.00000000
+con2_5,6: -0.00000000
+con2_6,7: -0.00000000
+con2_7,8: -0.00000000
+con2_8,9: -0.00000000
+con2_9,10: -0.00000000
+con2_10,11: -0.00000000
+con2_10,14: -0.00000001
+con2_11,12: -0.00000001
+con2_12,13: -0.00000002
+con2_14,15: -0.00000006
+con2_15,16: -0.00000024
+con2_16,27: -0.00000233
+con2_17,16: -0.00000095
+con2_18,17: -0.00000002
+con2_19,18: -0.00000000
+con2_20,21: -0.00000001
+con2_20,23: -0.00000000
+con2_21,22: -0.00000007
+con2_23,24: -0.00000000
+con2_23,28: -0.00000005
+con2_24,25: -0.00000000
+con2_25,32: -0.00000001
+con2_26,25: -0.00000001
+con2_27,26: -0.00000020
+con2_28,29: -0.00000017
+con2_29,30: -0.00000549
+con2_30,31: -0.00000009
+con2_32,31: -0.00000006
+l [*,*,1] (tr)
+:         1              2              3              4              5      :=
+2    -9.99999e-09     .              .              .              .
+3      .            -9.99999e-09     .              .              .
+4      .              .            -9.99985e-09     .              .
+5      .              .              .            -9.99985e-09     .
+6      .              .              .              .            -9.99981e-09
+19     .              .            -9.98748e-09     .              .
+20     .              .            -9.99986e-09     .              .
+
+:         6              7              8             9              10      :=
+7    -9.99975e-09     .              .             .              .
+8      .            -9.99961e-09     .             .              .
+9      .              .            -9.9995e-09     .              .
+10     .              .              .           -9.99936e-09     .
+11     .              .              .             .            -9.99766e-09
+14     .              .              .             .            -9.93329e-09
+
+:        11             12             14        15    16     17     :=
+12   -9.9959e-09     .              .             .     .     .
+13     .           -9.98956e-09     .             .     .     .
+15     .             .            -9.01357e-09    .     .     .
+16     .             .              .            550    .    2730
+27     .             .              .             .    750    .
+
+:         18             19             20        21         23         :=
+17   -9.90488e-09     .              .             .      .
+18     .            -9.98678e-09     .             .      .
+21     .              .            -9.93329e-09    .      .
+22     .              .              .            500     .
+23     .              .            -9.99966e-09    .      .
+24     .              .              .             .    -9.99907e-09
+28     .              .              .             .    -9.84408e-09
+
+:         24             25            26        27     28     29     :=
+25   -9.99845e-09     .            -9.9597e-09    .     .      .
+26     .              .              .           300    .      .
+29     .              .              .            .    2000    .
+30     .              .              .            .     .     1600
+32     .            -9.99183e-09     .            .     .      .
+
+:         30             32         :=
+31   -9.88749e-09   -9.93329e-09
+
+ [*,*,2] (tr)
+:         1              2              3              4              5      :=
+2    -9.99995e-09     .              .              .              .
+3      .            -9.99994e-09     .              .              .
+4      .              .            -9.99938e-09     .              .
+5      .              .              .            -9.99936e-09     .
+6      .              .              .              .            -9.99923e-09
+19     .              .            -9.91494e-09     .              .
+20     .              .            -9.99941e-09     .              .
+
+:         6              7              8              9              10     :=
+7    -9.99897e-09     .              .              .               .
+8      .            -9.99833e-09     .              .               .
+9      .              .            -9.99788e-09     .               .
+10     .              .              .            -9.99724e-09      .
+11     .              .              .              .             -9.98892e-09
+14     .              .              .              .            246.424
+
+:         11             12        14         15             16         :=
+12   -9.97908e-09     .             .      .              .
+13     .            -9.93431e-09    .      .              .
+15     .              .            500     .              .
+16     .              .             .    -9.57489e-09     .
+27     .              .             .      .            -9.69259e-09
+
+:         17         18        19             20             21         :=
+16   -9.68839e-09    .       .              .              .
+17     .            1750     .              .              .
+18     .             .     -9.9074e-09      .              .
+21     .             .       .           490.821           .
+22     .             .       .              .            -8.9874e-09
+23     .             .       .            -9.99856e-09     .
+
+:          23              24             25             26             27   :=
+24     -9.99589e-09     .              .              .              .
+25       .            -9.99297e-09     .            -9.42832e-09     .
+26       .              .              .              .            -9.38487e-09
+28   1500               .              .              .              .
+32       .              .            -9.95255e-09     .              .
+
+:         28             29        30      32       :=
+29   -8.45251e-09     .             .       .
+30     .            -9.69273e-09    .       .
+31     .              .            150   744.862
+
+ [*,*,3] (tr)
+:         1              2              3              4              5      :=
+2    -9.99985e-09     .              .              .              .
+3      .            -9.99983e-09     .              .              .
+4      .              .            -9.99805e-09     .              .
+5      .              .              .            -9.99799e-09     .
+6      .              .              .              .            -9.99757e-09
+19     .              .            -5.28996e-09     .              .
+20     .              .            -9.99815e-09     .              .
+
+:         6              7             8              9              10      :=
+7    -9.99671e-09     .             .              .               .
+8      .            -9.9945e-09     .              .               .
+9      .              .           -9.99283e-09     .               .
+10     .              .             .            -9.99032e-09      .
+11     .              .             .              .             -9.95126e-09
+14     .              .             .              .            553.576
+
+:         11             12            14             15            16       :=
+12   -9.88276e-09     .              .             .              .
+13     .            -9.01937e-09     .             .              .
+15     .              .            -9.6703e-09     .              .
+16     .              .              .           -9.83632e-09     .
+27     .              .              .             .            -9.8612e-09
+
+:         17             18          19            20              21        :=
+16   -9.86016e-09     .               .          .              .
+17     .            -8.96881e-09      .          .              .
+18     .              .            433.602       .              .
+21     .              .               .      1009.18            .
+22     .              .               .          .            -9.77534e-09
+23     .              .               .        -9.99529e-09     .
+
+:         23             24             25        26         27         :=
+24   -9.98512e-09     .              .             .      .
+25     .            -9.97252e-09     .            850     .
+26     .              .              .             .    -9.80907e-09
+28   -9.4617e-09      .              .             .      .
+32     .              .            -9.57776e-09    .      .
+
+:         28             29             30          32       :=
+29   -9.75206e-09     .              .               .
+30     .            -9.86123e-09     .               .
+31     .              .            -9.27961e-09   115.138
+
+ [*,*,4] (tr)
+:         1             2               3              4              5      :=
+2    -9.9996e-09     .               .              .              .
+3      .           -9.99957e-09      .              .              .
+4      .             .             -9.99472e-09     .              .
+5      .             .               .            -9.99453e-09     .
+6      .             .               .              .            -9.9933e-09
+19     .             .            400               .              .
+20     .             .             -9.99499e-09     .              .
+
+:         6              7              8              9              10     :=
+7    -9.99069e-09     .              .              .              .
+8      .            -9.98325e-09     .              .              .
+9      .              .            -9.97686e-09     .              .
+10     .              .              .            -9.96562e-09     .
+11     .              .              .              .            -9.65076e-09
+14     .              .              .              .            -9.69088e-09
+
+:     11     12         14             15             16             17      :=
+12   1200    .       .              .              .              .
+13    .     3500     .              .              .              .
+15    .      .     -9.86066e-09     .              .              .
+16    .      .       .            -9.90449e-09     .            -9.91355e-09
+27    .      .       .              .            -9.91397e-09     .
+
+:         18          19           20             21             23         :=
+17   -9.77755e-09      .        .              .              .
+18     .            366.398     .              .              .
+21     .               .      -9.69088e-09     .              .
+22     .               .        .            -9.88536e-09     .
+23     .               .      -9.98603e-09     .              .
+24     .               .        .              .            -9.94332e-09
+28     .               .        .              .            -9.82299e-09
+
+:         24        25         26             27             28         :=
+25   -9.87322e-09    .    -9.63117e-09     .              .
+26     .             .      .            -9.89532e-09     .
+29     .             .      .              .            -9.87927e-09
+32     .            950     .              .              .
+
+:         29             30             32         :=
+30   -9.91398e-09     .              .
+31     .            -9.80873e-09   -9.69088e-09
+
+ [*,*,5] (tr)
+:         1              2              3              4              5      :=
+2    -9.99856e-09     .              .              .              .
+3      .            -9.99843e-09     .              .              .
+4      .              .            -9.97749e-09     .              .
+5      .              .              .            -9.97656e-09     .
+6      .              .              .              .            -9.97001e-09
+19     .              .            -9.8096e-09      .              .
+20     .              .            -9.97885e-09     .              .
+
+:         6              7              8            9           10          :=
+7    -9.95394e-09     .              .              .          .
+8      .            -9.88221e-09     .              .          .
+9      .              .            -9.74462e-09     .          .
+10     .              .              .            68.8442      .
+11     .              .              .              .       950
+14     .              .              .              .        -9.90051e-09
+
+:         11             12             14             15             16     :=
+12   -9.26713e-09     .              .              .              .
+13     .            -9.79359e-09     .              .              .
+15     .              .            -9.93062e-09     .              .
+16     .              .              .            -9.94384e-09     .
+27     .              .              .              .            -9.94734e-09
+
+:         17             18             19             20             21     :=
+16   -9.94718e-09     .              .              .              .
+17     .            -9.91264e-09     .              .              .
+18     .              .            -9.81193e-09     .              .
+21     .              .              .            -9.90051e-09     .
+22     .              .              .              .            -9.93758e-09
+23     .              .              .            -9.91517e-09     .
+
+:          23          24         25            26             27         :=
+24   1230              .       .              .             .
+25       .            1300     .            -9.8923e-09     .
+26       .             .       .              .           -9.94072e-09
+28     -9.92141e-09    .       .              .             .
+32       .             .     -9.76301e-09     .             .
+
+:         28             29             30             32         :=
+29   -9.93577e-09     .              .              .
+30     .            -9.94734e-09     .              .
+31     .              .            -9.91846e-09   -9.90051e-09
+
+ [*,*,6] (tr)
+:     1     2           3           4      5      6     7     8       9      :=
+2    100    .         .             .      .      .     .     .       .
+3     .    1350       .             .      .      .     .     .       .
+4     .     .      900              .      .      .     .     .       .
+5     .     .         .            1150    .      .     .     .       .
+6     .     .         .             .     1450    .     .     .       .
+7     .     .         .             .      .     450    .     .       .
+8     .     .         .             .      .      .    850    .       .
+9     .     .         .             .      .      .     .    850      .
+10    .     .         .             .      .      .     .     .    731.156
+19    .     .       -9.94569e-09    .      .      .     .     .       .
+20    .     .     2200              .      .      .     .     .       .
+
+:         10             11             12             14             15     :=
+11   -9.90059e-09     .              .              .              .
+12     .            -9.92335e-09     .              .              .
+13     .              .            -9.94401e-09     .              .
+14   -9.95803e-09     .              .              .              .
+15     .              .              .            -9.96472e-09     .
+16     .              .              .              .            -9.96853e-09
+
+:         16             17             18             19              20    :=
+16     .            -9.96962e-09     .              .                .
+17     .              .            -9.96043e-09     .                .
+18     .              .              .            -9.94599e-09       .
+21     .              .              .              .              -9.95803e-09
+23     .              .              .              .            2650
+27   -9.96967e-09     .              .              .                .
+
+:         21             23             24             25             26     :=
+22   -9.96664e-09     .              .              .              .
+24     .            -9.77214e-09     .              .              .
+25     .              .            -9.87702e-09     .            -9.95645e-09
+28     .            -9.9624e-09      .              .              .
+32     .              .              .            -9.94116e-09     .
+
+:         27             28             29             30             32     :=
+26   -9.96757e-09     .              .              .              .
+29     .            -9.96613e-09     .              .              .
+30     .              .            -9.96967e-09     .              .
+31     .              .              .            -9.96171e-09   -9.95803e-09
+;
+
+q [*,*] (tr)
+:       1         2         3          4         5         6         7       :=
+2    5538.87       .         .          .         .         .         .
+3        .     5291.64       .          .         .         .         .
+4        .         .     2213.13        .         .         .         .
+5        .         .         .      2177.02       .         .         .
+6        .         .         .          .     1975.63       .         .
+7        .         .         .          .         .     1696.47       .
+8        .         .         .          .         .         .     1321.47
+19       .         .      667.005       .         .         .         .
+20       .         .     2175.4         .         .         .         .
+
+:       8         9        10        11       12       14       15        16 :=
+9    1168.69       .        .         .        .        .       .         .
+10       .     1022.86      .         .        .        .       .         .
+11       .         .     555.54       .        .        .       .         .
+12       .         .        .      416.66      .        .       .         .
+13       .         .        .         .     261.11      .       .         .
+14       .         .     321.483      .        .        .       .         .
+15       .         .        .         .        .     150.65     .         .
+16       .         .        .         .        .        .     72.8726     .
+27       .         .        .         .        .        .       .       23.2129
+
+:      17        18        19         20        21        23        24       :=
+16   36.4513      .         .          .         .         .         .
+17     .       276.728      .          .         .         .         .
+18     .          .      650.339       .         .         .         .
+21     .          .         .       393.055      .         .         .
+22     .          .         .          .      134.722      .         .
+23     .          .         .      1428.17       .         .         .
+24     .          .         .          .         .      972.449      .
+25     .          .         .          .         .         .      744.672
+28     .          .         .          .         .      165.447      .
+
+:      25         26         27        28         29         30        32    :=
+25      .      -329.564      .         .          .           .         .
+26      .          .      -79.5641     .          .           .         .
+29      .          .         .       84.8915      .           .         .
+30      .          .         .         .       -15.1085       .         .
+31      .          .         .         .          .       -115.108   144.275
+32   367.886       .         .         .          .           .         .
+;
+
+h [*] :=
+ 1 100         8  41.8225   15  32.1171   22  30        29  30
+ 2  97.1399    9  40.4599   16  30.2981   23  44.3549   30  30.2871
+ 3  61.6592   10  39.1942   17  32.801    24  38.6604   31  30.5721
+ 4  56.9519   11  37.6348   18  49.6766   25  34.9889   32  32.8342
+ 5  51.1176   12  34.2072   19  58.9282   26  31.1674
+ 6  44.9717   13  30        20  50.5133   27  30
+ 7  43.5333   14  33.6806   21  35.1604   28  38.7756
+;
+
+total_cost: 6055935.834539209
+solve_time: 1.347441
