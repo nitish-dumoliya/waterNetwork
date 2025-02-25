@@ -57,12 +57,12 @@ subject to con1{j in nodes}:
 #     h[i] - h[j]  = ((q[i,j]*(abs(q[i,j])+148*eps)) / (abs(q[i,j]) + 1000*eps)^0.148)*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 #f_first_order_approx3
-#subject to con2{(i,j) in arcs}:
-#     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps)^0.852) / (abs(q[i,j]) + 852*eps))*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+subject to con2{(i,j) in arcs}:
+     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps)^0.852) / (abs(q[i,j]) + 852*eps))*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 #f_second_order_approx
-subject to con2{(i,j) in arcs}:
-     h[i] - h[j]  = ((0.001^1.852)*q[i,j]*(abs(q[i,j])+ 1000*eps)^0.852 - (0.002368316*eps * q[i,j]/(abs(q[i,j]) + 1000*eps)^0.148) + ((0.175255362*(eps)^2) * q[i,j]/((abs(q[i,j])+1000*eps)^1.148))) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+#subject to con2{(i,j) in arcs}:
+#     h[i] - h[j]  = ((0.001^1.852)*q[i,j]*(abs(q[i,j])+ 1000*eps)^0.852 - (0.002368316*eps * q[i,j]/(abs(q[i,j]) + 1000*eps)^0.148) + ((0.175255362*(eps)^2) * q[i,j]/((abs(q[i,j])+1000*eps)^1.148))) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]
@@ -78,7 +78,7 @@ subject to con5{i in Source}:
 
 subject to con6_{i in nodes diff Source}: h[i] >= E[i] + P[i] ;
 
-subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
-subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
+#subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
+#subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
 
 #*******************************************************************************************#

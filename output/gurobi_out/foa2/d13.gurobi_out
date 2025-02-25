@@ -1,3 +1,10 @@
+Water Network: ../data/d13.dat 
+
+Results of first order approximation 2 of head loss constraint
+
+*******************************************************************************
+Ipopt solver outputs: 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
 bound_push = 0.01
@@ -18,7 +25,12 @@ suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
 total_cost: 14896324.013344765 
 
+eps: 1e-06 
+
 *******************************************************************************
+
+gurobi solver outputs:
+
 Gurobi 12.0.1: Set parameter LogToConsole to value 1
   tech:outlev = 1
 Set parameter Presolve to value 1
@@ -46,7 +58,7 @@ Set parameter OBBT to value 1
 Set parameter InfUnbdInfo to value 1
 Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
 
-CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
 Non-default parameters:
@@ -79,7 +91,7 @@ Presolve model has 3 nlconstr
 Added 93 variables to disaggregate expressions.
 Presolve added 11 rows and 0 columns
 Presolve removed 0 rows and 12 columns
-Presolve time: 0.00s
+Presolve time: 0.01s
 Presolved: 289 rows, 251 columns, 918 nonzeros
 Presolved model has 48 bilinear constraint(s)
 Presolved model has 3 nonlinear constraint(s)
@@ -113,20 +125,21 @@ H   42    29                    1.509211e+07 1.4658e+07  2.87%  21.1    0s
 H  126    58                    1.506549e+07 1.4674e+07  2.60%  10.4    0s
 H  137    58                    1.490832e+07 1.4674e+07  1.57%   9.8    0s
 H 1385   657                    1.489633e+07 1.4674e+07  1.49%   2.6    1s
-H 8582  2418                    1.489633e+07 1.4678e+07  1.47%   1.6    1s
-H 9189  2321                    1.489633e+07 1.4678e+07  1.47%   1.8    2s
-H 9813  2282                    1.489633e+07 1.4678e+07  1.47%   1.8    2s
-H11452  1878                    1.489633e+07 1.4678e+07  1.47%   2.2    3s
- 20994  4507 infeasible   59      1.4896e+07 1.4694e+07  1.36%   1.9    5s
- 82621 11194 infeasible   55      1.4896e+07 1.4780e+07  0.78%   0.9   10s
-H83377 11194                    1.489633e+07 1.4780e+07  0.78%   0.9   10s
+H 8582  2418                    1.489633e+07 1.4678e+07  1.47%   1.6    2s
+H 9189  2321                    1.489633e+07 1.4678e+07  1.47%   1.8    4s
+H 9813  2282                    1.489633e+07 1.4678e+07  1.47%   1.8    4s
+ 11376  2014 infeasible   57      1.4896e+07 1.4678e+07  1.47%   2.2    5s
+H11452  1878                    1.489633e+07 1.4678e+07  1.47%   2.2    5s
+ 36932  9295 1.4738e+07   47   15 1.4896e+07 1.4718e+07  1.20%   1.3   10s
+H83377 11194                    1.489633e+07 1.4780e+07  0.78%   0.9   14s
+ 91813  5049 infeasible   55      1.4896e+07 1.4797e+07  0.67%   0.9   15s
 
 Cutting planes:
   Implied bound: 8
   RLT: 1
   Relax-and-lift: 3
 
-Explored 102616 nodes (89841 simplex iterations) in 11.04 seconds (1.21 work units)
+Explored 102616 nodes (89841 simplex iterations) in 15.56 seconds (1.21 work units)
 Thread count was 32 (of 64 available processors)
 
 Solution count 7: 1.48963e+07 1.49083e+07 1.50655e+07 ... 1.54117e+07
@@ -144,16 +157,10 @@ WARNING:  "Tolerance violations"
 * algebraic con(s)             1E-06           -             
 *: Using the solver's aux variable values.
 Documentation: mp.ampl.com/modeling-tools.html#automatic-solution-check.
-con2_2,4: 0.00000000
-con2_2,6: 0.00000003
-con2_3,7: 0.00000000
-con2_3,10: 0.00000000
-con2_4,6: 0.00000001
-con2_4,11: 0.00000000
-con2_8,9: 0.00000000
-con2_9,3: 0.00000000
-con2_10,2: 0.00000000
-con2_11,1: 0.00000000
+*******************************************************************************
+
+Print the decision variables value:
+
 l [2,*,*] (tr)
 :       4        6      :=
 0       0       3491
@@ -293,5 +300,39 @@ h [*] :=
 11  479
 ;
 
+*******************************************************************************
+
+Constraint violations:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_2,4        |              1e-08   |                0     |
++-----------------+----------------------+----------------------+
+| con2_2,6        |              4.6e-07 |                3e-08 |
++-----------------+----------------------+----------------------+
+| con2_3,7        |              4e-08   |                0     |
++-----------------+----------------------+----------------------+
+| con2_3,10       |              0       |                0     |
++-----------------+----------------------+----------------------+
+| con2_4,6        |              4e-08   |                1e-08 |
++-----------------+----------------------+----------------------+
+| con2_4,11       |              0       |                0     |
++-----------------+----------------------+----------------------+
+| con2_8,9        |              0       |                0     |
++-----------------+----------------------+----------------------+
+| con2_9,3        |              0       |                0     |
++-----------------+----------------------+----------------------+
+| con2_10,2       |              1e-08   |                0     |
++-----------------+----------------------+----------------------+
+| con2_11,1       |              1.1e-07 |                0     |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation: 6.752216363814512e-07
+Total relative constraint violation: 5.6552518724490416e-08
+*******************************************************************************
+
 total_cost: 14896325.159157535
-solve_time: 11.07726
+solve_time: 15.599057
+*******************************************************************************
+

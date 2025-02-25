@@ -12,7 +12,7 @@ import random
 
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
-
+from tabulate import tabulate
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -765,6 +765,74 @@ class WaterNetworkOptimizer:
         for constraint, gap in relative_gaps.items():
               print(f"{constraint}: {gap:.8f}")
     
+    def constraint_violations(self, q_values, h_values, l_values, R_values, d_values, pipes, epsilon):
+
+       total_relative_constraint_violation = 0
+       total_absolute_constraint_violation = 0
+       relative_violations = {}
+       absolute_violations = {}
+   
+       for (i, j) in q_values.keys():
+           # Original constraint value
+           original_lhs = h_values[i] - h_values[j]
+           original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) * \
+                          sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                              for k in pipes)
+           original_value = original_rhs
+   
+           # Approximated constraint value
+           approx_lhs = h_values[i] - h_values[j]
+   
+           approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon) /(abs(q_values[i,j])+1000*epsilon)**0.148)* \
+                        sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                            for k in pipes)
+   
+   
+           approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
+                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) * \
+                        sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                            for k in pipes)
+   
+           approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon) ** 0.852) - \
+                       (0.002368316*epsilon * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon)**0.148) +\
+                       (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
+                       sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                            for k in pipes)
+   
+   
+   
+           approx_value = approx_rhs2
+           
+           # Compute relative violation
+           relative_violation = (original_value - approx_value) / (original_value + 1e-10)
+           relative_violations[f"con2_{i},{j}"] = relative_violation
+           total_relative_constraint_violation += abs(relative_violation)
+   
+           # Compute absolute violation
+           absolute_violation =  original_value - approx_value
+           absolute_violations[f"con2_{i},{j}"] = absolute_violation
+           
+           total_absolute_constraint_violation += abs(absolute_violation)
+   
+       # Prepare data for tabulation
+       table_data = []
+       for constraint, vio in relative_violations.items():
+           table_data.append([constraint, f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
+       
+       print("*******************************************************************************\n")
+       print("Constraint violations:\n")
+       # Print table
+       headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+       print(tabulate(table_data, headers=headers, tablefmt="grid"))
+   
+       # Print total violations
+       print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
+       print("Total relative constraint violation:", total_relative_constraint_violation)
+   
+       print("*******************************************************************************\n")
+
+
+   
  
     def iterate_arc(self, iteration, improved, current_cost, best_arc):
         improved = False
@@ -818,15 +886,15 @@ class WaterNetworkOptimizer:
             self.load_model()
             self.ampl.eval(f"set inarc := {{{inarc_set}}};")
             self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
-            self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
+            #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
             fix_arc_set = self.fix_leaf_arc_flow()
             self.update_initial_points1(self.l, self.q, self.h, self.t, self.all_duals, self.inarc)
             
             if (u,v) in self.arcs:
-                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-6;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-8;")
                 # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
             else:
-                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-6;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-8;")
                 # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
             
             flow_str = ''
@@ -970,7 +1038,9 @@ class WaterNetworkOptimizer:
         print("\n**********************************Final best results******************************************\n")
         print("Water Network:", self.data_list[self.data_number])
         # self.constraint_violation()
-        self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
+        #self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
+        
+        self.constraint_violations(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         print(f"Final best objective: {current_cost}")
 
         print("Number of nlp problem solved:", self.number_of_nlp)
@@ -1025,7 +1095,8 @@ class WaterNetworkOptimizer:
             # self.ampl.option["scip_options"] = "outlev  1 timelimit 20 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0" #cvt/pre/all = 0
             # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
             # self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive tol = 1e-4 dual_inf_tol=1e-6 ")   #max_iter = 1000
-            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.0003334 bound_frac = 0.011112 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            #self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             # self.ampl.set_option("ipopt_options", """outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo halt_on_ampl_error = yes max_iter = 700""")   #max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
@@ -1048,7 +1119,7 @@ class WaterNetworkOptimizer:
             # self.ampl.option["loqo_options"]="maxit 10000"
             # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
             # self.ampl.set_option("snopt_options", "meminc = 1 major_iterations_limit = 200")
-            self.ampl.set_option("ipopt_options", "outlev = 5 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive mu_oracle = loqo max_iter = 600")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.0003334 bound_frac = 0.011112 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive mu_oracle = loqo max_iter = 600")   #max_iter = 1000
             # self.ampl.set_option("ipopt_options", """outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo  halt_on_ampl_error = yes max_iter = 400""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
@@ -1069,7 +1140,7 @@ class WaterNetworkOptimizer:
         self.start_time = time.time()
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()
-        self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
+        #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
         fix_arc_set = self.fix_leaf_arc_flow()
         print("fix_arc_set:",fix_arc_set)
         self.super_source_out_arc = self.fix_arc_set()
@@ -1153,6 +1224,6 @@ if __name__ == "__main__":
     data_number = int(sys.argv[1]) -1
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
     print("Water Network:", data_list[(data_number)],"\n")
-    optimizer = WaterNetworkOptimizer("../water-nlp2.mod", input_data_file, data_number, data_list)
+    optimizer = WaterNetworkOptimizer("../water-nlp.mod", input_data_file, data_number, data_list)
     # optimizer = WaterNetworkOptimizer(sys.argv[1], sys.argv[2], sys.argv[3])
     optimizer.run()

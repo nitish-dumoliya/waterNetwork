@@ -1,13 +1,15 @@
 import sys
+from tabulate import tabulate
 from amplpy import AMPL
 ampl = AMPL()
 
 print("Water Network:", sys.argv[3],"\n")
 
-#print("Results of first order approximation function 1 of head loss constraint\n")
-#print("Results of first order approximation function 2 of head loss constraint\n")
-print("Results of second order approximation of head loss constraint\n")
+print("Results of first order approximation 1 of head loss constraint\n")
+#print("Results of first order approximation 2 of head loss constraint\n")
+#print("Results of second order approximation of head loss constraint\n")
 
+print("*******************************************************************************")
 
 ipopt_run = 1
 
@@ -19,24 +21,28 @@ if ipopt_run == 1:
             ampl.set_option("ipopt_options", "outlev = 0  expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based ")   #max_iter = 1000
 
             ampl.option["presolve_eps"] = "8.53e-15"
+            
+            print("Ipopt solver outputs: \n")
             ampl.solve()
 
             total_cost = ampl.getObjective("total_cost").value()
             print("total_cost:", total_cost, "\n")
-            print("*******************************************************************************")
 
             l_init = ampl.getVariable('l').getValues().to_dict()
             q_init = ampl.getVariable('q').getValues().to_dict()
             h_init = ampl.getVariable('h').getValues().to_dict()
             ampl.close()
 
+#***************************************************************************************
 ampl = AMPL()
 ampl.read(sys.argv[1])
 ampl.read_data(sys.argv[3])
 
 eps = ampl.getParameter('eps').getValues().to_list()[0]
+
 print("eps:",eps, "\n")
 
+print("*******************************************************************************\n")
 
 if ipopt_run == 1:
             ampl.getVariable("q").setValues(q_init)
@@ -58,14 +64,20 @@ ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol
 ampl.option["presolve"] = "1"
 ampl.option["presolve_eps"] = "8.53e-15"
 
+print(f"{sys.argv[2]} solver outputs:\n")
+
 ampl.solve()
 
 # ampl.eval("expand ;")
 
 # ampl.eval("display {i in 1.._ncons: _con[i].slack < -1e-3} (_conname[i], _con[i].slack);")
 
-def constraint_relative_gap(q_values, h_values, l_values, R_values, d_values, pipes, epsilon):
-    relative_gaps = {}
+def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipes, epsilon):
+    
+    total_relative_constraint_violation = 0
+    total_absolute_constraint_violation = 0
+    relative_violations = {}
+    absolute_violations = {}
 
     for (i, j) in q_values.keys():
         # Original constraint value
@@ -95,16 +107,37 @@ def constraint_relative_gap(q_values, h_values, l_values, R_values, d_values, pi
                          for k in pipes)
 
 
+
+        approx_value = approx_rhs1
         
-        approx_value = approx_rhs3 
+        # Compute relative violation
+        relative_violation = (original_value - approx_value) / (original_value + 1e-10)
+        relative_violations[f"con2_{i},{j}"] = relative_violation
+        total_relative_constraint_violation += abs(relative_violation)
 
-        # Compute relative gap
-        relative_gap = (original_value - approx_value) / (original_value + 1e-10)
-        relative_gaps[f"con2_{i},{j}"] = relative_gap
+        # Compute absolute violation
+        absolute_violation =  original_value - approx_value
+        absolute_violations[f"con2_{i},{j}"] = absolute_violation
+        
+        total_absolute_constraint_violation += abs(absolute_violation)
 
-    # Display relative gaps
-    for constraint, gap in relative_gaps.items():
-        print(f"{constraint}: {gap:.8f}")
+    # Prepare data for tabulation
+    table_data = []
+    for constraint, vio in relative_violations.items():
+        table_data.append([constraint, f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
+    
+    print("*******************************************************************************\n")
+    print("Constraint violations:\n")
+    # Print table
+    headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+    print(tabulate(table_data, headers=headers, tablefmt="grid"))
+
+    # Print total violations
+    print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
+    print("Total relative constraint violation:", total_relative_constraint_violation)
+
+    print("*******************************************************************************\n")
+
 
 l = ampl.getVariable('l').getValues().to_dict()
 q = ampl.getVariable('q').getValues().to_dict()
@@ -122,17 +155,22 @@ P = ampl.getParameter('P').to_dict()
 R = ampl.getParameter('R').to_dict()
 E = ampl.getParameter('E').to_dict()
 d = ampl.getParameter('d').to_dict()
-constraint_relative_gap(q, h, l, R, d, pipes, eps)
 
+print("*******************************************************************************\n")
+print("Print the decision variables value:\n")
 ampl.eval("display l;")
 ampl.eval("display q;")
 ampl.eval("display h;")
 
+constraint_violations(q, h, l, R, d, pipes, eps)
+
 solve_time = ampl.get_value('_solve_elapsed_time')
 total_cost = ampl.getObjective("total_cost").value()
+
 print("total_cost:", total_cost)
 print("solve_time:", solve_time)
 
 ampl.close()
 
+print("*******************************************************************************\n")
 

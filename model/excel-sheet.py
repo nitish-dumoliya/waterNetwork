@@ -10,6 +10,7 @@ import re
 import subprocess
 import traceback
 from typing import List, Tuple, Union
+import shutil
 
 def find_float(arr0, st0, fl0):
     for line in arr0:
@@ -130,9 +131,23 @@ def InstanceOutput(instance,output):
 
 
 def BaronInstanceOutput(instance, output):
-    file_data = output.read().split('\n')
+    
+    # Extract total relative constraint violation
+    output_content = output.read() 
+
+    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output_content)
+    #print(violation_match)
+    violation = None
+    if violation_match:
+        try:
+            violation = float(violation_match.group(1).strip())  # Convert extracted value to float
+        except ValueError:
+            print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
+ 
+    #file_data = out.read().split('\n')
+    file_data = output_content.split('\n')
     time = 0
-    find, time = find_float(file_data, "Total CPU time used: ", time)
+    find, time = find_float(file_data, "solve_time: ", time)
     Objective = 0
     find, Objective = find_float(file_data, "Objective ", Objective)
     # Objective = 0
@@ -146,14 +161,7 @@ def BaronInstanceOutput(instance, output):
         if (find2):
             print("No feasible solution was found")
             Objective = 1e+51
-
-    # print("model instance:",instance)
-    # print("Objective:",Objective)
-    # print("Lower bound:",lb1)
-    # print("Uper bound:",ub1)
-    # print("Time:",time) 
-    # print(" ")
-    return Objective, time
+    return Objective, time, violation
 
 def KnitroInstanceOutput(instance, output):
     file_data = output.read().split('\n')
@@ -227,13 +235,22 @@ def BonminInstanceOutput(instance, output):
     return Objective, time
 
 def GurobiInstanceOutput1(instance, output):
+    file_data = output.read().split('\n')
     obj_pattern = re.search(r'Optimal objective\s+([-\d\.eE]+)', output)
     time_pattern = re.search(r'Solved in\s+([\d\.]+)\s+seconds', output)
 
     objective = float(obj_pattern.group(1)) if obj_pattern else None
     solver_time = float(time_pattern.group(1)) if time_pattern else None
+    violation = None
+    find3, violation = find_float(file_data, "Total relative constraint violation:",violation) 
 
-    return objective, solver_time
+    if find3:
+        violation = float(violation)  # Convert extracted value to float
+        print("Extracted Total Relative Constraint Violation:", violation)
+    else:
+        print("No match found.")
+ 
+    return objective, solver_time, violation
 
 def GurobiInstanceOutput(instance, output):
     # Match best objective using a robust regex pattern
@@ -272,10 +289,20 @@ def GurobiInstanceOutput(instance, output):
             solver_time = float(time_match.group(1).strip())
         except ValueError:
             print(f"Warning: Could not convert solver time '{time_match.group(1)}' to float.")
+   
+    # Extract total relative constraint violation
+    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output)
+    
+    violation = None
+    if violation_match:
+        try:
+            violation = float(violation_match.group(1).strip())  # Convert extracted value to float
+        except ValueError:
+            print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
+ 
+    return objective, solver_time, violation
 
-    return objective, solver_time
-
-def SCIPInstanceOutput(instance, output):
+def SCIPInstanceOutput(instance, output): 
     # Match best objective using a robust regex pattern
     #obj_match = re.search(r'Best objective\s+([-\d\.eE]+)', output)
     obj_match = re.search(r"Primal Bound\s*:\s*([+-]?\d+\.\d+e[+-]?\d+)", output)
@@ -313,20 +340,46 @@ def SCIPInstanceOutput(instance, output):
             print(f"Warning: Could not convert solver time '{time_match.group(1)}' to float.")
     elif time_limit_reached:
         solver_time = 3600
+ 
+    # Extract total relative constraint violation
+    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output)
     
-    return objective, solver_time
+    violation = None
+    if violation_match:
+        try:
+            violation = float(violation_match.group(1).strip())  # Convert extracted value to float
+        except ValueError:
+            print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
+    
+    return objective, solver_time, violation
 
 
 
 
 def HeuristicInstanceOutput(instance, output):
-    file_data = output.read().split('\n')
+    
+    output_content = output.read() 
+
+    # Extract total relative constraint violation
+    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output_content)
+    
+    violation = None
+    if violation_match:
+        try:
+            violation = float(violation_match.group(1).strip())  # Convert extracted value to float
+        except ValueError:
+            print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
+
+    #file_data = output.read().split('\n')
+    file_data = output_content.split('\n')
     time = 0
     # find, time = find_float(file_data, "Total CPU secs in IPOPT", time)
     Objective = 0
     find, Objective = find_float(file_data, "Final best objective:", Objective)
     find, time = find_float(file_data, "Heuristic elapsed time:", time)
-    return Objective, time
+
+  
+    return Objective, time, violation
 
 data_list=["d1_Sample_input_cycle_twoloop",
            "d2_Sample_input_cycle_hanoi",
@@ -356,6 +409,7 @@ Mmultistart_Objective = []
 Mmultistart_Time_taken = []
 Baron_Objective = []
 Baron_Time_taken = []
+Baron_Rel_vio = []
 Knitro_Objective = []
 Knitro_Time_taken = []
 Ipopt_Objective = []
@@ -364,12 +418,15 @@ Bonmin_Objective = []
 Bonmin_Time_taken = []
 Gurobi_Objective = []
 Gurobi_Time_taken = []
+Gurobi_Rel_vio = []
 Scip_Objective = []
 Scip_Time_taken = []
+Scip_Rel_vio = []
 Heuristic_Objective = []
 Heuristic_Time_taken = []
+Heuristic_Rel_vio = []
 
-approx_folder = "foa1"
+approx_folder = "foa2"
 
 print("****************************Results of Mmultistart Solver *********************************")
 
@@ -389,12 +446,14 @@ print("******************************Results of Baron Solver *******************
 for ins in data_list:
     with open(f"../output/baron_out/{approx_folder}/{ins}.baron_out") as output:
         print("Model Name:",ins)
-        obj, time= BaronInstanceOutput(ins,output)
+        obj, time, violation= BaronInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
+        print("Relative violation", violation)
         print(" ")
         Baron_Objective.append(obj)
         Baron_Time_taken.append(time)
+        Baron_Rel_vio.append(violation)
 
 print("**********************Results of Knitro Solver *********************************")
  
@@ -439,12 +498,14 @@ for ins in data_list:
     with open(f"../output/gurobi_out/{approx_folder}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
-        obj, time = GurobiInstanceOutput(ins,output)
+        obj, time, violation = GurobiInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
+        print("Relative violation :",violation)
         print(" ")
         Gurobi_Objective.append(obj)
         Gurobi_Time_taken.append(time)
+        Gurobi_Rel_vio.append(violation)
 
 print("**********************Results of SCIP Solver *********************************")
         
@@ -452,27 +513,31 @@ for ins in data_list:
     with open(f"../output/scip_out/{approx_folder}/{ins}.scip_out") as output:
         print("Model Name:",ins)
         output = output.read()
-        obj, time = SCIPInstanceOutput(ins,output)
+        obj, time, violation = SCIPInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
+        print("Relative violation :",violation)
         print(" ")
         Scip_Objective.append(obj)
         Scip_Time_taken.append(time)
+        Scip_Rel_vio.append(violation)
 
 
 print("**********************Results of Heuristic *********************************")
 
 for ins in data_list:
-    with open(f"../output/heuristic_out/{ins}.heuristic_out") as output:
+    with open(f"../output/heuristic_out/{approx_folder}/{ins}.heuristic_out") as output:
         print("Model Name:",ins)
-        obj, time = HeuristicInstanceOutput(ins,output)
+        obj, time, violation = HeuristicInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
+        print("Relative violation :",violation)
         print(" ")
         Heuristic_Objective.append(obj)
         Heuristic_Time_taken.append(time)
+        Heuristic_Rel_vio.append(violation)
 
-fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken", "Gurobi Objective","Gurobi time taken", "Scip Objective","Scip time taken""Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken" ]
+fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken","Baron Rel Vio", "Gurobi Objective","Gurobi time taken", "Gurobi Rel Vio","Scip Objective","Scip time taken", "Scip Rel Vio","Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken", "Heuristic Rel Vio"  ]
 
 filename = "mmultistart_results.csv"
 
@@ -488,10 +553,13 @@ csv_input['Mmultistart Objective'] = Mmultistart_Objective
 csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
 csv_input['Baron Objective'] = Baron_Objective
 csv_input['Baron time taken'] = Baron_Time_taken
+csv_input['Baron Rel Vio'] = Baron_Rel_vio
 csv_input['Gurobi Objective'] = Gurobi_Objective
 csv_input['Gurobi time taken'] = Gurobi_Time_taken
+csv_input['Gurobi Rel Vio'] = Gurobi_Rel_vio
 csv_input['Scip Objective'] = Scip_Objective
 csv_input['Scip time taken'] = Scip_Time_taken
+csv_input['Scip Rel Vio'] = Scip_Rel_vio
 csv_input['Knitro Objective'] = Knitro_Objective
 csv_input['Knitro time taken'] = Knitro_Time_taken
 csv_input['Ipopt Objective'] = Ipopt_Objective
@@ -500,26 +568,7 @@ csv_input['Bonmin Objective'] = Bonmin_Objective
 csv_input['Bonmin time taken'] = Bonmin_Time_taken
 csv_input['Heuristic Objective'] = Heuristic_Objective
 csv_input['Heuristic time taken'] = Heuristic_Time_taken
+csv_input['Heuristic Rel Vio'] = Heuristic_Rel_vio
 
 csv_input.to_csv('output.csv', index=False)
-
-from googleapiclient.http import MediaFileUpload
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
-
-# Load credentials from the JSON key file
-SERVICE_ACCOUNT_FILE = "credentials.json"  # Ensure this file is in the same directory
-
-SCOPES = ["https://drive.google.com/file/d/1nDIsrSl_JhvciyTIt06J9A71UY1pRlIU/view?usp=sharing"]
-creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
-# Create the Drive API service
-drive_service = build("drive", "v3", credentials=creds)
-
-# Upload the file
-file_metadata = {"name": "output.csv"}  # Change name if needed
-media = MediaFileUpload("output.csv", mimetype="text/csv")
-
-file = drive_service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-print(f"File uploaded successfully! File ID: {file.get('id')}")
 
