@@ -1,8 +1,13 @@
 Water Network: ../data/d2_Sample_input_cycle_hanoi.dat 
 
-Results of second order approximation of head loss constraint
+Results of first order approximation 1 of head loss constraint
 
-eps: 1e-06 
+*******************************************************************************
+eps: 1e-08 
+
+*******************************************************************************
+
+bonmin solver outputs:
 
 Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
 bonmin: bonmin.bb_log_level 5
@@ -18,94 +23,62 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit http://projects.coin-or.org/Ipopt
 ******************************************************************************
 
-NLP0010I Ipopt return (for initialSolve): status  1, iter count  141, time 0.696443
+NLP0010I Ipopt return (for initialSolve): status  1, iter count  204, time 0.9987
 NLP0012I 
               Num      Status      Obj             It       time                 Location
-NLP0014I             1         OPT 6263059.1      141 0.696443
-NLP0001I After 1 tries found a solution of 6263059.1 (previous best 6263059.1).
+NLP0014I             1         OPT 6177508.6      204 0.9987
+NLP0001I After 1 tries found a solution of 6177508.6 (previous best 6177508.6).
 NLP3003W Trying to resolve NLP with different starting point (1 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  229, time 1.08026
-NLP0011I Solution of value 6260342.7 found on 1'th attempt
-NLP0014I *           1         OPT 6260342.7      229 1.08026         resolve cost
-NLP0001I After 2 tries found a solution of 6260342.7 (previous best 6260342.7).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  190, time 0.815163
+NLP0014I             1         OPT 6264070.9      190 0.815163         resolve cost
+NLP0001I After 2 tries found a solution of 6264070.9 (previous best 6177508.6).
 NLP3003W Trying to resolve NLP with different starting point (2 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  230, time 0.914697
-NLP0014I             2         OPT 6262661.7      230 0.914697         resolve cost
-NLP0001I After 3 tries found a solution of 6262661.7 (previous best 6260342.7).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  138, time 0.489429
+NLP0014I             2         OPT 6492473.2      138 0.489429         resolve cost
+NLP0001I After 3 tries found a solution of 6492473.2 (previous best 6177508.6).
 NLP3003W Trying to resolve NLP with different starting point (3 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  120, time 0.489362
-NLP0011I Solution of value 6067821 found on 3'th attempt
-NLP0014I *           3         OPT 6067821      120 0.489362         resolve cost
-NLP0001I After 4 tries found a solution of 6067821 (previous best 6067821).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  162, time 0.606747
+NLP0014I             3         OPT 6190726      162 0.606747         resolve cost
+NLP0001I After 4 tries found a solution of 6190726 (previous best 6177508.6).
 NLP3003W Trying to resolve NLP with different starting point (4 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  197, time 0.753767
-NLP0011I Solution of value 6062997.1 found on 4'th attempt
-NLP0014I *           4         OPT 6062997.1      197 0.753767         resolve cost
-NLP0001I After 5 tries found a solution of 6062997.1 (previous best 6062997.1).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  147, time 0.607346
+NLP0011I Solution of value 6063069.5 found on 4'th attempt
+NLP0014I *           4         OPT 6063069.5      147 0.607346         resolve cost
+NLP0001I After 5 tries found a solution of 6063069.5 (previous best 6063069.5).
 NLP3003W Trying to resolve NLP with different starting point (5 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  204, time 0.905894
-NLP0014I             5         OPT 6079583.1      204 0.905894         resolve cost
-NLP0001I After 6 tries found a solution of 6079583.1 (previous best 6062997.1).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  133, time 0.55595
+NLP0014I             5         OPT 6254960.4      133 0.55595         resolve cost
+NLP0001I After 6 tries found a solution of 6254960.4 (previous best 6063069.5).
 NLP3003W Trying to resolve NLP with different starting point (6 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  123, time 0.489363
-NLP0014I             6         OPT 6233474.9      123 0.489363         resolve cost
-NLP0001I After 7 tries found a solution of 6233474.9 (previous best 6062997.1).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  155, time 0.632466
+NLP0014I             6         OPT 6222929.3      155 0.632466         resolve cost
+NLP0001I After 7 tries found a solution of 6222929.3 (previous best 6063069.5).
 NLP3003W Trying to resolve NLP with different starting point (7 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  258, time 0.990532
-NLP0014I             7         OPT 6079611.2      258 0.990532         resolve cost
-NLP0001I After 8 tries found a solution of 6079611.2 (previous best 6062997.1).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  202, time 0.76966
+NLP0014I             7         OPT 6292512      202 0.76966         resolve cost
+NLP0001I After 8 tries found a solution of 6292512 (previous best 6063069.5).
 NLP3003W Trying to resolve NLP with different starting point (8 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  174, time 0.710307
-NLP0014I             8         OPT 6079583.1      174 0.710307         resolve cost
-NLP0001I After 9 tries found a solution of 6079583.1 (previous best 6062997.1).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  180, time 0.66179
+NLP0014I             8         OPT 6142802.7      180 0.66179         resolve cost
+NLP0001I After 9 tries found a solution of 6142802.7 (previous best 6063069.5).
 NLP3003W Trying to resolve NLP with different starting point (9 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  110, time 0.401797
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  110, time 0.431891
 NLP0011I Solution of value 6055935.8 found on 9'th attempt
-NLP0014I *           9         OPT 6055935.8      110 0.401797         resolve cost
+NLP0014I *           9         OPT 6055935.8      110 0.431891         resolve cost
 NLP0001I After 10 tries found a solution of 6055935.8 (previous best 6055935.8).
 NLP3003W Trying to resolve NLP with different starting point (10 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  178, time 0.801837
-NLP0014I            10         OPT 6254960.4      178 0.801837         resolve cost
-NLP0001I After 11 tries found a solution of 6254960.4 (previous best 6055935.8).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  151, time 0.696338
+NLP0014I            10         OPT 6067821      151 0.696338         resolve cost
+NLP0001I After 11 tries found a solution of 6067821 (previous best 6055935.8).
 Cbc3007W No integer variables - nothing to do
 
  	"Finished"
 
 bonmin: Optimal
-con2_1,2: 0.00000000
-con2_2,3: 0.00000000
-con2_3,4: 0.00000000
-con2_3,19: 0.00000000
-con2_3,20: 0.00000000
-con2_4,5: 0.00000000
-con2_5,6: 0.00000000
-con2_6,7: 0.00000000
-con2_7,8: 0.00000000
-con2_8,9: 0.00000000
-con2_9,10: 0.00000000
-con2_10,11: 0.00000000
-con2_10,14: 0.00000000
-con2_11,12: 0.00000000
-con2_12,13: 0.00000000
-con2_14,15: 0.00000000
-con2_15,16: 0.00000000
-con2_16,27: 0.00000000
-con2_17,16: 0.00000000
-con2_18,17: 0.00000000
-con2_19,18: 0.00000000
-con2_20,21: 0.00000000
-con2_20,23: 0.00000000
-con2_21,22: 0.00000000
-con2_23,24: 0.00000000
-con2_23,28: 0.00000000
-con2_24,25: 0.00000000
-con2_25,32: 0.00000000
-con2_26,25: 0.00000000
-con2_27,26: 0.00000000
-con2_28,29: 0.00000000
-con2_29,30: 0.00000000
-con2_30,31: 0.00000000
-con2_32,31: 0.00000000
+*******************************************************************************
+
+Print the decision variables value:
+
 l [*,*,1] (tr)
 :    1   2   3   4   5   6   7   8   9  10  11  12  14   15    16     17   18 :=
 2    0   .   .   .   .   .   .   .   .   .   .   .   .    .     .     .     .
@@ -384,5 +357,87 @@ h [*] :=
  7  43.5331   14  33.6815   21  35.1604   28  38.7756
 ;
 
-total_cost: 6055935.7765707355
-solve_time: 17.477182000000003
+*******************************************************************************
+
+Constraint violations:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,4        |                   -0 |                   -0 |
++-----------------+----------------------+----------------------+
+| con2_3,19       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,20       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_5,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_7,8        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_8,9        |                   -0 |                   -0 |
++-----------------+----------------------+----------------------+
+| con2_9,10       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_10,11      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_10,14      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_11,12      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_12,13      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_14,15      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_15,16      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_16,27      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_17,16      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_18,17      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_19,18      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_20,21      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_20,23      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_21,22      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_23,24      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_23,28      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_24,25      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_25,32      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_26,25      |                    0 |                   -0 |
++-----------------+----------------------+----------------------+
+| con2_27,26      |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_28,29      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_29,30      |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_30,31      |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_32,31      |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation: 4.9182879990894435e-14
+Total relative constraint violation: 5.0431751578178125e-14
+*******************************************************************************
+
+total_cost: 6055935.776573629
+solve_time: 20.784697
+*******************************************************************************
+
