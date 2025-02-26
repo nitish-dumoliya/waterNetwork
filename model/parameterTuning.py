@@ -11,7 +11,7 @@ ampl.read_data(sys.argv[2])
 ampl.option["solver"] = "ipopt"
 
 # Define parameter search space
-bound_push_values = np.linspace(1e-6, 0.004 , 3)  # Values: 0, 0.1, ..., 0.5
+bound_push_values = np.linspace(1e-6, 0.004 , 6)  # Values: 0, 0.1, ..., 0.5
 bound_frac_values = np.linspace(1e-6, 0.02 , 6)
 
 best_objective = float("inf")

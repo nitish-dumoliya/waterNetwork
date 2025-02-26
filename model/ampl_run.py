@@ -11,7 +11,7 @@ print("Results of first order approximation 1 of head loss constraint\n")
 
 print("*******************************************************************************")
 
-ipopt_run = 1
+ipopt_run = 0
 
 if ipopt_run == 1:
             ampl.read(sys.argv[1])
@@ -108,7 +108,7 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
 
 
 
-        approx_value = approx_rhs1
+        approx_value = approx_rhs2
         
         # Compute relative violation
         relative_violation = (original_value - approx_value) / (original_value + 1e-10)

@@ -1,5 +1,16 @@
+Water Network: ../data/d1_Sample_input_cycle_twoloop.dat 
+
+Results of first order approximation 1 of head loss constraint
+
+*******************************************************************************
+eps: 1e-08 
+
+*******************************************************************************
+
+mmultistart solver outputs:
+
 Environment: User provided options:
-  problem_file = /tmp/at1100842
+  problem_file = /tmp/at193986
   ampl = 1
 Environment: End of user provided options.
 
@@ -87,13 +98,13 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
  Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
 ----------------------------------------------------------------------------------------------
      0         0             -inf          inf         inf              0             0      0
-     2         1              inf   4.2113e+05    0.00e+00              1             0      1
+     3         1              inf   4.0341e+05    0.00e+00              1             0      1
 ----------------------------------------------------------------------------------------------
  
 BranchAndBound: stopping branch-and-bound
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 1.78
+BranchAndBound: time taken      = 2.55
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
 MsProcessor: nodes processed     = 1
@@ -105,8 +116,8 @@ MsProcessor: nodes with problems = 0
 MaxVio brancher: times called = 0
 MaxVio brancher: time in brancher = 0.00
 SolutionPool: Number of solutions found = 1
-SolutionPool: Time first solution found = 1.76
-SolutionPool: Time best solution found  = 1.76
+SolutionPool: Time first solution found = 2.55
+SolutionPool: Time best solution found  = 2.55
 Ipopt: total calls            = 0
 Ipopt: calls to Optimize      = 0
 Ipopt: calls to ReOptimize    = 0
@@ -143,20 +154,170 @@ NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
  
-MultiStart: best solution value = 421132.7292
+MultiStart: best solution value = 403406.1734
 MultiStart: best bound estimate from remaining nodes = inf
 MultiStart: gap = 0.0000
 MultiStart: gap percentage = 0.0000
-MultiStart: time used (s) = 1.78
+MultiStart: time used (s) = 2.56
 MultiStart: status of branch-and-bound: Optimal solution found
-MultiStart: wall clock time used (s) = 0.59
-con2_1,2: 0.00000000
-con2_2,3: 0.00000000
-con2_2,4: 0.00000000
-con2_3,5: 0.00000000
-con2_4,5: 0.00000273
-con2_4,6: 0.00000000
-con2_6,7: 0.00000001
-con2_7,5: 0.00000000
-total_cost: 421132.7291390545
-solve_time: 0.5903849999999999
+MultiStart: wall clock time used (s) = 1.09
+*******************************************************************************
+
+Print the decision variables value:
+
+l [1,*,*] (tr)
+:           2            :=
+1    -1e-08
+2    -1e-08
+3    -1e-08
+4    -1e-08
+5    -1e-08
+6        -9.99999e-09
+7        -9.99996e-09
+8        -9.99988e-09
+9        -9.99961e-09
+10       -9.99801e-09
+11     1000
+12       -9.98891e-09
+13       -9.99952e-09
+14       -9.99984e-09
+
+ [2,*,*] (tr)
+:           3                  4            :=
+1    -1e-08             -1e-08
+2    -1e-08             -1e-08
+3        -9.99999e-09   -1e-08
+4        -9.99998e-09   -1e-08
+5        -9.99983e-09       -9.99999e-09
+6        -9.99892e-09       -9.99996e-09
+7       795.187             -9.99985e-09
+8       204.813             -9.99948e-09
+9        -9.9836e-09        -9.99604e-09
+10       -9.9982e-09      1000
+11       -9.9992e-09        -9.99712e-09
+12       -9.99949e-09       -9.99886e-09
+13       -9.99977e-09       -9.99968e-09
+14       -9.99989e-09       -9.99987e-09
+
+ [3,*,*] (tr)
+:           5            :=
+1    -1e-08
+2    -1e-08
+3        -9.99997e-09
+4        -9.99985e-09
+5        -9.99841e-09
+6        98.4257
+7       901.574
+8        -9.99641e-09
+9        -9.99774e-09
+10       -9.99898e-09
+11       -9.99941e-09
+12       -9.99959e-09
+13       -9.99979e-09
+14       -9.99989e-09
+
+ [4,*,*] (tr)
+:          5                 6            :=
+1    1000             -1e-08
+2      -9.98155e-09   -1e-08
+3      -9.9908e-09    -1e-08
+4      -9.99388e-09   -1e-08
+5      -9.99607e-09       -9.99999e-09
+6      -9.99738e-09       -9.99994e-09
+7      -9.99817e-09       -9.99976e-09
+8      -9.99885e-09       -9.99909e-09
+9      -9.99905e-09      309.827
+10     -9.99937e-09      690.173
+11     -9.99957e-09       -9.99786e-09
+12     -9.99967e-09       -9.99906e-09
+13     -9.99982e-09       -9.9997e-09
+14     -9.9999e-09        -9.99987e-09
+
+ [6,*,*] (tr)
+:           7            :=
+1    -1e-08
+2    -1e-08
+3        -9.99997e-09
+4        -9.99985e-09
+5        -9.99841e-09
+6        11.0907
+7       988.909
+8        -9.99641e-09
+9        -9.99774e-09
+10       -9.99898e-09
+11       -9.99941e-09
+12       -9.99959e-09
+13       -9.99979e-09
+14       -9.99989e-09
+
+ [7,*,*] (tr)
+:          5           :=
+1    1000
+2      -9.982e-09
+3      -9.99092e-09
+4      -9.99393e-09
+5      -9.99609e-09
+6      -9.99739e-09
+7      -9.99817e-09
+8      -9.99886e-09
+9      -9.99905e-09
+10     -9.99938e-09
+11     -9.99957e-09
+12     -9.99967e-09
+13     -9.99982e-09
+14     -9.9999e-09
+;
+
+q :=
+1 2   311.109
+2 3   102.314
+2 4   181.017
+3 5    74.5366
+4 5     0.270999
+4 6   147.413
+6 7    55.7474
+7 5     0.192412
+;
+
+h [*] :=
+1  210
+2  203.25
+3  190
+4  198.856
+5  180
+6  195
+7  190
+;
+
+*******************************************************************************
+
+Constraint violations:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |                   -0 |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation: 3.3216127626189973e-09
+Total relative constraint violation: 2.561347758114656e-10
+*******************************************************************************
+
+total_cost: 403406.1732538944
+solve_time: 1.0979269999999999
+*******************************************************************************
+

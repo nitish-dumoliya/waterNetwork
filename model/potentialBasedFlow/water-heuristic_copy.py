@@ -13,12 +13,8 @@ import random
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 from tabulate import tabulate
-import optuna
 import warnings
 warnings.filterwarnings("ignore")
-from pyswarm import pso
-import multiprocessing
-
 
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number, data_list):
@@ -53,7 +49,6 @@ class WaterNetworkOptimizer:
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
         self.eps = self.ampl.getParameter('eps').to_list()[0]
-        
         
         self.delta = 0.1
         self.p = 1.852
@@ -836,6 +831,8 @@ class WaterNetworkOptimizer:
    
        print("*******************************************************************************\n")
 
+
+   
  
     def iterate_arc(self, iteration, improved, current_cost, best_arc):
         improved = False
@@ -894,10 +891,10 @@ class WaterNetworkOptimizer:
             self.update_initial_points1(self.l, self.q, self.h, self.t, self.all_duals, self.inarc)
             
             if (u,v) in self.arcs:
-                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-6;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-8;")
                 # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
             else:
-                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-6;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-8;")
                 # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
             
             flow_str = ''
@@ -1087,71 +1084,7 @@ class WaterNetworkOptimizer:
                 # Restore original stdout and stderr
                 sys.stdout = old_stdout
                 sys.stderr = old_stderr
-
-   
-    def objective(self, params):
-
-
-        bound_push, bound_frac = params
- 
-        print(f"Testing bound_push={bound_push}, bound_frac={bound_frac}")
-        self.bound_push = bound_push
-        self.bound_frac = bound_frac
-
-        self.load_model()
-        fix_arc_set = self.fix_leaf_arc_flow()
-        print("fix_arc_set:",fix_arc_set)
-        self.super_source_out_arc = self.fix_arc_set()
-        print("super_source_out_arc:", self.super_source_out_arc, "\n")
-        
-
-        self.ampl.option["solver"] = "ipopt"
-        ipopt_options = f"outlev=0 expect_infeasible_problem=yes bound_push={bound_push} bound_frac={bound_frac}  warm_start_init_point = yes nlp_scaling_method=none "
-        self.ampl.set_option("ipopt_options", ipopt_options)
-
-        self.solve()
-        total_cost = self.ampl.getObjective("total_cost").value()
     
-        print(f"Total cost: {total_cost}")
- 
-        return total_cost  # Minimize total cost
-
-       
-
-    def objective1(self, params, data):
-
-        #""" Objective function for Bayesian Optimization """
-       
-        # Sample hyperparameters from Optuna
-        #bound_push = trial.suggest_float("bound_push", 0.03, 0.05)
-        #bound_frac = trial.suggest_float("bound_frac", 0.03, 0.05)
-        #global self.solve_count, self.best_so_far, self.no_improve_count
-
-        bound_push, bound_frac = params
- 
-        print(f"Testing bound_push={bound_push}, bound_frac={bound_frac}")
-        #self.bound_push = bound_push
-        #self.bound_frac = bound_frac
-
-        # Load the model
-        ampl = AMPL()
-
-        ampl.read("../water-nlp.mod")
-        ampl.read_data(data)
-    
-
-        ampl.option["solver"] = "ipopt"
-        ipopt_options = f"outlev=0 expect_infeasible_problem=yes bound_push={bound_push} bound_frac={bound_frac}  warm_start_init_point = yes nlp_scaling_method=none "
-        ampl.set_option("ipopt_options", ipopt_options)
-
-        ampl.solve()
-        total_cost = ampl.getObjective("total_cost").value()
-    
-        print(f"Total cost: {total_cost}")
-
- 
-        return total_cost  # Minimize total cost
-
     def solve(self):
         print("bound_push:", self.bound_push)
         print("bound_frac:", self.bound_frac)
@@ -1165,7 +1098,7 @@ class WaterNetworkOptimizer:
         # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
         # self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive tol = 1e-4 dual_inf_tol=1e-6 ")   #max_iter = 1000
         #self.ampl.set_option(f"ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.0003334 bound_frac = 0.011112 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
-        self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes nlp_scaling_method = none")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} nlp_scaling_method = none")   #max_iter = 1000
         #self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo halt_on_ampl_error = yes max_iter = 700""")   #max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
         self.ampl.option["presolve_eps"] = "6.82e-14"
         self.ampl.option['presolve'] = 1
@@ -1190,8 +1123,8 @@ class WaterNetworkOptimizer:
             # self.ampl.set_option("snopt_options", "meminc = 1 major_iterations_limit = 200")
             print("bound_push:", self.bound_push)
             print("bound_frac:", self.bound_frac)
-            #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes ")   #max_iter = 1000
-            self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 400 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
+            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive mu_oracle = loqo max_iter = 600")   #max_iter = 1000
+            #self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 400""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
             # self.ampl.option['solver_msg'] = 0
@@ -1204,40 +1137,71 @@ class WaterNetworkOptimizer:
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.solver_time += solve_time
         self.number_of_nlp += 1
-    
+        
     def run(self):
         """Main method to run the optimization process."""
         
         self.start_time = time.time()
-        #self.initial_point = False
-        #study = optuna.create_study(direction="minimize")
-        #study.optimize(self.objective, n_trials=5)
+
+        #self.load_model()
+        #fix_arc_set = self.fix_leaf_arc_flow()
+        #print("fix_arc_set:",fix_arc_set)
+        #self.super_source_out_arc = self.fix_arc_set()
+        #print("super_source_out_arc:", self.super_source_out_arc, "\n")
         
-        # Print best parameters
-        #print("\nBest Found Parameters:")
-        #print(f"Bound Push: {study.best_params['bound_push']}")
-        #print(f"Bound Frac: {study.best_params['bound_frac']}")
-        #print(f"Best Objective Value: {study.best_value}")
- 
-       
-        #self.bound_push = study.best_params['bound_push']
-        #self.bound_frac = study.best_params['bound_frac']
-        lb = [1e-6, 1e-6]  # Lower bounds (0)
-        ub = [0.01, 0.1]  # Upper bounds (0.5)
 
-        def parallel_objective_function(params):
-            """ Wrapper for parallel evaluation of objective function inside PSO. """
-            return self.objective(params, self.data_file)  # Pass `data_number`
 
-        # Set up multiprocessing for parallel execution inside PSO
-        num_cores = multiprocessing.cpu_count()  # Get the number of available CPU cores
-        #with multiprocessing.Pool(processes=num_cores) as pool:
-        #    best_params, best_cost = pso(parallel_objective_function, lb, ub, swarmsize=2, maxiter=10, processes= num_cores)
-            #best_params, best_cost = pso(lambda params: pool.apply(parallel_objective_function, args=([params, self.data_file],)), lb, ub, swarmsize=2, maxiter=5)
-        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=5, maxiter=10)
+        
+        # Define parameter search space
+        bound_push_values = np.linspace(0.001, 0.01 , 5)  # Values: 0, 0.1, ..., 0.5
+        bound_frac_values = np.linspace(0.001, 0.01 , 5)
+        
+        best_objective = float("inf")
+        best_params = None
+        self.bound_push = None
+        self.bound_frac = None
+        
+        # Store results
+        results = []
+        
+        for self.bound_push in bound_push_values:
+            for self.bound_frac in bound_frac_values:
+                print(f"Testing bound_push={self.bound_push}, bound_frac={self.bound_frac}")
+                self.load_model()
 
-        self.bound_push , self.bound_frac = best_params
-        #self.bound_frac = 0.01
+                # Set IPOPT options dynamically
+                #ipopt_options = f"outlev=0 expect_infeasible_problem=yes bound_push={bound_push} bound_frac={bound_frac} nlp_scaling_method=gradient-based"
+                #self.ampl.set_option("ipopt_options", ipopt_options)
+                #self.ampl.option["presolve_eps"] = "8.53e-15"
+        
+                # Solve model
+                self.solve()
+        
+                # Extract objective value
+                total_cost = self.ampl.getObjective("total_cost").value()
+                print("total cost:", total_cost, "best cost:", best_objective)
+                
+                # Extract constraint violations
+                #violation = ampl.getValue("sum {c in con2} abs(con2[c].dual)")
+        
+                # Store results
+                results.append((self.bound_push, self.bound_frac, total_cost))
+        
+                # Update best parameters
+                if total_cost < best_objective :  # Ensure feasibility
+                    best_objective = total_cost
+                    best_params = (self.bound_push, self.bound_frac)
+        
+        self.bound_push = best_params[0]
+        self.bound_frac = best_params[1]
+        # Print best found parameters
+        print("\nBest Parameters:")
+        print(f"Bound Push: {self.bound_push}")
+        print(f"Bound Frac: {self.bound_frac}")
+        print(f"Best Objective Value: {best_objective}\n")
+        
+        # Close AMPL session
+        #self.ampl.close()
  
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()
@@ -1247,7 +1211,6 @@ class WaterNetworkOptimizer:
         self.super_source_out_arc = self.fix_arc_set()
         print("super_source_out_arc:", self.super_source_out_arc, "\n")
         
-        #self.update_initial_points(self.l, self.q, self.h)
         # self.ampl.eval("subject to con2{(i,j) in arcs }: (if -delta<=q[i,j]<=delta  then (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) else (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j]  ;")
         # self.ampl.eval("display option ipopt_options;")     # Display all options in AMPL
         # self.generate_random_acyclic_graph()
@@ -1331,4 +1294,3 @@ if __name__ == "__main__":
     optimizer = WaterNetworkOptimizer("../water-nlp.mod", input_data_file, data_number, data_list)
     # optimizer = WaterNetworkOptimizer(sys.argv[1], sys.argv[2], sys.argv[3])
     optimizer.run()
-
