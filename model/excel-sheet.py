@@ -426,7 +426,7 @@ Heuristic_Objective = []
 Heuristic_Time_taken = []
 Heuristic_Rel_vio = []
 
-approx_folder = "foa2"
+approx_folder = "soa"
 
 print("****************************Results of Mmultistart Solver *********************************")
 

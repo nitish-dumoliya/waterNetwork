@@ -3,14 +3,14 @@ Water Network: ../data/d18_pescara.dat
 Results of first order approximation 1 of head loss constraint
 
 *******************************************************************************
-eps: 1e-08 
+eps: 1e-06 
 
 *******************************************************************************
 
 mmultistart solver outputs:
 
 Environment: User provided options:
-  problem_file = /tmp/at195168
+  problem_file = /tmp/at2275557
   ampl = 1
 Environment: End of user provided options.
 
@@ -24,7 +24,7 @@ Environment: User provided options:
 Environment: End of user provided options.
 
 AMPLInterface: problem type is NLP
-Solver: time used in reading instance = 0.01
+Solver: time used in reading instance = 0.00
 MultiStart: objective sense: minimize
 MultiStart: handlers used in presolve:
 MultiStart: LinearHandler (Handling linear constraints)
@@ -99,14 +99,14 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
  Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
 ----------------------------------------------------------------------------------------------
      0         0             -inf          inf         inf              0             0      0
-    19        16              inf          inf         inf              1             0      0
-    19        16              inf          inf         inf              1             0      0
+     8         7              inf          inf         inf              1             0      0
+     8         7              inf          inf         inf              1             0      0
 ----------------------------------------------------------------------------------------------
  
 BranchAndBound: stopping branch-and-bound
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 19.20
+BranchAndBound: time taken      = 8.11
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
 MsProcessor: nodes processed     = 1
@@ -160,9 +160,9 @@ MultiStart: best solution value = inf
 MultiStart: best bound estimate from remaining nodes = inf
 MultiStart: gap = 0.0000
 MultiStart: gap percentage = inf
-MultiStart: time used (s) = 19.22
+MultiStart: time used (s) = 8.19
 MultiStart: status of branch-and-bound: Detected infeasibility
-MultiStart: wall clock time used (s) = 16.16
+MultiStart: wall clock time used (s) = 7.12
 *******************************************************************************
 
 Print the decision variables value:
@@ -1642,6 +1642,6 @@ Total relative constraint violation: 0.0
 *******************************************************************************
 
 total_cost: 0.0
-solve_time: 16.177408
+solve_time: 7.129274
 *******************************************************************************
 

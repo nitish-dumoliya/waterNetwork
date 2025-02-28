@@ -806,7 +806,7 @@ class WaterNetworkOptimizer:
    
    
    
-           approx_value = approx_rhs2
+           approx_value = approx_rhs3
            
            # Compute relative violation
            relative_violation = (original_value - approx_value) / (original_value + 1e-10)
@@ -1191,7 +1191,7 @@ class WaterNetworkOptimizer:
             print("bound_push:", self.bound_push)
             print("bound_frac:", self.bound_frac)
             #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes ")   #max_iter = 1000
-            self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 400 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
+            self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 600 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
             # self.ampl.option['solver_msg'] = 0
@@ -1223,7 +1223,7 @@ class WaterNetworkOptimizer:
         #self.bound_push = study.best_params['bound_push']
         #self.bound_frac = study.best_params['bound_frac']
         lb = [1e-6, 1e-6]  # Lower bounds (0)
-        ub = [0.01, 0.1]  # Upper bounds (0.5)
+        ub = [0.001, 0.01]  # Upper bounds (0.5)
 
         def parallel_objective_function(params):
             """ Wrapper for parallel evaluation of objective function inside PSO. """
@@ -1234,7 +1234,7 @@ class WaterNetworkOptimizer:
         #with multiprocessing.Pool(processes=num_cores) as pool:
         #    best_params, best_cost = pso(parallel_objective_function, lb, ub, swarmsize=2, maxiter=10, processes= num_cores)
             #best_params, best_cost = pso(lambda params: pool.apply(parallel_objective_function, args=([params, self.data_file],)), lb, ub, swarmsize=2, maxiter=5)
-        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=5, maxiter=10)
+        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=5, maxiter=5)
 
         self.bound_push , self.bound_frac = best_params
         #self.bound_frac = 0.01
@@ -1298,7 +1298,7 @@ class WaterNetworkOptimizer:
         print(f"Solver_time: {solver_time:.2f} seconds")
         # print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
         print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds\n")
-        
+
 if __name__ == "__main__":
     data_list = [
         "d1_Sample_input_cycle_twoloop",
@@ -1327,7 +1327,7 @@ if __name__ == "__main__":
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
     print("Water Network:", data_list[(data_number)],"\n")
 
-    
+
     optimizer = WaterNetworkOptimizer("../water-nlp.mod", input_data_file, data_number, data_list)
     # optimizer = WaterNetworkOptimizer(sys.argv[1], sys.argv[2], sys.argv[3])
     optimizer.run()
