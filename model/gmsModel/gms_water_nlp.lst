@@ -1,0 +1,439 @@
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  set nodes
+   2  set Source(nodes)
+   3  set pipes
+   4  ;
+   5   
+   6  alias(nodes,N,M);
+   7   
+   8  set arcs(N,M)
+   9  ;
+  10   
+  11  Parameter elevation(nodes)
+  12            D(nodes)
+  13            P(nodes)
+  14            L(N,M)
+  15            vmax(N,M)
+  16            R(pipes)
+  17            dia(pipes)
+  18            C(pipes)
+  19  ;
+  20   
+  21  Variables h(nodes)
+  22            q(N,M)
+  23            total_cost
+  24  ;
+  25   
+  26  Positive Variable length(N,M,pipes);
+  27   
+  28  Equations obj
+  29            Balance(nodes)
+  30            HydraulicHead_Flow(N,M)
+  31            length_limit(N,M)
+  32            elevation_constraint(Source)
+  33  ;
+  34   
+  35  Scalar omega / 10.67 / ;
+  36  Scalar epsilon / 1e-6 / ;
+  37   
+  38  obj.. total_cost =E= sum(arcs, sum(pipes, length(arcs,pipes)*C(pipes)));
+  39   
+  40  Balance(nodes)$(not Source(nodes))..
+  41    D(nodes) =E=  - SUM(M$arcs(nodes,M), q(nodes,M)) + SUM(N$arcs(N,nodes), q(N,nodes));
+  42   
+  43  HydraulicHead_Flow(N,M)$(arcs(N,M))..
+  44      h(N) - h(M) =E= signPower(q(N,M),1.852)*(0.001**1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes)/1000)**4.87) ));
+  45   
+  46  *HydraulicHead_Flow(N,M)$(arcs(N,M))..
+  47  *    h(N) - h(M) =E= sign(q(N,M)) * ((abs(q(N,M)) )**1.852)*(0.001**1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes)/1000)**4.87) ));
+  48   
+  49  *HydraulicHead_Flow(N,M)$(arcs(N,M))..
+  50  *    h(N) - h(M) =E= ((q(N,M) * abs(q(N,M)) * ((abs(q(N,M)) + 1000*epsilon)**0.852)) / (abs(q(N,M)) + 852*epsilon))*(0.001**1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes)/1000)**4.87)) );
+  51   
+  52  length_limit(N,M)$(arcs(N,M)) ..
+  53      sum(pipes, length(N,M,pipes)) =E= L(N,M);
+  54   
+  55  elevation_constraint(Source)..
+  56      h(Source) =E= elevation(Source);
+  57   
+INCLUDE    /home/nitishdumoliya/waterNetwork/model/gmsModel/d1.gmsdat
+  59  set nodes / 1*7 /;
+  60   
+  61  set arcs(N,M) /
+  62  1.2
+  63  2.3
+  64  2.4
+  65  4.5
+  66  4.6
+  67  6.7
+  68  3.5
+  69  7.5
+  70  /;
+  71   
+  72  set Source(nodes) / 1 /;
+  73   
+  74  Parameter elevation(nodes) /
+  75         1                210
+  76         2              150
+  77         3              160
+  78         4              155
+  79         5              150
+  80         6              165
+  81         7              160
+  82  /;
+  83   
+  84  Parameter D(nodes) /
+  85         1              0
+  86         2              27.77
+  87         3              27.77
+  88         4              33.33
+  89         5              75.00
+  90         6              91.67
+  91         7              55.55
+  92  /;
+  93   
+  94   
+  95  *Parameter D(nodes) /
+  96  *       1              0
+  97  *       2              0.02777
+  98  *       3              0.02777
+  99  *       4              0.03333
+ 100  *       5              0.075
+ 101  *       6              0.09167
+ 102  *       7              0.05555
+ 103  */;
+ 104   
+ 105  Parameter P(nodes) /
+ 106         1              0
+ 107         2              30
+ 108         3              30
+ 109         4              30
+ 110         5              30
+ 111         6              30
+ 112         7              30
+ 113  /;
+ 114   
+ 115   
+ 116  set pipes / 1*14 /;
+ 117   
+ 118  Parameter dia(pipes) /
+ 119         1            025.4
+ 120         2            050.8
+ 121         3            076.2
+ 122         4            101.6
+ 123         5            152.4
+ 124         6            203.2
+ 125         7            254.0
+ 126         8            304.8
+ 127         9            355.6
+ 128        10            406.4
+ 129        11            457.2
+ 130        12            508.0
+ 131        13            558.8
+ 132        14            609.6
+ 133  /;
+ 134   
+ 135  *Parameter dia(pipes) /
+ 136  *       1            0.0254
+ 137  *       2            0.0508
+ 138  *       3            0.0762
+ 139  *       4            0.1016
+ 140  *       5            0.1524
+ 141  *       6            0.2032
+ 142  *       7            0.2540
+ 143  *       8            0.3048
+ 144  *       9            0.3556
+ 145  *      10            0.4064
+ 146  *      11            0.4572
+ 147  *      12            0.5080
+ 148  *      13            0.5588
+ 149  *      14            0.6096
+ 150  */;
+ 151   
+ 152  Parameter C(pipes) /
+ 153         1              2
+ 154         2              5
+ 155         3              8
+ 156         4             11
+ 157         5             16
+ 158         6             23
+ 159         7             32
+ 160         8             50
+ 161         9             60
+ 162        10             90
+ 163        11            130
+ 164        12            170
+ 165        13            300
+ 166        14            550
+ 167  /;
+ 168   
+ 169   
+ 170  L(arcs) = 1000;
+ 171  R(pipes) = 130;
+ 172  vmax(arcs) = 2.0;
+ 173   
+ 174  Parameter Q_max;
+ 175  Q_max = sum(nodes$(not Source(nodes)), D(nodes));
+ 176   
+ 177  *dmin = smin(pipe, dia(pipe));
+ 178  *dmax = smax(pipe, dia(pipe));
+ 179   
+ 180  h.lo(nodes) = P(nodes) + elevation(nodes);
+ 181  q.up(arcs(N,M)) =  Q_max;
+ 182  q.lo(arcs(N,M)) =  -Q_max;
+ 183  length.up(N,M,pipes) =  L(N,M);
+ 184  length.lo(N,M,pipes) =  0;
+ 185   
+ 186  model gms_water_nlp / all /;
+ 187   
+ 188  Option solver = IPOPT;
+ 189   
+ 190  Option solprint = off ;
+ 191   
+ 192  solve gms_water_nlp using DNLP min total_cost;
+ 193   
+ 194  display total_cost.l;
+ 195  display q.l;
+ 196  display h.l;
+ 197  display length.l;
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  /home/nitishdumoliya/waterNetwork/model/gmsModel/gms_water_nlp.gms
+     2       58 INCLUDE        1      58  ./home/nitishdumoliya/waterNetwork/model/gmsModel/d1.gmsdat
+
+
+COMPILATION TIME     =        0.001 SECONDS      3 MB  49.1.0 5c4d4ed6 LEX-LEG
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE gms_water_nlp Using DNLP From line 192
+
+
+---- obj  =E=  
+
+obj..  total_cost - 2*length(1,2,1) - 5*length(1,2,2) - 8*length(1,2,3) - 11*length(1,2,4) - 16*length(1,2,5) - 23*length(1,2,6) - 32*length(1,2,7) - 50*length(1,2,8) - 60*length(1,2,9) - 90*length(1,2,10) - 130*length(1,2,11) - 170*length(1,2,12) - 300*length(1,2,13) - 550*length(1,2,14) - 2*length(2,3,1) - 5*length(2,3,2) - 8*length(2,3,3) - 11*length(2,3,4) - 16*length(2,3,5) - 23*length(2,3,6) - 32*length(2,3,7) - 50*length(2,3,8) - 60*length(2,3,9) - 90*length(2,3,10) - 130*length(2,3,11) - 170*length(2,3,12) - 300*length(2,3,13) - 550*length(2,3,14) - 2*length(2,4,1) - 5*length(2,4,2) - 8*length(2,4,3) - 11*length(2,4,4) - 16*length(2,4,5) - 23*length(2,4,6) - 32*length(2,4,7) - 50*length(2,4,8) - 60*length(2,4,9) - 90*length(2,4,10) - 130*length(2,4,11) - 170*length(2,4,12) - 300*length(2,4,13) - 550*length(2,4,14) - 2*length(3,5,1) - 5*length(3,5,2) - 8*length(3,5,3) - 11*length(3,5,4) - 16*length(3,5,5) - 23*length(3,5,6) - 32*length(3,5,7) - 50*length(3,5,8) - 60*length(3,5,9) - 90*length(3,5,10) - 130*length(3,5,11) - 170*length(3,5,12) - 300*length(3,5,13) - 550*length(3,5,14) - 2*length(4,5,1) - 5*length(4,5,2) - 8*length(4,5,3) - 11*length(4,5,4) - 16*length(4,5,5) - 23*length(4,5,6) - 32*length(4,5,7) - 50*length(4,5,8) - 60*length(4,5,9) - 90*length(4,5,10) - 130*length(4,5,11) - 170*length(4,5,12) - 300*length(4,5,13) - 550*length(4,5,14) - 2*length(4,6,1) - 5*length(4,6,2) - 8*length(4,6,3) - 11*length(4,6,4) - 16*length(4,6,5) - 23*length(4,6,6) - 32*length(4,6,7) - 50*length(4,6,8) - 60*length(4,6,9) - 90*length(4,6,10) - 130*length(4,6,11) - 170*length(4,6,12) - 300*length(4,6,13) - 550*length(4,6,14) - 2*length(6,7,1) - 5*length(6,7,2) - 8*length(6,7,3) - 11*length(6,7,4) - 16*length(6,7,5) - 23*length(6,7,6) - 32*length(6,7,7) - 50*length(6,7,8) - 60*length(6,7,9) - 90*length(6,7,10) - 130*length(6,7,11) - 170*length(6,7,12) - 300*length(6,7,13) - 550*length(6,7,14) - 2*length(7,5,1) - 5*length(7,5,2) - 8*length(7,5,3) - 11*length(7,5,4) - 16*length(7,5,5) - 23*length(7,5,6) - 32*length(7,5,7) - 50*length(7,5,8) - 60*length(7,5,9) - 90*length(7,5,10) - 130*length(7,5,11) - 170*length(7,5,12) - 300*length(7,5,13) - 550*length(7,5,14) =E= 0 ; (LHS = 0)
+     
+
+---- Balance  =E=  
+
+Balance(2)..  - q(1,2) + q(2,3) + q(2,4) =E= -27.77 ; (LHS = 0, INFES = 27.77 ****)
+     
+Balance(3)..  - q(2,3) + q(3,5) =E= -27.77 ; (LHS = 0, INFES = 27.77 ****)
+     
+Balance(4)..  - q(2,4) + q(4,5) + q(4,6) =E= -33.33 ; (LHS = 0, INFES = 33.33 ****)
+     
+REMAINING 3 ENTRIES SKIPPED
+
+
+---- HydraulicHead_Flow  =E=  
+
+HydraulicHead_Flow(1,2)..  h(1) - h(2) + (0)*q(1,2) + (0)*length(1,2,1) + (0)*length(1,2,2) + (0)*length(1,2,3) + (0)*length(1,2,4) + (0)*length(1,2,5) + (0)*length(1,2,6) + (0)*length(1,2,7) + (0)*length(1,2,8) + (0)*length(1,2,9) + (0)*length(1,2,10) + (0)*length(1,2,11) + (0)*length(1,2,12) + (0)*length(1,2,13) + (0)*length(1,2,14) =E= 0 ; (LHS = 30, INFES = 30 ****)
+     
+HydraulicHead_Flow(2,3)..  h(2) - h(3) + (0)*q(2,3) + (0)*length(2,3,1) + (0)*length(2,3,2) + (0)*length(2,3,3) + (0)*length(2,3,4) + (0)*length(2,3,5) + (0)*length(2,3,6) + (0)*length(2,3,7) + (0)*length(2,3,8) + (0)*length(2,3,9) + (0)*length(2,3,10) + (0)*length(2,3,11) + (0)*length(2,3,12) + (0)*length(2,3,13) + (0)*length(2,3,14) =E= 0 ; (LHS = -10, INFES = 10 ****)
+     
+HydraulicHead_Flow(2,4)..  h(2) - h(4) + (0)*q(2,4) + (0)*length(2,4,1) + (0)*length(2,4,2) + (0)*length(2,4,3) + (0)*length(2,4,4) + (0)*length(2,4,5) + (0)*length(2,4,6) + (0)*length(2,4,7) + (0)*length(2,4,8) + (0)*length(2,4,9) + (0)*length(2,4,10) + (0)*length(2,4,11) + (0)*length(2,4,12) + (0)*length(2,4,13) + (0)*length(2,4,14) =E= 0 ; (LHS = -5, INFES = 5 ****)
+     
+REMAINING 5 ENTRIES SKIPPED
+
+
+---- length_limit  =E=  
+
+length_limit(1,2)..  length(1,2,1) + length(1,2,2) + length(1,2,3) + length(1,2,4) + length(1,2,5) + length(1,2,6) + length(1,2,7) + length(1,2,8) + length(1,2,9) + length(1,2,10) + length(1,2,11) + length(1,2,12) + length(1,2,13) + length(1,2,14) =E= 1000 ; (LHS = 0, INFES = 1000 ****)
+     
+length_limit(2,3)..  length(2,3,1) + length(2,3,2) + length(2,3,3) + length(2,3,4) + length(2,3,5) + length(2,3,6) + length(2,3,7) + length(2,3,8) + length(2,3,9) + length(2,3,10) + length(2,3,11) + length(2,3,12) + length(2,3,13) + length(2,3,14) =E= 1000 ; (LHS = 0, INFES = 1000 ****)
+     
+length_limit(2,4)..  length(2,4,1) + length(2,4,2) + length(2,4,3) + length(2,4,4) + length(2,4,5) + length(2,4,6) + length(2,4,7) + length(2,4,8) + length(2,4,9) + length(2,4,10) + length(2,4,11) + length(2,4,12) + length(2,4,13) + length(2,4,14) =E= 1000 ; (LHS = 0, INFES = 1000 ****)
+     
+REMAINING 5 ENTRIES SKIPPED
+
+
+---- elevation_constraint  =E=  
+
+elevation_constraint(1)..  h(1) =E= 210 ; (LHS = 210)
+     
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE gms_water_nlp Using DNLP From line 192
+
+
+---- h  
+
+h(1)
+                (.LO, .L, .UP, .M = 210, 210, +INF, 0)
+        1       HydraulicHead_Flow(1,2)
+        1       elevation_constraint(1)
+        0       (OLD LEVEL ****)
+
+h(2)
+                (.LO, .L, .UP, .M = 180, 180, +INF, 0)
+       -1       HydraulicHead_Flow(1,2)
+        1       HydraulicHead_Flow(2,3)
+        1       HydraulicHead_Flow(2,4)
+        0       (OLD LEVEL ****)
+
+h(3)
+                (.LO, .L, .UP, .M = 190, 190, +INF, 0)
+       -1       HydraulicHead_Flow(2,3)
+        1       HydraulicHead_Flow(3,5)
+        0       (OLD LEVEL ****)
+
+REMAINING 4 ENTRIES SKIPPED
+
+---- q  
+
+q(1,2)
+                (.LO, .L, .UP, .M = -311.09, 0, 311.09, 0)
+       -1       Balance(2)
+       (0)      HydraulicHead_Flow(1,2)
+
+q(2,3)
+                (.LO, .L, .UP, .M = -311.09, 0, 311.09, 0)
+        1       Balance(2)
+       -1       Balance(3)
+       (0)      HydraulicHead_Flow(2,3)
+
+q(2,4)
+                (.LO, .L, .UP, .M = -311.09, 0, 311.09, 0)
+        1       Balance(2)
+       -1       Balance(4)
+       (0)      HydraulicHead_Flow(2,4)
+
+REMAINING 5 ENTRIES SKIPPED
+
+---- total_cost  
+
+total_cost
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj
+
+
+---- length  
+
+length(1,2,1)
+                (.LO, .L, .UP, .M = 0, 0, 1000, 0)
+       -2       obj
+       (0)      HydraulicHead_Flow(1,2)
+        1       length_limit(1,2)
+
+length(1,2,2)
+                (.LO, .L, .UP, .M = 0, 0, 1000, 0)
+       -5       obj
+       (0)      HydraulicHead_Flow(1,2)
+        1       length_limit(1,2)
+
+length(1,2,3)
+                (.LO, .L, .UP, .M = 0, 0, 1000, 0)
+       -8       obj
+       (0)      HydraulicHead_Flow(1,2)
+        1       length_limit(1,2)
+
+REMAINING 109 ENTRIES SKIPPED
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE gms_water_nlp Using DNLP From line 192
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 2.777E+01, 1.000E+03] - Zero values observed as well
+Bound     [min, max] : [ 1.800E+02, 1.000E+03] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 5.500E+02] - Zero values observed as well
+
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE gms_water_nlp Using DNLP From line 192
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           5     SINGLE EQUATIONS           24
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES          128  7 projected
+NON ZERO ELEMENTS           377     NON LINEAR N-Z            120
+CODE LENGTH                 288     CONSTANT POOL              32
+
+
+GENERATION TIME      =        0.001 SECONDS      4 MB  49.1.0 5c4d4ed6 LEX-LEG
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE gms_water_nlp Using DNLP From line 192
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   gms_water_nlp       OBJECTIVE  total_cost
+     TYPE    DNLP                DIRECTION  MINIMIZE
+     SOLVER  IPOPT               FROM LINE  192
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      2 Locally Optimal
+**** OBJECTIVE VALUE           403389.7617
+
+ RESOURCE USAGE, LIMIT          0.083 10000000000.000
+ ITERATION COUNT, LIMIT       126    2147483647
+ EVALUATION ERRORS              0             0
+
+COIN-OR Ipopt    49.1.0 5c4d4ed6 Feb 15, 2025          LEG x86 64bit/Linux    
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+GAMS 49.1.0  5c4d4ed6 Feb 15, 2025          LEX-LEG x86 64bit/Linux - 03/07/25 12:45:28 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    194 VARIABLE total_cost.L          =   403389.762  
+
+----    195 VARIABLE q.L  
+
+            2           3           4           5           6           7
+
+1     311.090
+2                 102.307     181.013
+3                                          74.537
+4                                           0.271     147.412
+6                                                                  55.742
+7                                           0.192
+
+
+----    196 VARIABLE h.L  
+
+1 210.000,    2 203.251,    3 190.000,    4 198.857,    5 180.000,    6 195.000,    7 190.000
+
+
+----    197 VARIABLE length.L  
+
+              1           2           3           4           5           6           7           8           9          10          11          12          13          14
+
+1.2 -9.9995E-11 -9.9856E-11 -9.8962E-11 -9.5782E-11 -6.9324E-11 2.87206E-11 3.16003E-10 1.113367E-9 3.949386E-9 2.147062E-8    1000.000 1.699790E-7 4.802768E-9 1.482878E-9
+2.3 -9.9754E-11 -9.2800E-11 -4.7907E-11 1.14564E-10 1.635239E-9 1.081962E-8     795.462     204.538 1.662098E-7 1.818248E-8 7.966294E-9 5.043574E-9 2.243282E-9 1.043536E-9
+2.4 -9.9984E-11 -9.9534E-11 -9.6642E-11 -8.6339E-11 2.90682E-13 3.34497E-10 1.429842E-9 5.231697E-9 4.275045E-8    1000.000 3.189729E-8 1.194323E-8 3.176915E-9 1.238718E-9
+3.5 -9.8357E-11 -5.1834E-11 2.52281E-10 1.401370E-9 1.604695E-8      98.426     901.574 3.635237E-8 2.284934E-8 1.025326E-8 5.854995E-9 4.076416E-9 2.017001E-9 9.86435E-10
+4.5    1000.000 2.571381E-7 1.081715E-7 6.835970E-8 4.233435E-8 2.759208E-8 1.904130E-8 1.173323E-8 9.662486E-9 6.301689E-9 4.287692E-9 3.237651E-9 1.777432E-9 9.19598E-10
+4.6 -9.9977E-11 -9.9319E-11 -9.5087E-11 -7.9999E-11 4.75647E-11 5.50297E-10 2.301711E-9 9.169443E-9     310.183     689.817 2.160213E-8 9.469004E-9 2.928633E-9 1.191959E-9
+6.7 -9.8357E-11 -5.1834E-11 2.52282E-10 1.401373E-9 1.604698E-8      11.177     988.823 3.635238E-8 2.284934E-8 1.025326E-8 5.854995E-9 4.076416E-9 2.017001E-9 9.86435E-10
+7.5    1000.000 2.510356E-7 1.069194E-7 6.784579E-8 4.213403E-8 2.750614E-8 1.900007E-8 1.171742E-8 9.651715E-9 6.297051E-9 4.285511E-9 3.236389E-9 1.777032E-9 9.19480E-10
+
+
+
+EXECUTION TIME       =        0.101 SECONDS      4 MB  49.1.0 5c4d4ed6 LEX-LEG
+
+
+USER: GAMS Demo, for EULA and demo limitations see   G250131/0001CB-GEN
+      https://www.gams.com/latest/docs/UG%5FLicense.html         DC0000
+
+
+**** FILE SUMMARY
+
+Input      /home/nitishdumoliya/waterNetwork/model/gmsModel/gms_water_nlp.gms
+Output     /home/nitishdumoliya/waterNetwork/model/gmsModel/gms_water_nlp.lst
