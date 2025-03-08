@@ -105,13 +105,19 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
                     (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
                     sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
                          for k in pipes)
+        approx_rhs4 = (q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
+                     (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) +\
+                    (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
+                    sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                         for k in pipes)
 
 
 
-        approx_value = approx_rhs2
+
+        approx_value = approx_rhs4
         
         # Compute relative violation
-        relative_violation = (original_value - approx_value) / (original_value + 1e-10)
+        relative_violation = abs(original_value - approx_value) / (abs(original_value)+1e-10)
         relative_violations[f"con2_{i},{j}"] = relative_violation
         total_relative_constraint_violation += abs(relative_violation)
 
