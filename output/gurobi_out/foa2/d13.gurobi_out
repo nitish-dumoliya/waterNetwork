@@ -23,10 +23,21 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 14896324.013344765 
+total_cost: 14896324.021273384 
 
-eps: 1e-06 
+eps: {(2, 4): 1e-08, (2, 6): 1e-08, (3, 7): 1e-08, (3, 10): 1e-08, (4, 6): 1e-08, (4, 11): 1e-08, (8, 9): 1e-08, (9, 3): 1e-08, (10, 2): 1e-08, (11, 1): 1e-08} 
 
+*******************************************************************************
+
+Constraint violations:
+
+
+Total absolute constraint violation using ipopt: 6.756772918947718e-11
+Total relative constraint violation using ipopt: 5.659223408983631e-12
+*******************************************************************************
+
+total_cost using ipopt: 14896324.021273384
+solve_time using ipopt: 0.084765
 *******************************************************************************
 
 gurobi solver outputs:
@@ -35,8 +46,8 @@ Gurobi 12.0.1: Set parameter LogToConsole to value 1
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
-Set parameter TimeLimit to value 3600
-  lim:time = 3600
+Set parameter TimeLimit to value 300
+  lim:time = 300
   alg:iisfind = 1
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
@@ -62,7 +73,7 @@ CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
 Non-default parameters:
-TimeLimit  3600
+TimeLimit  300
 Method  3
 ConcurrentMethod  3
 NodeMethod  1
@@ -74,7 +85,7 @@ NumericFocus  1
 Presolve  1
 
 Optimize a model with 23 rows, 166 columns and 249 nonzeros
-Model fingerprint: 0xe43978db
+Model fingerprint: 0xa01c209f
 Model has 3 simple general constraints
   3 ABS
 Model has 3 general nonlinear constraints (195 nonlinear terms)
@@ -82,8 +93,9 @@ Variable types: 166 continuous, 0 integer (0 binary)
 Coefficient statistics:
   Matrix range     [1e-05, 1e+00]
   Objective range  [1e+02, 3e+03]
-  Bounds range     [9e-04, 2e+08]
+  Bounds range     [9e-06, 2e+10]
   RHS range        [4e+00, 7e+03]
+Warning: Model contains large bounds
 
 User MIP start did not produce a new incumbent solution
 
@@ -100,239 +112,59 @@ Solving non-convex MINLP
 
 Variable types: 248 continuous, 3 integer (3 binary)
 
-Root relaxation: objective 1.317288e+07, 107 iterations, 0.00 seconds (0.00 work units)
+Root relaxation: objective 1.317288e+07, 114 iterations, 0.00 seconds (0.00 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0 1.3173e+07    0   13          - 1.3173e+07      -     -    0s
-     0     0 1.3173e+07    0   13          - 1.3173e+07      -     -    0s
      0     0 1.3173e+07    0   14          - 1.3173e+07      -     -    0s
-     0     0 1.3387e+07    0   16          - 1.3387e+07      -     -    0s
-     0     0 1.3544e+07    0   16          - 1.3544e+07      -     -    0s
-     0     0 1.3544e+07    0   16          - 1.3544e+07      -     -    0s
-     0     0 1.3611e+07    0   17          - 1.3611e+07      -     -    0s
-     0     0 1.3611e+07    0   17          - 1.3611e+07      -     -    0s
-     0     0 1.3611e+07    0   19          - 1.3611e+07      -     -    0s
-     0     0 1.3611e+07    0   19          - 1.3611e+07      -     -    0s
-     0     0 1.3611e+07    0   18          - 1.3611e+07      -     -    0s
-     0     0 1.3611e+07    0   13          - 1.3611e+07      -     -    0s
-     0     2 1.3611e+07    0   13          - 1.3611e+07      -     -    0s
-H    3     4                    1.541171e+07 1.3655e+07  11.4%  59.3    0s
-H    4     4                    1.526414e+07 1.3655e+07  10.5%  48.5    0s
-H   37    30                    1.516949e+07 1.4631e+07  3.55%  23.1    0s
-H   42    29                    1.509211e+07 1.4658e+07  2.87%  21.1    0s
-H  126    58                    1.506549e+07 1.4674e+07  2.60%  10.4    0s
-H  137    58                    1.490832e+07 1.4674e+07  1.57%   9.8    0s
-H 1385   657                    1.489633e+07 1.4674e+07  1.49%   2.6    1s
-H 8582  2418                    1.489633e+07 1.4678e+07  1.47%   1.6    2s
-H 9189  2321                    1.489633e+07 1.4678e+07  1.47%   1.8    4s
-H 9813  2282                    1.489633e+07 1.4678e+07  1.47%   1.8    4s
- 11376  2014 infeasible   57      1.4896e+07 1.4678e+07  1.47%   2.2    5s
-H11452  1878                    1.489633e+07 1.4678e+07  1.47%   2.2    5s
- 36932  9295 1.4738e+07   47   15 1.4896e+07 1.4718e+07  1.20%   1.3   10s
-H83377 11194                    1.489633e+07 1.4780e+07  0.78%   0.9   14s
- 91813  5049 infeasible   55      1.4896e+07 1.4797e+07  0.67%   0.9   15s
+     0     0 1.3173e+07    0   10          - 1.3173e+07      -     -    0s
+     0     0 1.3173e+07    0   12          - 1.3173e+07      -     -    0s
+H    0     0                    1.544268e+07 1.3173e+07  14.7%     -    0s
+H    0     0                    1.517296e+07 1.3173e+07  13.2%     -    0s
+     0     2 1.3173e+07    0   12 1.5173e+07 1.3173e+07  13.2%     -    0s
+H   30    36                    1.504113e+07 1.4141e+07  5.99%  21.5    0s
+H 1069  1099                    1.501648e+07 1.4141e+07  5.83%   3.3    0s
+H10164  1995                    1.501578e+07 1.4668e+07  2.31%   3.7    2s
+*11023  1820              37    1.490820e+07 1.4668e+07  1.61%   3.7    3s
+*11776  1510              41    1.490817e+07 1.4668e+07  1.61%   3.7    3s
+*11779  1420              43    1.490816e+07 1.4668e+07  1.61%   3.7    3s
+*12133  1250              52    1.490816e+07 1.4668e+07  1.61%   3.7    3s
+*12135  1168              51    1.490816e+07 1.4668e+07  1.61%   3.7    3s
+*12541   986              50    1.490816e+07 1.4668e+07  1.61%   3.7    3s
+*12792   829              38    1.490780e+07 1.4668e+07  1.61%   3.7    3s
+*14290   315              37    1.490755e+07 1.4668e+07  1.60%   3.6    3s
+H14308   315                    1.489633e+07 1.4668e+07  1.53%   3.6    3s
+*16801    96              58    1.489633e+07 1.4721e+07  1.18%   3.7    4s
+*17004    96              58    1.489633e+07 1.4730e+07  1.12%   3.6    4s
+*17196   498              73    1.489633e+07 1.4866e+07  0.20%   3.6    4s
 
 Cutting planes:
-  Implied bound: 8
-  RLT: 1
-  Relax-and-lift: 3
+  RLT: 4
 
-Explored 102616 nodes (89841 simplex iterations) in 15.56 seconds (1.21 work units)
+Explored 18455 nodes (62495 simplex iterations) in 4.19 seconds (0.43 work units)
 Thread count was 32 (of 64 available processors)
 
-Solution count 7: 1.48963e+07 1.49083e+07 1.50655e+07 ... 1.54117e+07
+Solution count 10: 1.48963e+07 1.48963e+07 1.48963e+07 ... 1.49082e+07
 
 Optimal solution found (tolerance 1.00e-04)
-Warning: max constraint violation (1.1400e-06) exceeds tolerance
-Best objective 1.489632515916e+07, best bound 1.489632515916e+07, gap 0.0000%
-Gurobi 12.0.1: optimal solution; objective 14896325.16
-89841 simplex iterations
-102616 branching nodes
- 
------------- WARNINGS ------------
-WARNING:  "Tolerance violations"
-  Type                         MaxAbs [Name]   MaxRel [Name]
-* algebraic con(s)             1E-06           -             
-*: Using the solver's aux variable values.
-Documentation: mp.ampl.com/modeling-tools.html#automatic-solution-check.
-*******************************************************************************
-
-Print the decision variables value:
-
-l [2,*,*] (tr)
-:       4        6      :=
-0       0       3491
-1       0          0
-2       0          0
-3       0          0
-4    1475.81       0
-5     966.185      0
-6       0          0
-7       0          0
-8       0          0
-9       0          0
-10      0          0
-11      0          0
-12      0          0
-
- [3,*,*] (tr)
-:       7      10     :=
-0       0        0
-1       0        0
-2       0        0
-3    4346.51     0
-4    2998.49     0
-5       0        0
-6       0      924
-7       0        0
-8       0        0
-9       0        0
-10      0        0
-11      0        0
-12      0        0
-
- [4,*,*] (tr)
-:     6         11         :=
-0    318     0
-1      0     0
-2      0     8.4265e-05
-3      0   485
-4      0     0
-5      0     0
-6      0     0
-7      0     0
-8      0     0
-9      0     0
-10     0     0
-11     0     0
-12     0     0
-
- [8,*,*] (tr)
-:       9        :=
-0       0
-1       0
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0
-8     668.665
-9    2017.34
-10      0
-11      0
-12      0
-
- [9,*,*] (tr)
-:          3           :=
-0       0
-1       0
-2       0
-3       0
-4       0
-5       0
-6       0
-7       0.000216276
-8    1943
-9       0
-10      0
-11      0
-12      0
-
- [10,*,*] (tr)
-:          2           :=
-0       3.43398e-06
-1       0
-2       0
-3       0
-4       0
-5    4808
-6       0
-7       0
-8       0
-9       0
-10      0
-11      0
-12      0
-
- [11,*,*] (tr)
-:       1        :=
-0       0
-1     793.818
-2    3472.18
-3       0
-4       0
-5       0
-6       0
-7       0
-8       0
-9       0
-10      0
-11      0
-12      0
-;
-
-q :=
-2  4     9.90908
-2  6     1.39092
-3  7     5.2
-3  10   12.9
-4  6     2.20908
-4  11    4.2
-8  9    24.9
-9  3    24.9
-10 2    12.9
-11 1     4.2
-;
-
-h [*] :=
- 1  449
- 2  491.188
- 3  518.489
- 4  480.014
- 6  476.961
- 7  500
- 8  530
- 9  524.456
-10  516
-11  479
-;
+Best objective 1.489632517513e+07, best bound 1.489632513873e+07, gap 0.0000%
+Gurobi 12.0.1: optimal solution; objective 14896325.18
+62495 simplex iterations
+18455 branching nodes
+absmipgap=0.0364022, relmipgap=2.4437e-09
+eps: {(2, 4): 1e-08, (2, 6): 1e-08, (3, 7): 1e-08, (3, 10): 1e-08, (4, 6): 1e-08, (4, 11): 1e-08, (8, 9): 1e-08, (9, 3): 1e-08, (10, 2): 1e-08, (11, 1): 1e-08} 
 
 *******************************************************************************
 
 Constraint violations:
 
-+-----------------+----------------------+----------------------+
-| Constraint ID   |   Absolute Violation |   Relative Violation |
-+=================+======================+======================+
-| con2_2,4        |              1e-08   |                0     |
-+-----------------+----------------------+----------------------+
-| con2_2,6        |              4.6e-07 |                3e-08 |
-+-----------------+----------------------+----------------------+
-| con2_3,7        |              4e-08   |                0     |
-+-----------------+----------------------+----------------------+
-| con2_3,10       |              0       |                0     |
-+-----------------+----------------------+----------------------+
-| con2_4,6        |              4e-08   |                1e-08 |
-+-----------------+----------------------+----------------------+
-| con2_4,11       |              0       |                0     |
-+-----------------+----------------------+----------------------+
-| con2_8,9        |              0       |                0     |
-+-----------------+----------------------+----------------------+
-| con2_9,3        |              0       |                0     |
-+-----------------+----------------------+----------------------+
-| con2_10,2       |              1e-08   |                0     |
-+-----------------+----------------------+----------------------+
-| con2_11,1       |              1.1e-07 |                0     |
-+-----------------+----------------------+----------------------+
 
-Total absolute constraint violation: 6.752216363814512e-07
-Total relative constraint violation: 5.6552518724490416e-08
+Total absolute constraint violation using gurobi: 6.75688394125018e-11
+Total relative constraint violation using gurobi: 5.659147328184365e-12
 *******************************************************************************
 
-total_cost: 14896325.159157535
-solve_time: 15.599057
+total_cost using gurobi: 14896325.173948083
+solve_time using gurobi: 4.23407
 *******************************************************************************
 

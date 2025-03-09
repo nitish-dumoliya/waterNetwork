@@ -135,7 +135,7 @@ def BaronInstanceOutput(instance, output):
     # Extract total relative constraint violation
     output_content = output.read() 
 
-    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output_content)
+    violation_match = re.search(r'Total relative constraint violation using baron:\s*([\d.eE+-]+)', output_content)
     #print(violation_match)
     violation = None
     if violation_match:
@@ -147,7 +147,7 @@ def BaronInstanceOutput(instance, output):
     #file_data = out.read().split('\n')
     file_data = output_content.split('\n')
     time = 0
-    find, time = find_float(file_data, "solve_time: ", time)
+    find, time = find_float(file_data, "solve_time using baron: ", time)
     Objective = 0
     find, Objective = find_float(file_data, "Objective ", Objective)
     # Objective = 0
@@ -194,21 +194,54 @@ def KnitroInstanceOutput(instance, output):
     # print(" ")
     return Objective, time
 
-def IpoptInstanceOutput(instance, output):
-    file_data = output.read().split('\n')
-    time = 0
-    find, time = find_float(file_data, "solve_time:", time)
-    Objective = 0
-    find, Objective = find_float(file_data, "total_cost:", Objective)
-    return Objective, time
 
+def IpoptInstanceOutput(instance, output):
+    output_content = output.read()  # Read the entire output content
+
+    # Extract total relative constraint violation
+    violation_match = re.search(r'Total relative constraint violation using ipopt:\s*([\d.eE+-]+)', output_content)
+    violation = float(violation_match.group(1)) if violation_match else None
+
+    # Extract objective value
+    objective_match = re.search(r'total_cost using ipopt:\s*([\d.eE+-]+)', output_content)
+    objective = float(objective_match.group(1)) if objective_match else None
+
+    # Extract solve time
+    time_match = re.search(r'solve_time using ipopt:\s*([\d.eE+-]+)', output_content)
+    solve_time = float(time_match.group(1)) if time_match else None
+
+    return objective, solve_time, violation
+
+#def IpoptInstanceOutput(instance, output):
+#    output_content = output.read() 
+#
+#    violation_match = re.search(r'Total relative constraint violation using ipopt:\s*([\d.eE+-]+)', output_content)
+#    #print(violation_match)
+#    violation = None
+#    if violation_match:
+#        try:
+#            violation = float(violation_match.group(1).strip())  # Convert extracted value to float
+#        except ValueError:
+#            print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
+# 
+#    file_data = output_content.split('\n')
+#    time = 0
+#    find, time = find_float(file_data, "solve_time using ipopt:", time)
+#    Objective = 0
+#    find, Objective = find_float(file_data, "total_cost using ipopt:", Objective)
+#    
+#
+#
+#
+#    return Objective, time, violation
+#
 def BonminInstanceOutput(instance, output):
     file_data = output.read().split('\n')
     time = 0
     # find, time = find_float(file_data, "Total CPU secs in IPOPT", time)
     Objective = 0
-    find, Objective = find_float(file_data, "total_cost", Objective)
-    find, time = find_float(file_data, "solve_time", time)
+    find, Objective = find_float(file_data, "total_cost using baron", Objective)
+    find, time = find_float(file_data, "solve_time using baron", time)
     
     # T = []
     # for line in file_data:
@@ -233,24 +266,6 @@ def BonminInstanceOutput(instance, output):
     #             Objective = "INFEAS"
     # time = sum(T)
     return Objective, time
-
-def GurobiInstanceOutput1(instance, output):
-    file_data = output.read().split('\n')
-    obj_pattern = re.search(r'Optimal objective\s+([-\d\.eE]+)', output)
-    time_pattern = re.search(r'Solved in\s+([\d\.]+)\s+seconds', output)
-
-    objective = float(obj_pattern.group(1)) if obj_pattern else None
-    solver_time = float(time_pattern.group(1)) if time_pattern else None
-    violation = None
-    find3, violation = find_float(file_data, "Total relative constraint violation:",violation) 
-
-    if find3:
-        violation = float(violation)  # Convert extracted value to float
-        print("Extracted Total Relative Constraint Violation:", violation)
-    else:
-        print("No match found.")
- 
-    return objective, solver_time, violation
 
 def GurobiInstanceOutput(instance, output):
     # Match best objective using a robust regex pattern
@@ -277,7 +292,7 @@ def GurobiInstanceOutput(instance, output):
             print(f"Warning: Could not convert extracted objective '{extracted_obj}' to float.")
 
     # Match solver time (ensure correct extraction)
-    time_match = re.search(r'solve_time:\s*([\d\.]+)', output)
+    time_match = re.search(r'solve_time using gurobi:\s*([\d\.]+)', output)
 
     time_limit_reached = "Time limit reached" in output
 
@@ -291,7 +306,7 @@ def GurobiInstanceOutput(instance, output):
             print(f"Warning: Could not convert solver time '{time_match.group(1)}' to float.")
    
     # Extract total relative constraint violation
-    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output)
+    violation_match = re.search(r'Total relative constraint violation using gurobi:\s*([\d.eE+-]+)', output)
     
     violation = None
     if violation_match:
@@ -327,7 +342,7 @@ def SCIPInstanceOutput(instance, output):
     #time_match = re.search(r"Solving Time \(sec\)\s*:\s*([\d\.]+)", output)
     #time_match = re.search(r'Solving Time (sec) :\s*([\d\.]+)', output)
 
-    time_match = re.search(r'solve_time:\s*([\d\.]+)', output)
+    time_match = re.search(r'solve_time using scip:\s*([\d\.]+)', output)
     
     time_limit_reached = "time limit reached" in output
 
@@ -342,7 +357,7 @@ def SCIPInstanceOutput(instance, output):
         solver_time = 3600
  
     # Extract total relative constraint violation
-    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output)
+    violation_match = re.search(r'Total relative constraint violation using scip:\s*([\d.eE+-]+)', output)
     
     violation = None
     if violation_match:
@@ -425,8 +440,11 @@ Scip_Rel_vio = []
 Heuristic_Objective = []
 Heuristic_Time_taken = []
 Heuristic_Rel_vio = []
+InitialIpopt_Objective = []
+InitialIpopt_Time_taken = []
+InitialIpopt_Rel_vio = []
 
-approx_folder = "soa"
+approx_folder = "foa1"
 
 print("****************************Results of Mmultistart Solver *********************************")
 
@@ -441,12 +459,30 @@ for ins in data_list:
         Mmultistart_Objective.append(obj)
         Mmultistart_Time_taken.append(time)
 
+print("******************************Results of Initial Ipopt Solve Result ************************************")
+for ins in data_list:
+    with open(f"../output/baron_out/{approx_folder}/{ins}.baron_out") as output:
+        print("Model Name:",ins)
+        out = output
+        obj, time, violation = IpoptInstanceOutput(ins,out)
+        print("Objective :",obj)
+        print("Time :",time)
+        print("Relative violation :",violation)
+        print(" ")
+
+        InitialIpopt_Objective.append(obj)
+        InitialIpopt_Time_taken.append(time)
+        InitialIpopt_Rel_vio.append(violation)
+
+
+
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
     with open(f"../output/baron_out/{approx_folder}/{ins}.baron_out") as output:
         print("Model Name:",ins)
-        obj, time, violation= BaronInstanceOutput(ins,output)
+        out = output
+        obj, time, violation= BaronInstanceOutput(ins,out)
         print("Objective :",obj)
         print("Time :",time)
         print("Relative violation", violation)
@@ -472,9 +508,11 @@ print("**********************Results of IPOPT Solver ***************************
 for ins in data_list:
     with open(f"../output/ipopt_out/{ins}.ipopt_out") as output:
         print("Model Name:",ins)
-        obj, time = IpoptInstanceOutput(ins,output)
+        #output = output.read()
+        obj, time, violation = IpoptInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
+        print("Relative violation", violation)
         print(" ")
         Ipopt_Objective.append(obj)
         Ipopt_Time_taken.append(time)
@@ -537,7 +575,7 @@ for ins in data_list:
         Heuristic_Time_taken.append(time)
         Heuristic_Rel_vio.append(violation)
 
-fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Baron Objective","Baron time taken","Baron Rel Vio", "Gurobi Objective","Gurobi time taken", "Gurobi Rel Vio","Scip Objective","Scip time taken", "Scip Rel Vio","Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken", "Heuristic Rel Vio"  ]
+fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Rel Vio","Baron Objective","Baron time taken","Baron Rel Vio", "Gurobi Objective","Gurobi time taken", "Gurobi Rel Vio","Scip Objective","Scip time taken", "Scip Rel Vio","Knitro Objective","Knitro time taken","Ipopt Objective","Ipopt time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken", "Heuristic Rel Vio"  ]
 
 filename = "mmultistart_results.csv"
 
@@ -551,6 +589,9 @@ csv_input = pd.read_csv(filename)
 csv_input['Instances'] = Ins
 csv_input['Mmultistart Objective'] = Mmultistart_Objective
 csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
+csv_input['Ini Ipopt Objective'] = InitialIpopt_Objective
+csv_input['Ini Ipopt time taken'] = InitialIpopt_Time_taken
+csv_input['Ini Ipopt Rel Vio'] = InitialIpopt_Rel_vio
 csv_input['Baron Objective'] = Baron_Objective
 csv_input['Baron time taken'] = Baron_Time_taken
 csv_input['Baron Rel Vio'] = Baron_Rel_vio

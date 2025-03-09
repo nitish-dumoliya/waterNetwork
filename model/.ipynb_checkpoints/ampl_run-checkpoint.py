@@ -1,129 +1,176 @@
-# # Install dependencies
 import sys
-# import pandas as pd
-# import csv
-# import argparse
-
-# pip install -q amplpy pandas numpy
+from tabulate import tabulate
 from amplpy import AMPL
 ampl = AMPL()
 
-# data_list=[  #"d1_Sample_input_cycle_twoloop.dat",
-            #  "d2_Sample_input_cycle_hanoi.dat",
-            # "d14_NewYork.dat",
-        #    "d15_foss_poly_0.dat",
-        #    "d16_foss_iron.dat",
-        #    "d17_foss_poly_1.dat",
-        #    ]
+print("Water Network:", sys.argv[3],"\n")
 
-# OBJ = []
-# csv_data = []
-# for data in data_list:
-ampl.reset()
-# ampl.read("non_convex_multiple1.mod")
+print("Results of first order approximation 1 of head loss constraint\n")
+#print("Results of first order approximation 2 of head loss constraint\n")
+#print("Results of second order approximation of head loss constraint\n")
+
+print("*******************************************************************************")
+
+ipopt_run = 0
+
+if ipopt_run == 1:
+            ampl.read(sys.argv[1])
+            ampl.read_data(sys.argv[3])
+            ampl.option["solver"] = "ipopt"
+
+            ampl.set_option("ipopt_options", "outlev = 0  expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = gradient-based ")   #max_iter = 1000
+
+            ampl.option["presolve_eps"] = "8.53e-15"
+            
+            print("Ipopt solver outputs: \n")
+            ampl.solve()
+
+            total_cost = ampl.getObjective("total_cost").value()
+            print("total_cost:", total_cost, "\n")
+
+            l_init = ampl.getVariable('l').getValues().to_dict()
+            q_init = ampl.getVariable('q').getValues().to_dict()
+            h_init = ampl.getVariable('h').getValues().to_dict()
+            ampl.close()
+
+#***************************************************************************************
+ampl = AMPL()
 ampl.read(sys.argv[1])
 ampl.read_data(sys.argv[3])
-# ampl.read_data(f"/home/nitishdumoliya/minotaur/examples/water-network/Data/{data}")
-#ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
-# ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build-d/bin/mqg"
-# ampl.set_option("mqg_options","--presolve 1,--log_level 6, --nlp_engine IPOPT, --eval_within_bnds 1")
+
+eps = ampl.getParameter('eps').getValues().to_list()[0]
+
+print("eps:",eps, "\n")
+
+print("*******************************************************************************\n")
+
+if ipopt_run == 1:
+            ampl.getVariable("q").setValues(q_init)
+            ampl.getVariable("h").setValues(h_init)
+            ampl.getVariable("l").setValues(l_init)
+
 ampl.option["solver"]= sys.argv[2]
-# ampl.option["solver"]= "/home/nitishdumoliya/minotaur/build/bin/mmultistart"
 ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
-#ampl.option["gurobi_options"] = "outlev 1"
-# ampl.option["presolve_eps"] = "1.09e-12"
 
-# ampl.option["solver"] = "knitro"
-# ampl.option["solver"] = "/home/nitishdumoliya/dist/bin/ipopt"
-#ampl.option["ipopt_options"] = "print_level 3"
-# ampl.set_option("ipopt_options", "outlev = 1 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes")   #max_iter = 1000
-ampl.option["ipopt_options"] = "outlev = 6 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 nlp_scaling = gradient-based warm_start_init_point = yes max_iter = 3000 halt_on_ampl_error = yes"
+ampl.option["ipopt_options"] = "outlev = 3 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.01 warm_start_init_point = yes "
 
+#ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
-# ampl.eval("option gurobi_auxfiles rc;")
-# ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 checkinfeas  concurrentmethod = 0 lpmethod = 0 networkalg = 1" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
-ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 timing NumericFocus = 3 iisfind = 1 iismethod 0 networkalg = 1 networkcuts = 1 seed 5 varbranch = 3 cuts = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
+ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iisfind = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 " #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1
 
-ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 2 lsolver = conopt lpsolver = cplex" # lsolver = conopt
+ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 4 lpsolver = cplex lsolver = conopt threads = 8" # lsolver = conopt
 ampl.option["scip_options"] = "outlev  1 timelimit 3600 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
 ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
-#ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 1  feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 0 ms_maxsolves = 0"
 ampl.option["presolve"] = "1"
 ampl.option["presolve_eps"] = "8.53e-15"
+
+print(f"{sys.argv[2]} solver outputs:\n")
+
 ampl.solve()
 
-
 # ampl.eval("expand ;")
-# Define the file path where you want to save the results
-# output_file = f"/home/nitishdumoliya/minotaur/examples/water-network/Data/multi_out/{data}.txt"
 
-# ampl.setOption('tee', output_file)
+# ampl.eval("display {i in 1.._ncons: _con[i].slack < -1e-3} (_conname[i], _con[i].slack);")
 
-# Write the results to the file
-# with open(output_file, 'w') as file:
-#     sys.stdout = file
-#     # ampl.solve()
-#     totalcost = ampl.get_objective("total_cost")
-#     # totalcost = ampl.get_objective("Objective")
-#     print("Objective is:", totalcost.value())    
-#     OBJ.append(totalcost.value())
-#     ampl.eval("display total_cost;")
-#     # ampl.eval('display l;')
-#     ampl.eval("display {(i,j) in arcs, k in pipes : l[i,j,k]>0.1}: l[i,j,k];")
-#     ampl.eval('display q;')
-#     ampl.eval('display h;')
-#     ampl.eval("display {(i,j) in arcs} 1000*q[i,j]/((3.14/4)*((sum{k in pipes} d[k]*l[i,j,k])/L[i,j])^2);")
-#     ampl.eval("display {(i,j) in arcs} 1000*q[i,j]/(sum{k in pipes} (3.14/4)*(d[k]*X[i,j,k])^2);")
+def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipes, epsilon):
+    
+    total_relative_constraint_violation = 0
+    total_absolute_constraint_violation = 0
+    relative_violations = {}
+    absolute_violations = {}
 
-# csv_data.append([data_list, OBJ])
-# fields = ["Instances","Objective"]
+    for (i, j) in q_values.keys():
+        # Original constraint value
+        original_lhs = h_values[i] - h_values[j]
+        original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) * \
+                       sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                           for k in pipes)
+        original_value = original_rhs
 
-# rows = csv_data
-# filename = "/home/nitishdumoliya/minotaur/examples/water-network/Data/multi_out/Water_instances_mmultistart_results.csv"
+        # Approximated constraint value
+        approx_lhs = h_values[i] - h_values[j]
 
-# with open(filename, 'w') as csvfile:
+        approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon) /(abs(q_values[i,j])+1000*epsilon)**0.148)* \
+                     sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                         for k in pipes)
 
-#     csvwriter = csv.writer(csvfile)
 
-#     csvwriter.writerow(fields)
+        approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
+                     (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) * \
+                     sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                         for k in pipes)
 
-#     csvwriter.writerows(rows)
+        approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon) ** 0.852) - \
+                    (0.002368316*epsilon * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon)**0.148) +\
+                    (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
+                    sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                         for k in pipes)
 
-# df = pd.read_csv(filename)
 
-# excel_file = pd.ExcelWriter('/home/nitishdumoliya/minotaur/examples/water-network/Data/multi_out/Water_instances_mmultistart_results.xlsx')
-# df.to_excel(excel_file, index = False)
 
-# excel_file.save()
-# excel_file = pd.ExcelWriter('/home/nitishdumoliya/minotaur/examples/water-network/Data/multi_out/Water_instances_mmultistart_results.xlsx')
+        approx_value = approx_rhs2
+        
+        # Compute relative violation
+        relative_violation = (original_value - approx_value) / (original_value + 1e-10)
+        relative_violations[f"con2_{i},{j}"] = relative_violation
+        total_relative_constraint_violation += abs(relative_violation)
 
-# ampl.close()
+        # Compute absolute violation
+        absolute_violation =  original_value - approx_value
+        absolute_violations[f"con2_{i},{j}"] = absolute_violation
+        
+        total_absolute_constraint_violation += abs(absolute_violation)
 
-# df1 = ampl.get_variable("l")
-# print("Pipe length : ", df1.get_values())
-# ampl.eval("display X;")
-# ampl.eval("display {(i,j) in arcs, k in pipes : X[i,j,k]=1}: X[i,j,k];")
-# ampl.eval("display {(i,j) in arcs, k in pipes }: l[i,j,k];")
+    # Prepare data for tabulation
+    table_data = []
+    for constraint, vio in relative_violations.items():
+        table_data.append([constraint, f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
+    
+    print("*******************************************************************************\n")
+    print("Constraint violations:\n")
+    # Print table
+    headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+    print(tabulate(table_data, headers=headers, tablefmt="grid"))
 
-# ampl.eval("display l;")
-# ampl.eval("display q;")
-# ampl.eval("display {(i,j) in arcs}: q1[i,j]+q2[i,j];")
-# ampl.eval("display h;")
-# ampl.eval("display total_cost;")
+    # Print total violations
+    print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
+    print("Total relative constraint violation:", total_relative_constraint_violation)
+
+    print("*******************************************************************************\n")
+
+
+l = ampl.getVariable('l').getValues().to_dict()
+q = ampl.getVariable('q').getValues().to_dict()
+h = ampl.getVariable('h').getValues().to_dict()
+
+nodes = ampl.getSet('nodes')
+source = ampl.getSet('Source')
+arcs = ampl.getSet('arcs')
+pipes = ampl.getSet('pipes')
+
+L = ampl.getParameter('L').to_dict()
+D = ampl.getParameter('D').to_dict()
+C = ampl.getParameter('C').to_dict()
+P = ampl.getParameter('P').to_dict()
+R = ampl.getParameter('R').to_dict()
+E = ampl.getParameter('E').to_dict()
+d = ampl.getParameter('d').to_dict()
+
+print("*******************************************************************************\n")
+print("Print the decision variables value:\n")
+ampl.eval("display l;")
+ampl.eval("display q;")
+ampl.eval("display h;")
+
+constraint_violations(q, h, l, R, d, pipes, eps)
+
 solve_time = ampl.get_value('_solve_elapsed_time')
-
 total_cost = ampl.getObjective("total_cost").value()
+
 print("total_cost:", total_cost)
 print("solve_time:", solve_time)
-# ampl.eval("display x;")
-# df2 = ampl.get_variable("q")
-# print("Flow Values : ",df2.get_values())
-# df3 = ampl.get_variable("h")
-# print("head loss : ", df3.get_values())
-# ampl.eval("display {i in 1.._ncons: _con[i].slack < -1e-3} (_conname[i], _con[i].slack);")
-# ampl.eval("display {(i,j) in arcs} 1000*q[i,j]/(sum{k in pipes} (3.14/4)*(d[k]*X[i,j,k])^2);")
-# ampl.eval("display {(i,j) in arcs} 1000*q[i,j]/(sum{k in pipes: l[i,j,k] >1} (3.14/4)*(d[k]*X[i,j,k])^2);")
- 
-# ampl.eval("display {(i,j) in arcs} 1000*q[i,j]/((3.14/4)*((sum{k in pipes} d[k]*l[i,j,k])/L[i,j])^2);")
 
-# ampl.eval("display {(i,j) in arcs }: vmax[i,j]*(sum{k in pipes } (3.14/4)*(d[k])^2);")
+ampl.close()
+
+print("*******************************************************************************\n")
+

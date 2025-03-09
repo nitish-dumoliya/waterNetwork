@@ -21,13 +21,18 @@ param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4;
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 param Q_max = sum{k in nodes diff Source} D[k];
 
-param eps default 1e-6;  # Small smoothing parameter
+param Q_min = min{i in nodes diff Source} D[i];
+
+#param eps default 1e-4;  # Small smoothing parameter
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
 var t{nodes}>=0;
+
+var eps{arcs}>=0;
+
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
 minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
@@ -54,21 +59,33 @@ subject to con1{j in nodes}:
 #    else 
 #		(q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j]  
 #;
+
 #f_first_order_approx1
 #subject to con2{(i,j) in arcs}:
-#     h[i] - h[j]  = ((0.00000278)*q[i,j]*(abs(q[i,j]) + 1000*eps)^0.852 - 0.002368316*eps*q[i,j]/(abs(q[i,j])+1000*eps)^0.148) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+#     h[i] - h[j]  = ((0.00000278)*q[i,j]*(abs(q[i,j]) + 1000*eps[i,j])^0.852 - 0.002368316*eps[i,j]*q[i,j]/(abs(q[i,j])+1000*eps[i,j])^0.148) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 #f_first_order_approx2
 #subject to con2{(i,j) in arcs}: 
-#     h[i] - h[j]  = ((q[i,j]*(abs(q[i,j])+148*eps)) / (abs(q[i,j]) + 1000*eps)^0.148)*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+#     h[i] - h[j]  = ((q[i,j]*(abs(q[i,j])+148*eps[i,j])) / (abs(q[i,j]) + 1000*eps[i,j])^0.148)*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 #f_first_order_approx3
 #subject to con2{(i,j) in arcs}:
-#     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps)^0.852) / (abs(q[i,j]) + 852*eps))*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+#     h[i] - h[j]  = ((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps[i,j])^0.852) / (abs(q[i,j]) + 852*eps[i,j]))*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 #f_second_order_approx
 subject to con2{(i,j) in arcs}:
-     h[i] - h[j]  = ((0.001^1.852)*q[i,j]*(abs(q[i,j])+ 1000*eps)^0.852 - (0.002368316*eps * q[i,j]/(abs(q[i,j]) + 1000*eps)^0.148) + ((0.175255362*(eps)^2) * q[i,j]/((abs(q[i,j])+1000*eps)^1.148))) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+     h[i] - h[j]  = (((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps[i,j])^0.852) / (abs(q[i,j]) + 852*eps[i,j]))*(0.001^1.852) + ((0.175255362*(eps[i,j])^2) * q[i,j]/((abs(q[i,j])+1000*eps[i,j])^1.148))) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+
+subject to eps_selection{(i,j) in arcs}: 
+    eps[i,j] = 0.001 * 10^(log10(Q_min*(0.001) + 1e-5))
+    #eps[i,j] = 0.001 * 10^(log10(Q_min*(0.001) + 1e-5))
+;
+
+
+#subject to eps_selection2{(i,j) in arcs}: 
+#    eps[i,j] <= (1e-3)*abs(q[i,j])*(0.001)
+#;
 
 subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]

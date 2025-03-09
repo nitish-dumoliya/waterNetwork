@@ -52,7 +52,7 @@ class WaterNetworkOptimizer:
         self.R = self.ampl.getParameter('R').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
-        self.eps = self.ampl.getParameter('eps').to_list()[0]
+        #self.eps = self.ampl.getParameter('eps').to_list()[0]
         
         
         self.delta = 0.1
@@ -787,26 +787,51 @@ class WaterNetworkOptimizer:
    
            # Approximated constraint value
            approx_lhs = h_values[i] - h_values[j]
-   
-           approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon) /(abs(q_values[i,j])+1000*epsilon)**0.148)* \
+ 
+           approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon[i,j]) /(abs(q_values[i,j])+1000*epsilon[i,j])**0.148)* \
                         sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
                             for k in pipes)
-   
-   
-           approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
-                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) * \
+
+
+           approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
+                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) * \
                         sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
                             for k in pipes)
-   
-           approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon) ** 0.852) - \
-                       (0.002368316*epsilon * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon)**0.148) +\
-                       (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
+
+           approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon[i,j]) ** 0.852) - \
+                       (0.002368316*epsilon[i,j] * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon[i,j])**0.148) +\
+                       (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
                        sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
                             for k in pipes)
+           approx_rhs4 = (q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
+                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
+                       (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
+                       sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+                            for k in pipes)
+
+
+
+
+   
+               #approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon) /(abs(q_values[i,j])+1000*epsilon)**0.148)* \
+               #             sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+               #                 for k in pipes)
+   
+   
+               #approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
+               #             (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) * \
+               #             sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+               #                 for k in pipes)
+   
+               #approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon) ** 0.852) - \
+               #            (0.002368316*epsilon * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon)**0.148) +\
+               #            (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
+               #            sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+               #                 for k in pipes)
    
    
    
-           approx_value = approx_rhs3
+           approx_value = approx_rhs2
            
            # Compute relative violation
            relative_violation = (original_value - approx_value) / (original_value + 1e-10)
@@ -1043,6 +1068,7 @@ class WaterNetworkOptimizer:
         # self.constraint_violation()
         #self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         
+        self.eps = self.ampl.getVariable('eps').getValues().to_dict()
         self.constraint_violations(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         print(f"Final best objective: {current_cost}")
 
