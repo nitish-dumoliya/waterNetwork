@@ -33,6 +33,31 @@ git push
 	git commit -m "add commit comments"
 	pit push 
 
+public git account
+	git init git-folder
+	create new file <file1>
+	git add file1
+	git commit -m "commit message"
+
+	>>>>upload the git repo to online(on github acount)
+
+	ssh-keygen -t rsa -b 4096 -C "nitishdumoliya8699@gmail.com"
+
+	eval "$(ssh-agent -s)"	
+	ssh-add ~/.ssh/id_rsa
+
+	git remote add origin git@github.com:nitish-dumoliya/demo-repo.git
+	git push --set-upstream origin master
+
+	or
+
+	git push -u origin master
+
+
+
+
+
+
 Jupeter notebook session :	
        jupyter lab --no-browser --ip=10.119.2.11 --port=8910
 
