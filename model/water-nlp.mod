@@ -20,8 +20,8 @@ param a := (15*(delta)^(p-1))/8 + ((p-1)*p*delta^(p-1))/8 - 7*p*(delta^(p-1))/8;
 param b := (-5*(delta)^(p-3))/4 - ((p-1)*p*delta^(p-3))/4 + 5*p*(delta^(p-3))/4; 
 param c := (3*(delta)^(p-5))/8 + ((p-1)*p*delta^(p-5))/8 - 3*p*(delta^(p-5))/8;
 param Q_max = sum{k in nodes diff Source} D[k];
-
-param Q_min = min{i in nodes diff Source} D[i];
+param D_min = min{i in nodes diff Source} D[i];
+param D_max = max{i in nodes diff Source} D[i];
 
 #param eps default 1e-4;  # Small smoothing parameter
 
@@ -38,7 +38,7 @@ var eps{arcs}>=0;
 minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
 
 #****************************************CONSTRAINTS**************************************#
-subject to con1{j in nodes}:
+subject to con1{j in nodes diff Source}:
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
 ;
 
@@ -77,10 +77,10 @@ subject to con2{(i,j) in arcs}:
      h[i] - h[j]  = (((q[i,j] * abs(q[i,j])*(abs(q[i,j])+1000*eps[i,j])^0.852) / (abs(q[i,j]) + 852*eps[i,j]))*(0.001^1.852) + ((0.175255362*(eps[i,j])^2) * q[i,j]/((abs(q[i,j])+1000*eps[i,j])^1.148))) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 
-subject to eps_selection{(i,j) in arcs}: 
-    eps[i,j] = 0.001 * 10^(log10(Q_min*(0.001) + 1e-5))
-    #eps[i,j] = 0.001 * 10^(log10(Q_min*(0.001) + 1e-5))
-;
+#subject to eps_selection{(i,j) in arcs}: 
+#    eps[i,j] = 0.001 * 10^(log10(Q_min*(0.001) + 1e-5))
+#    #eps[i,j] = 0.001 * 10^(log10(Q_min*(0.001) + 1e-5))
+#;
 
 
 #subject to eps_selection2{(i,j) in arcs}: 

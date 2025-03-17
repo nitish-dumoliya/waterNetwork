@@ -3,13 +3,20 @@ Water Network: ../data/d13.dat
 Results of first order approximation 1 of head loss constraint
 
 *******************************************************************************
+min_demand: 0.0
+max_demand: 0.0068
+max_flow: 0.024900000000000002
+eps: 1e-08
 Ipopt solver outputs: 
 
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
+tol = 1e-8
+bound_relax_factor=0
 bound_push = 0.01
 bound_frac = 0.01
-nlp_scaling_method = gradient-based
+warm_start_init_point = yes
+nlp_scaling_method = none
 
 
 ******************************************************************************
@@ -23,26 +30,62 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 14896324.021274954 
-
-eps: {(2, 4): 1e-08, (2, 6): 1e-08, (3, 7): 1e-08, (3, 10): 1e-08, (4, 6): 1e-08, (4, 11): 1e-08, (8, 9): 1e-08, (9, 3): 1e-08, (10, 2): 1e-08, (11, 1): 1e-08} 
+total_cost: 14896325.214236654 
 
 *******************************************************************************
 
-Constraint violations:
+Violations between approximation constraint and original constraint:
 
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_2,4        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,6        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,7        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,10       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,11       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_8,9        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_9,3        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_10,2       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_11,1       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
 
-Total absolute constraint violation using ipopt: 6.757194803697075e-11
-Total relative constraint violation using ipopt: 5.659002637996856e-12
+Total absolute constraint violation using ipopt: 1.334373353457062e-16
+Total relative constraint violation using ipopt: 5.659790663017136e-12
 *******************************************************************************
 
-total_cost using ipopt: 14896324.021274954
-solve_time using ipopt: 0.08644199999999999
+con2.body :=
+2  4     0
+2  6     0
+3  7    -5.68434e-14
+3  10    0
+4  6     0
+4  11    0
+8  9     0
+9  3     0
+10 2     0
+11 1     0
+;
+
+total_cost using ipopt: 14896325.214236654
+solve_time using ipopt: 0.13447
 *******************************************************************************
 
 baron solver outputs:
 
-BARON 24.5.8 (2024.05.08): maxtime = 300
+eps: 1e-08 
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
 iisfind = 4
 lpsolver = cplex
@@ -50,7 +93,7 @@ lsolver = conopt
 threads = 8
 ===========================================================================
  BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
- Running on machine kanjur
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -66,6 +109,7 @@ threads = 8
  For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
+ Starting solution is feasible with a value of  0.148963E+08      
  Doing local search
  Preprocessing found feasible solution with value 0.148963E+08
  Solving bounding LP
@@ -73,36 +117,186 @@ threads = 8
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
-          1           0.39    11MB    0.131729E+08    0.148963E+08    NA
-         65           1.86    12MB    0.148963E+08    0.148963E+08  100.00%
+          1           0.36    12MB    0.131729E+08    0.148963E+08    9.62%
+variable _svar[144]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[144]: Variable considered fixed at Lower Bound and Initial value is moved.
+variable _svar[144]: Variable considered fixed at Lower Bound and Initial value is moved.
+          9           1.08    12MB    0.148963E+08    0.148963E+08  100.00%
 
                          *** Normal completion ***            
 
- Wall clock time:                     1.86
- Total CPU time used:                 1.77
+ Wall clock time:                     1.08
+ Total CPU time used:                 1.05
 
- Total no. of BaR iterations:      65
- Best solution found at node:       1
- Max. no. of nodes in memory:       4
+ Total no. of BaR iterations:       9
+ Best solution found at node:       7
+ Max. no. of nodes in memory:       2
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 65 iterations, optimal within tolerances.
+BARON 24.5.8 (2024.05.08): 9 iterations, optimal within tolerances.
 Objective 14896325.2
-eps: {(2, 4): 1e-08, (2, 6): 1e-08, (3, 7): 1e-08, (3, 10): 1e-08, (4, 6): 1e-08, (4, 11): 1e-08, (8, 9): 1e-08, (9, 3): 1e-08, (10, 2): 1e-08, (11, 1): 1e-08} 
-
 *******************************************************************************
 
-Constraint violations:
+l [2,*,*] (tr)
+:       4        6      :=
+0       0       3491
+1       0          0
+2       0          0
+3       0          0
+4    1475.81       0
+5     966.185      0
+6       0          0
+7       0          0
+8       0          0
+9       0          0
+10      0          0
+11      0          0
+12      0          0
 
+ [3,*,*] (tr)
+:       7      10     :=
+0       0        0
+1       0        0
+2       0        0
+3    4346.51     0
+4    2998.49     0
+5       0        0
+6       0      924
+7       0        0
+8       0        0
+9       0        0
+10      0        0
+11      0        0
+12      0        0
 
-Total absolute constraint violation using baron: 6.756328829737868e-11
-Total relative constraint violation using baron: 5.658747185443689e-12
+ [4,*,*] (tr)
+:     6    11     :=
+0    318     0
+1      0     0
+2      0     0
+3      0   485
+4      0     0
+5      0     0
+6      0     0
+7      0     0
+8      0     0
+9      0     0
+10     0     0
+11     0     0
+12     0     0
+
+ [8,*,*] (tr)
+:       9        :=
+0       0
+1       0
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8     856.817
+9    1829.18
+10      0
+11      0
+12      0
+
+ [9,*,*] (tr)
+:       3        :=
+0       0
+1       0
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8    1754.85
+9     188.153
+10      0
+11      0
+12      0
+
+ [10,*,*] (tr)
+:     2      :=
+0       0
+1       0
+2       0
+3       0
+4       0
+5    4808
+6       0
+7       0
+8       0
+9       0
+10      0
+11      0
+12      0
+
+ [11,*,*] (tr)
+:       1        :=
+0       0
+1     793.818
+2    3472.18
+3       0
+4       0
+5       0
+6       0
+7       0
+8       0
+9       0
+10      0
+11      0
+12      0
+;
+
+con2.body :=
+2  4    -2.6148e-11
+2  6     4.54747e-12
+3  7    -5.00077e-08
+3  10   -5.16405e-08
+4  6     1.06866e-11
+4  11   -4.79029e-08
+8  9    -1.48702e-10
+9  3    -1.48702e-10
+10 2     5.15626e-08
+11 1     2.99656e-09
+;
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_2,4        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,6        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,7        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,10       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,11       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_8,9        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_9,3        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_10,2       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_11,1       |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using baron: 1.3352203864043163e-16
+Total relative constraint violation using baron: 5.6602742865827635e-12
 *******************************************************************************
 
-total_cost using baron: 14896325.202316316
-solve_time using baron: 1.940178
+total_cost using baron: 14896325.202316338
+solve_time using baron: 1.11778
 *******************************************************************************
 

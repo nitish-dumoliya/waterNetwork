@@ -1,0 +1,54 @@
+Ipopt 3.12.13: outlev = 4
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+warm_start_init_point = yes
+max_iter = 3000
+halt_on_ampl_error = yes
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+Total number of variables............................:     1447
+                     variables with only lower bounds:       68
+                variables with lower and upper bounds:     1379
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      262
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+
+Number of Iterations....: 1467
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.4463349619298698e+06    5.6566160361077208e+06
+Dual infeasibility......:   1.0000004189912336e+02    3.9110016386747145e+02
+Constraint violation....:   7.6681929379793843e+00    7.6681929379793843e+00
+Complementarity.........:   1.7555365605464538e-09    6.8659034882971810e-09
+Overall NLP error.......:   1.0000004189912336e+02    3.9110016386747145e+02
+
+
+Number of objective function evaluations             = 1488
+Number of objective gradient evaluations             = 4
+Number of equality constraint evaluations            = 1488
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 1469
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 1468
+Total CPU secs in IPOPT (w/o function evaluations)   =     26.274
+Total CPU secs in NLP function evaluations           =      0.429
+
+EXIT: Converged to a point of local infeasibility. Problem may be infeasible.
+ 
+Ipopt 3.12.13: Converged to a locally infeasible point. Problem may be infeasible.
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 5656616.036107717
+solve_time: 26.926804999999998

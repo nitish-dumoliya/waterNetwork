@@ -1,16 +1,20 @@
 Water Network: d16_foss_iron 
 
-Testing bound_push=0.0002215573006483902, bound_frac=0.007851547255537912
+Testing bound_push=0.0045833263344559035, bound_frac=0.008020313903333215
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.0002215573006483902
-bound_frac: 0.007851547255537912
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0002215573006483902
-bound_frac = 0.007851547255537912
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.0045833263344559035
+bound_frac = 0.008020313903333215
 nlp_scaling_method = none
 
 
@@ -25,18 +29,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 172918.61457552595
-Testing bound_push=0.0007320385720030818, bound_frac=0.009211616686268633
+Total cost: 172716.55542434286
+Testing bound_push=0.004590820022572331, bound_frac=0.009159413000131804
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.0007320385720030818
-bound_frac: 0.009211616686268633
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0007320385720030818
-bound_frac = 0.009211616686268633
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.004590820022572331
+bound_frac = 0.009159413000131804
 nlp_scaling_method = none
 
 
@@ -51,18 +59,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505665
-Testing bound_push=0.00033150693731390154, bound_frac=0.007863865738364966
+Total cost: 172602.8515410011
+Testing bound_push=0.0004843857567274554, bound_frac=0.00808796259993837
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.00033150693731390154
-bound_frac: 0.007863865738364966
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.00033150693731390154
-bound_frac = 0.007863865738364966
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.0004843857567274554
+bound_frac = 0.00808796259993837
 nlp_scaling_method = none
 
 
@@ -77,18 +89,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505482
-Testing bound_push=0.00083794149318609, bound_frac=0.0006547937383933551
+Total cost: 172597.56376624294
+Testing bound_push=0.003758837778958875, bound_frac=0.005611938301259942
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.00083794149318609
-bound_frac: 0.0006547937383933551
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.00083794149318609
-bound_frac = 0.0006547937383933551
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.003758837778958875
+bound_frac = 0.005611938301259942
 nlp_scaling_method = none
 
 
@@ -103,44 +119,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 172901.9203250556
-Testing bound_push=0.0006944830960889984, bound_frac=0.009018767038808462
+Total cost: 172840.50777876904
+Testing bound_push=1e-06, bound_frac=0.008121786948240948
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.0006944830960889984
-bound_frac: 0.009018767038808462
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0006944830960889984
-bound_frac = 0.009018767038808462
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Solved To Acceptable Level.
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171724.33102405147
-Testing bound_push=0.0005204304740621071, bound_frac=0.004530346624692304
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0005204304740621071
-bound_frac: 0.004530346624692304
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0005204304740621071
-bound_frac = 0.004530346624692304
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 1e-06
+bound_frac = 0.008121786948240948
 nlp_scaling_method = none
 
 
@@ -155,18 +149,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 171727.03685440958
-Testing bound_push=0.001, bound_frac=0.01
+Total cost: 171724.33240508952
+Testing bound_push=0.002672321318792684, bound_frac=0.005696694330703633
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.001
-bound_frac: 0.01
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.001
-bound_frac = 0.01
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.002672321318792684
+bound_frac = 0.005696694330703633
 nlp_scaling_method = none
 
 
@@ -181,617 +179,23 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505365
-Testing bound_push=0.0006378719155509874, bound_frac=0.006690978004873667
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0006378719155509874
-bound_frac: 0.006690978004873667
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0006378719155509874
-bound_frac = 0.006690978004873667
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.920325054
-Testing bound_push=0.00042546817054773834, bound_frac=0.0038274725026609833
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.00042546817054773834
-bound_frac: 0.0038274725026609833
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00042546817054773834
-bound_frac = 0.0038274725026609833
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171743.432700424
-Testing bound_push=0.00023683199348795841, bound_frac=0.01
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.00023683199348795841
-bound_frac: 0.01
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00023683199348795841
-bound_frac = 0.01
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.92032394133
-Testing bound_push=0.0007564687040310694, bound_frac=0.003925347198912661
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0007564687040310694
-bound_frac: 0.003925347198912661
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007564687040310694
-bound_frac = 0.003925347198912661
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171724.33102516332
-Testing bound_push=0.001, bound_frac=0.01
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.001
-bound_frac: 0.01
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.001
-bound_frac = 0.01
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505365
-Testing bound_push=0.0008050365108843247, bound_frac=0.00638584124774277
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008050365108843247
-bound_frac: 0.00638584124774277
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008050365108843247
-bound_frac = 0.00638584124774277
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.9203250234
-Testing bound_push=0.00028512174720384697, bound_frac=0.006154821234333303
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.00028512174720384697
-bound_frac: 0.006154821234333303
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00028512174720384697
-bound_frac = 0.006154821234333303
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171743.43270042315
-Testing bound_push=0.00024786937245740396, bound_frac=0.01
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.00024786937245740396
-bound_frac: 0.01
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00024786937245740396
-bound_frac = 0.01
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171743.43270042518
-Testing bound_push=0.0008588480404169985, bound_frac=0.00387146063062173
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008588480404169985
-bound_frac: 0.00387146063062173
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008588480404169985
-bound_frac = 0.00387146063062173
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505022
-Testing bound_push=0.0009808328675191358, bound_frac=0.01
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0009808328675191358
-bound_frac: 0.01
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0009808328675191358
-bound_frac = 0.01
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.9203250561
-Testing bound_push=0.0008622830924016736, bound_frac=0.007291457499658864
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008622830924016736
-bound_frac: 0.007291457499658864
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008622830924016736
-bound_frac = 0.007291457499658864
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172714.29762355334
-Testing bound_push=0.00030014832941301615, bound_frac=0.007909397426133061
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.00030014832941301615
-bound_frac: 0.007909397426133061
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00030014832941301615
-bound_frac = 0.007909397426133061
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172637.84622147045
-Testing bound_push=0.0004762835980188339, bound_frac=0.009610830074135929
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0004762835980188339
-bound_frac: 0.009610830074135929
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0004762835980188339
-bound_frac = 0.009610830074135929
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171743.43270042512
-Testing bound_push=0.0008461651867461481, bound_frac=0.0042121436330746385
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008461651867461481
-bound_frac: 0.0042121436330746385
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008461651867461481
-bound_frac = 0.0042121436330746385
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172721.55443617573
-Testing bound_push=0.0009087104638553717, bound_frac=0.01
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0009087104638553717
-bound_frac: 0.01
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0009087104638553717
-bound_frac = 0.01
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.9203250537
-Testing bound_push=0.0008440872505282262, bound_frac=0.008166250977955576
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008440872505282262
-bound_frac: 0.008166250977955576
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008440872505282262
-bound_frac = 0.008166250977955576
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172714.2976235535
-Testing bound_push=0.0003196725667297713, bound_frac=0.009049205233713593
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0003196725667297713
-bound_frac: 0.009049205233713593
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0003196725667297713
-bound_frac = 0.009049205233713593
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 173180.19751195432
-Testing bound_push=0.0007423667076301348, bound_frac=0.009063131196066552
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0007423667076301348
-bound_frac: 0.009063131196066552
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007423667076301348
-bound_frac = 0.009063131196066552
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.9203250544
-Testing bound_push=0.0007956611805023229, bound_frac=0.005511723212594926
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0007956611805023229
-bound_frac: 0.005511723212594926
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007956611805023229
-bound_frac = 0.005511723212594926
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505607
-Testing bound_push=0.0008734328998239965, bound_frac=0.009630231716669144
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008734328998239965
-bound_frac: 0.009630231716669144
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008734328998239965
-bound_frac = 0.009630231716669144
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 171743.4327004231
-Testing bound_push=0.0007744845332585355, bound_frac=0.00866789176149409
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0007744845332585355
-bound_frac: 0.00866789176149409
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007744845332585355
-bound_frac = 0.00866789176149409
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172901.92032505397
-Testing bound_push=0.00044312297229050647, bound_frac=0.009508965387749866
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.00044312297229050647
-bound_frac: 0.009508965387749866
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00044312297229050647
-bound_frac = 0.009508965387749866
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172597.56261769115
-Testing bound_push=0.0008460931947221537, bound_frac=0.008763236704331006
-fix_arc_set: {(37, 1)}
-super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
-
-bound_push: 0.0008460931947221537
-bound_frac: 0.008763236704331006
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008460931947221537
-bound_frac = 0.008763236704331006
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 172714.29762355346
-Stopping search: maximum iterations reached --> 5
+Total cost: 172721.55595331892
+Stopping search: maximum iterations reached --> 2
 Solve the original nonconvex optimization problem using IPOPT 
 fix_arc_set: {(37, 1)}
 super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
 
-bound_push: 0.0006944830960889984
-bound_frac: 0.009018767038808462
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 1e-06 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0006944830960889984
-bound_frac = 0.009018767038808462
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 1e-06
+bound_frac = 0.008121786948240948
 nlp_scaling_method = none
 
 
@@ -802,13 +206,13 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
 ******************************************************************************
 
  
-Ipopt 3.14.13: Solved To Acceptable Level.
+Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Objective:  171724.33102405147
+Objective:  171724.33240508952
 Solve_result:  solved
-Solve_time: 0.3606669999999994 
+Solve_time: 0.23244399999999998 
 
 
 **********************************************************************************************
@@ -817,27 +221,27 @@ Iteration : 1
 self.sorted_nodes: [18, 26, 16, 13, 35, 15, 2, 32, 3, 22, 21, 20, 12, 6, 25, 24, 5, 29, 30, 28, 7] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(10, 18)  True    1,71,724      1,72,185      0.1s        solved        No        9.99s
-(11, 26)  True    1,71,724      1,72,807      0.09s       solved        No        10.13s
-(29, 16)  True    1,71,724      1,74,370      0.16s       solved        No        10.41s
-(12, 13)  True    1,71,724      1,78,250      0.24s       solved        No        10.76s
-(34, 35)  True    1,71,724      1,72,809      0.09s       solved        No        10.92s
-(26, 15)  True    1,71,724      1,73,394      0.13s       solved        No        11.1s
-(18, 2)   True    1,71,724      1,73,440      0.1s        solved        No        11.32s
-(33, 32)  True    1,71,724      1,72,389      0.09s       solved        No        11.43s
-(2, 3)    True    1,71,724      1,78,676      0.11s       solved        No        11.58s
-(15, 22)  True    1,71,724      1,72,919      0.12s       solved        No        11.74s
-(22, 21)  True    1,71,724      1,74,196      0.11s       solved        No        11.89s
-(15, 20)  True    1,71,724      1,74,165      0.11s       solved        No        12.04s
-(19, 12)  True    1,71,724      1,73,494      0.06s       solved        No        12.14s
-(7, 6)    True    1,71,724      1,77,711      0.14s       solved        No        12.31s
-(16, 25)  True    1,71,724      1,75,234      0.13s       solved        No        12.49s
-(23, 24)  True    1,71,724      1,71,743      0.09s       solved        No        12.64s
-(4, 5)    True    1,71,724      1,74,605      0.15s       solved        No        12.83s
-(33, 29)  True    1,71,724      1,74,269      0.2s        solved        No        13.06s
-(35, 30)  True    1,71,724      1,75,177      0.36s       solved        No        13.46s
-(29, 28)  True    1,71,724      1,73,083      0.1s        solved        No        13.68s
-(24, 7)   True    1,71,724      1,77,139      0.24s       solved        No        13.96s
+(10, 18)  True    1,71,724      1,72,185      0.02s       solved        No        1.44s
+(11, 26)  True    1,71,724      1,72,790      0.03s       solved        No        1.77s
+(29, 16)  True    1,71,724      1,74,288      0.05s       solved        No        2.17s
+(12, 13)  True    1,71,724      1,73,205      0.03s       solved        No        2.63s
+(34, 35)  True    1,71,724      1,72,809      0.05s       solved        No        3.04s
+(26, 15)  True    1,71,724      1,72,968      0.03s       solved        No        3.39s
+(18, 2)   True    1,71,724      1,73,421      0.03s       solved        No        3.74s
+(33, 32)  True    1,71,724      1,72,389      0.04s       solved        No        4.08s
+(2, 3)    True    1,71,724      1,78,676      0.03s       solved        No        4.44s
+(15, 22)  True    1,71,724      1,72,919      0.03s       solved        No        4.69s
+(22, 21)  True    1,71,724      1,74,017      0.03s       solved        No        5.37s
+(15, 20)  True    1,71,724      1,74,095      0.03s       solved        No        5.9s
+(19, 12)  True    1,71,724      1,73,494      0.03s       solved        No        6.22s
+(7, 6)    True    1,71,724      1,75,560      0.04s       solved        No        6.68s
+(16, 25)  True    1,71,724      1,75,073      0.03s       solved        No        7.06s
+(23, 24)  True    1,71,724      1,71,743      0.02s       solved        No        7.36s
+(4, 5)    True    1,71,724      1,74,351      0.23s       solved        No        8.46s
+(33, 29)  True    1,71,724      1,74,101      0.03s       solved        No        8.88s
+(35, 30)  True    1,71,724      1,75,177      0.06s       solved        No        9.74s
+(29, 28)  True    1,71,724      1,73,083      0.02s       solved        No        10.16s
+(24, 7)   True    1,71,724      1,76,935      0.05s       solved        No        10.62s
 
 **********************************Final best results******************************************
 
@@ -849,130 +253,130 @@ Constraint violations:
 +-----------------+----------------------+----------------------+
 | Constraint ID   |   Absolute Violation |   Relative Violation |
 +=================+======================+======================+
-| con2_1,17       |                0     |            0         |
+| con2_1,17       |                    0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_1,31       |                0     |            0         |
+| con2_1,31       |                    0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_2,3        |                0     |            0         |
+| con2_2,3        |                    0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_2,18       |               -0     |            0         |
+| con2_2,18       |                   -0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_3,4        |                0     |            0         |
+| con2_3,4        |                    0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_3,11       |               -0     |            0         |
+| con2_3,11       |                   -0 |           5e-08      |
 +-----------------+----------------------+----------------------+
-| con2_4,5        |                0     |            2e-08     |
+| con2_4,5        |                    0 |           2.6e-07    |
 +-----------------+----------------------+----------------------+
-| con2_5,6        |               -1e-08 |            7e-08     |
+| con2_5,6        |                   -0 |           8.9e-07    |
 +-----------------+----------------------+----------------------+
-| con2_5,13       |                0     |            2.8e-07   |
+| con2_5,13       |                    0 |           3.81e-06   |
 +-----------------+----------------------+----------------------+
-| con2_6,7        |               -0     |            1e-08     |
+| con2_6,7        |                   -0 |           7e-08      |
 +-----------------+----------------------+----------------------+
-| con2_7,24       |               -0     |            1e-08     |
+| con2_7,24       |                   -0 |           9e-08      |
 +-----------------+----------------------+----------------------+
-| con2_8,28       |               -0     |            0         |
+| con2_8,28       |                   -0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_9,36       |               -0     |            0         |
+| con2_9,36       |                   -0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_10,11      |                0     |            0         |
+| con2_10,11      |                    0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_10,32      |                0     |            0         |
+| con2_10,32      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_11,19      |                0     |            0         |
+| con2_11,19      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_11,26      |                0     |            0         |
+| con2_11,26      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_12,4       |               -0     |            1e-08     |
+| con2_12,4       |                   -0 |           1.6e-07    |
 +-----------------+----------------------+----------------------+
-| con2_12,13      |                0     |            2e-08     |
+| con2_12,13      |                    0 |           2.5e-07    |
 +-----------------+----------------------+----------------------+
-| con2_13,14      |               -0     |            2e-08     |
+| con2_13,14      |                   -0 |           2.2e-07    |
 +-----------------+----------------------+----------------------+
-| con2_14,20      |               -0     |            0         |
+| con2_14,20      |                   -0 |           5e-08      |
 +-----------------+----------------------+----------------------+
-| con2_14,21      |                0     |            1.377e-05 |
+| con2_14,21      |                    0 |           0.00016969 |
 +-----------------+----------------------+----------------------+
-| con2_15,16      |               -0     |            0         |
+| con2_15,16      |                   -0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_15,22      |                0     |            0         |
+| con2_15,22      |                    0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_16,25      |                0     |            0         |
+| con2_16,25      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_16,29      |               -0     |            0         |
+| con2_16,29      |                   -0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_17,2       |                1e-08 |            0         |
+| con2_17,2       |                    0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_17,18      |                0     |            0         |
+| con2_17,18      |                    0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_18,10      |               -0     |            0         |
+| con2_18,10      |                   -0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_19,12      |                0     |            1e-08     |
+| con2_19,12      |                    0 |           1e-07      |
 +-----------------+----------------------+----------------------+
-| con2_19,20      |                0     |            3e-08     |
+| con2_19,20      |                    0 |           4.3e-07    |
 +-----------------+----------------------+----------------------+
-| con2_20,15      |               -0     |            0         |
+| con2_20,15      |                   -0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_21,6       |                0     |            3.3e-07   |
+| con2_21,6       |                    0 |           4.43e-06   |
 +-----------------+----------------------+----------------------+
-| con2_21,22      |               -0     |            0         |
+| con2_21,22      |                   -0 |           6e-08      |
 +-----------------+----------------------+----------------------+
-| con2_22,7       |                1e-08 |            4e-08     |
+| con2_22,7       |                    0 |           5.2e-07    |
 +-----------------+----------------------+----------------------+
-| con2_22,23      |               -0     |            0         |
+| con2_22,23      |                   -0 |           7e-08      |
 +-----------------+----------------------+----------------------+
-| con2_23,25      |               -0     |            0         |
+| con2_23,25      |                   -0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_24,8       |               -0     |            0         |
+| con2_24,8       |                   -0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_24,23      |               -1e-08 |            3.898e-05 |
+| con2_24,23      |                   -0 |           0.00058779 |
 +-----------------+----------------------+----------------------+
-| con2_25,8       |               -0     |            2e-08     |
+| con2_25,8       |                   -0 |           2.1e-07    |
 +-----------------+----------------------+----------------------+
-| con2_26,15      |                0     |            0         |
+| con2_26,15      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_26,27      |               -0     |            0         |
+| con2_26,27      |                   -0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_27,16      |                0     |            0         |
+| con2_27,16      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_28,9       |               -0     |            0         |
+| con2_28,9       |                   -0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_28,29      |               -0     |            0         |
+| con2_28,29      |                   -0 |           3e-08      |
 +-----------------+----------------------+----------------------+
-| con2_29,30      |               -0     |            0         |
+| con2_29,30      |                   -0 |           2e-08      |
 +-----------------+----------------------+----------------------+
-| con2_29,33      |               -0     |            0         |
+| con2_29,33      |                   -0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_30,9       |               -0     |            3e-07     |
+| con2_30,9       |                   -0 |           4.11e-06   |
 +-----------------+----------------------+----------------------+
-| con2_30,35      |               -0     |            0         |
+| con2_30,35      |                   -0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_31,10      |                0     |            0         |
+| con2_31,10      |                    0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_31,34      |                0     |            0         |
+| con2_31,34      |                    0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_32,27      |                0     |            0         |
+| con2_32,27      |                    0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_32,33      |               -0     |            0         |
+| con2_32,33      |                   -0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_33,34      |               -0     |            0         |
+| con2_33,34      |                   -0 |           0          |
 +-----------------+----------------------+----------------------+
-| con2_34,35      |                0     |            0         |
+| con2_34,35      |                    0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_35,36      |               -0     |            2e-08     |
+| con2_35,36      |                   -0 |           2.4e-07    |
 +-----------------+----------------------+----------------------+
-| con2_36,1       |               -0     |            0         |
+| con2_36,1       |                   -0 |           1e-08      |
 +-----------------+----------------------+----------------------+
-| con2_37,1       |                0     |            0         |
+| con2_37,1       |                    0 |           0          |
 +-----------------+----------------------+----------------------+
 
-Total absolute constraint violation: 1.1944474238891598e-07
-Total relative constraint violation: 5.3962746191989406e-05
+Total absolute constraint violation: 9.878411831359286e-12
+Total relative constraint violation: 0.0007740280316435703
 *******************************************************************************
 
-Final best objective: 171724.33102405147
-Number of nlp problem solved: 52
+Final best objective: 171724.33240508952
+Number of nlp problem solved: 151
 Total number of iteration: 1
-Solver_time: 11.99 seconds
-Heuristic elapsed time: 13.97 seconds
+Solver_time: 8.25 seconds
+Heuristic elapsed time: 10.62 seconds
 

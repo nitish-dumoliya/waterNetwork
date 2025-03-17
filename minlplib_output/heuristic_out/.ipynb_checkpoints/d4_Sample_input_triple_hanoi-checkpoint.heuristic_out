@@ -1,0 +1,36 @@
+Water Network: d4_Sample_input_triple_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(72, 73), (81, 82), (1, 2), (10, 11), (70, 71), (41, 42), (12, 13), (21, 22), (50, 51), (80, 81), (11, 12), (51, 52), (40, 41), (42, 43), (71, 72), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (2, 33), (33, 34), (33, 49), (33, 50), (2, 63), (63, 64), (63, 79), (63, 80)] 
+
+Objective:  18376564.098041907
+Solve_result:  solved
+Solve_time: 5.3629430000000005 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [27, 57, 87, 29, 59, 89, 16, 46, 76] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(26, 27)  True      1,83,76,564    1,84,19,582    0.38        solved         No        5.99        
+(56, 57)  True      1,83,76,564    1,84,19,582    0.35        solved         No        6.4         
+(86, 87)  True      1,83,76,564    1,84,19,582    0.34        solved         No        6.8         
+(28, 29)  True      1,83,76,564    1,86,46,183    0.4         solved         No        7.28        
+(58, 59)  True      1,83,76,564    1,86,46,181    0.44        solved         No        7.81        
+(88, 89)  True      1,83,76,564    1,86,46,181    0.46        solved         No        8.33        
+(17, 16)  True      1,83,76,564    1,83,83,512    0.36        solved         No        8.74        
+(47, 46)  True      1,83,76,564    1,83,83,513    0.33        solved         No        9.12        
+(77, 76)  True      1,83,76,564    1,83,83,513    0.33        solved         No        9.5         
+
+**********************************Final best results******************************************
+
+Water Network: d4_Sample_input_triple_hanoi
+Final best objective: 18376564.0980
+Number of nlp problem solved: 10
+Total number of iteration: 1
+Solver_time: 8.75 seconds
+Heuristic elapsed time: 9.50 seconds = 0.16 minutes.
+

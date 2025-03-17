@@ -1,0 +1,61 @@
+Ipopt 3.12.13: outlev = 4
+expect_infeasible_problem = yes
+bound_push = 0.01
+bound_frac = 0.01
+warm_start_init_point = yes
+max_iter = 3000
+halt_on_ampl_error = yes
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+Total number of variables............................:     2708
+                     variables with only lower bounds:      165
+                variables with lower and upper bounds:     2543
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      531
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+In iteration 978, 1 Slack too small, adjusting variable bound
+In iteration 979, 1 Slack too small, adjusting variable bound
+In iteration 980, 1 Slack too small, adjusting variable bound
+In iteration 981, 1 Slack too small, adjusting variable bound
+In iteration 982, 1 Slack too small, adjusting variable bound
+In iteration 983, 1 Slack too small, adjusting variable bound
+In iteration 984, 1 Slack too small, adjusting variable bound
+
+Number of Iterations....: 986
+
+                                   (scaled)                 (unscaled)
+Objective...............:   3.9585913672714628e+05    1.1060304280156465e+07
+Dual infeasibility......:   3.7849942526428158e-10    1.0575273941884026e-08
+Constraint violation....:   1.7705151580948986e-13    1.7705151580948986e-13
+Complementarity.........:   3.8271340692735530e-09    1.0693012589550307e-07
+Overall NLP error.......:   4.3863644745445340e-11    1.0693012589550307e-07
+
+
+Number of objective function evaluations             = 1111
+Number of objective gradient evaluations             = 928
+Number of equality constraint evaluations            = 1111
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 989
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 986
+Total CPU secs in IPOPT (w/o function evaluations)   =     21.816
+Total CPU secs in NLP function evaluations           =      0.544
+
+EXIT: Optimal Solution Found.
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 11060304.280566674
+solve_time: 23.163678

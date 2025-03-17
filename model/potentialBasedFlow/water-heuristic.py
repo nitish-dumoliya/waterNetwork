@@ -780,58 +780,51 @@ class WaterNetworkOptimizer:
        for (i, j) in q_values.keys():
            # Original constraint value
            original_lhs = h_values[i] - h_values[j]
-           original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) * \
-                          sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-                              for k in pipes)
+           #original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) * \
+           #               sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+           #                   for k in pipes)
+
+           original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) 
+           
            original_value = original_rhs
    
            # Approximated constraint value
            approx_lhs = h_values[i] - h_values[j]
  
-           approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon[i,j]) /(abs(q_values[i,j])+1000*epsilon[i,j])**0.148)* \
-                        sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-                            for k in pipes)
+           #approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon[i,j]) /(abs(q_values[i,j])+1000*epsilon[i,j])**0.148)* \
+           #             sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+           #                 for k in pipes)
+  
+           approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon[i,j]) /(abs(q_values[i,j])+1000*epsilon[i,j])**0.148)
 
-
+           #approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
+           #             (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) * \
+           #             sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+           #                 for k in pipes)
+           
            approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
-                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) * \
-                        sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-                            for k in pipes)
-
+                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852)
+ 
+           #approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon[i,j]) ** 0.852) - \
+           #            (0.002368316*epsilon[i,j] * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon[i,j])**0.148) +\
+           #            (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
+           #            sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+           #                 for k in pipes)
            approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon[i,j]) ** 0.852) - \
-                       (0.002368316*epsilon[i,j] * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon[i,j])**0.148) +\
-                       (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
-                       sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-                            for k in pipes)
+                    (0.002368316*epsilon[i,j] * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon[i,j])**0.148) +\
+                    (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) 
+ 
+           #approx_rhs4 = (q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
+           #             (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
+           #            (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
+           #            sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
+           #                 for k in pipes)
+
            approx_rhs4 = (q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
-                        (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
-                       (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
-                       sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-                            for k in pipes)
-
-
-
-
-   
-               #approx_rhs1 = (0.001**1.852)*(q_values[i,j]*(abs(q_values[i,j])+148*epsilon) /(abs(q_values[i,j])+1000*epsilon)**0.148)* \
-               #             sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-               #                 for k in pipes)
-   
-   
-               #approx_rhs2 = q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon) ** 0.852) * \
-               #             (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon)) * (0.001 ** 1.852) * \
-               #             sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-               #                 for k in pipes)
-   
-               #approx_rhs3 = ((0.001 ** 1.852)*(q_values[i, j] * (abs(q_values[i, j]) + 1000*epsilon) ** 0.852) - \
-               #            (0.002368316*epsilon * q_values[i,j]/(abs(q_values[i,j]) + 1000*epsilon)**0.148) +\
-               #            (0.175255362*(epsilon)**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon)**1.148)) * \
-               #            sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
-               #                 for k in pipes)
-   
-   
-   
-           approx_value = approx_rhs2
+                     (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
+                    (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) 
+ 
+           approx_value = approx_rhs1
            
            # Compute relative violation
            relative_violation = (original_value - approx_value) / (original_value + 1e-10)
@@ -911,6 +904,56 @@ class WaterNetworkOptimizer:
             (u,v) = edge
             acy_check = True
             in_arc_check = True
+        
+            #def parallel_objective_function(params):
+            #    """ Wrapper for parallel evaluation of objective function inside PSO. """
+            #    return self.objective(params, self.data_file)
+
+           
+            def objective(params):
+
+               bound_push, bound_frac = params
+ 
+               #print(f"Testing bound_push={bound_push}, bound_frac={bound_frac}")
+               self.bound_push = bound_push
+               self.bound_frac = bound_frac
+               self.load_model()
+               self.ampl.eval(f"set inarc := {{{inarc_set}}};")
+               self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
+               #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
+               fix_arc_set = self.fix_leaf_arc_flow()
+               self.update_initial_points1(self.l, self.q, self.h, self.t, self.all_duals, self.inarc)
+               
+               if (u,v) in self.arcs:
+                   self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-9;")
+                   # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
+               else:
+                   self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-9;")
+                   # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
+               
+               #flow_str = ''
+               #flow_str = '+'.join(
+               #    f"(q[{i},{j}])" if (i, j) in self.arcs else f"(-q[{j},{i}])"
+               #    for (i, j) in node_arcs if (i, j) != (u, v))
+               # print("flow_str",flow_str)
+               #if flow_str:
+               #   self.ampl.eval(f"s.t. inc_arc_flow: {flow_str}>={self.D[node]};")
+
+               self.solve1()
+               total_cost = self.ampl.getObjective("total_cost").value()
+    
+               #print(f"Total cost: {total_cost}")
+ 
+               return total_cost
+            lb = [1e-6, 1e-6]  # Lower bounds (0)
+            ub = [0.01, 0.01]  # Upper bounds (0.5)
+
+            with self.suppress_output():
+                best_params, best_cost = pso(objective, lb, ub, swarmsize=2, maxiter=2)
+                self.bound_push , self.bound_frac = best_params
+            #self.bound_push , self.bound_frac = (0.01, 0.01)
+ 
+   
             self.load_model()
             self.ampl.eval(f"set inarc := {{{inarc_set}}};")
             self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
@@ -919,19 +962,19 @@ class WaterNetworkOptimizer:
             self.update_initial_points1(self.l, self.q, self.h, self.t, self.all_duals, self.inarc)
             
             if (u,v) in self.arcs:
-                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-6;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-9;")
                 # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
             else:
-                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-6;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{v}, {u}]>=1e-9;")
                 # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
             
-            flow_str = ''
-            flow_str = '+'.join(
-                f"(q[{i},{j}])" if (i, j) in self.arcs else f"(-q[{j},{i}])"
-                for (i, j) in node_arcs if (i, j) != (u, v))
+            #flow_str = ''
+            #flow_str = '+'.join(
+            #    f"(q[{i},{j}])" if (i, j) in self.arcs else f"(-q[{j},{i}])"
+            #    for (i, j) in node_arcs if (i, j) != (u, v))
             # print("flow_str",flow_str)
-            if flow_str:
-               self.ampl.eval(f"s.t. inc_arc_flow: {flow_str}>={self.D[node]};")
+            #if flow_str:
+            #   self.ampl.eval(f"s.t. inc_arc_flow: {flow_str}>={self.D[node]};")
             
             self.solve1()
             
@@ -1117,7 +1160,6 @@ class WaterNetworkOptimizer:
    
     def objective(self, params):
 
-
         bound_push, bound_frac = params
  
         print(f"Testing bound_push={bound_push}, bound_frac={bound_frac}")
@@ -1132,7 +1174,7 @@ class WaterNetworkOptimizer:
         
 
         self.ampl.option["solver"] = "ipopt"
-        ipopt_options = f"outlev=0 expect_infeasible_problem=yes bound_push={bound_push} bound_frac={bound_frac}  warm_start_init_point = yes nlp_scaling_method=none "
+        ipopt_options = f"outlev=0 expect_infeasible_problem=yes tol = 1e-8 bound_relax_factor=0  bound_push={bound_push} bound_frac={bound_frac}  warm_start_init_point = yes nlp_scaling_method=none "
         self.ampl.set_option("ipopt_options", ipopt_options)
 
         self.solve()
@@ -1177,10 +1219,25 @@ class WaterNetworkOptimizer:
 
  
         return total_cost  # Minimize total cost
+    
+    def compute_adaptive_eps(self, min_demand):
+    
+        min_demand = min_demand/1000
+        if min_demand < 1e-4:
+            #print("min_demand1", min_demand,"\n")
+            return 1e-8
+    
+        elif min_demand < 1:
+            #print("min_demand2", min_demand,"\n")
+            return 1e-6
+        else:
+            #print("min_demand3", min_demand,"\n")
+            return 1e-3
+    
 
     def solve(self):
-        print("bound_push:", self.bound_push)
-        print("bound_frac:", self.bound_frac)
+        #print("bound_push:", self.bound_push)
+        #print("bound_frac:", self.bound_frac)
         #with self.suppress_output():
         #"""Solve the optimization problem."""
         self.ampl.option["solver"] = "ipopt"
@@ -1191,12 +1248,24 @@ class WaterNetworkOptimizer:
         # self.ampl.option["solver"] = "/home/nitishdumoliya/Nitish/minotaur/build/bin/mmultistart"
         # self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes mu_strategy = adaptive tol = 1e-4 dual_inf_tol=1e-6 ")   #max_iter = 1000
         #self.ampl.set_option(f"ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.0003334 bound_frac = 0.011112 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
-        self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes nlp_scaling_method = none")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes tol=1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} nlp_scaling_method = none")   #max_iter = 1000
         #self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes mu_strategy = adaptive mu_oracle = loqo halt_on_ampl_error = yes max_iter = 700""")   #max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
         self.ampl.option["presolve_eps"] = "6.82e-14"
         self.ampl.option['presolve'] = 1
         # self.ampl.option['solver_msg'] = 0
         # self.ampl.option['show_stats'] = 0
+        
+        min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
+        max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
+        max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
+
+        print("min_demand:", min_demand/1000)
+        print("max_demand:", max_demand/1000)
+        print("max_flow:", max_flow/1000)
+        epsilon = self.compute_adaptive_eps(min_demand)
+        print("eps:", epsilon, "\n")
+        self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
+
         self.ampl.solve()
         self.solve_result = self.ampl.solve_result
         self.total_cost = self.ampl.get_objective("total_cost").value()
@@ -1217,11 +1286,24 @@ class WaterNetworkOptimizer:
             print("bound_push:", self.bound_push)
             print("bound_frac:", self.bound_frac)
             #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes ")   #max_iter = 1000
-            self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 600 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
+            self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-9  bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 600 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
             # self.ampl.option['solver_msg'] = 0
             # self.ampl.option['show_stats'] = 0
+            
+            min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
+            max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
+            max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
+
+            print("min_demand:", min_demand/1000)
+            print("max_demand:", max_demand/1000)
+            print("max_flow:", max_flow/1000)
+            epsilon = self.compute_adaptive_eps(min_demand)
+            print("eps:", epsilon)
+            self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
+
+
             self.ampl.solve()
             self.solve_result = self.ampl.solve_result
             self.total_cost = self.ampl.get_objective("total_cost").value()
@@ -1235,35 +1317,18 @@ class WaterNetworkOptimizer:
         """Main method to run the optimization process."""
         
         self.start_time = time.time()
-        #self.initial_point = False
-        #study = optuna.create_study(direction="minimize")
-        #study.optimize(self.objective, n_trials=5)
         
-        # Print best parameters
-        #print("\nBest Found Parameters:")
-        #print(f"Bound Push: {study.best_params['bound_push']}")
-        #print(f"Bound Frac: {study.best_params['bound_frac']}")
-        #print(f"Best Objective Value: {study.best_value}")
- 
-       
-        #self.bound_push = study.best_params['bound_push']
-        #self.bound_frac = study.best_params['bound_frac']
         lb = [1e-6, 1e-6]  # Lower bounds (0)
-        ub = [0.001, 0.01]  # Upper bounds (0.5)
+        ub = [0.01, 0.01]  # Upper bounds (0.5)
 
-        def parallel_objective_function(params):
-            """ Wrapper for parallel evaluation of objective function inside PSO. """
-            return self.objective(params, self.data_file)  # Pass `data_number`
+        #def parallel_objective_function(params):
+        #    """ Wrapper for parallel evaluation of objective function inside PSO. """
+        #    return self.objective(params, self.data_file)
 
-        # Set up multiprocessing for parallel execution inside PSO
-        num_cores = multiprocessing.cpu_count()  # Get the number of available CPU cores
-        #with multiprocessing.Pool(processes=num_cores) as pool:
-        #    best_params, best_cost = pso(parallel_objective_function, lb, ub, swarmsize=2, maxiter=10, processes= num_cores)
-            #best_params, best_cost = pso(lambda params: pool.apply(parallel_objective_function, args=([params, self.data_file],)), lb, ub, swarmsize=2, maxiter=5)
-        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=5, maxiter=5)
-
+        #num_cores = multiprocessing.cpu_count()
+        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=2, maxiter=2)
         self.bound_push , self.bound_frac = best_params
-        #self.bound_frac = 0.01
+        #self.bound_push , self.bound_frac = (0.0001, 0.01)
  
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()
@@ -1273,13 +1338,16 @@ class WaterNetworkOptimizer:
         self.super_source_out_arc = self.fix_arc_set()
         print("super_source_out_arc:", self.super_source_out_arc, "\n")
         
-        #self.update_initial_points(self.l, self.q, self.h)
-        # self.ampl.eval("subject to con2{(i,j) in arcs }: (if -delta<=q[i,j]<=delta  then (0.001^1.852)*(c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) else (q[i,j] * abs(q[i,j])^0.852) * (0.001^1.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) = h[i] - h[j]  ;")
-        # self.ampl.eval("display option ipopt_options;")     # Display all options in AMPL
         # self.generate_random_acyclic_graph()
         # self.update_model()
         self.solve()
         
+        #fix_arc_set = self.fix_leaf_arc_flow()
+        #print("fix_arc_set:",fix_arc_set)
+        #self.super_source_out_arc = self.fix_arc_set()
+        #print("super_source_out_arc:", self.super_source_out_arc, "\n")
+        
+
         print("Objective: ",self.total_cost)
         print("Solve_result: ",self.solve_result)
         print("Solve_time:", self.ampl.get_value('_solve_elapsed_time'),"\n")
@@ -1352,7 +1420,6 @@ if __name__ == "__main__":
     data_number = int(sys.argv[1]) -1
     input_data_file = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
     print("Water Network:", data_list[(data_number)],"\n")
-
 
     optimizer = WaterNetworkOptimizer("../water-nlp.mod", input_data_file, data_number, data_list)
     # optimizer = WaterNetworkOptimizer(sys.argv[1], sys.argv[2], sys.argv[3])

@@ -1,0 +1,344 @@
+Water Network: ../../data/minlplib_data/d1_shamir.dat 
+
+Results of first order approximation 1 of head loss constraint
+
+*******************************************************************************
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+eps: 1e-06
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-8
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 423978.93353278976 
+
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                   -0 |             1.69e-06 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_5,7        |                    0 |             1.69e-06 |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using ipopt: 9.776500116514658e-13
+Total relative constraint violation using ipopt: 3.389983399056663e-06
+*******************************************************************************
+
+total_cost using ipopt: 423978.93353278976
+solve_time using ipopt: 0.536388
+*******************************************************************************
+
+baron solver outputs:
+
+eps: 1e-06 
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of   423979.          
+ Doing local search
+ Preprocessing found feasible solution with value 423979.
+ Solving bounding LP
+ Starting multi-start local search
+constraint _scon[1]: Initial function value too large = 1.1E+12
+constraint _scon[2]: Initial function value too large = 1.6E+22
+constraint _scon[3]: Initial function value too large = 6.9E+21
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[5]: Initial function value too large = 2.3E+22
+constraint _scon[6]: Initial function value too large = 5.8E+21
+constraint _scon[1]: Initial function value too large = 2.7E+21
+constraint _scon[2]: Initial function value too large = 9.0E+21
+constraint _scon[3]: Initial function value too large = 9.7E+21
+constraint _scon[4]: Initial function value too large = 6.1E+11
+constraint _scon[5]: Initial function value too large = 6.9E+11
+constraint _scon[6]: Initial function value too large = 7.2E+11
+constraint _scon[1]: Initial function value too large = 2.7E+21
+constraint _scon[2]: Initial function value too large = 9.1E+21
+constraint _scon[3]: Initial function value too large = 9.8E+21
+constraint _scon[4]: Initial function value too large = 6.2E+11
+constraint _scon[5]: Initial function value too large = 6.9E+11
+constraint _scon[6]: Initial function value too large = 7.1E+11
+constraint _scon[1]: Initial function value too large = 2.7E+21
+constraint _scon[2]: Initial function value too large = 9.1E+21
+constraint _scon[3]: Initial function value too large = 9.9E+21
+constraint _scon[4]: Initial function value too large = 6.3E+11
+constraint _scon[5]: Initial function value too large = 7.4E+11
+constraint _scon[6]: Initial function value too large = 6.8E+11
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+constraint _scon[1]: Initial function value too large = 1.1E+12
+constraint _scon[2]: Initial function value too large = 1.5E+22
+constraint _scon[3]: Initial function value too large = 6.4E+21
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[5]: Initial function value too large = 2.1E+22
+constraint _scon[6]: Initial function value too large = 5.4E+21
+*         1           0.56    12MB     16000.0         417179.        0.02%
+          1           0.66    12MB     16000.0         417179.        0.03%
+*         2           0.98    12MB     16000.0         403390.        0.05%
+constraint _scon[2]: Initial function value too large = 1.3E+12
+constraint _scon[5]: Initial function value too large = 2.8E+15
+constraint _scon[6]: Initial function value too large = 1.3E+12
+constraint _scon[2]: Initial function value too large = 6.9E+11
+constraint _scon[5]: Initial function value too large = 4.4E+14
+constraint _scon[6]: Initial function value too large = 7.0E+11
+constraint _scon[2]: Initial function value too large = 3.1E+19
+constraint _scon[5]: Initial function value too large = 1.3E+12
+constraint _scon[6]: Initial function value too large = 1.3E+12
+constraint _scon[3]: Initial function value too large = 2.9E+18
+constraint _scon[4]: Initial function value too large = 7.3E+11
+constraint _scon[5]: Initial function value too large = 1.1E+15
+constraint _scon[6]: Initial function value too large = 6.7E+11
+constraint _scon[4]: Initial function value too large = 1.1E+18
+constraint _scon[5]: Initial function value too large = 1.3E+12
+constraint _scon[6]: Initial function value too large = 1.3E+12
+constraint _scon[4]: Initial function value too large = 4.0E+18
+constraint _scon[5]: Initial function value too large = 2.6E+16
+constraint _scon[6]: Initial function value too large = 2.7E+18
+*        65           2.91    12MB     71006.9         403390.        9.05%
+*        89           3.08    12MB     264973.         403390.       11.57%
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[2]: Initial function value too large = 1.3E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[2]: Initial function value too large = 2.9E+18
+constraint _scon[4]: Initial function value too large = 6.1E+11
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+      29085          33.08    12MB     388885.         403390.       64.28%
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+      63056          63.08    12MB     388885.         403390.       64.28%
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+      93751          93.08    12MB     388885.         403390.       64.28%
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+     129246         123.08    12MB     388885.         403390.       64.28%
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+     170377         153.08    12MB     388885.         403390.       64.28%
+     211801         183.08    12MB     388885.         403390.       64.28%
+     252972         213.08    12MB     388885.         403390.       64.28%
+     290543         243.08    32MB     388885.         403390.       64.28%
+     323738         273.08   120MB     388885.         403390.       64.28%
+*    354711         302.46   190MB     388885.         403390.       64.28%
+     395726         332.46   190MB     388885.         403390.       64.28%
+     442304         362.46   190MB     388885.         403390.       64.28%
+     495675         392.46   190MB     388885.         403390.       64.28%
+     555092         422.46   190MB     388885.         403390.       64.28%
+*    594634         443.29   190MB     388885.         403390.       64.28%
+     631631         473.29   190MB     388885.         403390.       64.28%
+     654412         503.30   190MB     388885.         403390.       64.28%
+     669012         533.30   190MB     388885.         403390.       64.28%
+     687548         563.30   190MB     388885.         403390.       64.28%
+     705705         593.30   190MB     388885.         403390.       64.28%
+     723599         623.30   190MB     388885.         403390.       64.28%
+     741600         653.30   190MB     388885.         403390.       64.28%
+     759672         683.30   190MB     388885.         403390.       64.28%
+     777962         713.30   190MB     388885.         403390.       64.28%
+     796139         743.30   190MB     388885.         403390.       64.28%
+     811992         773.30   190MB     388885.         403390.       64.28%
+     829115         803.30   190MB     388885.         403390.       64.28%
+     846532         833.30   190MB     388885.         403390.       64.28%
+     863874         863.30   190MB     388885.         403390.       64.28%
+     881382         893.30   190MB     388885.         403390.       64.28%
+     898750         923.31   190MB     388885.         403390.       64.28%
+     915862         953.31   190MB     388885.         403390.       64.28%
+     929096         983.31   190MB     388885.         403390.       64.28%
+     946046        1013.31   190MB     388885.         403390.       64.28%
+     961338        1043.32   190MB     388885.         403390.       64.28%
+     978582        1073.32   190MB     388885.         403390.       64.28%
+     995139        1103.32   190MB     388885.         403390.       64.28%
+    1000000        1113.79   190MB     388885.         403390.       64.28%
+    1017696        1143.79   190MB     388885.         403390.       64.28%
+    1034992        1173.79   190MB     388885.         403390.       64.28%
+    1052186        1203.79   190MB     388885.         403390.       64.28%
+    1069647        1233.80   190MB     388885.         403390.       64.28%
+    1086873        1263.80   190MB     388885.         403390.       64.28%
+    1104222        1293.80   190MB     388885.         403390.       64.28%
+    1121468        1323.80   190MB     388885.         403390.       64.28%
+    1138768        1353.80   190MB     388885.         403390.       64.28%
+    1155807        1383.80   190MB     388885.         403390.       64.28%
+    1173372        1413.80   190MB     388885.         403390.       64.28%
+    1190346        1443.80   190MB     388885.         403390.       64.28%
+    1207334        1473.81   190MB     388885.         403390.       64.28%
+    1224376        1503.81   190MB     388885.         403390.       64.28%
+    1241627        1533.81   190MB     388885.         403390.       64.28%
+    1259014        1563.81   190MB     388885.         403390.       64.28%
+*   1274481        1591.10   190MB     388885.         403390.       64.28%
+    1292123        1621.10   190MB     388885.         403390.       64.28%
+    1309766        1651.10   190MB     388885.         403390.       64.28%
+    1326754        1681.10   190MB     388885.         403390.       64.28%
+    1343790        1711.10   190MB     388885.         403390.       64.28%
+    1360678        1741.10   190MB     388885.         403390.       64.28%
+    1377749        1771.10   190MB     388885.         403390.       64.28%
+    1394688        1801.11   190MB     388885.         403390.       64.28%
+    1412895        1831.11   190MB     388885.         403390.       64.28%
+    1431278        1861.11   190MB     388885.         403390.       64.28%
+    1448670        1891.11   190MB     388885.         403390.       64.28%
+    1466101        1921.11   190MB     388885.         403390.       64.28%
+    1483674        1951.11   190MB     388885.         403390.       64.28%
+    1499360        1981.11   190MB     388885.         403390.       64.28%
+    1515101        2011.12   190MB     388885.         403390.       64.28%
+    1530787        2041.12   190MB     388885.         403390.       64.28%
+    1548219        2071.12   190MB     388885.         403390.       64.28%
+    1565570        2101.12   190MB     388885.         403390.       64.28%
+    1583359        2131.12   190MB     388885.         403390.       64.28%
+    1600886        2161.12   190MB     388885.         403390.       64.28%
+    1619112        2191.12   190MB     388885.         403390.       64.28%
+    1637015        2221.12   190MB     388885.         403390.       64.28%
+    1652720        2251.12   190MB     388885.         403390.       64.28%
+    1670662        2281.12   190MB     388885.         403390.       64.28%
+    1689151        2311.12   190MB     388885.         403390.       64.28%
+    1707266        2341.12   190MB     388885.         403390.       64.28%
+    1725180        2371.12   190MB     388885.         403390.       64.28%
+    1743612        2401.12   190MB     388885.         403390.       64.28%
+    1761790        2431.13   190MB     388885.         403390.       64.28%
+    1781522        2461.13   190MB     388885.         403390.       64.28%
+    1801472        2491.13   190MB     388885.         403390.       64.28%
+    1821514        2521.13   190MB     388885.         403390.       64.28%
+    1839998        2551.13   190MB     388885.         403390.       64.28%
+*   1854485        2579.91   190MB     388885.         403390.       64.28%
+    1873660        2609.91   190MB     388885.         403390.       64.28%
+    1893477        2639.91   190MB     388885.         403390.       64.28%
+    1912764        2669.91   190MB     388885.         403390.       64.28%
+    1932370        2699.91   190MB     388885.         403390.       64.28%
+    1951996        2729.91   190MB     388885.         403390.       64.28%
+    1970992        2759.91   190MB     388885.         403390.       64.28%
+    1989758        2789.91   190MB     388885.         403390.       64.28%
+    2000000        2806.54   190MB     388885.         403390.       64.28%
+    2018387        2836.54   190MB     388885.         403390.       64.28%
+    2036924        2866.54   190MB     388885.         403390.       64.28%
+    2055528        2896.54   190MB     388885.         403390.       64.28%
+    2072371        2926.55   190MB     388885.         403390.       64.28%
+    2090740        2956.55   190MB     388885.         403390.       64.28%
+    2107350        2986.55   190MB     388885.         403390.       64.28%
+    2123776        3016.55   190MB     388885.         403390.       64.28%
+    2141461        3046.55   190MB     388885.         403390.       64.28%
+    2159610        3076.55   190MB     388885.         403390.       64.28%
+    2177695        3106.55   190MB     388885.         403390.       64.28%
+    2195884        3136.56   190MB     388885.         403390.       64.28%
+    2214910        3166.56   190MB     388885.         403390.       64.28%
+    2233280        3196.56   190MB     388885.         403390.       64.28%
+    2252154        3226.56   190MB     388885.         403390.       64.28%
+    2270488        3256.56   190MB     388885.         403390.       64.28%
+    2287006        3286.56   190MB     388885.         403390.       64.28%
+    2306838        3316.56   190MB     388885.         403390.       64.28%
+    2325704        3346.56   190MB     388885.         403390.       64.28%
+    2342394        3376.57   190MB     388885.         403390.       64.28%
+    2362340        3406.57   190MB     388885.         403390.       64.28%
+    2381969        3436.57   190MB     388885.         403390.       64.28%
+    2401440        3466.57   190MB     388885.         403390.       64.28%
+    2421333        3496.57   190MB     388885.         403390.       64.28%
+    2440624        3526.57   190MB     388885.         403390.       64.28%
+    2459517        3556.57   190MB     388885.         403390.       64.28%
+    2477790        3586.57   190MB     388885.         403390.       64.28%
+    2485940        3600.00   190MB     388885.         403390.       64.28%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3600.00
+ Total CPU time used:              3596.18
+
+ Total no. of BaR iterations: 2485940
+ Best solution found at node: 1854485
+ Max. no. of nodes in memory:   37825
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 2485940 iterations, CPU time limit reached.
+Objective 403389.7612
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                   -0 |             8.6e-07  |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_5,7        |                    0 |             1.69e-06 |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using baron: 9.522374908188863e-13
+Total relative constraint violation using baron: 2.5506592640040277e-06
+*******************************************************************************
+
+total_cost using baron: 403389.76124429674
+solve_time using baron: 3600.0732660000003
+*******************************************************************************
+

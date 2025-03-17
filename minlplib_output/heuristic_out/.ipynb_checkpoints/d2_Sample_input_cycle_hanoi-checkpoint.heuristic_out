@@ -1,0 +1,30 @@
+Water Network: d2_Sample_input_cycle_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2), (10, 11), (12, 13), (21, 22), (2, 3), (11, 12), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20)] 
+
+Objective:  6055935.776574206
+Solve_result:  solved
+Solve_time: 1.6743350000000001 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [27, 29, 16] 
+
+Arc       Acyclic   C_Best_Sol     New_Sol        Solve_Time  Solve_Result   Improved  Time        
+(26, 27)  True      60,55,936      61,05,880      0.11        solved         No        1.89        
+(28, 29)  True      60,55,936      63,32,528      0.2         solved         No        2.12        
+(15, 16)  True      60,55,936      60,60,731      0.11        solved         No        2.26        
+
+**********************************Final best results******************************************
+
+Water Network: d2_Sample_input_cycle_hanoi
+Final best objective: 6055935.7766
+Number of nlp problem solved: 4
+Total number of iteration: 1
+Solver_time: 2.08 seconds
+Heuristic elapsed time: 2.26 seconds = 0.04 minutes.
+

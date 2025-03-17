@@ -1,16 +1,20 @@
 Water Network: d11_HG_SP_6_3 
 
-Testing bound_push=0.0001555786908737336, bound_frac=0.0015350230908200689
+Testing bound_push=0.0035279030967938258, bound_frac=0.0029301191409843905
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 0.0001555786908737336
-bound_frac: 0.0015350230908200689
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0001555786908737336
-bound_frac = 0.0015350230908200689
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.0035279030967938258
+bound_frac = 0.0029301191409843905
 nlp_scaling_method = none
 
 
@@ -25,18 +29,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 11642886.617804782
-Testing bound_push=0.0006380816666956025, bound_frac=0.0008050002307019308
+Total cost: 10799778.09579406
+Testing bound_push=0.002940559492820009, bound_frac=0.00981565913433246
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 0.0006380816666956025
-bound_frac: 0.0008050002307019308
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0006380816666956025
-bound_frac = 0.0008050002307019308
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.002940559492820009
+bound_frac = 0.00981565913433246
 nlp_scaling_method = none
 
 
@@ -51,96 +59,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 10959965.394540897
-Testing bound_push=0.0002933559702906429, bound_frac=0.0068542848512713
+Total cost: 10747481.196452761
+Testing bound_push=0.006561885414290331, bound_frac=1e-06
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 0.0002933559702906429
-bound_frac: 0.0068542848512713
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0002933559702906429
-bound_frac = 0.0068542848512713
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617804749
-Testing bound_push=3.2149235980124615e-05, bound_frac=0.0015390846697478852
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 3.2149235980124615e-05
-bound_frac: 0.0015390846697478852
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 3.2149235980124615e-05
-bound_frac = 0.0015390846697478852
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617805166
-Testing bound_push=0.0006964718851108469, bound_frac=0.003218852200232759
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0006964718851108469
-bound_frac: 0.003218852200232759
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0006964718851108469
-bound_frac = 0.003218852200232759
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10836325.242506102
-Testing bound_push=0.0006967714370631176, bound_frac=1e-06
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0006967714370631176
-bound_frac: 1e-06
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0006967714370631176
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.006561885414290331
 bound_frac = 1e-06
-warm_start_init_point = yes
 nlp_scaling_method = none
 
 
@@ -155,18 +89,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 11668719.455670824
-Testing bound_push=0.001, bound_frac=0.0024187946741175497
+Total cost: 11648848.389593579
+Testing bound_push=0.0073669105300789885, bound_frac=0.01
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 0.001
-bound_frac: 0.0024187946741175497
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.001
-bound_frac = 0.0024187946741175497
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.0073669105300789885
+bound_frac = 0.01
 nlp_scaling_method = none
 
 
@@ -181,18 +119,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 11045492.502247283
-Testing bound_push=0.0004689941710693496, bound_frac=0.007795905512810376
+Total cost: 10972686.20660024
+Testing bound_push=0.007277559118094706, bound_frac=0.001354106745857369
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 0.0004689941710693496
-bound_frac: 0.007795905512810376
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0004689941710693496
-bound_frac = 0.007795905512810376
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.007277559118094706
+bound_frac = 0.001354106745857369
 nlp_scaling_method = none
 
 
@@ -207,18 +149,22 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 11793243.59288367
-Testing bound_push=1e-06, bound_frac=1e-06
+Total cost: 10959976.182743382
+Testing bound_push=0.007428776422831849, bound_frac=0.01
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 1e-06
-bound_frac: 1e-06
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 1e-06
-bound_frac = 1e-06
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.007428776422831849
+bound_frac = 0.01
 nlp_scaling_method = none
 
 
@@ -233,565 +179,23 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Total cost: 11642886.617805125
-Testing bound_push=0.001, bound_frac=0.004999634554591372
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.001
-bound_frac: 0.004999634554591372
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.001
-bound_frac = 0.004999634554591372
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11045492.502247283
-Testing bound_push=0.0008019320182486927, bound_frac=1e-06
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0008019320182486927
-bound_frac: 1e-06
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008019320182486927
-bound_frac = 1e-06
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617821863
-Testing bound_push=0.001, bound_frac=0.0033441227881516322
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.001
-bound_frac: 0.0033441227881516322
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.001
-bound_frac = 0.0033441227881516322
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11045492.502247283
-Testing bound_push=0.00047747923151120116, bound_frac=0.006942612526468864
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.00047747923151120116
-bound_frac: 0.006942612526468864
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00047747923151120116
-bound_frac = 0.006942612526468864
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11038779.003219724
-Testing bound_push=0.00018364986609637518, bound_frac=1e-06
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.00018364986609637518
-bound_frac: 1e-06
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00018364986609637518
-bound_frac = 1e-06
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617805226
-Testing bound_push=0.001, bound_frac=0.004803231580767844
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.001
-bound_frac: 0.004803231580767844
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.001
-bound_frac = 0.004803231580767844
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11045492.502247283
-Testing bound_push=0.0005109549197483444, bound_frac=0.001088675655919687
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0005109549197483444
-bound_frac: 0.001088675655919687
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0005109549197483444
-bound_frac = 0.001088675655919687
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617805658
-Testing bound_push=0.0008589616007644095, bound_frac=0.002667376856396359
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0008589616007644095
-bound_frac: 0.002667376856396359
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0008589616007644095
-bound_frac = 0.002667376856396359
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10953781.424135337
-Testing bound_push=0.0005829058297651797, bound_frac=0.00642890644759057
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0005829058297651797
-bound_frac: 0.00642890644759057
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0005829058297651797
-bound_frac = 0.00642890644759057
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11226360.980406454
-Testing bound_push=0.0003496800830407389, bound_frac=0.00047344466094854226
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0003496800830407389
-bound_frac: 0.00047344466094854226
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0003496800830407389
-bound_frac = 0.00047344466094854226
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11710708.503398225
-Testing bound_push=0.0009149836901397164, bound_frac=0.003807263881374796
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0009149836901397164
-bound_frac: 0.003807263881374796
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0009149836901397164
-bound_frac = 0.003807263881374796
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10974692.833543034
-Testing bound_push=0.000266795188613761, bound_frac=0.0022771065383556384
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.000266795188613761
-bound_frac: 0.0022771065383556384
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.000266795188613761
-bound_frac = 0.0022771065383556384
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617805997
-Testing bound_push=0.0007785730885891838, bound_frac=0.0024974686767970165
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0007785730885891838
-bound_frac: 0.0024974686767970165
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007785730885891838
-bound_frac = 0.0024974686767970165
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10930950.132142285
-Testing bound_push=0.0006749791364235477, bound_frac=0.005928669000911174
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0006749791364235477
-bound_frac: 0.005928669000911174
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0006749791364235477
-bound_frac = 0.005928669000911174
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10792935.235375194
-Testing bound_push=0.00042077419617987395, bound_frac=0.0009858416588019465
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.00042077419617987395
-bound_frac: 0.0009858416588019465
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.00042077419617987395
-bound_frac = 0.0009858416588019465
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10801943.999391967
-Testing bound_push=0.0007321664915366489, bound_frac=0.004073073686541729
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0007321664915366489
-bound_frac: 0.004073073686541729
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007321664915366489
-bound_frac = 0.004073073686541729
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10927740.32257989
-Testing bound_push=0.000161128132115943, bound_frac=0.0038353726807638638
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.000161128132115943
-bound_frac: 0.0038353726807638638
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.000161128132115943
-bound_frac = 0.0038353726807638638
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617805196
-Testing bound_push=0.0007166131141572383, bound_frac=0.0031761372058381997
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0007166131141572383
-bound_frac: 0.0031761372058381997
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0007166131141572383
-bound_frac = 0.0031761372058381997
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10776569.62183735
-Testing bound_push=0.000732486239769996, bound_frac=0.005035583489340204
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.000732486239769996
-bound_frac: 0.005035583489340204
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.000732486239769996
-bound_frac = 0.005035583489340204
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11642886.617825357
-Testing bound_push=0.0005040026116136339, bound_frac=0.001250327417613085
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0005040026116136339
-bound_frac: 0.001250327417613085
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0005040026116136339
-bound_frac = 0.001250327417613085
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 11800373.319024207
-Testing bound_push=0.0006241686772515434, bound_frac=0.0038424554509430883
-fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
-super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
-
-bound_push: 0.0006241686772515434
-bound_frac: 0.0038424554509430883
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-bound_push = 0.0006241686772515434
-bound_frac = 0.0038424554509430883
-warm_start_init_point = yes
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-Total cost: 10795423.929509234
-Stopping search: maximum iterations reached --> 5
+Total cost: 10926480.597273331
+Stopping search: maximum iterations reached --> 2
 Solve the original nonconvex optimization problem using IPOPT 
 fix_arc_set: {(54, 92), (53, 35), (139, 114), (17, 152), (109, 61), (146, 86), (24, 26), (31, 83), (135, 134), (134, 142), (161, 162), (23, 94), (29, 43), (162, 139), (156, 138), (71, 73), (50, 44), (98, 29), (157, 161), (51, 42), (38, 30), (152, 24), (155, 75), (64, 155), (28, 135), (137, 51), (163, 12), (130, 82), (42, 146), (44, 79), (95, 121)}
 super_source_out_arc: [(1, 25), (1, 39), (1, 153)] 
 
-bound_push: 0.0007166131141572383
-bound_frac: 0.0031761372058381997
+min_demand: 0.0
+max_demand: 0.122
+max_flow: 0.985170509
+eps: 1e-08 
+
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
-bound_push = 0.0007166131141572383
-bound_frac = 0.0031761372058381997
-warm_start_init_point = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.002940559492820009
+bound_frac = 0.00981565913433246
 nlp_scaling_method = none
 
 
@@ -806,76 +210,94 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Objective:  10776569.62183735
+Objective:  10747481.196452761
 Solve_result:  solved
-Solve_time: 5.666868000000022 
+Solve_time: 3.630164999999998 
 
 
 **********************************************************************************************
 Iteration : 1 
 
-self.sorted_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 82, 30, 131, 35, 65, 32, 72, 2, 93, 19, 113, 55, 100, 45, 14, 60, 88, 6] 
+self.sorted_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 82, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 113, 55, 100, 45, 116, 88, 6] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(27, 165) True    1,07,76,570   1,36,20,894   3.5s        limit         No        203.19s
-(136, 166)True    1,07,76,570   1,46,30,001   3.37s       limit         No        206.71s
-(140, 136)True    1,07,76,570   1,57,86,916   3.46s       limit         No        210.3s
-(141, 140)True    1,07,76,570   1,19,84,067   0.88s       infeasible    No        211.34s
-(8, 141)  True    1,07,76,570   1,08,88,406   1.39s       solved        No        212.83s
-(69, 70)  True    1,07,76,570   1,14,58,613   3.08s       infeasible    No        216.05s
-(128, 115)True    1,07,76,570   1,50,76,527   3.49s       limit         No        219.75s
-(119, 114)True    1,07,76,570   1,53,41,201   3.43s       limit         No        223.34s
-(22, 87)  True    1,07,76,570   1,28,94,115   2.2s        limit         No        225.63s
-(107, 85) True    1,07,76,570   1,18,60,599   1.4s        solved        No        227.13s
-(147, 37) True    1,07,76,570   1,07,69,426   0.32s       solved        Yes       227.55s
+(27, 165) True    1,07,47,481   1,24,30,105   1.62s       limit         No        33.82s
+(136, 166)True    1,07,47,481   1,37,57,792   1.65s       limit         No        45.54s
+(140, 136)True    1,07,47,481   1,45,36,310   1.51s       limit         No        56.54s
+(141, 140)True    1,07,47,481   1,12,39,659   0.44s       solved        No        60.74s
+(8, 141)  True    1,07,47,481   1,08,68,536   0.41s       solved        No        64.49s
+(69, 70)  True    1,07,47,481   1,16,51,528   0.85s       infeasible    No        70.48s
+(128, 115)True    1,07,47,481   1,48,90,295   1.53s       limit         No        81.75s
+(119, 114)True    1,07,47,481   1,58,70,340   1.55s       limit         No        93.03s
+(22, 87)  True    1,07,47,481   1,09,46,160   1.07s       solved        No        101.7s
+(87, 85)  True    1,07,47,481   1,08,54,892   0.55s       solved        No        106.6s
+(147, 37) True    1,07,47,481   1,07,09,051   0.48s       solved        Yes       110.15s
 
 visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37]
 
 **********************************************************************************************
 Iteration : 2 
 
-self.sorted_nodes: [124, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 74, 113, 55, 100, 45, 60, 88, 6] 
+self.sorted_nodes: [147, 82, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 113, 55, 100, 45, 60, 88, 6] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(47, 124) True    1,07,69,426   1,79,81,096   3.32s       limit         No        231.04s
-(105, 30) True    1,07,69,426   1,08,30,183   3.37s       limit         No        234.53s
-(56, 131) True    1,07,69,426   1,14,86,844   2.59s       infeasible    No        237.22s
-(48, 35)  True    1,07,69,426   1,53,08,579   3.45s       limit         No        240.82s
-(75, 65)  True    1,07,69,426   1,11,91,373   3.62s       limit         No        244.57s
-(111, 32) True    1,07,69,426   1,10,00,725   1.12s       solved        No        245.8s
-(129, 72) True    1,07,69,426   1,27,47,308   3.21s       limit         No        249.14s
-(18, 2)   True    1,07,69,426   1,18,14,214   2.85s       limit         No        252.18s
-(14, 122) True    1,07,69,426   1,07,94,977   0.67s       solved        No        252.97s
-(74, 93)  True    1,07,69,426   1,07,53,668   0.67s       solved        Yes       253.73s
+(58, 147) True    1,07,09,051   1,07,08,883   0.08s       solved        Yes       111.78s
 
-visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 124, 30, 131, 35, 65, 32, 72, 2, 122, 93]
+visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 147]
 
 **********************************************************************************************
 Iteration : 3 
 
-self.sorted_nodes: [19, 74, 113, 55, 100, 45, 60, 88, 6] 
+self.sorted_nodes: [82, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 113, 55, 100, 45, 116, 88, 6, 58] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(68, 19)  True    1,07,53,668   1,08,26,477   1.09s       solved        No        255.01s
-(93, 74)  True    1,07,53,668   1,07,96,641   0.56s       solved        No        255.66s
-(100, 113)True    1,07,53,668   1,20,68,393   3.36s       limit         No        259.12s
-(76, 55)  True    1,07,53,668   1,07,60,340   2.88s       limit         No        262.11s
-(144, 100)True    1,07,53,668   1,10,17,211   2.73s       solved        No        264.93s
-(6, 45)   True    1,07,53,668   1,07,66,289   1.52s       solved        No        266.55s
-(116, 60) True    1,07,53,668   1,07,38,977   0.78s       solved        Yes       267.45s
+(124, 82) True    1,07,08,883   1,07,09,468   0.2s        solved        No        114.99s
+(105, 30) True    1,07,08,883   1,07,80,833   0.93s       solved        No        120.27s
+(56, 131) True    1,07,08,883   1,14,75,768   0.44s       infeasible    No        124.49s
+(48, 35)  True    1,07,08,883   1,52,48,293   1.53s       limit         No        135.46s
+(75, 65)  True    1,07,08,883   1,14,74,021   1.28s       solved        No        144.92s
+(111, 32) True    1,07,08,883   1,09,32,448   0.75s       solved        No        149.6s
+(129, 72) True    1,07,08,883   1,43,58,788   1.45s       limit         No        159.96s
+(18, 2)   True    1,07,08,883   1,12,70,749   1.0s        solved        No        168.63s
+(14, 122) True    1,07,08,883   1,07,12,109   0.07s       solved        No        172.56s
+(74, 93)  True    1,07,08,883   1,07,23,105   0.57s       solved        No        178.18s
+(68, 19)  True    1,07,08,883   1,07,85,419   0.71s       solved        No        183.14s
+(100, 113)True    1,07,08,883   1,18,92,903   0.93s       solved        No        192.19s
+(76, 55)  True    1,07,08,883   1,07,14,168   1.04s       solved        No        199.69s
+(144, 100)True    1,07,08,883   1,09,97,669   1.22s       solved        No        206.55s
+(6, 45)   True    1,07,08,883   1,07,63,490   0.22s       solved        No        209.52s
+(60, 116) True    1,07,08,883   1,07,05,560   0.51s       solved        Yes       213.22s
 
-visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 124, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 74, 113, 55, 100, 45, 60]
+visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 147, 82, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 113, 55, 100, 45, 116]
 
 **********************************************************************************************
 Iteration : 4 
 
-self.sorted_nodes: [14, 116, 88, 6] 
+self.sorted_nodes: [60, 88, 6] 
 
 Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(62, 14)  True    1,07,38,977   1,52,88,545   3.32s       limit         No        270.93s
-(26, 116) True    1,07,38,977   1,07,59,210   0.94s       solved        No        271.99s
-(84, 88)  True    1,07,38,977   1,14,02,973   3.53s       limit         No        275.65s
-(79, 6)   True    1,07,38,977   1,07,96,082   1.11s       solved        No        276.85s
+(116, 60) True    1,07,05,560   1,07,05,448   0.06s       solved        Yes       215.71s
+
+visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 147, 82, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 113, 55, 100, 45, 116, 60]
+
+**********************************************************************************************
+Iteration : 5 
+
+self.sorted_nodes: [88, 6] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(84, 88)  True    1,07,05,448   1,09,31,101   0.8s        solved        No        220.71s
+(101, 6)  True    1,07,05,448   1,07,03,946   0.12s       solved        Yes       223.97s
+
+visited_nodes: [165, 166, 136, 140, 141, 70, 115, 114, 87, 85, 37, 147, 82, 30, 131, 35, 65, 32, 72, 2, 122, 93, 19, 113, 55, 100, 45, 116, 60, 88, 6]
+
+**********************************************************************************************
+Iteration : 6 
+
+self.sorted_nodes: [101] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(110, 101)True    1,07,03,946   1,38,85,300   1.59s       limit         No        235.36s
 
 **********************************Final best results******************************************
 
@@ -887,410 +309,410 @@ Constraint violations:
 +-----------------+----------------------+----------------------+
 | Constraint ID   |   Absolute Violation |   Relative Violation |
 +=================+======================+======================+
-| con2_1,25       |                    0 |            0         |
+| con2_1,25       |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_2,18       |                   -0 |            0         |
+| con2_2,18       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_3,111      |                    0 |            0         |
+| con2_3,111      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_4,43       |                   -0 |            0         |
+| con2_4,43       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_5,89       |                   -0 |            0         |
+| con2_5,89       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_6,101      |                   -0 |            0         |
+| con2_6,101      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_7,39       |                    0 |           -0         |
+| con2_7,39       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_8,85       |                   -0 |            0         |
+| con2_8,85       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_9,92       |                   -0 |            0         |
+| con2_9,92       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_10,126     |                   -0 |            4e-08     |
+| con2_10,126     |                   -0 |             5e-08    |
 +-----------------+----------------------+----------------------+
-| con2_11,59      |                    0 |            0         |
+| con2_11,59      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_12,125     |                    0 |           -0         |
+| con2_12,125     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_13,66      |                   -0 |            0         |
+| con2_13,66      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_14,149     |                    0 |            0         |
+| con2_14,149     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_15,103     |                   -0 |            0         |
+| con2_15,103     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_16,96      |                   -0 |            0         |
+| con2_16,96      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_17,152     |                   -0 |            1.9e-07   |
+| con2_17,152     |                   -0 |             3.9e-07  |
 +-----------------+----------------------+----------------------+
-| con2_18,96      |                   -0 |            0         |
+| con2_18,96      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_19,68      |                   -0 |            0         |
+| con2_19,68      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_20,115     |                    0 |           -0         |
+| con2_20,115     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_21,121     |                    0 |           -0         |
+| con2_21,121     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_22,2       |                   -0 |            0         |
+| con2_22,2       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_23,94      |                   -0 |            2.1e-07   |
+| con2_23,94      |                   -0 |             4.7e-07  |
 +-----------------+----------------------+----------------------+
-| con2_24,26      |                   -0 |            0         |
+| con2_24,26      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_25,65      |                    0 |            0         |
+| con2_25,65      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_26,116     |                    0 |            0         |
+| con2_26,116     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_27,159     |                   -0 |            0         |
+| con2_27,159     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_27,165     |                    0 |            0         |
+| con2_27,165     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_28,135     |                   -0 |            3e-08     |
+| con2_28,135     |                   -0 |             3e-08    |
 +-----------------+----------------------+----------------------+
-| con2_29,43      |                   -0 |            2e-08     |
+| con2_29,43      |                   -0 |             2e-08    |
 +-----------------+----------------------+----------------------+
-| con2_30,77      |                   -0 |            0         |
+| con2_30,77      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_30,105     |                   -0 |            0         |
+| con2_30,105     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_31,83      |                   -0 |            6e-08     |
+| con2_31,83      |                   -0 |             8e-08    |
 +-----------------+----------------------+----------------------+
-| con2_32,3       |                   -0 |            0         |
+| con2_32,3       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_32,41      |                    0 |            0         |
+| con2_32,41      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_33,114     |                    0 |            0         |
+| con2_33,114     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_34,11      |                    0 |            0         |
+| con2_34,11      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_35,48      |                   -0 |            0         |
+| con2_35,48      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_36,154     |                   -0 |            0         |
+| con2_36,154     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_37,7       |                   -0 |            0         |
+| con2_37,7       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_37,147     |                   -0 |            0         |
+| con2_37,147     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_38,30      |                   -0 |            2.02e-06  |
+| con2_38,30      |                   -0 |            -5.7e-07  |
 +-----------------+----------------------+----------------------+
-| con2_39,1       |                    0 |           -0         |
+| con2_39,1       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_40,62      |                    0 |            0         |
+| con2_40,62      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_41,19      |                    0 |            0         |
+| con2_41,19      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_42,146     |                   -0 |            0         |
+| con2_42,146     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_43,158     |                   -0 |            0         |
+| con2_43,158     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_44,79      |                   -0 |            3.5e-07   |
+| con2_44,79      |                   -0 |             2.98e-06 |
 +-----------------+----------------------+----------------------+
-| con2_45,6       |                   -0 |            0         |
+| con2_45,6       |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_45,101     |                   -0 |            0         |
+| con2_45,101     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_46,133     |                   -0 |            0         |
+| con2_46,133     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_47,93      |                   -0 |            0         |
+| con2_47,93      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_48,117     |                   -0 |            0         |
+| con2_48,117     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_49,25      |                   -0 |            0         |
+| con2_49,25      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_50,44      |                   -0 |            3.59e-06  |
+| con2_50,44      |                   -0 |            -5.3e-07  |
 +-----------------+----------------------+----------------------+
-| con2_51,42      |                   -0 |            0         |
+| con2_51,42      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_52,118     |                    0 |            0         |
+| con2_52,118     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_53,35      |                   -0 |            1.2e-07   |
+| con2_53,35      |                   -0 |             1.8e-07  |
 +-----------------+----------------------+----------------------+
-| con2_54,92      |                   -0 |            8.1e-07   |
+| con2_54,92      |                   -0 |            -8.6e-07  |
 +-----------------+----------------------+----------------------+
-| con2_55,10      |                   -0 |            3.3e-07   |
+| con2_55,10      |                   -0 |             2.23e-06 |
 +-----------------+----------------------+----------------------+
-| con2_56,112     |                   -0 |            0         |
+| con2_56,112     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_57,16      |                   -0 |            0         |
+| con2_57,16      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_58,91      |                   -0 |            0         |
+| con2_58,91      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_59,40      |                    0 |            0         |
+| con2_59,40      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_60,97      |                   -0 |            0         |
+| con2_60,97      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_60,100     |                    0 |            0         |
+| con2_60,100     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_61,34      |                    0 |            0         |
+| con2_61,34      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_61,153     |                   -0 |            0         |
+| con2_61,153     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_62,14      |                    0 |            0         |
+| con2_62,14      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_63,33      |                    0 |            0         |
+| con2_63,33      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_63,120     |                   -0 |            0         |
+| con2_63,120     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_64,155     |                   -0 |            1e-07     |
+| con2_64,155     |                   -0 |             1.4e-07  |
 +-----------------+----------------------+----------------------+
-| con2_65,49      |                   -0 |            0         |
+| con2_65,49      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_65,75      |                   -0 |            0         |
+| con2_65,75      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_66,132     |                    0 |           -0         |
+| con2_66,132     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_67,13      |                   -0 |            0         |
+| con2_67,13      |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_68,30      |                   -0 |            0         |
+| con2_68,30      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_69,70      |                    0 |            0         |
+| con2_69,70      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_69,131     |                   -0 |            0         |
+| con2_69,131     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_70,73      |                   -0 |            0         |
+| con2_70,73      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_71,73      |                   -0 |            4.7e-07   |
+| con2_71,73      |                   -0 |            -2.67e-06 |
 +-----------------+----------------------+----------------------+
-| con2_72,7       |                   -0 |            0         |
+| con2_72,7       |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_73,131     |                   -0 |            0         |
+| con2_73,131     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_74,72      |                   -0 |            0         |
+| con2_74,72      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_74,93      |                    0 |            0         |
+| con2_74,93      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_75,49      |                   -0 |            0         |
+| con2_75,49      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_76,55      |                    0 |            9e-08     |
+| con2_76,55      |                    0 |             7e-08    |
 +-----------------+----------------------+----------------------+
-| con2_76,108     |                   -0 |            2e-08     |
+| con2_76,108     |                   -0 |             3e-08    |
 +-----------------+----------------------+----------------------+
-| con2_77,35      |                    0 |           -0         |
+| con2_77,35      |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_78,99      |                   -0 |            0         |
+| con2_78,99      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_78,141     |                    0 |            0         |
+| con2_78,141     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_79,6       |                    0 |            0         |
+| con2_79,6       |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_80,106     |                   -0 |            0         |
+| con2_80,106     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_81,15      |                   -0 |            0         |
+| con2_81,15      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_82,83      |                   -0 |            0         |
+| con2_82,83      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_82,115     |                    0 |            0         |
+| con2_82,115     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_83,123     |                   -0 |            0         |
+| con2_83,123     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_84,88      |                    0 |            0         |
+| con2_84,88      |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_85,87      |                   -0 |            0         |
+| con2_85,87      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_86,3       |                    0 |            0         |
+| con2_86,3       |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_87,22      |                   -0 |            0         |
+| con2_87,22      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_87,36      |                   -0 |            0         |
+| con2_87,36      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_88,145     |                   -0 |            0         |
+| con2_88,145     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_89,67      |                   -0 |            0         |
+| con2_89,67      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_90,88      |                   -0 |            0         |
+| con2_90,88      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_91,74      |                   -0 |            0         |
+| con2_91,74      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_92,113     |                   -0 |            0         |
+| con2_92,113     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_93,72      |                    0 |           -0         |
+| con2_93,72      |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_94,15      |                   -0 |            0         |
+| con2_94,15      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_94,150     |                    0 |            0         |
+| con2_94,150     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_95,121     |                   -0 |            1e-07     |
+| con2_95,121     |                   -0 |             1.4e-07  |
 +-----------------+----------------------+----------------------+
-| con2_96,2       |                    0 |            0         |
+| con2_96,2       |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_96,122     |                   -0 |            0         |
+| con2_96,122     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_97,81      |                   -0 |            0         |
+| con2_97,81      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_97,145     |                    0 |            0         |
+| con2_97,145     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_98,29      |                   -0 |            1.2e-07   |
+| con2_98,29      |                   -0 |             1.8e-07  |
 +-----------------+----------------------+----------------------+
-| con2_99,36      |                   -0 |            0         |
+| con2_99,36      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_100,144    |                    0 |           -0         |
+| con2_100,144    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_101,110    |                   -0 |            0         |
+| con2_101,110    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_102,65     |                    0 |           -0         |
+| con2_102,65     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_103,45     |                    0 |            0         |
+| con2_103,45     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_103,52     |                    0 |            0         |
+| con2_103,52     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_104,127    |                   -0 |            0         |
+| con2_104,127    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_105,77     |                   -0 |            0         |
+| con2_105,77     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_106,20     |                   -0 |            0         |
+| con2_106,20     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_107,37     |                   -0 |            0         |
+| con2_107,37     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_107,85     |                    0 |            0         |
+| con2_107,85     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_108,116    |                   -0 |            0         |
+| con2_108,116    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_109,61     |                   -0 |            7.1e-07   |
+| con2_109,61     |                   -0 |            -9.8e-07  |
 +-----------------+----------------------+----------------------+
-| con2_110,5      |                    0 |           -0         |
+| con2_110,5      |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_111,32     |                    0 |            0         |
+| con2_111,32     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_112,4      |                   -0 |            0         |
+| con2_112,4      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_113,100    |                    0 |           -0         |
+| con2_113,100    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_113,101    |                    0 |           -0         |
+| con2_113,101    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_114,119    |                    0 |           -0         |
+| con2_114,119    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_115,83     |                   -0 |            0         |
+| con2_115,83     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_115,128    |                   -0 |            0         |
+| con2_115,128    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_116,60     |                   -0 |           -6.944e-05 |
+| con2_116,60     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_117,35     |                    0 |            0         |
+| con2_117,35     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_117,92     |                   -0 |            0         |
+| con2_117,92     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_118,79     |                    0 |            0         |
+| con2_118,79     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_119,77     |                    0 |           -0         |
+| con2_119,77     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_120,19     |                   -0 |            0         |
+| con2_120,19     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_121,104    |                   -0 |            0         |
+| con2_121,104    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_122,11     |                   -0 |            0         |
+| con2_122,11     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_122,14     |                    0 |            0         |
+| con2_122,14     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_123,21     |                   -0 |            0         |
+| con2_123,21     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_124,47     |                    0 |           -0         |
+| con2_124,47     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_124,82     |                   -0 |            0         |
+| con2_124,82     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_125,124    |                   -0 |            0         |
+| con2_125,124    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_126,108    |                   -0 |            3e-08     |
+| con2_126,108    |                   -0 |             3e-08    |
 +-----------------+----------------------+----------------------+
-| con2_127,9      |                    0 |           -0         |
+| con2_127,9      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_128,46     |                    0 |           -0         |
+| con2_128,46     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_129,7      |                   -0 |            0         |
+| con2_129,7      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_129,72     |                    0 |            0         |
+| con2_129,72     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_130,82     |                   -0 |            2.5e-07   |
+| con2_130,82     |                   -0 |             7.3e-07  |
 +-----------------+----------------------+----------------------+
-| con2_131,56     |                   -0 |            0         |
+| con2_131,56     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_131,112    |                   -0 |            0         |
+| con2_131,112    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_132,102    |                    0 |           -0         |
+| con2_132,102    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_133,21     |                   -0 |            0         |
+| con2_133,21     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_134,142    |                   -0 |            0         |
+| con2_134,142    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_135,134    |                   -0 |            0         |
+| con2_135,134    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_136,8      |                   -0 |            0         |
+| con2_136,8      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_136,140    |                   -0 |            0         |
+| con2_136,140    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_137,51     |                   -0 |            0         |
+| con2_137,51     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_138,160    |                   -0 |            0         |
+| con2_138,160    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_139,114    |                   -0 |            0         |
+| con2_139,114    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_140,8      |                   -0 |            0         |
+| con2_140,8      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_140,141    |                   -0 |            0         |
+| con2_140,141    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_141,8      |                   -0 |            0         |
+| con2_141,8      |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_142,70     |                   -0 |            0         |
+| con2_142,70     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_142,86     |                    0 |            0         |
+| con2_142,86     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_143,78     |                   -0 |            0         |
+| con2_143,78     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_143,141    |                    0 |            0         |
+| con2_143,141    |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_144,45     |                    0 |           -0         |
+| con2_144,45     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_145,26     |                    0 |            0         |
+| con2_145,26     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_146,86     |                   -0 |            0         |
+| con2_146,86     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_147,58     |                   -0 |            0         |
+| con2_147,58     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_148,27     |                   -0 |            0         |
+| con2_148,27     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_148,166    |                    0 |            0         |
+| con2_148,166    |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_149,103    |                    0 |            0         |
+| con2_149,103    |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_150,84     |                    0 |            0         |
+| con2_150,84     |                    0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_151,80     |                   -0 |            0         |
+| con2_151,80     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_152,24     |                   -0 |            0         |
+| con2_152,24     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_153,1      |                    0 |           -0         |
+| con2_153,1      |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_154,57     |                   -0 |            0         |
+| con2_154,57     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_155,75     |                   -0 |            0         |
+| con2_155,75     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_156,138    |                   -0 |            0         |
+| con2_156,138    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_157,161    |                   -0 |            0         |
+| con2_157,161    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_158,90     |                   -0 |            0         |
+| con2_158,90     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_159,12     |                   -0 |            0         |
+| con2_159,12     |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_160,151    |                    0 |           -0         |
+| con2_160,151    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_161,162    |                   -0 |            0         |
+| con2_161,162    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_162,139    |                    0 |           -0         |
+| con2_162,139    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_163,12     |                   -0 |            0         |
+| con2_163,12     |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_164,138    |                   -0 |            0         |
+| con2_164,138    |                    0 |            -0        |
 +-----------------+----------------------+----------------------+
-| con2_165,164    |                   -0 |            0         |
+| con2_165,164    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
-| con2_166,136    |                   -0 |            0         |
+| con2_166,136    |                   -0 |             0        |
 +-----------------+----------------------+----------------------+
 
-Total absolute constraint violation: 1.0178203081463874e-10
-Total relative constraint violation: 7.912436898433635e-05
+Total absolute constraint violation: 3.2470765486528284e-15
+Total relative constraint violation: 1.3383320549263608e-05
 *******************************************************************************
 
-Final best objective: 10738976.900892401
-Number of nlp problem solved: 63
-Total number of iteration: 4
-Solver_time: 270.74 seconds
-Heuristic elapsed time: 276.88 seconds
+Final best objective: 10703946.356453475
+Number of nlp problem solved: 231
+Total number of iteration: 6
+Solver_time: 222.14 seconds
+Heuristic elapsed time: 235.37 seconds
 

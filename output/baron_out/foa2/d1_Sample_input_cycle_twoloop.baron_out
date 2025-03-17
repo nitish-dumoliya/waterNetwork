@@ -3,13 +3,19 @@ Water Network: ../data/d1_Sample_input_cycle_twoloop.dat
 Results of first order approximation 2 of head loss constraint
 
 *******************************************************************************
+min_demand: 0.027777
+max_demand: 0.091666
+max_flow: 0.3111087
+eps: 1e-06
 Ipopt solver outputs: 
 
 Ipopt 3.14.13: outlev = 0
 expect_infeasible_problem = yes
+tol = 1e-8
+bound_relax_factor=0
 bound_push = 0.01
 bound_frac = 0.01
-nlp_scaling_method = gradient-based
+nlp_scaling_method = none
 
 
 ******************************************************************************
@@ -23,26 +29,56 @@ Ipopt 3.14.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-total_cost: 423992.18839609774 
-
-eps: {(1, 2): 2.7787000000000014e-05, (2, 3): 2.7787000000000014e-05, (2, 4): 2.7787000000000014e-05, (3, 5): 2.7787000000000014e-05, (4, 5): 2.7787000000000014e-05, (4, 6): 2.7787000000000014e-05, (6, 7): 2.7787000000000014e-05, (7, 5): 2.7787000000000014e-05} 
+total_cost: 433733.19662116206 
 
 *******************************************************************************
 
-Constraint violations:
+Violations between approximation constraint and original constraint:
 
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                   -0 |             6.63e-06 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |             3.56e-06 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
 
-Total absolute constraint violation using ipopt: 0.022215833749612113
-Total relative constraint violation using ipopt: 0.0022191007985682414
+Total absolute constraint violation using ipopt: 1.0097205275714244e-12
+Total relative constraint violation using ipopt: 1.019133734307292e-05
 *******************************************************************************
 
-total_cost using ipopt: 423992.18839609774
-solve_time using ipopt: 0.16406300000000001
+con2.body :=
+1 2    6.82121e-13
+2 3   -5.45697e-12
+2 4    2.30216e-12
+3 5   -9.63183e-10
+4 5    1.7053e-12
+4 6   -2.87059e-12
+6 7    1.67105e-09
+7 5   -4.83169e-12
+;
+
+total_cost using ipopt: 433733.19662116206
+solve_time using ipopt: 0.23459100000000002
 *******************************************************************************
 
 baron solver outputs:
 
-BARON 24.5.8 (2024.05.08): maxtime = 300
+eps: 1e-06 
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 1
 iisfind = 4
 lpsolver = cplex
@@ -66,82 +102,359 @@ threads = 8
  For LP/MIP/QP: CLP/CBC                                         
  For NLP: External NLP, IPOPT, FILTERSQP
 ===========================================================================
+ Starting solution is feasible with a value of   433733.          
  Doing local search
- Preprocessing found feasible solution with value 423994.
+ Preprocessing found feasible solution with value 433733.
  Solving bounding LP
  Starting multi-start local search
 
-/opt/ampl/conopt: bad bound triple 116 in bounds file "boundsfile.2":
-	L = 180
-	x = 17984691205.154396
+/opt/ampl/conopt: bad bound triple 114 in bounds file "boundsfile.2":
+	L = 190
+	x = 3030446012766.1074
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
 
-/opt/ampl/conopt: bad bound triple 116 in bounds file "boundsfile.6":
-	L = 180
-	x = 17287318104.374844
+/opt/ampl/conopt: bad bound triple 114 in bounds file "boundsfile.6":
+	L = 190
+	x = 3030446012766.088
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-*         1           0.24    12MB     0.00000         417195.        0.02%
-          1           0.58    12MB     0.00000         417195.        0.03%
+*         1           0.18    12MB     16000.0         423994.        0.02%
+          1           0.61    12MB     16000.0         423994.        0.05%
+*         2           0.65    12MB     16000.0         421533.        0.07%
+*         3           0.80    12MB     16000.0         406203.        0.11%
+*         3           0.82    12MB     16000.0         403406.        0.11%
 
-/opt/ampl/conopt: bad bound triple 117 in bounds file "boundsfile.8":
-	L = 195
-	x = 49423845572.48773
-	U = 1e+10
-Surprise errno 4 ==> Interrupted system call
-*        10           1.38    12MB     71702.0         403406.       15.34%
-objective _sobj[1]: Initial function value too large = 4.4E+10
-
-/opt/ampl/conopt: bad bound triple 116 in bounds file "boundsfile.13":
+/opt/ampl/conopt: bad bound triple 113 in bounds file "boundsfile.8":
 	L = 180
-	x = 17390470973.773544
+	x = 1117949343227.16
 	U = 1e+10
 Surprise errno 4 ==> Interrupted system call
-objective _sobj[1]: Initial function value too large = 7.6E+10
-objective _sobj[1]: Initial function value too large = 6.2E+10
-objective _sobj[1]: Initial function value too large = 5.9E+10
-      16052          31.38    12MB     71702.0         403406.       17.64%
-      29763          61.38    12MB     71702.0         403406.       18.19%
-      38984          91.39    12MB     71702.0         403406.       18.21%
-      48150         121.40    12MB     71702.0         403406.       18.26%
-      56272         151.40    12MB     71702.0         403406.       18.28%
-      63434         181.41    12MB     71702.0         403406.       18.28%
-      70857         211.41    12MB     71702.0         403406.       18.28%
-      80674         241.42    12MB     71702.0         403406.       18.28%
-      86156         271.43    12MB     71702.0         403406.       18.29%
-      91646         300.01    12MB     71702.0         403406.       18.29%
+
+/opt/ampl/conopt: bad bound triple 113 in bounds file "boundsfile.10":
+	L = 180
+	x = 52044427488.26954
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 114 in bounds file "boundsfile.12":
+	L = 190
+	x = 130054594358.46637
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+*       645           9.77    12MB     16000.0         403406.        1.51%
+constraint _scon[2]: Initial function value too large = 2.5E+20
+constraint _scon[3]: Initial function value too large = 1.5E+14
+constraint _scon[4]: Initial function value too large = 1.5E+14
+constraint _scon[5]: Initial function value too large = 4.0E+12
+constraint _scon[2]: Initial function value too large = 5.1E+20
+constraint _scon[3]: Initial function value too large = 1.1E+12
+constraint _scon[4]: Initial function value too large = 1.1E+12
+*      4492          29.28    12MB     16000.0         403406.        2.45%
+       8513          59.28    12MB     16000.0         403406.        2.47%
+      12495+         89.29    12MB     16000.0         403406.        2.48%
+      16638         119.30    12MB     16000.0         403406.        2.50%
+      17897+        149.32    12MB     16000.0         403406.        2.50%
+constraint _scon[2]: Initial function value too large = 2.9E+18
+constraint _scon[3]: Initial function value too large = 1.5E+14
+constraint _scon[4]: Initial function value too large = 1.4E+14
+constraint _scon[5]: Initial function value too large = 4.0E+12
+      22319         179.33    12MB     16000.0         403406.        2.51%
+constraint _scon[2]: Initial function value too large = 2.6E+18
+constraint _scon[3]: Initial function value too large = 1.5E+14
+constraint _scon[4]: Initial function value too large = 1.4E+14
+constraint _scon[5]: Initial function value too large = 4.0E+12
+      27779         209.34    12MB     16000.0         403406.        2.52%
+      30576         239.35    12MB     16000.0         403406.        2.52%
+      33957         269.37    12MB     16000.0         403406.        2.53%
+      37069         299.38    12MB     16000.0         403406.        2.53%
+      40964         329.38    12MB     16000.0         403406.        2.54%
+      44621         359.39    12MB     16000.0         403406.        2.54%
+      49379         389.39    12MB     16000.0         403406.        2.55%
+      53229         419.44    12MB     16000.0         403406.        2.57%
+      57297         449.44    12MB     16000.0         403406.        2.59%
+      61513         479.44    12MB     16000.0         403406.        2.59%
+      71083         509.46    12MB     16000.0         403406.        2.66%
+      75427         539.46    12MB     16000.0         403406.        2.67%
+      80688         569.50    12MB     16000.0         403406.        2.68%
+      84808         599.52    12MB     16000.0         403406.        2.69%
+constraint _scon[2]: Initial function value too large = 2.4E+20
+constraint _scon[3]: Initial function value too large = 1.5E+14
+constraint _scon[4]: Initial function value too large = 1.4E+14
+constraint _scon[5]: Initial function value too large = 4.0E+12
+      89228         629.54    12MB     16000.0         403406.        2.70%
+      93237         659.54    12MB     16000.0         403406.        2.70%
+      97371         689.54    12MB     16000.0         403406.        2.71%
+     104496         719.56    12MB     16000.0         403406.        2.72%
+     110255         749.58    12MB     16000.0         403406.        2.73%
+     115146         779.59    12MB     16000.0         403406.        2.73%
+     119759         809.60    12MB     16000.0         403406.        2.75%
+     123587         839.60    12MB     16000.0         403406.        2.75%
+     127041         869.60    12MB     16000.0         403406.        2.86%
+     130193         899.63    12MB     16000.0         403406.        2.97%
+     133969         929.64    12MB     16000.0         403406.        3.02%
+     139909         959.65    12MB     16000.0         403406.        3.03%
+     144026         989.65    12MB     16000.0         403406.        3.13%
+     148027        1019.68    12MB     16000.0         403406.        3.15%
+constraint _scon[2]: Initial function value too large = 5.9E+20
+constraint _scon[3]: Initial function value too large = 1.4E+14
+constraint _scon[4]: Initial function value too large = 1.5E+14
+constraint _scon[5]: Initial function value too large = 4.0E+12
+     152527        1049.69    12MB     16000.0         403406.        3.18%
+     157533        1079.71    12MB     16000.0         403406.        3.19%
+     161322+       1109.73    12MB     16000.0         403406.        3.26%
+constraint _scon[2]: Initial function value too large = 3.0E+19
+constraint _scon[3]: Initial function value too large = 1.5E+14
+constraint _scon[4]: Initial function value too large = 9.8E+13
+constraint _scon[5]: Initial function value too large = 4.0E+12
+     170470        1139.73    12MB     16000.0         403406.        3.37%
+     182932        1169.75    12MB     16000.0         403406.        3.40%
+     196090        1199.76    12MB     16000.0         403406.        3.44%
+     209411        1229.76    12MB     16000.0         403406.        3.50%
+     223314        1259.76    12MB     16000.0         403406.        3.54%
+     232651        1289.76    12MB     16000.0         403406.        3.55%
+constraint _scon[2]: Initial function value too large = 1.1E+19
+constraint _scon[3]: Initial function value too large = 1.1E+14
+constraint _scon[4]: Initial function value too large = 2.1E+13
+constraint _scon[6]: Initial function value too large = 2.1E+13
+     245375        1319.77    12MB     16000.0         403406.        3.59%
+     256830        1349.78    12MB     16000.0         403406.        3.64%
+     267331        1379.78    12MB     16000.0         403406.        3.69%
+     282733        1409.78    12MB     16000.0         403406.        3.73%
+     295655        1439.78    12MB     16000.0         403406.        3.77%
+     310018        1469.78    12MB     16000.0         403406.        3.83%
+     323048        1499.79    12MB     16000.0         403406.        3.88%
+     339766        1529.79    12MB     16000.0         403406.        3.91%
+     358776        1559.79    12MB     16000.0         403406.        3.95%
+     376358        1589.79    12MB     16000.0         403406.        4.03%
+     395968        1619.79    12MB     16000.0         403406.        4.06%
+     415863        1649.79    12MB     16000.0         403406.        4.11%
+     433500        1679.79    12MB     16000.0         403406.        4.59%
+     448455        1709.79    12MB     16000.0         403406.        4.63%
+     462843        1739.79    12MB     16000.0         403406.        5.27%
+     470362        1769.79    12MB     16000.0         403406.        5.59%
+     475451        1799.80    12MB     16000.0         403406.        5.70%
+     481993        1829.81    12MB     16000.0         403406.        5.84%
+     488517        1859.81    12MB     16000.0         403406.        5.96%
+     494597        1889.82    12MB     16000.0         403406.        6.06%
+     500951        1919.83    12MB     16000.0         403406.        6.14%
+     508303        1949.83    12MB     16000.0         403406.        6.24%
+     513995        1979.83    12MB     16000.0         403406.        6.34%
+     520042        2009.83    12MB     16000.0         403406.        6.43%
+     524072        2039.88    12MB     16000.0         403406.        6.49%
+     525597        2069.90    12MB     16000.0         403406.        6.52%
+     527017        2099.91    12MB     16000.0         403406.        6.54%
+     528705        2129.93    12MB     16000.0         403406.        6.57%
+     530589        2159.97    12MB     16000.0         403406.        6.60%
+     534541        2189.98    12MB     16000.0         403406.        6.67%
+     540720        2220.01    12MB     16000.0         403406.        6.78%
+     547743        2250.01    12MB     16000.0         403406.        6.90%
+     555491        2280.01    12MB     16000.0         403406.        7.03%
+     562513        2310.01    12MB     16000.0         403406.        7.14%
+     569111        2340.01    12MB     16000.0         403406.        7.24%
+     575295        2370.02    12MB     16000.0         403406.        7.34%
+     581407        2400.02    12MB     16000.0         403406.        7.43%
+     588661        2430.02    12MB     16000.0         403406.        7.57%
+     596335        2460.04    12MB     16000.0         403406.        7.70%
+     603259        2490.04    12MB     16000.0         403406.        7.81%
+     607391        2520.05    12MB     16000.0         403406.        7.88%
+     609073        2550.05    12MB     16000.0         403406.        7.90%
+     610751        2580.14    12MB     16000.0         403406.        7.93%
+     612339        2610.19    12MB     16000.0         403406.        7.95%
+     614141        2640.26    12MB     16000.0         403406.        7.98%
+     617673        2717.70    12MB     16000.0         403406.        8.04%
+     625001        2747.70    12MB     16000.0         403406.        8.14%
+     632059        2777.70    12MB     16000.0         403406.        8.25%
+     638266        2807.70    12MB     16000.0         403406.        8.37%
+     644455        2837.71    12MB     16000.0         403406.        8.48%
+     652028        2867.74    12MB     16000.0         403406.        8.57%
+     653309        2897.75    12MB     16000.0         403406.        8.60%
+     654466        2927.76    12MB     16000.0         403406.        8.63%
+     655502        2957.79    12MB     16000.0         403406.        8.65%
+     656509        2987.81    12MB     16000.0         403406.        8.67%
+     657605        3017.82    12MB     16000.0         403406.        8.70%
+     663426        3047.84    12MB     16000.0         403406.        8.83%
+     670345        3077.84    12MB     16000.0         403406.        8.96%
+     676653        3107.84    12MB     16000.0         403406.        9.09%
+     684001        3137.84    12MB     16000.0         403406.        9.23%
+     690561        3167.85    12MB     16000.0         403406.        9.37%
+     697059        3197.85    12MB     16000.0         403406.        9.50%
+     703365        3227.85    12MB     16000.0         403406.        9.62%
+     709275        3257.85    12MB     16000.0         403406.        9.73%
+     716717        3287.85    12MB     16000.0         403406.        9.88%
+     723851        3317.86    12MB     16000.0         403406.       10.01%
+     730469        3347.86    12MB     16000.0         403406.       10.13%
+     737527        3377.86    12MB     16000.0         403406.       10.23%
+     744488        3407.86    12MB     16000.0         403406.       10.34%
+     751361        3437.86    12MB     16000.0         403406.       10.44%
+     756497        3467.86    12MB     16000.0         403406.       10.52%
+     757870        3498.00    12MB     16000.0         403406.       10.55%
+     759742        3528.01    12MB     16000.0         403406.       10.58%
+     761614        3558.03    12MB     16000.0         403406.       10.61%
+     763325        3588.10    12MB     16000.0         403406.       10.64%
+     764038        3600.00    12MB     16000.0         403406.       10.65%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                   300.01
- Total CPU time used:               154.91
+ Wall clock time:                  3600.00
+ Total CPU time used:              1812.45
 
- Total no. of BaR iterations:   91646
- Best solution found at node:   10800
- Max. no. of nodes in memory:     442
+ Total no. of BaR iterations:  764038
+ Best solution found at node:    6117
+ Max. no. of nodes in memory:     485
  
  All done
 ===========================================================================
 Executable for subsolver cplex not found
 License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
-BARON 24.5.8 (2024.05.08): 91646 iterations, CPU time limit reached.
-Objective 403406.2066
-eps: {(1, 2): 2.7787000000000014e-05, (2, 3): 2.7787000000000014e-05, (2, 4): 2.7787000000000014e-05, (3, 5): 2.7787000000000014e-05, (4, 5): 2.7787000000000014e-05, (4, 6): 2.7787000000000014e-05, (6, 7): 2.7787000000000014e-05, (7, 5): 2.7787000000000014e-05} 
-
+BARON 24.5.8 (2024.05.08): 764038 iterations, CPU time limit reached.
+Objective 403406.155
 *******************************************************************************
 
-Constraint violations:
+l [1,*,*] (tr)
+:     2      :=
+1       0
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8       0
+9       0
+10      0
+11   1000
+12      0
+13      0
+14      0
 
+ [2,*,*] (tr)
+:       3       4      :=
+1      0          0
+2      0          0
+3      0          0
+4      0          0
+5      0          0
+6      0          0
+7    795.187      0
+8    204.813      0
+9      0          0
+10     0       1000
+11     0          0
+12     0          0
+13     0          0
+14     0          0
 
-Total absolute constraint violation using baron: 0.02217467415266361
-Total relative constraint violation using baron: 0.0016961082358297108
+ [3,*,*] (tr)
+:       5        :=
+1      0
+2      0
+3      0
+4      0
+5      0
+6     98.4257
+7    901.574
+8      0
+9      0
+10     0
+11     0
+12     0
+13     0
+14     0
+
+ [4,*,*] (tr)
+:     5        6       :=
+1    1000     0
+2       0     0
+3       0     0
+4       0     0
+5       0     0
+6       0     0
+7       0     0
+8       0     0
+9       0   309.828
+10      0   690.172
+11      0     0
+12      0     0
+13      0     0
+14      0     0
+
+ [6,*,*] (tr)
+:       7        :=
+1      0
+2      0
+3      0
+4      0
+5      0
+6     11.0907
+7    988.909
+8      0
+9      0
+10     0
+11     0
+12     0
+13     0
+14     0
+
+ [7,*,*] (tr)
+:     5      :=
+1    1000
+2       0
+3       0
+4       0
+5       0
+6       0
+7       0
+8       0
+9       0
+10      0
+11      0
+12      0
+13      0
+14      0
+;
+
+con2.body :=
+1 2   -9.11266e-07
+2 3   -1.35189e-07
+2 4   -3.34246e-07
+3 5   -6.36217e-08
+4 5   -1.79763e-08
+4 6   -2.4801e-07
+6 7   -3.72362e-08
+7 5    1.01255e-09
+;
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |             8.5e-07  |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                    0 |             1.69e-06 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using baron: 9.512997742596011e-13
+Total relative constraint violation using baron: 2.5450968909118495e-06
 *******************************************************************************
 
-total_cost using baron: 403406.2066009544
-solve_time using baron: 300.096706
+total_cost using baron: 403406.1549535217
+solve_time using baron: 3600.237458
 *******************************************************************************
 

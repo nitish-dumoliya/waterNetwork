@@ -1,0 +1,97 @@
+Artelys Knitro 14.0.0: maxtime_real = 3600
+outlev = 4
+threads=8
+feastol = 1.0e-7
+feastol_abs = 1.0e-7
+ms_enable = 1
+ms_maxsolves = 10
+
+=======================================
+          Commercial License
+         Artelys Knitro 14.0.0
+=======================================
+
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+concurrent_evals:        0
+datacheck:               0
+feastol:                 1e-07
+feastol_abs:             1e-07
+hessian_no_f:            1
+maxtime_real:            3600
+ms_enable:               1
+ms_maxsolves:            10
+numthreads:              8
+outlev:                  4
+
+Problem Characteristics                                 (   Presolved)
+-----------------------
+Objective goal:  Minimize
+Objective type:  linear
+Number of variables:                                262 (         262)
+    bounded below only:                              31 (          55)
+    bounded above only:                               0 (          11)
+    bounded below and above:                        231 (         196)
+    fixed:                                            0 (           0)
+    free:                                             0 (           0)
+Number of constraints:                               93 (          93)
+    linear equalities:                               66 (          66)
+    quadratic equalities:                             0 (           0)
+    gen. nonlinear equalities:                       27 (          27)
+    linear one-sided inequalities:                    0 (           0)
+    quadratic one-sided inequalities:                 0 (           0)
+    gen. nonlinear one-sided inequalities:            0 (           0)
+    linear two-sided inequalities:                    0 (           0)
+    quadratic two-sided inequalities:                 0 (           0)
+    gen. nonlinear two-sided inequalities:            0 (           0)
+Number of nonzeros in Jacobian:                     556 (         556)
+Number of nonzeros in Hessian:                      189 (         189)
+
+Multistart will generate 10 start points as follows:
+    231 variables will vary within their upper and lower bounds
+     31 variables will vary over a range of 1000
+
+Knitro parallel multistart will run with 8 threads.
+
+ Solve #  ThreadID  Status     Objective     FeasError   OptError   Real Time 
+--------  --------  ------  --------------  ----------  ---------- ----------
+       1         0       0    6.262872e+06   2.492e-10   1.576e-08      3.523
+       8         1       0    6.059417e+06   6.494e-09   6.420e-08     23.315
+       2         4       0    6.055936e+06   4.315e-09   4.193e-07     25.973
+       4         3       0    6.274560e+06   5.116e-09   6.899e-08     27.547
+       5         7       0    6.272462e+06   8.772e-08   1.962e-06     28.956
+       9         0       0    6.183296e+06   1.477e-09   2.626e-08     27.124
+       3         5       0    6.184818e+06   8.840e-08   5.097e-06     33.096
+       7         2       0    6.061051e+06   1.794e-08   1.288e-07     35.661
+       6         6       0    6.316550e+06   9.236e-10   3.017e-05     38.087
+      10         1       0    6.292512e+06   2.315e-11   2.211e-08     17.091
+Multistart stopping, reached ms_maxsolves limit.
+
+MULTISTART: Best locally optimal solution is returned.
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   6.05593581225791e+06
+Final feasibility error (abs / rel) =   4.32e-09 / 4.71e-13
+Final optimality error  (abs / rel) =   4.19e-07 / 4.19e-09
+# of iterations                     =       2722 
+# of CG iterations                  =       1949 
+# of function evaluations           =       3559
+# of gradient evaluations           =       2733
+# of Hessian evaluations            =       2735
+Total program time (secs)           =      40.47201 (    18.501 CPU time)
+
+===============================================================================
+
+Knitro 14.0.0: Locally optimal or satisfactory solution.
+objective 6055935.812; feasibility error 4.32e-09
+2722 iterations; 3559 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+total_cost: 6055935.812257909
