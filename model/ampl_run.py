@@ -66,12 +66,13 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
         #            (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) * \
         #            sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
         #                 for k in pipes)
-
         approx_rhs4 = (q_values[i, j] * ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 0.852) * \
                      (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
                     (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) 
+
+        approx_rhs5 = (0.001**1.852)*q_values[i, j]**3 / ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 1.148)
  
-        approx_value = approx_rhs3
+        approx_value = approx_rhs5
         
         # Compute relative violation
         relative_violation = abs(original_value - approx_value) / (abs(original_value)+1e-10)
@@ -129,20 +130,20 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
 
 def compute_adaptive_eps(min_demand):
 
-    min_demand = min_demand/1000
+    #min_demand = min_demand/1000
     if min_demand < 1e-4:
         #print("min_demand1", min_demand,"\n")
         return 1e-8
 
     elif min_demand < 1:
         #print("min_demand2", min_demand,"\n")
-        return 1e-3
+        return 1e-6
     else:
         #print("min_demand3", min_demand,"\n")
         return 1e-3
 
 
-ipopt_run = 0
+ipopt_run = 1
 
 if ipopt_run == 1:
             ampl.read(sys.argv[1])
@@ -254,14 +255,14 @@ if ipopt_run == 1:
 ampl.option["solver"]= sys.argv[2]
 ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 
-ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes tol = 1e-8 bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
+ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes tol = 1e-8 bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
 
 #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
 ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
 #ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 300 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
 
-ampl.option["baron_options"]= "maxtime = 10  outlev = 1 iisfind = 4 lpsolver = cplex lsolver = conopt threads = 8" # lsolver = conopt
+ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 4 lpsolver = cplex lsolver = conopt threads = 8" # lsolver = conopt
 ampl.option["scip_options"] = "outlev  1 timelimit 300 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
 ampl.option["knitro_options"]= "maxtime_real = 300 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
 ampl.option["presolve"] = "1"
@@ -312,16 +313,15 @@ print("*************************************************************************
 
 #ampl.eval("display con2.body;")
 
-#constraint_violations(q, h, l, R, d, pipes, eps, sys.argv[2])
+constraint_violations(q, h, l, R, d, pipes, eps, sys.argv[2])
 
 solve_time = ampl.get_value('_solve_elapsed_time')
 total_cost = ampl.getObjective("total_cost").value()
 
 print(f"total_cost using {sys.argv[2]}:", total_cost)
-print(f"solve_time using {sys.argv[2]}:", solve_time)
-
+print(f"solve_time using {sys.argv[2]}:", solve_time,"\n")
 print("min_demand:", min_demand/1000, "\n")
-print("Q_max:", Q_max, "\n")
+print("Q_max:", Q_max/1000, "\n")
 print("eps:", epsilon, "\n")
 ampl.close()
 
