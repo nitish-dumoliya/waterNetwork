@@ -70,12 +70,12 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
                      (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
                     (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) 
 
-        approx_rhs5 = (0.001**1.852)*q_values[i, j]**3 / ((abs(q_values[i, j]) + 1000 * epsilon[i,j]) ** 1.148)
+        approx_rhs5 = (0.001**1.852)*q_values[i, j]**3 * ((q_values[i, j]**2 + 1000**2 * epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 426000*epsilon[i,j]**2)
  
         approx_value = approx_rhs5
         
         # Compute relative violation
-        relative_violation = abs(original_value - approx_value) / (abs(original_value)+1e-10)
+        relative_violation = abs(original_value - approx_value) / (abs(original_value))
         relative_violations[f"con2_{i},{j}"] = relative_violation
         total_relative_constraint_violation += abs(relative_violation)
 
@@ -130,14 +130,14 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
 
 def compute_adaptive_eps(min_demand):
 
-    #min_demand = min_demand/1000
+    min_demand = min_demand/1000
     if min_demand < 1e-4:
         #print("min_demand1", min_demand,"\n")
-        return 1e-8
+        return 1e-5
 
     elif min_demand < 1:
         #print("min_demand2", min_demand,"\n")
-        return 1e-6
+        return 1e-5
     else:
         #print("min_demand3", min_demand,"\n")
         return 1e-3
@@ -149,7 +149,7 @@ if ipopt_run == 1:
             ampl.read(sys.argv[1])
             ampl.read_data(sys.argv[3])
             ampl.option["solver"] = "ipopt"
-            ampl.set_option("ipopt_options", "outlev = 0  expect_infeasible_problem = yes tol = 1e-8 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = none")   #max_iter = 1000
+            ampl.set_option("ipopt_options", "outlev = 0  expect_infeasible_problem = yes tol = 1e-9 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = none")   #max_iter = 1000
 
             ampl.option["presolve_eps"] = "8.53e-15"
 
@@ -308,7 +308,7 @@ d = ampl.getParameter('d').to_dict()
 print("*******************************************************************************\n")
 #print("Print the decision variables value:\n")
 #ampl.eval("display l;")
-#ampl.eval("display q;")
+ampl.eval("display q;")
 #ampl.eval("display h;")
 
 #ampl.eval("display con2.body;")

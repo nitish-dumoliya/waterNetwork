@@ -45,11 +45,11 @@ subject to con1{j in nodes diff Source}:
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
-#subject to con2{(i,j) in arcs}: 
-#     h[i] - h[j]  = q[i,j]^3 *((q[i,j]^2 + 1000^2 * eps[i,j]^2)^0.426)*(1/(q[i,j]^2+426000*eps[i,j]^2)) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
-
 subject to con2{(i,j) in arcs}: 
-     h[i] - h[j]  = ((q[i,j]*(q[i,j]^2+574000*eps[i,j])) / (q[i,j]^2 + 1000^2*eps[i,j])^0.574)*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+     h[i] - h[j]  = q[i,j]^3 *((q[i,j]^2 + 1000^2 * eps[i,j]^2)^0.426)*(1/(q[i,j]^2+426000*eps[i,j]^2)) * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
+
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = ((q[i,j]*(q[i,j]^2+574000*eps[i,j])) / (q[i,j]^2 + 1000^2*eps[i,j])^0.574)*(0.001^1.852) * sum{k in pipes} (10.67 * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));
 
 
 #subject to con2{(i,j) in arcs}: 
