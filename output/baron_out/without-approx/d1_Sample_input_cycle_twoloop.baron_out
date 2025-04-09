@@ -1,0 +1,243 @@
+Water Network: ../data/d1_Sample_input_cycle_twoloop.dat 
+
+*******************************************************************************
+*******************************************************************************
+
+baron solver outputs:
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 417195.
+ Solving bounding LP
+ Starting multi-start local search
+constraint _scon[2]: Initial function value too large = 1.4E+15
+constraint _scon[3]: Initial function value too large = 6.3E+14
+constraint _scon[5]: Initial function value too large = 2.0E+15
+constraint _scon[6]: Initial function value too large = 5.0E+14
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+constraint _scon[2]: Initial function value too large = 1.3E+15
+constraint _scon[3]: Initial function value too large = 5.9E+14
+constraint _scon[5]: Initial function value too large = 1.9E+15
+constraint _scon[6]: Initial function value too large = 4.7E+14
+          1           0.38    12MB     16000.0         417195.        0.00%
+constraint _scon[2]: Initial function value too large = 1.2E+18
+constraint _scon[2]: Initial function value too large = 7.7E+12
+constraint _scon[3]: Initial function value too large = 7.7E+12
+constraint _scon[5]: Initial function value too large = 7.7E+12
+constraint _scon[6]: Initial function value too large = 1.1E+14
+constraint _scon[3]: Initial function value too large = 4.4E+19
+*       767           3.93    12MB     74696.7         403406.       19.19%
+constraint _scon[3]: Initial function value too large = 4.4E+19
+constraint _scon[4]: Initial function value too large = 2.1E+10
+constraint _scon[5]: Initial function value too large = 2.1E+13
+constraint _scon[2]: Initial function value too large = 7.0E+10
+constraint _scon[4]: Initial function value too large = 7.3E+10
+constraint _scon[3]: Initial function value too large = 4.4E+19
+constraint _scon[4]: Initial function value too large = 3.8E+10
+constraint _scon[5]: Initial function value too large = 2.1E+13
+constraint _scon[4]: Initial function value too large = 7.1E+10
+constraint _scon[3]: Initial function value too large = 4.4E+19
+constraint _scon[4]: Initial function value too large = 3.3E+10
+constraint _scon[5]: Initial function value too large = 2.1E+13
+      28511          33.76    12MB     77194.6         403406.       19.96%
+constraint _scon[3]: Initial function value too large = 4.4E+19
+constraint _scon[4]: Initial function value too large = 6.0E+10
+constraint _scon[5]: Initial function value too large = 3.2E+12
+constraint _scon[6]: Initial function value too large = 3.2E+12
+constraint _scon[4]: Initial function value too large = 1.3E+11
+constraint _scon[3]: Initial function value too large = 4.5E+19
+constraint _scon[4]: Initial function value too large = 6.5E+10
+constraint _scon[5]: Initial function value too large = 3.2E+12
+constraint _scon[6]: Initial function value too large = 3.2E+12
+      68399          63.60    12MB     77194.6         403406.       20.17%
+      93448          93.48    12MB     77194.6         403406.       20.25%
+constraint _scon[2]: Initial function value too large = 4.0E+11
+constraint _scon[4]: Initial function value too large = 1.5E+11
+constraint _scon[3]: Initial function value too large = 4.5E+19
+constraint _scon[4]: Initial function value too large = 7.6E+10
+constraint _scon[5]: Initial function value too large = 3.2E+12
+constraint _scon[6]: Initial function value too large = 9.8E+11
+     129698         123.34    12MB     77194.6         403406.       20.39%
+constraint _scon[2]: Initial function value too large = 3.6E+11
+constraint _scon[4]: Initial function value too large = 1.3E+11
+     161355         153.21    12MB     77194.6         403406.       20.58%
+constraint _scon[3]: Initial function value too large = 4.4E+19
+constraint _scon[4]: Initial function value too large = 6.7E+10
+constraint _scon[5]: Initial function value too large = 3.2E+12
+constraint _scon[6]: Initial function value too large = 3.2E+12
+     199783         183.07    12MB     77205.9         403406.       20.90%
+constraint _scon[2]: Initial function value too large = 4.2E+10
+constraint _scon[4]: Initial function value too large = 9.5E+10
+constraint _scon[3]: Initial function value too large = 4.5E+19
+constraint _scon[4]: Initial function value too large = 4.9E+10
+constraint _scon[5]: Initial function value too large = 1.9E+12
+     238147         212.92    12MB     77205.9         403406.       21.29%
+     280284         242.78    12MB     77286.9         403406.       21.66%
+     314600         272.64    12MB     77400.4         403406.       21.88%
+     352447         302.50    12MB     78357.5         403406.       22.16%
+     391153         332.35    12MB     78357.5         403406.       22.29%
+     429472         362.21    12MB     78357.5         403406.       22.40%
+     466810         392.06    12MB     78357.5         403406.       22.53%
+     494935         421.93    12MB     78357.5         403406.       22.63%
+     522975         451.80    12MB     78357.5         403406.       22.71%
+     552627         481.66    12MB     78357.5         403406.       22.80%
+     581428         511.53    12MB     78357.5         403406.       22.88%
+     608155         541.40    12MB     78357.5         403406.       22.96%
+     640206         571.29    12MB     78357.5         403406.       23.05%
+     674752         601.14    12MB     78357.5         403406.       23.17%
+     704891         631.01    12MB     78357.5         403406.       23.28%
+     728409         660.88    12MB     78357.5         403406.       23.34%
+     763183         690.75    12MB     78357.5         403406.       23.38%
+     794102         720.61    12MB     78357.5         403406.       23.42%
+     832514         750.46    12MB     78357.5         403406.       23.48%
+     867373         780.31    12MB     78357.5         403406.       23.54%
+     900967         810.18    12MB     78357.5         403406.       23.59%
+     933941         840.04    12MB     78357.5         403406.       23.68%
+     961474         869.90    12MB     78357.5         403406.       23.90%
+     990738         899.78    12MB     78357.5         403406.       23.96%
+    1000000         910.06    12MB     78357.5         403406.       23.99%
+    1025981         939.94    12MB     78357.5         403406.       24.05%
+    1061755         969.80    12MB     78357.5         403406.       24.07%
+    1093227         999.67    12MB     78357.5         403406.       24.09%
+    1123055        1029.53    12MB     78357.5         403406.       24.15%
+    1151388        1059.41    12MB     78357.5         403406.       24.22%
+    1178666        1089.30    12MB     78357.5         403406.       24.26%
+    1213286        1119.17    12MB     78357.5         403406.       24.34%
+    1246030        1149.06    12MB     78357.5         403406.       24.40%
+    1274536        1178.94    12MB     78357.5         403406.       24.44%
+    1303888        1208.84    12MB     78357.5         403406.       24.46%
+    1337203        1238.72    12MB     78357.5         403406.       24.50%
+    1364864        1268.60    12MB     78357.5         403406.       24.51%
+    1385675        1298.49    12MB     78357.5         403406.       24.53%
+    1416366        1328.36    12MB     78357.5         403406.       24.56%
+    1450350        1358.22    12MB     78357.5         403406.       24.61%
+    1480415        1388.10    12MB     78357.5         403406.       24.64%
+    1512885        1417.96    12MB     78357.5         403406.       24.70%
+    1546562        1447.84    12MB     78357.5         403406.       24.80%
+    1582470        1477.71    12MB     78357.5         403406.       24.91%
+    1620275        1507.57    12MB     78357.5         403406.       25.00%
+    1648069        1537.46    12MB     78357.5         403406.       25.06%
+    1679667        1567.34    12MB     78357.5         403406.       25.11%
+    1708038        1597.23    12MB     78357.5         403406.       25.16%
+    1738044        1627.10    12MB     78357.5         403406.       25.19%
+    1763686        1656.97    12MB     78357.5         403406.       25.24%
+    1791542        1686.85    12MB     78357.5         403406.       25.29%
+    1815949        1716.74    12MB     78357.5         403406.       25.32%
+    1835739        1746.63    12MB     78357.5         403406.       25.34%
+    1864842        1776.54    12MB     78357.5         403406.       25.38%
+    1899324        1806.41    12MB     78357.5         403406.       25.44%
+    1934113        1836.28    12MB     78357.5         403406.       25.50%
+    1966315        1866.05    12MB     78357.5         403406.       25.55%
+    1986778        1895.84    12MB     78357.5         403406.       25.59%
+    2000000        1914.46    12MB     78357.5         403406.       25.60%
+    2024263        1944.33    12MB     78357.5         403406.       25.64%
+    2044182        1974.23    12MB     78357.5         403406.       25.68%
+    2058960        2004.07    12MB     78357.5         403406.       25.70%
+    2075716        2033.91    12MB     78357.5         403406.       25.73%
+    2105099        2063.79    12MB     78357.5         403406.       25.76%
+    2135722        2093.67    12MB     78357.5         403406.       25.82%
+    2167546        2123.54    12MB     78357.5         403406.       25.87%
+    2200226        2153.42    12MB     78357.5         403406.       25.93%
+    2225159        2183.31    12MB     78357.5         403406.       25.97%
+    2255716        2213.27    12MB     78357.5         403406.       26.00%
+    2288223        2243.15    12MB     78357.5         403406.       26.04%
+    2312977        2273.03    12MB     78357.5         403406.       26.06%
+    2337205        2302.88    12MB     78357.5         403406.       26.08%
+    2360555        2332.74    12MB     78357.5         403406.       26.10%
+    2389323        2362.60    12MB     78357.5         403406.       26.12%
+    2410278        2392.49    12MB     78357.5         403406.       26.15%
+    2432288        2422.36    12MB     78357.5         403406.       26.17%
+    2453372        2452.23    12MB     78357.5         403406.       26.19%
+    2479467        2482.09    12MB     78357.5         403406.       26.20%
+    2499891        2511.93    12MB     78357.5         403406.       26.21%
+    2521024        2541.81    12MB     78357.5         403406.       26.23%
+    2542991        2571.68    12MB     78357.5         403406.       26.24%
+    2568629        2601.57    12MB     78357.5         403406.       26.26%
+    2588764        2631.46    12MB     78357.5         403406.       26.27%
+    2614545        2661.23    12MB     78357.5         403406.       26.29%
+    2636800        2691.10    12MB     78357.5         403406.       26.30%
+    2665788        2720.98    12MB     78357.5         403406.       26.33%
+    2687302        2750.86    12MB     78357.5         403406.       26.34%
+    2707057        2780.75    12MB     78357.5         403406.       26.36%
+    2728772        2810.65    12MB     78357.5         403406.       26.38%
+    2753824        2840.53    12MB     78357.5         403406.       26.39%
+    2775234        2870.42    12MB     78357.5         403406.       26.40%
+    2794030        2900.31    12MB     78357.5         403406.       26.41%
+    2813446        2930.20    12MB     78357.5         403406.       26.41%
+    2836720        2960.09    12MB     78357.5         403406.       26.42%
+    2857913        2989.97    12MB     78357.5         403406.       26.44%
+    2884545        3019.82    12MB     78357.5         403406.       26.47%
+    2908684        3049.71    12MB     78357.5         403406.       26.49%
+    2933786        3079.58    12MB     78357.5         403406.       26.50%
+    2954676        3109.47    12MB     78357.5         403406.       26.52%
+    2977168        3139.34    12MB     78357.5         403406.       26.54%
+    3000000        3162.59    12MB     78357.5         403406.       26.57%
+    3022234        3192.46    12MB     78357.5         403406.       26.60%
+    3041396        3222.34    12MB     78357.5         403406.       26.61%
+    3064421        3252.20    12MB     78357.5         403406.       26.63%
+    3093987        3282.06    12MB     78357.5         403406.       26.67%
+    3116965        3311.92    12MB     78357.5         403406.       26.74%
+    3138175        3341.75    12MB     78357.5         403406.       26.80%
+    3160526        3371.63    12MB     78357.5         403406.       26.82%
+    3192798        3401.49    12MB     78357.5         403406.       26.88%
+    3216469        3431.36    12MB     78357.5         403406.       26.92%
+    3239190        3461.21    12MB     78357.5         403406.       26.96%
+    3265472        3491.08    12MB     78357.5         403406.       26.99%
+    3295613        3520.93    12MB     78402.0         403406.       27.04%
+    3314076        3550.82    12MB     78402.0         403406.       27.06%
+    3334456        3580.69    12MB     78416.6         403406.       27.11%
+    3350577        3600.00    12MB     78416.6         403406.       27.15%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3615.97
+ Total CPU time used:              3600.00
+
+ Total no. of BaR iterations: 3350577
+ Best solution found at node:     767
+ Max. no. of nodes in memory:    1059
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 3350577 iterations, CPU time limit reached.
+Objective 403406.1549
+*******************************************************************************
+
+q :=
+1 2   311.109
+2 3   102.314
+2 4   181.017
+3 5    74.5366
+4 5     0.270999
+4 6   147.413
+6 7    55.7474
+7 5     0.192412
+;
+
+total_cost using baron: 403406.15487382695
+solve_time using baron: 3615.989711 
+
+*******************************************************************************
+

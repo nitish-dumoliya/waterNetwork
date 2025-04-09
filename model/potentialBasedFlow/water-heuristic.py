@@ -824,7 +824,8 @@ class WaterNetworkOptimizer:
                      (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
                     (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) 
  
-           approx_value = approx_rhs1
+           approx_rhs5 = (0.001**1.852)*q_values[i, j]**3 * ((q_values[i, j]**2 + 1000**2 * epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 426000*epsilon[i,j]**2)
+           approx_value = approx_rhs5
            
            # Compute relative violation
            relative_violation = (original_value - approx_value) / (original_value + 1e-10)
@@ -846,7 +847,7 @@ class WaterNetworkOptimizer:
        print("Constraint violations:\n")
        # Print table
        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
-       print(tabulate(table_data, headers=headers, tablefmt="grid"))
+       #print(tabulate(table_data, headers=headers, tablefmt="grid"))
    
        # Print total violations
        print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
@@ -1020,8 +1021,8 @@ class WaterNetworkOptimizer:
                     self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
                     
                     print("\nvisited_nodes:", self.visited_nodes)
-                    if self.visited_nodes:
-                        self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
+                    #if self.visited_nodes:
+                    #    self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
                     # print("sorted_nodes", self.sorted_nodes) 
                            
                     fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
@@ -1229,7 +1230,7 @@ class WaterNetworkOptimizer:
     
         elif min_demand < 1:
             #print("min_demand2", min_demand,"\n")
-            return 1e-6
+            return 1e-10
         else:
             #print("min_demand3", min_demand,"\n")
             return 1e-3
@@ -1241,6 +1242,7 @@ class WaterNetworkOptimizer:
         #with self.suppress_output():
         #"""Solve the optimization problem."""
         self.ampl.option["solver"] = "ipopt"
+        self.bound_push , self.bound_frac = (0.001, 0.01)
         # self.ampl.option["loqo_options"]="maxit 100000"
         # self.ampl.option["octeract_options"] = "outlev 1"
         # self.ampl.option["gurobi_options"] = "outlev 1 presolve 0"
@@ -1285,6 +1287,7 @@ class WaterNetworkOptimizer:
             # self.ampl.set_option("snopt_options", "meminc = 1 major_iterations_limit = 200")
             print("bound_push:", self.bound_push)
             print("bound_frac:", self.bound_frac)
+            self.bound_push , self.bound_frac = (0.01, 0.01)
             #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes ")   #max_iter = 1000
             self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-9  bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 600 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
@@ -1309,6 +1312,7 @@ class WaterNetworkOptimizer:
             self.total_cost = self.ampl.get_objective("total_cost").value()
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
+        # print("eps:", epsilon)
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.solver_time += solve_time
         self.number_of_nlp += 1
@@ -1326,9 +1330,9 @@ class WaterNetworkOptimizer:
         #    return self.objective(params, self.data_file)
 
         #num_cores = multiprocessing.cpu_count()
-        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=2, maxiter=2)
-        self.bound_push , self.bound_frac = best_params
-        #self.bound_push , self.bound_frac = (0.0001, 0.01)
+        #best_params, best_cost = pso(self.objective, lb, ub, swarmsize=2, maxiter=2)
+        #self.bound_push , self.bound_frac = best_params
+        self.bound_push , self.bound_frac = (0.001, 0.001)
  
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()

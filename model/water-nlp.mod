@@ -131,7 +131,7 @@ subject to con5{i in Source}:
 
 subject to con6_{i in nodes diff Source}: h[i] >= E[i] + P[i] ;
 
-subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
-subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
+#subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
+#subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
 
 #*******************************************************************************************#

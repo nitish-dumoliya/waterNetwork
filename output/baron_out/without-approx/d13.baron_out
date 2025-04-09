@@ -1,0 +1,71 @@
+Water Network: ../data/d13.dat 
+
+*******************************************************************************
+*******************************************************************************
+
+baron solver outputs:
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+lsolver = conopt
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 0.148963E+08
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.94    15MB    0.131729E+08    0.148963E+08    9.62%
+         27           2.29    15MB    0.148963E+08    0.148963E+08  100.00%
+
+                         *** Normal completion ***            
+
+ Wall clock time:                     2.36
+ Total CPU time used:                 2.29
+
+ Total no. of BaR iterations:      27
+ Best solution found at node:       7
+ Max. no. of nodes in memory:       5
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 27 iterations, optimal within tolerances.
+Objective 14896325.2
+*******************************************************************************
+
+q :=
+2  4     9.90908
+2  6     1.39092
+3  7     5.2
+3  10   12.9
+4  6     2.20908
+4  11    4.2
+8  9    24.9
+9  3    24.9
+10 2    12.9
+11 1     4.2
+;
+
+total_cost using baron: 14896325.202315504
+solve_time using baron: 2.3811959999999996 
+
+*******************************************************************************
+

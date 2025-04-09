@@ -1,0 +1,140 @@
+Water Network: ../data/d13.dat 
+
+*******************************************************************************
+*******************************************************************************
+
+gurobi solver outputs:
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter IISMethod to value 0
+  alg:iismethod = 0
+  alg:iisforce = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 4
+  alg:method = 4
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+Set parameter FeasibilityTol to value 1e-06
+  alg:feastol = 1e-06
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  4
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+IISMethod  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 26 rows, 174 columns and 208 nonzeros
+Model fingerprint: 0xab7b3de0
+Model has 7 simple general constraints
+  7 ABS
+Model has 7 general nonlinear constraints (273 nonlinear terms)
+Variable types: 174 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e-05, 1e+00]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [1e-03, 7e+03]
+  RHS range        [2e+00, 7e+03]
+Presolve model has 7 nlconstr
+Added 189 variables to disaggregate expressions.
+Presolve added 13 rows and 0 columns
+Presolve removed 0 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 564 rows, 361 columns, 1388 nonzeros
+Presolved model has 98 bilinear constraint(s)
+Presolved model has 7 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 358 continuous, 3 integer (3 binary)
+
+Root relaxation: objective 1.317288e+07, 125 iterations, 0.05 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1.3173e+07    0    9          - 1.3173e+07      -     -    1s
+     0     0 1.3259e+07    0   11          - 1.3259e+07      -     -    1s
+     0     0 1.3280e+07    0   16          - 1.3280e+07      -     -    1s
+     0     0 1.3281e+07    0   16          - 1.3281e+07      -     -    1s
+     0     0 1.3579e+07    0   18          - 1.3579e+07      -     -    1s
+     0     0 1.3593e+07    0   18          - 1.3593e+07      -     -    1s
+     0     0 1.3626e+07    0   17          - 1.3626e+07      -     -    1s
+     0     0 1.3636e+07    0   19          - 1.3636e+07      -     -    1s
+     0     0 1.3637e+07    0   19          - 1.3637e+07      -     -    1s
+     0     0 1.3637e+07    0   19          - 1.3637e+07      -     -    1s
+     0     0 1.3637e+07    0   16          - 1.3637e+07      -     -    1s
+H    0     0                    1.554629e+07 1.3637e+07  12.3%     -    2s
+H    0     0                    1.552066e+07 1.3637e+07  12.1%     -    2s
+     0     2 1.3637e+07    0   16 1.5521e+07 1.3637e+07  12.1%     -    2s
+H    4     4                    1.494313e+07 1.3730e+07  8.12%  38.0    3s
+H   37    12                    1.494162e+07 1.4874e+07  0.45%  14.1    3s
+H   38    11                    1.490346e+07 1.4878e+07  0.17%  13.8    3s
+*   55     6              10    1.489662e+07 1.4895e+07  0.01%  11.5    3s
+
+Cutting planes:
+  Cover: 1
+  Implied bound: 14
+  MIR: 1
+  RLT: 4
+  Relax-and-lift: 6
+
+Explored 59 nodes (978 simplex iterations) in 3.72 seconds (0.08 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 6: 1.48966e+07 1.49035e+07 1.49416e+07 ... 1.55463e+07
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.489661846399e+07, best bound 1.489629868557e+07, gap 0.0021%
+Gurobi 12.0.1: optimal solution; objective 14896618.46
+978 simplex iterations
+59 branching nodes
+absmipgap=319.778, relmipgap=2.14665e-05
+*******************************************************************************
+
+q :=
+2  4     9.90825
+2  6     1.39175
+3  7     5.2
+3  10   12.9
+4  6     2.20825
+4  11    4.2
+8  9    24.9
+9  3    24.9
+10 2    12.9
+11 1     4.2
+;
+
+total_cost using gurobi: 14896618.463990323
+solve_time using gurobi: 3.853977 
+
+*******************************************************************************
+

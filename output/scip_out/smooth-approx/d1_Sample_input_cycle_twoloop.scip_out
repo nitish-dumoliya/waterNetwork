@@ -1,0 +1,179 @@
+Water Network: ../data/d1_Sample_input_cycle_twoloop.dat 
+
+Results of smooth approximation of head loss constraint
+
+*******************************************************************************
+min_demand: 0.027777
+max_demand: 0.091666
+max_flow: 0.3111087
+eps: 1e-10
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 433733.196672942 
+
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                   -0 |             1.38e-05 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |             3.96e-06 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using ipopt: 7.679979500743594e-13
+Total relative constraint violation using ipopt: 1.77675707368929e-05
+*******************************************************************************
+
+total_cost using ipopt: 433733.196672942
+solve_time using ipopt: 1.055614
+*******************************************************************************
+
+scip solver outputs:
+
+eps: 1e-10 
+
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 3600
+lp/initalgorithm = b
+numerics/feastol = 1e-09
+
+read problem </tmp/at3695978.nl>
+============
+
+original problem has 126 variables (0 bin, 0 int, 0 impl, 126 cont) and 22 constraints
+
+solve problem
+=============
+
+1/1 feasible solution given by solution candidate storage, new primal bound 4.337332e+05
+
+presolving:
+(round 1, fast)       3 del vars, 3 del conss, 0 add conss, 21 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) no symmetry present
+presolving (2 rounds: 2 fast, 1 medium, 1 exhaustive):
+ 3 deleted vars, 3 deleted constraints, 0 added constraints, 21 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 123 variables (0 bin, 0 int, 0 impl, 123 cont) and 19 constraints
+     11 constraints of type <linear>
+      8 constraints of type <nonlinear>
+Presolving Time: 0.00
+transformed 1/1 original solutions to the transformed problem space
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.0s|     1 |     0 |    54 |     - |  2356k |   0 | 185 |  19 | 183 |   0 |  0 |   0 |   0 | 1.600000e+04 | 4.337332e+05 |2610.83%| unknown
+  0.6s|     1 |     0 |    63 |     - |  2992k |   0 | 185 |  19 | 194 |  11 |  1 |   0 |   0 | 1.600000e+04 | 4.337332e+05 |2610.83%| unknown
+  0.6s|     1 |     0 |   146 |     - |  2992k |   0 | 185 |  19 | 204 |  21 |  2 |   0 |   0 | 1.600000e+04 | 4.337332e+05 |2610.83%| unknown
+(node 1) unresolved numerical troubles in LP 5 -- using pseudo solution instead (loop 1)
+  0.7s|     1 |     2 |   156 |     - |  3046k |   0 | 185 |  19 | 214 |  31 |  3 |   0 |   0 | 1.600000e+04 | 4.337332e+05 |2610.83%| unknown
+  0.7s|   100 |    49 |   171 |   0.2 |  3093k |  53 | 185 |  19 |   0 |  31 |  0 |   0 |   0 | 1.600000e+04 | 4.337332e+05 |2610.83%| unknown
+  0.8s|   200 |    23 |   203 |   0.2 |  3126k |  83 | 185 |  19 |   0 |  31 |  0 |   1 |   0 | 1.600000e+04 | 4.337332e+05 |2610.83%|  50.01%
+
+SCIP Status        : problem is solved [optimal solution found]
+Solving Time (sec) : 0.80
+Solving Nodes      : 202
+Primal Bound       : +4.33733196672548e+05 (2 solutions)
+Dual Bound         : +4.33733196672548e+05
+Gap                : 0.00 %
+optimal solution found
+*******************************************************************************
+
+q :=
+1 2   311.109
+2 3    27.6802
+2 4   255.651
+3 5    -0.0967675
+4 5   130.519
+4 6    91.7983
+6 7     0.13234
+7 5   -55.4227
+;
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                   -0 |             1.38e-05 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |             3.96e-06 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using scip: 7.679979500743594e-13
+Total relative constraint violation using scip: 1.77675707368929e-05
+*******************************************************************************
+
+total_cost using scip: 433733.196672942
+solve_time using scip: 1.019436 
+
+min_demand: 0.027777 
+
+Q_max: 0.3111087 
+
+eps: 1e-10 
+
+*******************************************************************************
+

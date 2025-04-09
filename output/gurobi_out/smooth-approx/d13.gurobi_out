@@ -1,0 +1,237 @@
+Water Network: ../data/d13.dat 
+
+Results of smooth approximation of head loss constraint
+
+*******************************************************************************
+min_demand: 0.0
+max_demand: 0.0068
+max_flow: 0.024900000000000002
+eps: 1e-10
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 14896325.21443899 
+
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_2,4        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,7        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,10       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,11       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_8,9        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_9,3        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_10,2       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_11,1       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using ipopt: 2.7618152990266376e-15
+Total relative constraint violation using ipopt: 3.8772408662767713e-10
+*******************************************************************************
+
+total_cost using ipopt: 14896325.21443899
+solve_time using ipopt: 0.16209000000000004
+*******************************************************************************
+
+gurobi solver outputs:
+
+eps: 1e-10 
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:iisfind = 1
+Set parameter IISMethod to value 0
+  alg:iismethod = 0
+  alg:iisforce = 1
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  cvt:socp = 2
+Set parameter Method to value 3
+  alg:method = 3
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter ConcurrentMethod to value 3
+  alg:concurrentmethod = 3
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter OBBT to value 1
+  mip:obbt = 1
+  alg:start = 1
+Set parameter FeasibilityTol to value 1e-06
+  alg:feastol = 1e-06
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+Method  3
+ConcurrentMethod  3
+NodeMethod  1
+OBBT  1
+VarBranch  0
+IISMethod  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 26 rows, 203 columns and 208 nonzeros
+Model fingerprint: 0x71789351
+Model has 7 general nonlinear constraints (728 nonlinear terms)
+Variable types: 203 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e-05, 1e+00]
+  Objective range  [1e+02, 3e+03]
+  Bounds range     [9e-11, 1e+11]
+  RHS range        [2e+00, 7e+03]
+Warning: Model contains large bounds
+
+User MIP start produced solution with objective 1.48963e+07 (0.00s)
+Loaded user MIP start with objective 1.48963e+07
+
+Presolve model has 7 nlconstr
+Added 224 variables to disaggregate expressions.
+Presolve removed 2 rows and 54 columns
+Presolve time: 0.00s
+Presolved: 1060 rows, 472 columns, 2415 nonzeros
+Presolved model has 196 bilinear constraint(s)
+Presolved model has 21 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 472 continuous, 0 integer (0 binary)
+Extra simplex iterations after uncrush: 250
+
+Root relaxation: objective 3.330128e+06, 252 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3330128.00    0  108 1.4896e+07 3330128.00  77.6%     -    0s
+     0     0 1.3173e+07    0   43 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   18 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   17 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   17 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   17 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   17 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   13 1.4896e+07 1.3173e+07  11.6%     -    0s
+     0     0 1.3173e+07    0   18 1.4896e+07 1.3173e+07  11.6%     -    1s
+     0     2 1.3173e+07    0   17 1.4896e+07 1.3173e+07  11.6%     -    1s
+  4471  1554 1.3275e+07   75    0 1.4896e+07 1.3173e+07  11.6%  18.8    5s
+  5247  1478 1.4653e+07   41   25 1.4896e+07 1.3173e+07  11.6%  18.1   10s
+H 9582   922                    1.489633e+07 1.3173e+07  11.6%  15.0   14s
+ 10379   960 1.3922e+07   77   19 1.4896e+07 1.3173e+07  11.6%  14.5   15s
+
+Cutting planes:
+  RLT: 24
+
+Explored 21205 nodes (342598 simplex iterations) in 19.94 seconds (1.51 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 3: 1.48963e+07 1.48963e+07 1.48963e+07 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.489632521107e+07, best bound 1.489632521107e+07, gap 0.0000%
+Gurobi 12.0.1: optimal solution; objective 14896325.21
+342598 simplex iterations
+21205 branching nodes
+absmipgap=1.86265e-09, relmipgap=0
+*******************************************************************************
+
+q :=
+2  4     9.90908
+2  6     1.39092
+3  7     5.2
+3  10   12.9
+4  6     2.20908
+4  11    4.2
+8  9    24.9
+9  3    24.9
+10 2    12.9
+11 1     4.2
+;
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_2,4        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,7        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,10       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,11       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_8,9        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_9,3        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_10,2       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_11,1       |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using gurobi: 2.761274044973342e-15
+Total relative constraint violation using gurobi: 3.8772331387862693e-10
+*******************************************************************************
+
+total_cost using gurobi: 14896325.211076276
+solve_time using gurobi: 20.094304 
+
+min_demand: 0.0 
+
+Q_max: 0.024900000000000002 
+
+eps: 1e-10 
+
+*******************************************************************************
+

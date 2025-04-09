@@ -1,0 +1,175 @@
+Water Network: ../data/d1_Sample_input_cycle_twoloop.dat 
+
+Results of smooth approximation of head loss constraint
+
+*******************************************************************************
+min_demand: 0.027777
+max_demand: 0.091666
+max_flow: 0.3111087
+eps: 1e-10
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 433733.196672942 
+
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                   -0 |             1.38e-05 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |             0        |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |             3.96e-06 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                   -0 |             0        |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using ipopt: 7.679979500743594e-13
+Total relative constraint violation using ipopt: 1.77675707368929e-05
+*******************************************************************************
+
+total_cost using ipopt: 433733.196672942
+solve_time using ipopt: 0.314072
+*******************************************************************************
+
+baron solver outputs:
+
+eps: 1e-10 
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of   433733.          
+ Doing local search
+ Preprocessing found feasible solution with value 433733.
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+*         1           0.21    12MB     16000.0         423994.        0.02%
+*         1           0.68    12MB     16000.0         403406.        0.02%
+          1           0.74    12MB     16000.0         403406.        0.02%
+constraint _scon[1]: Initial function value too large = 2.4E+14
+       2936          30.74    12MB     173330.         403406.       38.10%
+       6138          60.74    12MB     278138.         403406.       43.48%
+       9536          90.75    12MB     335535.         403406.       47.43%
+      12015         108.98    12MB     403406.         403406.      100.00%
+
+                         *** Normal completion ***            
+
+ Wall clock time:                   108.98
+ Total CPU time used:               108.62
+
+ Total no. of BaR iterations:   12015
+ Best solution found at node:       6
+ Max. no. of nodes in memory:     163
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 12015 iterations, optimal within tolerances.
+Objective 403406.1549
+*******************************************************************************
+
+q :=
+1 2   311.109
+2 3   102.314
+2 4   181.017
+3 5    74.5366
+4 5     0.270999
+4 6   147.413
+6 7    55.7474
+7 5     0.192412
+;
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |              0       |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |              0       |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                   -0 |              0       |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                    0 |              0       |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                    0 |              2.3e-07 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |              0       |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |              0       |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                    0 |              8.9e-07 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using baron: 1.7295265270341476e-13
+Total relative constraint violation using baron: 1.11609468563308e-06
+*******************************************************************************
+
+total_cost using baron: 403406.1549203685
+solve_time using baron: 109.04875399999999 
+
+min_demand: 0.027777 
+
+Q_max: 0.3111087 
+
+eps: 1e-10 
+
+*******************************************************************************
+
