@@ -1,0 +1,68 @@
+Water Network: d13 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(11, 1), (9, 3), (3, 7), (3, 10), (8, 9), (4, 11), (10, 2)}
+super_source_out_arc: [(8, 9), (9, 3), (3, 7), (3, 10), (10, 2), (2, 6), (2, 4)] 
+
+min_demand: 0.0
+max_demand: 0.0068
+max_flow: 0.024900000000000002
+eps: 1e-08 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.001
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  14896325.214236025
+Solve_result:  solved
+Solve_time: 0.12837700000000002 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [6] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [6]
+delta_arc: {(4, 6): 2.209080067735683}
+node: 6
+node-in-arcs: [(2, 6), (4, 6)]
+decreasing-in-flow-arcs: [(4, 6), (2, 6)]
+(4, 6)    True    1,48,96,325   1,51,76,154   0.06s       solved        No        0.24s
+(2, 6)    True    1,48,96,325   2,10,66,095   0.1s        infeasible    No        0.36s
+
+**********************************Final best results******************************************
+
+Water Network: d13
+*******************************************************************************
+
+Constraint violations:
+
+
+Total absolute constraint violation: 2.303929616531697e-19
+Total relative constraint violation: 1.0262200411533162e-15
+*******************************************************************************
+
+Final best objective: 14896325.214236025
+Number of nlp problem solved: 3
+Total number of iteration: 1
+Solver_time: 0.29 seconds
+Heuristic elapsed time: 0.36 seconds
+

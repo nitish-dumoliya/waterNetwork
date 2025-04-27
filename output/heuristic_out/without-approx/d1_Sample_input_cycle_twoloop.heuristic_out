@@ -1,0 +1,69 @@
+Water Network: d1_Sample_input_cycle_twoloop 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 4), (2, 3)] 
+
+min_demand: 0.027777
+max_demand: 0.091666
+max_flow: 0.3111087
+eps: 1e-07 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.001
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  403406.1735506391
+Solve_result:  solved
+Solve_time: 0.251089 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [5] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [5]
+delta_arc: {(3, 5): 74.53658863081586, (7, 5): 0.19241222029271468}
+node: 5
+node-in-arcs: [(3, 5), (4, 5), (7, 5)]
+decreasing-in-flow-arcs: [(3, 5), (4, 5), (7, 5)]
+(3, 5)    True    4,03,406      4,29,384      0.15s       solved        No        0.44s
+(4, 5)    True    4,03,406      4,55,637      0.06s       solved        No        0.52s
+(7, 5)    True    4,03,406      4,22,652      0.06s       solved        No        0.6s
+
+**********************************Final best results******************************************
+
+Water Network: d1_Sample_input_cycle_twoloop
+*******************************************************************************
+
+Constraint violations:
+
+
+Total absolute constraint violation: 2.4287902138908613e-17
+Total relative constraint violation: 1.2220877418222791e-14
+*******************************************************************************
+
+Final best objective: 403406.1735506391
+Number of nlp problem solved: 4
+Total number of iteration: 1
+Solver_time: 0.52 seconds
+Heuristic elapsed time: 0.60 seconds
+

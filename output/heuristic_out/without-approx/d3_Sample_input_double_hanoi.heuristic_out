@@ -1,0 +1,93 @@
+Water Network: d3_Sample_input_double_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2), (10, 11), (41, 42), (12, 13), (21, 22), (50, 51), (11, 12), (51, 52), (40, 41), (42, 43), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (2, 33), (33, 34), (33, 49), (33, 50)] 
+
+min_demand: 0.016666
+max_demand: 0.375
+max_flow: 10.830509600000001
+eps: 1e-07 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.001
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  12064445.117532613
+Solve_result:  solved
+Solve_time: 0.763859 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [27, 57, 29, 59, 16, 46] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [16, 27, 29, 46, 57, 59]
+delta_arc: {(15, 16): 72.9513802115247, (17, 16): 36.39296849606687, (16, 27): 23.23334870759153, (26, 27): 79.54365129240851, (28, 29): 84.88640911847692, (30, 29): 15.113590881523102, (45, 46): 72.95138021152935, (47, 46): 36.39296849606396, (46, 57): 23.23334870759329, (56, 57): 79.54365129240675, (58, 59): 84.88640911847675, (60, 59): 15.113590881523265}
+node: 27
+node-in-arcs: [(16, 27), (27, 26)]
+decreasing-in-flow-arcs: [(27, 26), (16, 27)]
+(27, 26)  True    1,20,64,445   1,21,14,386   0.08s       solved        No        0.92s
+(16, 27)  True    1,20,64,445   1,20,68,958   0.07s       solved        No        1.03s
+node: 57
+node-in-arcs: [(46, 57), (57, 56)]
+decreasing-in-flow-arcs: [(57, 56), (46, 57)]
+(57, 56)  True    1,20,64,445   1,21,14,386   0.08s       solved        No        1.15s
+(46, 57)  True    1,20,64,445   1,20,68,958   0.07s       solved        No        1.25s
+node: 29
+node-in-arcs: [(28, 29), (29, 30)]
+decreasing-in-flow-arcs: [(28, 29), (29, 30)]
+(28, 29)  True    1,20,64,445   1,23,41,023   0.11s       solved        No        1.4s
+(29, 30)  True    1,20,64,445   1,20,70,922   0.07s       solved        No        1.51s
+node: 59
+node-in-arcs: [(58, 59), (59, 60)]
+decreasing-in-flow-arcs: [(58, 59), (59, 60)]
+(58, 59)  True    1,20,64,445   1,23,41,023   0.1s        solved        No        1.64s
+(59, 60)  True    1,20,64,445   1,20,70,922   0.07s       solved        No        1.74s
+node: 16
+node-in-arcs: [(15, 16), (17, 16)]
+decreasing-in-flow-arcs: [(15, 16), (17, 16)]
+(15, 16)  True    1,20,64,445   1,20,69,256   0.07s       solved        No        1.85s
+(17, 16)  True    1,20,64,445   1,20,77,308   0.08s       solved        No        1.96s
+node: 46
+node-in-arcs: [(45, 46), (47, 46)]
+decreasing-in-flow-arcs: [(45, 46), (47, 46)]
+(45, 46)  True    1,20,64,445   1,20,69,256   0.06s       solved        No        2.06s
+(47, 46)  True    1,20,64,445   1,20,78,271   0.09s       solved        No        2.18s
+
+**********************************Final best results******************************************
+
+Water Network: d3_Sample_input_double_hanoi
+*******************************************************************************
+
+Constraint violations:
+
+
+Total absolute constraint violation: 1.0740811452053523e-14
+Total relative constraint violation: 6.126249290607705e-15
+*******************************************************************************
+
+Final best objective: 12064445.117532613
+Number of nlp problem solved: 13
+Total number of iteration: 1
+Solver_time: 1.75 seconds
+Heuristic elapsed time: 2.18 seconds
+

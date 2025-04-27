@@ -1,0 +1,107 @@
+Water Network: d5_Taichung_input 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: set()
+super_source_out_arc: [(20, 10), (20, 19)] 
+
+min_demand: 0.0115741
+max_demand: 0.0347222
+max_flow: 0.4629623999999999
+eps: 1e-07 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol=1e-9
+bound_relax_factor=0
+bound_push = 0.001
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  8836478.294819662
+Solve_result:  solved
+Solve_time: 0.30181800000000003 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [13, 14, 1, 2, 4, 12, 15, 11] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [1, 2, 4, 11, 12, 13, 14, 15]
+delta_arc: {(2, 1): 23.095423163687407, (6, 1): 0.05267683631259159, (3, 2): 40.52011701324499, (7, 2): 5.723406150442418, (3, 4): 5.246115465821579, (5, 4): 8.0034549758868, (6, 11): 11.109322416618763, (12, 11): 6.174850503572189, (16, 11): 5.772245484643547, (7, 12): 19.107984741917463, (13, 12): 1.3333029528331255, (17, 12): 8.881662808821599, (8, 13): 13.773663060502997, (14, 13): 10.015581486847948, (18, 13): 12.266258405482182, (9, 14): 11.508750338277087, (19, 14): 33.22903114857086, (11, 15): 11.4823184048345}
+node: 13
+node-in-arcs: [(8, 13), (14, 13), (13, 18)]
+decreasing-in-flow-arcs: [(8, 13), (13, 18), (14, 13)]
+(8, 13)   True    88,36,478     89,90,756     0.12s       solved        No        0.47s
+(13, 18)  True    88,36,478     89,24,704     0.12s       solved        No        0.62s
+(14, 13)  True    88,36,478     88,48,976     0.1s        solved        No        0.75s
+node: 14
+node-in-arcs: [(9, 14), (14, 19)]
+decreasing-in-flow-arcs: [(14, 19), (9, 14)]
+(14, 19)  True    88,36,478     89,35,001     0.13s       solved        No        0.91s
+(9, 14)   True    88,36,478     89,34,528     0.07s       solved        No        1.01s
+node: 1
+node-in-arcs: [(2, 1), (1, 6)]
+decreasing-in-flow-arcs: [(2, 1), (1, 6)]
+(2, 1)    True    88,36,478     88,49,218     0.1s        solved        No        1.13s
+(1, 6)    True    88,36,478     88,36,726     0.06s       solved        No        1.22s
+node: 2
+node-in-arcs: [(3, 2), (7, 2)]
+decreasing-in-flow-arcs: [(3, 2), (7, 2)]
+(3, 2)    True    88,36,478     89,02,793     0.13s       solved        No        1.39s
+(7, 2)    True    88,36,478     88,36,506     0.07s       solved        No        1.5s
+node: 4
+node-in-arcs: [(4, 3), (4, 5), (9, 4)]
+decreasing-in-flow-arcs: [(9, 4), (4, 5), (4, 3)]
+(9, 4)    True    88,36,478     90,24,366     0.23s       solved        No        1.76s
+(4, 5)    True    88,36,478     88,75,039     0.07s       solved        No        1.87s
+(4, 3)    True    88,36,478     88,59,085     0.08s       solved        No        1.99s
+node: 12
+node-in-arcs: [(7, 12), (13, 12), (12, 17)]
+decreasing-in-flow-arcs: [(7, 12), (12, 17), (13, 12)]
+(7, 12)   True    88,36,478     89,54,901     0.14s       solved        No        2.16s
+(12, 17)  True    88,36,478     89,26,310     0.07s       solved        No        2.27s
+(13, 12)  True    88,36,478     88,48,397     0.06s       solved        No        2.37s
+node: 15
+node-in-arcs: [(11, 15), (15, 16)]
+decreasing-in-flow-arcs: [(15, 16), (11, 15)]
+(15, 16)  True    88,36,478     90,07,560     0.14s       solved        No        2.54s
+(11, 15)  True    88,36,478     89,18,848     0.09s       solved        No        2.66s
+node: 11
+node-in-arcs: [(6, 11), (12, 11), (11, 16)]
+decreasing-in-flow-arcs: [(6, 11), (12, 11), (11, 16)]
+(6, 11)   True    88,36,478     89,81,939     0.11s       solved        No        2.81s
+(12, 11)  True    88,36,478     88,90,314     0.08s       solved        No        2.93s
+(11, 16)  True    88,36,478     89,03,081     0.07s       solved        No        3.03s
+
+**********************************Final best results******************************************
+
+Water Network: d5_Taichung_input
+*******************************************************************************
+
+Constraint violations:
+
+
+Total absolute constraint violation: 2.6758068588783867e-17
+Total relative constraint violation: 1.6047653285101682e-12
+*******************************************************************************
+
+Final best objective: 8836478.294819662
+Number of nlp problem solved: 21
+Total number of iteration: 1
+Solver_time: 2.32 seconds
+Heuristic elapsed time: 3.03 seconds
+
