@@ -30,7 +30,7 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
         #               sum(10.67 * l_values[i, j, k] / ((R_values[k] ** 1.852) * ((d_values[k] / 1000) ** 4.87))
         #                   for k in pipes)
 
-        original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.001 ** 1.852) 
+        original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * (0.00000277971326776) 
         #original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852  
 
         original_value = original_rhs
@@ -71,15 +71,16 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
                      (abs(q_values[i, j]) / (abs(q_values[i, j]) + 852 * epsilon[i,j])) * (0.001 ** 1.852) +\
                     (0.175255362*(epsilon[i,j])**2) * q_values[i,j]/((abs(q_values[i,j])+1000*epsilon[i,j])**1.148)) 
 
-        approx_rhs5 = (0.001**1.852)*q_values[i, j]**3 * ((q_values[i, j]**2 + 1000**2 * epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 426000*epsilon[i,j]**2)
+        #approx_rhs5 = (0.001**1.852)*q_values[i, j]**3 * ((q_values[i, j]**2 + 1000**2 * epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 426000*epsilon[i,j]**2)
+        approx_rhs5 = (0.00000277971326776)*q_values[i, j]**3 * ((q_values[i, j]**2 + 0.0001) ** 0.426)/(q_values[i,j]**2 + 0.000426)
         #approx_rhs5 = q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)
  
         approx_value = approx_rhs5
         
         # Compute relative violation
-        relative_violation = abs(original_value - approx_value) / (abs(original_value))
+        relative_violation = abs(original_value - approx_value) / (abs(original_value)+1e-10)
         relative_violations[f"con2_{i},{j}"] = relative_violation
-        total_relative_constraint_violation += abs(relative_violation)
+        total_relative_constraint_violation += relative_violation
 
         # Compute absolute violation
         absolute_violation =  original_value - approx_value
@@ -129,13 +130,159 @@ def constraint_violations(q_values, h_values, l_values, R_values, d_values, pipe
 
     print("*******************************************************************************\n")
 
+    def constraint_relative_gap(self, q_values, h_values, l_values, epsilon, solver):
+        total_absolute_constraint_violation = 0
+        total_relative_constraint_violation = 0
+         
+        con1_gap = {}
+        for i in self.nodes:
+            con1_rhs = self.D[i]
+            incoming_flow = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
+            outgoing_flow = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
+            con1_lhs = incoming_flow - outgoing_flow
+            con1_violation = con1_lhs - con1_rhs
+            con1_gap[f"con1_{i}"] = con1_violation
+            total_absolute_constraint_violation += abs(con1_violation)
+        #print("con1_gap:", con1_gap)
+        
+        con2_original_gap = {}
+        con2_approx_gap = {}
+        absolute_violations = {}
+        relative_violations = {}
+        con2_absolute_constraint_violation = 0
+        con2_relative_constraint_violation = 0
+        con2_original_violation = 0
+        con2_approx_violation = 0
+        for (i, j) in q_values.keys():
+            # Original constraint value
+            lhs = h_values[i] - h_values[j]
+            alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k] / 1000) ** 4.87)) for k in self.pipes)
+            original_rhs =  (0.00000277971326776) * q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
+            
+            # Approximated constraint value
+            approx_rhs = (0.00000277971326776)*(q_values[i, j]**3 * ((q_values[i, j]**2 + 0.000000001) ** 0.426)/(q_values[i,j]**2 + 0.00000000426))*alpha_rhs
+
+            con2_original_violation =  lhs - original_rhs
+            con2_original_gap[f"con2_{i}_{j}"] = con2_original_violation
+            con2_original_violation += abs(con2_original_violation) 
+            
+            con2_approx_violation =  lhs - approx_rhs
+            con2_approx_gap[f"con2_{i}_{j}"] = con2_approx_violation
+            
+            total_absolute_constraint_violation += abs(con2_approx_violation)    
+            con2_approx_violation += abs(con2_approx_violation) 
+
+             # Compute absolute violation
+            absolute_violation =  original_rhs - approx_rhs
+            absolute_violations[f"con2_{i},{j}"] = absolute_violation
+            con2_absolute_constraint_violation += abs(absolute_violation)
+
+            # Compute relative violation between original_rhs and approx_rhs
+            relative_violation = (original_rhs - approx_rhs) / (original_rhs)
+            relative_violations[f"con2_{i},{j}"] = relative_violation
+            con2_relative_constraint_violation += abs(relative_violation)
+           
+        #print("con2_gap:", con2_gap)
+        
+        con3_gap = {}
+        for (i,j) in self.arcs:
+            con3_rhs = self.L[i,j]
+            con3_lhs = sum(l_values[i,j,k] for k in self.pipes) 
+            con3_violation = con3_lhs - con3_rhs
+            con3_gap[f"con3_{i}"] = con3_violation 
+            total_absolute_constraint_violation += abs(con3_violation)
+        #print("con3_gap:", con3_gap)
+
+        con4_gap = {}
+        for (i,j) in self.arcs:
+            for k in self.pipes:
+                #con4_rhs = self.L[i,j]
+                #con4_lhs = l_values[i,j,k]
+                con4_violation = max(0,l_values[i,j,k]-self.L[i,j])
+                con4_gap[f"con4_{i}_{j}_{k}"] = con4_violation 
+                total_absolute_constraint_violation += abs(con4_violation)
+        #print("con4_gap:", con4_gap)
+        
+        con5_gap = {}
+        for j in self.source:
+            con5_rhs = self.E[j]
+            con5_lhs = h_values[j]
+            con5_violation = con5_lhs - con5_rhs
+            con5_gap[f"con5_{j}"] = con5_violation 
+            total_absolute_constraint_violation += abs(con5_violation)
+        #print("con5_gap:", con5_gap)
+
+        con6_gap = {}
+        for j in self.nodes:
+            if j not in self.source:
+                #con6_rhs = self.E[j] + self.P[j]
+                #con6_lhs = h_values[j]
+                con6_violation = max(0, -h_values[j] + self.E[j] + self.P[j])
+                con6_gap[f"con6_{j}"] = con6_violation 
+                total_absolute_constraint_violation += abs(con6_violation)
+        #print("con6_gap:", con6_gap)
+        
+        print("*******************************************************************************\n")
+        print("Constraints violation:\n")
+
+        table_data = []
+        for constraint, vio in con1_gap.items():
+               table_data.append([constraint, f"{con1_gap[constraint]:.8f}"])
+        for constraint, vio in con2_approx_gap.items():
+               table_data.append([constraint, f"{con2_approx_gap[constraint]:.8f}"])
+        for constraint, vio in con3_gap.items():
+               table_data.append([constraint, f"{con3_gap[constraint]:.8f}"])
+        for constraint, vio in con4_gap.items():
+               table_data.append([constraint, f"{con4_gap[constraint]:.8f}"])
+        for constraint, vio in con5_gap.items():
+               table_data.append([constraint, f"{con5_gap[constraint]:.8f}"])
+        for constraint, vio in con6_gap.items():
+               table_data.append([constraint, f"{con6_gap[constraint]:.8f}"])
+
+        headers = ["Constraint ID", "Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print("\nSum of constraints violation:", total_absolute_constraint_violation)
+        
+        print("*******************************************************************************\n")
+        table_data = []
+        for constraint, vio in con2_original_gap.items():
+               table_data.append([constraint, f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}"])
+
+        print("*******************************************************************************\n")
+        print("Constraint 2 violations:\n")
+        headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        
+        print("\nSum of violation of original con2:", con2_original_violation)
+        print("Sum of violation of approx con2:", con2_approx_violation)
+
+
+        table_data = []
+        for constraint, vio in relative_violations.items():
+               table_data.append([constraint, f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
+
+        print("*******************************************************************************\n")
+        print("Absolute and relative violations between original and approximation constraint 2:\n")
+        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
+        print("Con2 sum of relative violation:", con2_relative_constraint_violation)
+
+        # Print total violations
+        #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
+        #print("Total relative constraint violation:", total_relative_constraint_violation)
+
+        print("*******************************************************************************\n")
+
+
+
 
 def compute_adaptive_eps(min_demand):
 
     min_demand = min_demand/1000
     if min_demand < 1e-4:
         #print("min_demand1", min_demand,"\n")
-        return 1e-7
+        return 1e-3
 
     elif min_demand < 1:
         #print("min_demand2", min_demand,"\n")
@@ -145,7 +292,7 @@ def compute_adaptive_eps(min_demand):
         return 1e-3
 
 
-ipopt_run = 0
+ipopt_run = 1
 
 if ipopt_run == 1:
             ampl.read(sys.argv[1])
@@ -214,7 +361,7 @@ if ipopt_run == 1:
             #ampl.eval("display h;")
             
             constraint_violations(q_init, h_init, l_init, R, d, pipes, eps, "ipopt")
-
+            constraint_relative_gap(q_init, h_init, l_init, eps)
             #ampl.eval("display con1.body;")
             #ampl.eval("display con2.body;")
             #ampl.eval("display con3.body;")
@@ -261,12 +408,12 @@ ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes tol =
 
 #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
 ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
-#ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-#ampl.option["gurobi_options"] = "outlev 1" # presolve 1 timelimit 300 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6 " #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+#ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+#ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
 
-#ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 4 lpsolver = cplex lsolver = conopt threads = 8" # lsolver = conopt
-ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 lsolver = conopt " # lsolver = conopt
+ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 iisfind = 4 lpsolver = cplex lsolver = conopt threads = 8" # lsolver = conopt
+#ampl.option["baron_options"]= "maxtime = 3600  outlev = 1 lsolver = ipopt threads = 8" # lsolver = conopt
 ampl.option["scip_options"] = "outlev  1 timelimit 300 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
 ampl.option["knitro_options"]= "maxtime_real = 300 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
 #ampl.option["conopt_options"]= "outlev = 4"
@@ -275,14 +422,19 @@ ampl.option["presolve_eps"] = "8.53e-15"
 
 print(f"{sys.argv[2]} solver outputs:\n")
 
-#min_demand = ampl.getParameter('D_min').getValues().to_list()[0]
-#Q_max = ampl.getParameter('Q_max').getValues().to_list()[0]
+min_demand = ampl.getParameter('D_min').getValues().to_list()[0]
+max_demand = ampl.getParameter('D_max').getValues().to_list()[0]
+Q_max = ampl.getParameter('Q_max').getValues().to_list()[0]
 
-#epsilon = compute_adaptive_eps(min_demand)
+print("min_demand:", min_demand/1000)
+print("max_demand:", max_demand/1000)
+print("max_flow:", Q_max/1000)
 
-#print("eps:", epsilon, "\n")
+epsilon = compute_adaptive_eps(min_demand)
 
-#ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
+print("eps:", epsilon, "\n")
+
+ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
 
 ampl.solve()
 
@@ -293,7 +445,7 @@ ampl.solve()
 l = ampl.getVariable('l').getValues().to_dict()
 q = ampl.getVariable('q').getValues().to_dict()
 h = ampl.getVariable('h').getValues().to_dict()
-#eps = ampl.getVariable('eps').getValues().to_dict()
+eps = ampl.getVariable('eps').getValues().to_dict()
 
 #print("eps:",eps, "\n")
 
@@ -318,16 +470,16 @@ ampl.eval("display q;")
 
 #ampl.eval("display con2.body;")
 
-#constraint_violations(q, h, l, R, d, pipes, eps, sys.argv[2])
+constraint_violations(q, h, l, R, d, pipes, eps, sys.argv[2])
 
 solve_time = ampl.get_value('_solve_elapsed_time')
 total_cost = ampl.getObjective("total_cost").value()
 
 print(f"total_cost using {sys.argv[2]}:", total_cost)
 print(f"solve_time using {sys.argv[2]}:", solve_time,"\n")
-#print("min_demand:", min_demand/1000, "\n")
-#print("Q_max:", Q_max/1000, "\n")
-#print("eps:", epsilon, "\n")
+print("min_demand:", min_demand/1000, "\n")
+print("Q_max:", Q_max/1000, "\n")
+print("eps:", epsilon, "\n")
 ampl.close()
 
 print("*******************************************************************************\n")

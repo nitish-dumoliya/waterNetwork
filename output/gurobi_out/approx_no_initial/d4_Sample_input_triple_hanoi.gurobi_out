@@ -1,0 +1,634 @@
+Water Network: ../data/d4_Sample_input_triple_hanoi.dat
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+min_demand: 0.0
+max_demand: 0.375
+max_flow: 15.886042400000008
+eps: 1.376433248637255e-05 
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+Set parameter Method to value 2
+  alg:method = 2
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 276 rows, 1456 columns and 1143 nonzeros
+Model fingerprint: 0xf9857a6f
+Model has 85 general nonlinear constraints (1445 nonlinear terms)
+Variable types: 1456 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [3e-05, 1e+00]
+  Objective range  [5e+01, 3e+02]
+  Bounds range     [6e-06, 1e+13]
+  RHS range        [1e+00, 4e+03]
+Warning: Model contains large bounds
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+Presolve model has 85 nlconstr
+Added 1955 variables to disaggregate expressions.
+Presolve removed 16 rows and 617 columns
+Presolve time: 0.02s
+Presolved: 6040 rows, 2795 columns, 14792 nonzeros
+Presolved model has 765 bilinear constraint(s)
+Presolved model has 255 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 2795 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 1.400e+02
+ Factor NZ  : 7.260e+02
+ Factor Ops : 8.348e+03 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   2.95637117e+14 -5.29473930e+15  2.53e+12 0.00e+00  1.37e+12     4s
+   1   2.45383220e+14 -1.03189364e+18  2.10e+12 2.24e+01  5.87e+14     4s
+   2   1.58235450e+14 -1.14913961e+19  1.35e+12 5.82e-11  1.72e+16     4s
+   3   8.18767868e+13 -1.30930147e+19  6.99e+11 5.82e-11  3.03e+16     4s
+   4   4.13618499e+13 -7.47244632e+18  3.53e+11 5.82e-11  2.05e+16     4s
+   5   2.09223770e+13 -3.82881644e+18  1.79e+11 3.64e-11  1.13e+16     4s
+   6   1.04876759e+13 -1.92333759e+18  8.95e+10 2.55e-11  5.91e+15     4s
+   7   4.07028239e+12 -7.46343759e+17  3.47e+10 1.46e-11  2.34e+15     4s
+   8   9.95062596e+10 -1.81484384e+16  8.49e+08 5.68e-12  5.78e+13     4s
+   9   4.97565044e+10 -9.07430637e+15  4.24e+08 2.79e-12  2.89e+13     4s
+  10   2.48816266e+10 -4.53719675e+15  2.12e+08 1.41e-12  1.44e+13     4s
+  11   1.24441876e+10 -2.26861708e+15  1.06e+08 9.09e-13  7.22e+12     4s
+  12   1.71104363e+07 -1.89135943e+12  8.84e+04 9.09e-13  6.02e+09     5s
+  13   1.18162645e+07 -9.45768025e+11  4.42e+04 1.31e-09  3.01e+09     5s
+  14   9.02681816e+06 -5.65053207e+11  2.21e+04 1.43e-09  1.80e+09     5s
+  15   1.00758251e+07 -1.61095219e+09  2.17e+04 8.05e-05  1.30e+07     5s
+  16   7.37559971e+06 -2.58105949e+08  2.45e+01 3.05e-07  8.60e+05     5s
+  17   7.31003322e+06 -8.17696268e+06  7.21e-01 1.80e-08  5.01e+04     5s
+  18   6.74491584e+06  2.18893063e+06  9.77e-04 1.53e-08  1.52e+04     5s
+  19   6.25482759e+06  5.05661836e+06  4.88e-04 2.38e-07  4.27e+03     5s
+  20   5.75216184e+06  5.29580903e+06  2.44e-04 1.19e-07  1.68e+03     5s
+  21   5.56179850e+06  5.38108002e+06  1.22e-04 5.96e-08  6.75e+02     5s
+  22   5.46542169e+06  5.43354514e+06  2.44e-04 1.19e-07  1.09e+02     5s
+  23   5.44118576e+06  5.43963532e+06  1.22e-04 2.11e-08  5.04e+00     5s
+  24   5.44054072e+06  5.44053911e+06  1.22e-04 1.19e-07  5.04e-03     5s
+  25   5.44054010e+06  5.44054009e+06  1.22e-04 3.38e-09  4.03e-05     5s
+  26   5.44054010e+06  5.44054010e+06  1.22e-04 5.07e-10  1.81e-08     5s
+  27   5.44054010e+06  5.44054010e+06  3.05e-05 3.65e-10  2.59e-11     5s
+  28   5.44054010e+06  5.44054010e+06  2.27e-13 2.87e-10  4.76e-14     5s
+
+Barrier solved model in 28 iterations and 4.87 seconds (0.13 work units)
+Optimal objective 5.44054010e+06
+
+Warning: Markowitz tolerance tightened to 0.5
+
+Use crossover to convert LP symmetric solution to basic solution...
+Extra simplex iterations after uncrush: 85
+
+Root relaxation: objective 5.440540e+06, 191 iterations, 0.83 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 5440540.10    0  423          - 5440540.10      -     -    5s
+     0     0 5440540.10    0  475          - 5440540.10      -     -    5s
+     0     0 5440540.10    0  474          - 5440540.10      -     -    5s
+     0     0 5440540.10    0  480          - 5440540.10      -     -    6s
+     0     0 5440540.10    0  482          - 5440540.10      -     -    6s
+     0     0 5440540.10    0  484          - 5440540.10      -     -    6s
+     0     0 5440540.10    0  486          - 5440540.10      -     -    6s
+     0     0 5440540.10    0  486          - 5440540.10      -     -    6s
+     0     0 5440540.10    0  488          - 5440540.10      -     -    6s
+     0     0 5440540.10    0  425          - 5440540.10      -     -   17s
+  NLP heuristic elapsed time = 5.11s
+     0     2 5440540.10    0  425          - 5440540.10      -     -   83s
+     1     5 5440540.10    1  428          - 5440540.10      -   224  200s
+     3     8 5440540.10    2  428          - 5440540.10      -   201  264s
+     7    14 5440540.10    3  428          - 5440540.10      -   265  300s
+    15    24 5440540.10    4  438          - 5440540.10      -   262  318s
+    29    32 5440540.10    5  436          - 5440540.10      -   200  339s
+    53    34 5440540.10    6  439          - 5440540.10      -   154  357s
+    85    74 5440540.10    7  437          - 5440540.10      -   115  391s
+   141   103 infeasible    8               - 5440540.10      -  83.8  419s
+   212   153 infeasible   10               - 5440543.53      -  69.3  446s
+   288   204 5440543.53   12  431          - 5440543.53      -  58.6  473s
+   343   264 5440543.53   13  429          - 5440543.53      -  57.7  492s
+   407   351 5440543.53   14  427          - 5440543.53      -  58.8  508s
+   500   447 5440543.53   15  426          - 5440543.53      -  61.5  519s
+   598   585 5440543.53   17  392          - 5440543.53      -  62.8  527s
+   742   698 5440543.53   19  393          - 5440543.53      -  58.6  542s
+   859   804 infeasible   20               - 5440543.53      -  59.7  563s
+   971   901 infeasible   23               - 5440543.53      -  60.2  572s
+  1074  1010 5783241.99   24  364          - 5440543.53      -  61.9  579s
+  1193   964 5783982.85   28  358          - 5440543.53      -  61.6  592s
+  1393  1082 5783982.85   32  354          - 5440543.53      -  57.3  628s
+  1515  1210 5783982.85   36  369          - 5440543.53      -  56.6  637s
+  1649  1360 5783982.85   37  369          - 5440543.53      -  56.9  649s
+  1821  1525 5783982.85   41  362          - 5440543.53      -  57.2  689s
+  1925  1525 5597282.41   21  436          - 5440543.53      -  58.5  690s
+  2008  1683 5783982.85   44  412          - 5440543.53      -  57.4  707s
+  2188  1847 5783982.85   45  412          - 5440543.53      -  58.7  718s
+  2362  2039 5783982.85   47  412          - 5440543.53      -  59.8  729s
+  2556  2262 5783982.85   48  412          - 5440543.53      -  59.6  741s
+  2791  2488 5783982.85   51  403          - 5440543.53      -  57.8  765s
+  3028  2489 5597282.41   32    0          - 5440543.53      -  56.1  771s
+  NLP heuristic elapsed time = 5.18s
+  NLP heuristic elapsed time = 10.31s
+  NLP heuristic elapsed time = 15.17s
+  NLP heuristic elapsed time = 20.51s
+  NLP heuristic elapsed time = 25.41s
+  NLP heuristic elapsed time = 30.40s
+  NLP heuristic elapsed time = 35.49s
+  NLP heuristic elapsed time = 40.20s
+  NLP heuristic elapsed time = 45.14s
+  NLP heuristic elapsed time = 50.75s
+  NLP heuristic elapsed time = 55.24s
+  NLP heuristic elapsed time = 60.41s
+  NLP heuristic elapsed time = 65.21s
+  NLP heuristic elapsed time = 70.31s
+  NLP heuristic elapsed time = 75.13s
+  NLP heuristic elapsed time = 80.13s
+  NLP heuristic elapsed time = 85.08s
+  NLP heuristic elapsed time = 90.53s
+  NLP heuristic elapsed time = 95.25s
+  NLP heuristic elapsed time = 100.03s
+  NLP heuristic elapsed time = 105.10s
+  NLP heuristic elapsed time = 110.09s
+  NLP heuristic elapsed time = 115.14s
+  NLP heuristic elapsed time = 120.57s
+  NLP heuristic elapsed time = 125.54s
+  NLP heuristic elapsed time = 130.31s
+  NLP heuristic elapsed time = 135.60s
+  NLP heuristic elapsed time = 140.79s
+  NLP heuristic elapsed time = 145.31s
+  NLP heuristic elapsed time = 150.05s
+  NLP heuristic elapsed time = 155.11s
+  NLP heuristic elapsed time = 160.15s
+  NLP heuristic elapsed time = 165.14s
+  NLP heuristic elapsed time = 170.49s
+  NLP heuristic elapsed time = 175.44s
+  NLP heuristic elapsed time = 180.32s
+  NLP heuristic elapsed time = 185.95s
+  NLP heuristic elapsed time = 190.58s
+  NLP heuristic elapsed time = 195.56s
+  NLP heuristic elapsed time = 200.47s
+  NLP heuristic elapsed time = 205.60s
+  NLP heuristic elapsed time = 210.07s
+  NLP heuristic elapsed time = 215.85s
+  NLP heuristic elapsed time = 220.89s
+  NLP heuristic elapsed time = 225.18s
+  NLP heuristic elapsed time = 230.20s
+  NLP heuristic elapsed time = 235.12s
+  NLP heuristic elapsed time = 240.66s
+  NLP heuristic elapsed time = 245.58s
+  NLP heuristic elapsed time = 250.54s
+  NLP heuristic elapsed time = 255.07s
+  NLP heuristic elapsed time = 260.38s
+  NLP heuristic elapsed time = 265.67s
+  NLP heuristic elapsed time = 270.57s
+  NLP heuristic elapsed time = 275.46s
+  NLP heuristic elapsed time = 280.15s
+  NLP heuristic elapsed time = 285.53s
+  NLP heuristic elapsed time = 290.85s
+  3029  2490 6456353.18   29    0          - 5440543.53      -  56.1 1065s
+  3030  2490 5793217.03   12    0          - 5793217.03      -  56.1 1407s
+  3032  2492 5793244.00   30    0          - 5793244.00      -  56.0 1413s
+  3035  2494 5794622.24   29    0          - 5794622.24      -  56.0 1420s
+  3038  2496 6456353.18   37    0          - 5794779.08      -  55.9 1425s
+  3046  2501 5794779.08   27    0          - 5794779.08      -  55.8 1433s
+  NLP heuristic elapsed time = 5.08s
+  NLP heuristic elapsed time = 10.49s
+  NLP heuristic elapsed time = 15.81s
+  NLP heuristic elapsed time = 20.06s
+  NLP heuristic elapsed time = 25.15s
+  NLP heuristic elapsed time = 30.33s
+  NLP heuristic elapsed time = 35.06s
+  NLP heuristic elapsed time = 40.43s
+  NLP heuristic elapsed time = 45.39s
+  NLP heuristic elapsed time = 50.29s
+  NLP heuristic elapsed time = 55.32s
+  NLP heuristic elapsed time = 60.21s
+  NLP heuristic elapsed time = 65.47s
+  NLP heuristic elapsed time = 70.67s
+  NLP heuristic elapsed time = 75.17s
+  NLP heuristic elapsed time = 80.09s
+  NLP heuristic elapsed time = 85.51s
+  NLP heuristic elapsed time = 90.41s
+  NLP heuristic elapsed time = 95.21s
+  NLP heuristic elapsed time = 100.41s
+  NLP heuristic elapsed time = 105.04s
+  NLP heuristic elapsed time = 110.10s
+  NLP heuristic elapsed time = 115.16s
+  NLP heuristic elapsed time = 120.33s
+  NLP heuristic elapsed time = 125.23s
+  NLP heuristic elapsed time = 130.57s
+  NLP heuristic elapsed time = 135.38s
+  NLP heuristic elapsed time = 140.96s
+  NLP heuristic elapsed time = 146.00s
+  NLP heuristic elapsed time = 151.60s
+  NLP heuristic elapsed time = 155.66s
+  NLP heuristic elapsed time = 160.19s
+  NLP heuristic elapsed time = 166.81s
+  NLP heuristic elapsed time = 171.28s
+  NLP heuristic elapsed time = 175.23s
+  NLP heuristic elapsed time = 180.99s
+  NLP heuristic elapsed time = 185.93s
+  NLP heuristic elapsed time = 190.86s
+  NLP heuristic elapsed time = 195.08s
+  NLP heuristic elapsed time = 200.34s
+  NLP heuristic elapsed time = 205.02s
+  NLP heuristic elapsed time = 210.57s
+  NLP heuristic elapsed time = 215.22s
+  NLP heuristic elapsed time = 220.85s
+  NLP heuristic elapsed time = 226.07s
+  NLP heuristic elapsed time = 230.08s
+  NLP heuristic elapsed time = 235.84s
+  NLP heuristic elapsed time = 241.13s
+  NLP heuristic elapsed time = 246.09s
+  NLP heuristic elapsed time = 250.40s
+  NLP heuristic elapsed time = 255.17s
+  NLP heuristic elapsed time = 260.09s
+  NLP heuristic elapsed time = 266.21s
+  NLP heuristic elapsed time = 270.35s
+  NLP heuristic elapsed time = 275.64s
+  NLP heuristic elapsed time = 280.80s
+  NLP heuristic elapsed time = 285.51s
+  NLP heuristic elapsed time = 290.49s
+  NLP heuristic elapsed time = 295.72s
+  NLP heuristic elapsed time = 300.61s
+  NLP heuristic elapsed time = 305.23s
+  NLP heuristic elapsed time = 310.29s
+  NLP heuristic elapsed time = 315.55s
+  NLP heuristic elapsed time = 320.71s
+  NLP heuristic elapsed time = 325.18s
+  NLP heuristic elapsed time = 330.21s
+  NLP heuristic elapsed time = 335.65s
+  NLP heuristic elapsed time = 340.32s
+  NLP heuristic elapsed time = 345.95s
+  NLP heuristic elapsed time = 350.57s
+  NLP heuristic elapsed time = 355.08s
+  NLP heuristic elapsed time = 360.19s
+  NLP heuristic elapsed time = 365.99s
+  NLP heuristic elapsed time = 370.27s
+  NLP heuristic elapsed time = 375.06s
+  NLP heuristic elapsed time = 380.64s
+  NLP heuristic elapsed time = 385.95s
+  NLP heuristic elapsed time = 390.42s
+  NLP heuristic elapsed time = 395.58s
+  3050  2505 5794779.08   65    0          - 5794779.08      -  57.1 1836s
+  3051  2505 6456353.18   26    0          - 5818498.27      -  57.1 2179s
+  3052  2506 5818498.27   12    0          - 5818498.27      -  57.1 2190s
+  3053  2507 5818498.27   25    0          - 5818498.27      -  57.1 2200s
+  3056  2509 5818498.27   12    0          - 5818498.27      -  57.0 2208s
+  3059  2511 5818498.27   22    0          - 5818498.27      -  57.0 2218s
+  3062  2513 5818498.27   43    0          - 5818498.27      -  56.9 2225s
+  3066  2515 5818498.27   58    0          - 5818498.27      -  56.8 2239s
+  3067  2516 5818498.27   27    0          - 5818498.27      -  56.8 2435s
+  NLP heuristic elapsed time = 5.22s
+  NLP heuristic elapsed time = 10.10s
+  NLP heuristic elapsed time = 15.18s
+  NLP heuristic elapsed time = 20.18s
+  NLP heuristic elapsed time = 25.81s
+  NLP heuristic elapsed time = 30.24s
+  NLP heuristic elapsed time = 35.13s
+  NLP heuristic elapsed time = 40.20s
+  NLP heuristic elapsed time = 45.66s
+  NLP heuristic elapsed time = 50.23s
+  NLP heuristic elapsed time = 55.35s
+  NLP heuristic elapsed time = 60.03s
+  NLP heuristic elapsed time = 65.31s
+  NLP heuristic elapsed time = 70.19s
+  NLP heuristic elapsed time = 75.19s
+  NLP heuristic elapsed time = 80.49s
+  NLP heuristic elapsed time = 85.36s
+  NLP heuristic elapsed time = 90.46s
+  NLP heuristic elapsed time = 95.26s
+  NLP heuristic elapsed time = 100.22s
+  NLP heuristic elapsed time = 105.10s
+  NLP heuristic elapsed time = 110.94s
+  NLP heuristic elapsed time = 115.29s
+  NLP heuristic elapsed time = 120.05s
+  NLP heuristic elapsed time = 125.22s
+  NLP heuristic elapsed time = 130.25s
+  NLP heuristic elapsed time = 135.04s
+  NLP heuristic elapsed time = 140.42s
+  NLP heuristic elapsed time = 145.61s
+  NLP heuristic elapsed time = 151.46s
+  NLP heuristic elapsed time = 155.63s
+  NLP heuristic elapsed time = 160.89s
+  NLP heuristic elapsed time = 166.24s
+  NLP heuristic elapsed time = 170.26s
+  NLP heuristic elapsed time = 175.46s
+  NLP heuristic elapsed time = 180.34s
+  NLP heuristic elapsed time = 187.02s
+  NLP heuristic elapsed time = 191.05s
+  NLP heuristic elapsed time = 196.58s
+  NLP heuristic elapsed time = 200.09s
+  NLP heuristic elapsed time = 205.06s
+  NLP heuristic elapsed time = 210.13s
+  NLP heuristic elapsed time = 216.17s
+  NLP heuristic elapsed time = 220.57s
+  NLP heuristic elapsed time = 225.38s
+  NLP heuristic elapsed time = 230.08s
+  NLP heuristic elapsed time = 235.13s
+  NLP heuristic elapsed time = 240.01s
+  NLP heuristic elapsed time = 245.20s
+  NLP heuristic elapsed time = 250.92s
+  NLP heuristic elapsed time = 255.10s
+  NLP heuristic elapsed time = 261.43s
+  NLP heuristic elapsed time = 265.16s
+  NLP heuristic elapsed time = 270.05s
+  NLP heuristic elapsed time = 275.35s
+  NLP heuristic elapsed time = 280.81s
+  NLP heuristic elapsed time = 285.31s
+  NLP heuristic elapsed time = 290.83s
+  NLP heuristic elapsed time = 295.77s
+  NLP heuristic elapsed time = 301.19s
+  NLP heuristic elapsed time = 306.28s
+  NLP heuristic elapsed time = 310.46s
+  NLP heuristic elapsed time = 316.00s
+  NLP heuristic elapsed time = 320.92s
+  NLP heuristic elapsed time = 325.02s
+  NLP heuristic elapsed time = 330.23s
+  NLP heuristic elapsed time = 335.65s
+  NLP heuristic elapsed time = 341.62s
+  NLP heuristic elapsed time = 345.64s
+  3070  2520 5818498.27   50    0          - 5818498.27      -  58.1 2795s
+  3071  2520 6499863.84   22    0          - 6499863.84      -  58.0 3347s
+  3074  2522 6499863.84   11    0          - 6499863.84      -  58.0 3356s
+  3077  2524 6499863.84   27    0          - 6499863.84      -  57.9 3361s
+  3081  2527 6499863.84   19    0          - 6499863.84      -  57.9 3366s
+
+Explored 3084 nodes (181380 simplex iterations) in 3613.88 seconds (12.23 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 6.499863842612e+06, gap -
+Gurobi 12.0.1: time limit, without a feasible solution
+181380 simplex iterations
+140 barrier iterations
+3084 branching nodes
+eps [*,*] (tr)
+:         1             2             3             4             5         :=
+2    1.37643e-05    .             .             .             .
+3     .            1.37643e-05    .             .             .
+4     .             .            1.37643e-05    .             .
+5     .             .             .            1.37643e-05    .
+6     .             .             .             .            1.37643e-05
+19    .             .            1.37643e-05    .             .
+20    .             .            1.37643e-05    .             .
+33    .            1.37643e-05    .             .             .
+63    .            1.37643e-05    .             .             .
+
+:         6             7             8             9            10         :=
+7    1.37643e-05    .             .             .             .
+8     .            1.37643e-05    .             .             .
+9     .             .            1.37643e-05    .             .
+10    .             .             .            1.37643e-05    .
+11    .             .             .             .            1.37643e-05
+14    .             .             .             .            1.37643e-05
+
+:        11            12            14            15            16         :=
+12   1.37643e-05    .             .             .             .
+13    .            1.37643e-05    .             .             .
+15    .             .            1.37643e-05    .             .
+16    .             .             .            1.37643e-05    .
+27    .             .             .             .            1.37643e-05
+
+:        17            18            19            20            21         :=
+16   1.37643e-05    .             .             .             .
+17    .            1.37643e-05    .             .             .
+18    .             .            1.37643e-05    .             .
+21    .             .             .            1.37643e-05    .
+22    .             .             .             .            1.37643e-05
+23    .             .             .            1.37643e-05    .
+
+:        23            24            25            26            27         :=
+24   1.37643e-05    .             .             .             .
+25    .            1.37643e-05    .            1.37643e-05    .
+26    .             .             .             .            1.37643e-05
+28   1.37643e-05    .             .             .             .
+32    .             .            1.37643e-05    .             .
+
+:        28            29            30            32            33         :=
+29   1.37643e-05    .             .             .             .
+30    .            1.37643e-05    .             .             .
+31    .             .            1.37643e-05   1.37643e-05    .
+34    .             .             .             .            1.37643e-05
+49    .             .             .             .            1.37643e-05
+50    .             .             .             .            1.37643e-05
+
+:        34            35            36            37            38         :=
+35   1.37643e-05    .             .             .             .
+36    .            1.37643e-05    .             .             .
+37    .             .            1.37643e-05    .             .
+38    .             .             .            1.37643e-05    .
+39    .             .             .             .            1.37643e-05
+
+:        39            40            41            42            44         :=
+40   1.37643e-05    .             .             .             .
+41    .            1.37643e-05    .             .             .
+42    .             .            1.37643e-05    .             .
+43    .             .             .            1.37643e-05    .
+44    .            1.37643e-05    .             .             .
+45    .             .             .             .            1.37643e-05
+
+:        45            46            47            48            49         :=
+46   1.37643e-05    .            1.37643e-05    .             .
+47    .             .             .            1.37643e-05    .
+48    .             .             .             .            1.37643e-05
+57    .            1.37643e-05    .             .             .
+
+:        50            51            53            54            55         :=
+51   1.37643e-05    .             .             .             .
+52    .            1.37643e-05    .             .             .
+53   1.37643e-05    .             .             .             .
+54    .             .            1.37643e-05    .             .
+55    .             .             .            1.37643e-05    .
+58    .             .            1.37643e-05    .             .
+62    .             .             .             .            1.37643e-05
+
+:        56            57            58            59            60         :=
+55   1.37643e-05    .             .             .             .
+56    .            1.37643e-05    .             .             .
+59    .             .            1.37643e-05    .             .
+60    .             .             .            1.37643e-05    .
+61    .             .             .             .            1.37643e-05
+
+:        62            63            64            65            66         :=
+61   1.37643e-05    .             .             .             .
+64    .            1.37643e-05    .             .             .
+65    .             .            1.37643e-05    .             .
+66    .             .             .            1.37643e-05    .
+67    .             .             .             .            1.37643e-05
+79    .            1.37643e-05    .             .             .
+80    .            1.37643e-05    .             .             .
+
+:        67            68            69            70            71         :=
+68   1.37643e-05    .             .             .             .
+69    .            1.37643e-05    .             .             .
+70    .             .            1.37643e-05    .             .
+71    .             .             .            1.37643e-05    .
+72    .             .             .             .            1.37643e-05
+74    .             .             .            1.37643e-05    .
+
+:        72            74            75            76            77         :=
+73   1.37643e-05    .             .             .             .
+75    .            1.37643e-05    .             .             .
+76    .             .            1.37643e-05    .            1.37643e-05
+87    .             .             .            1.37643e-05    .
+
+:        78            79            80            81            83         :=
+77   1.37643e-05    .             .             .             .
+78    .            1.37643e-05    .             .             .
+81    .             .            1.37643e-05    .             .
+82    .             .             .            1.37643e-05    .
+83    .             .            1.37643e-05    .             .
+84    .             .             .             .            1.37643e-05
+88    .             .             .             .            1.37643e-05
+
+:        84            85            86            87            88         :=
+85   1.37643e-05    .            1.37643e-05    .             .
+86    .             .             .            1.37643e-05    .
+89    .             .             .             .            1.37643e-05
+92    .            1.37643e-05    .             .             .
+
+:        89            90            92         :=
+90   1.37643e-05    .             .
+91    .            1.37643e-05   1.37643e-05
+;
+
+q [*,*] (tr)
+:    1   2   3   4   5   6   7   8   9     10       11       12    14  15  16 :=
+2    0   .   .   .   .   .   .   .   .      .        .        .     .   .   .
+3    .   0   .   .   .   .   .   .   .      .        .        .     .   .   .
+4    .   .   0   .   .   .   .   .   .      .        .        .     .   .   .
+5    .   .   .   0   .   .   .   .   .      .        .        .     .   .   .
+6    .   .   .   .   0   .   .   .   .      .        .        .     .   .   .
+7    .   .   .   .   .   0   .   .   .      .        .        .     .   .   .
+8    .   .   .   .   .   .   0   .   .      .        .        .     .   .   .
+9    .   .   .   .   .   .   .   0   .      .        .        .     .   .   .
+10   .   .   .   .   .   .   .   .   0      .        .        .     .   .   .
+11   .   .   .   .   .   .   .   .   .   555.54      .        .     .   .   .
+12   .   .   .   .   .   .   .   .   .      .     416.66      .     .   .   .
+13   .   .   .   .   .   .   .   .   .      .        .     261.11   .   .   .
+14   .   .   .   .   .   .   .   .   .     0         .        .     .   .   .
+15   .   .   .   .   .   .   .   .   .      .        .        .     0   .   .
+16   .   .   .   .   .   .   .   .   .      .        .        .     .   0   .
+19   .   .   0   .   .   .   .   .   .      .        .        .     .   .   .
+20   .   .   0   .   .   .   .   .   .      .        .        .     .   .   .
+27   .   .   .   .   .   .   .   .   .      .        .        .     .   .   0
+33   .   0   .   .   .   .   .   .   .      .        .        .     .   .   .
+63   .   0   .   .   .   .   .   .   .      .        .        .     .   .   .
+
+:   17  18  19     20        21     23  24  25  26  27  28  29  30  32  33  34 :=
+16   0   .   .      .         .      .   .   .   .   .   .   .   .   .   .   .
+17   .   0   .      .         .      .   .   .   .   .   .   .   .   .   .   .
+18   .   .   0      .         .      .   .   .   .   .   .   .   .   .   .   .
+21   .   .   .   393.055      .      .   .   .   .   .   .   .   .   .   .   .
+22   .   .   .      .      134.722   .   .   .   .   .   .   .   .   .   .   .
+23   .   .   .     0          .      .   .   .   .   .   .   .   .   .   .   .
+24   .   .   .      .         .      0   .   .   .   .   .   .   .   .   .   .
+25   .   .   .      .         .      .   0   .   0   .   .   .   .   .   .   .
+26   .   .   .      .         .      .   .   .   .   0   .   .   .   .   .   .
+28   .   .   .      .         .      0   .   .   .   .   .   .   .   .   .   .
+29   .   .   .      .         .      .   .   .   .   .   0   .   .   .   .   .
+30   .   .   .      .         .      .   .   .   .   .   .   0   .   .   .   .
+31   .   .   .      .         .      .   .   .   .   .   .   .   0   0   .   .
+32   .   .   .      .         .      .   .   0   .   .   .   .   .   .   .   .
+34   .   .   .      .         .      .   .   .   .   .   .   .   .   .   0   .
+35   .   .   .      .         .      .   .   .   .   .   .   .   .   .   .   0
+49   .   .   .      .         .      .   .   .   .   .   .   .   .   .   0   .
+50   .   .   .      .         .      .   .   .   .   .   .   .   .   .   0   .
+
+:   35  36  37  38  39     40       41       42    44  45  46  47  48  49    :=
+36   0   .   .   .   .      .        .        .     .   .   .   .   .   .
+37   .   0   .   .   .      .        .        .     .   .   .   .   .   .
+38   .   .   0   .   .      .        .        .     .   .   .   .   .   .
+39   .   .   .   0   .      .        .        .     .   .   .   .   .   .
+40   .   .   .   .   0      .        .        .     .   .   .   .   .   .
+41   .   .   .   .   .   555.54      .        .     .   .   .   .   .   .
+42   .   .   .   .   .      .     416.66      .     .   .   .   .   .   .
+43   .   .   .   .   .      .        .     261.11   .   .   .   .   .   .
+44   .   .   .   .   .     0         .        .     .   .   .   .   .   .
+45   .   .   .   .   .      .        .        .     0   .   .   .   .   .
+46   .   .   .   .   .      .        .        .     .   0   .   0   .   .
+47   .   .   .   .   .      .        .        .     .   .   .   .   0   .
+48   .   .   .   .   .      .        .        .     .   .   .   .   .   0
+57   .   .   .   .   .      .        .        .     .   .   0   .   .   .
+
+:      50        51     53  54  55  56  57  58  59  60  62  63  64  65  66  67 :=
+51   393.055      .      .   .   .   .   .   .   .   .   .   .   .   .   .   .
+52      .      134.722   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+53     0          .      .   .   .   .   .   .   .   .   .   .   .   .   .   .
+54      .         .      0   .   .   .   .   .   .   .   .   .   .   .   .   .
+55      .         .      .   0   .   0   .   .   .   .   .   .   .   .   .   .
+56      .         .      .   .   .   .   0   .   .   .   .   .   .   .   .   .
+58      .         .      0   .   .   .   .   .   .   .   .   .   .   .   .   .
+59      .         .      .   .   .   .   .   0   .   .   .   .   .   .   .   .
+60      .         .      .   .   .   .   .   .   0   .   .   .   .   .   .   .
+61      .         .      .   .   .   .   .   .   .   0   0   .   .   .   .   .
+62      .         .      .   .   0   .   .   .   .   .   .   .   .   .   .   .
+64      .         .      .   .   .   .   .   .   .   .   .   0   .   .   .   .
+65      .         .      .   .   .   .   .   .   .   .   .   .   0   .   .   .
+66      .         .      .   .   .   .   .   .   .   .   .   .   .   0   .   .
+67      .         .      .   .   .   .   .   .   .   .   .   .   .   .   0   .
+68      .         .      .   .   .   .   .   .   .   .   .   .   .   .   .   0
+79      .         .      .   .   .   .   .   .   .   .   .   0   .   .   .   .
+80      .         .      .   .   .   .   .   .   .   .   .   0   .   .   .   .
+
+:   68  69     70       71       72    74  75  76  77  78  79     80       :=
+69   0   .      .        .        .     .   .   .   .   .   .      .
+70   .   0      .        .        .     .   .   .   .   .   .      .
+71   .   .   555.54      .        .     .   .   .   .   .   .      .
+72   .   .      .     416.66      .     .   .   .   .   .   .      .
+73   .   .      .        .     261.11   .   .   .   .   .   .      .
+74   .   .     0         .        .     .   .   .   .   .   .      .
+75   .   .      .        .        .     0   .   .   .   .   .      .
+76   .   .      .        .        .     .   0   .   0   .   .      .
+77   .   .      .        .        .     .   .   .   .   0   .      .
+78   .   .      .        .        .     .   .   .   .   .   0      .
+81   .   .      .        .        .     .   .   .   .   .   .   393.055
+83   .   .      .        .        .     .   .   .   .   .   .     0
+87   .   .      .        .        .     .   .   0   .   .   .      .
+
+:      81     83  84  85  86  87  88  89  90  92    :=
+82   134.722   .   .   .   .   .   .   .   .   .
+84      .      0   .   .   .   .   .   .   .   .
+85      .      .   0   .   0   .   .   .   .   .
+86      .      .   .   .   .   0   .   .   .   .
+88      .      0   .   .   .   .   .   .   .   .
+89      .      .   .   .   .   .   0   .   .   .
+90      .      .   .   .   .   .   .   0   .   .
+91      .      .   .   .   .   .   .   .   0   0
+92      .      .   .   0   .   .   .   .   .   .
+;
+

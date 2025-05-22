@@ -1,0 +1,341 @@
+Water Network: ../data/d5_fossolo_poly_1.dat
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+min_demand: 0.00026
+max_demand: 0.00202
+max_flow: 0.033909999999999996
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+Set parameter Method to value 2
+  alg:method = 2
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 326 rows, 1718 columns and 1970 nonzeros
+Model fingerprint: 0x29efc55a
+Model has 58 general nonlinear constraints (5104 nonlinear terms)
+Variable types: 1660 continuous, 58 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [4e-01, 2e+02]
+  Bounds range     [3e-02, 4e+02]
+  RHS range        [3e-04, 4e+02]
+Presolve model has 58 nlconstr
+Added 5220 variables to disaggregate expressions.
+Presolve removed 39 rows and 155 columns
+Presolve time: 0.05s
+Presolved: 13685 rows, 6784 columns, 31232 nonzeros
+Presolved model has 2552 bilinear constraint(s)
+Presolved model has 116 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 6726 continuous, 58 integer (58 binary)
+  NLP heuristic elapsed time = 5.49s
+  NLP heuristic elapsed time = 10.17s
+  NLP heuristic elapsed time = 16.02s
+  NLP heuristic elapsed time = 20.70s
+  NLP heuristic elapsed time = 25.33s
+  NLP heuristic elapsed time = 30.68s
+  NLP heuristic elapsed time = 35.34s
+  NLP heuristic elapsed time = 40.91s
+  NLP heuristic elapsed time = 45.53s
+  NLP heuristic elapsed time = 50.59s
+  NLP heuristic elapsed time = 55.70s
+  NLP heuristic elapsed time = 61.08s
+  NLP heuristic elapsed time = 65.55s
+  NLP heuristic elapsed time = 70.06s
+  NLP heuristic elapsed time = 76.04s
+  NLP heuristic elapsed time = 80.32s
+  NLP heuristic elapsed time = 86.10s
+  NLP heuristic elapsed time = 90.92s
+Root barrier log...
+
+Ordering time: 0.87s
+
+Barrier statistics:
+ AA' NZ     : 1.612e+05
+ Factor NZ  : 2.895e+05 (roughly 7 MB of memory)
+ Factor Ops : 1.483e+07 (less than 1 second per iteration)
+ Threads    : 32
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.64281625e+09 -9.25201254e+08  8.45e+04 0.00e+00  6.18e+05    96s
+   1   2.74317768e+08 -1.91650624e+08  2.21e+04 4.55e-13  1.48e+05    96s
+   2   8.69002776e+06 -3.16760509e+07  6.84e+02 4.55e-13  6.08e+03    97s
+   3   2.05338060e+06 -6.13240210e+06  1.67e+02 6.82e-13  1.37e+03    97s
+   4   6.26472899e+05 -1.60916756e+06  5.21e+01 4.55e-13  4.19e+02    97s
+   5   2.13935603e+05 -7.19254349e+05  1.60e+01 4.55e-13  1.40e+02    98s
+   6   8.79591035e+04 -2.68579729e+05  4.87e+00 4.55e-13  4.43e+01    98s
+   7   2.47469605e+04 -9.89486288e+04  4.78e-01 3.41e-13  9.45e+00    98s
+   8   1.28050677e+04 -1.34313466e+04  1.16e-01 4.55e-13  1.92e+00    99s
+   9   9.37228257e+03 -5.48297209e+03  7.01e-02 3.66e-13  1.08e+00    99s
+  10   7.41954345e+03 -1.93081088e+03  4.48e-02 7.28e-13  6.70e-01    99s
+  11   6.07597859e+03 -2.41127617e+02  2.91e-02 8.28e-13  4.46e-01    99s
+  12   4.95909159e+03  8.12282967e+02  1.71e-02 3.27e-13  2.87e-01   100s
+  13   4.44039511e+03  1.38817241e+03  1.18e-02 2.33e-13  2.09e-01   100s
+  14   3.98547993e+03  2.50450697e+03  7.28e-03 4.55e-13  1.04e-01   100s
+  15   3.68119076e+03  2.83813101e+03  4.44e-03 7.32e-13  5.97e-02   100s
+  16   3.41318600e+03  3.05995194e+03  1.95e-03 1.92e-12  2.53e-02   100s
+  17   3.29584802e+03  3.14313200e+03  8.83e-04 2.27e-13  1.10e-02   101s
+  18   3.22723405e+03  3.18320292e+03  2.53e-04 4.55e-13  3.20e-03   101s
+  19   3.22230812e+03  3.18654800e+03  2.09e-04 2.09e-12  2.62e-03   101s
+  20   3.21157152e+03  3.18791877e+03  1.10e-04 1.23e-12  1.67e-03   102s
+  21   3.20344180e+03  3.19793106e+03  3.94e-05 4.55e-13  4.22e-04   102s
+  22   3.19903150e+03  3.19888792e+03  1.07e-06 4.55e-13  1.11e-05   102s
+  23   3.19890238e+03  3.19890194e+03  3.51e-09 1.61e-12  3.42e-08   102s
+  24   3.19890195e+03  3.19890195e+03  5.10e-12 2.74e-12  8.57e-13   103s
+
+Barrier solved model in 24 iterations and 102.63 seconds (0.58 work units)
+Optimal objective 3.19890195e+03
+
+
+Root crossover log...
+
+    2654 DPushes remaining with DInf 0.0000000e+00               103s
+       0 DPushes remaining with DInf 0.0000000e+00               103s
+
+     164 PPushes remaining with PInf 0.0000000e+00               103s
+       8 PPushes remaining with PInf 0.0000000e+00               104s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 1.3156881e+03    104s
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+     337    3.1976881e+03   2.432271e+03   0.000000e+00    104s
+     419    3.1989020e+03   0.000000e+00   0.000000e+00    104s
+     419    3.1989020e+03   0.000000e+00   0.000000e+00    105s
+
+Root relaxation: objective 3.198902e+03, 419 iterations, 11.33 seconds (0.12 work units)
+Total elapsed time = 104.75s (DegenMoves)
+Total elapsed time = 109.14s (DegenMoves)
+Total elapsed time = 110.83s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3198.90195    0   67          - 3198.90195      -     -  111s
+     0     0 3202.37729    0   73          - 3202.37729      -     -  113s
+     0     0 3206.38256    0   73          - 3206.38256      -     -  124s
+     0     0 3206.70392    0   83          - 3206.70392      -     -  129s
+     0     0 3206.85485    0   84          - 3206.85485      -     -  130s
+     0     0 3207.47154    0   84          - 3207.47154      -     -  135s
+     0     0 3207.47154    0   82          - 3207.47154      -     -  137s
+     0     0 3207.47154    0   81          - 3207.47154      -     -  140s
+     0     0 3207.47154    0   74          - 3207.47154      -     -  141s
+     0     0 3207.47154    0   78          - 3207.47154      -     -  149s
+     0     0 3207.47154    0   82          - 3207.47154      -     -  156s
+     0     0 3207.47154    0   82          - 3207.47154      -     -  157s
+     0     0 3207.47154    0   83          - 3207.47154      -     -  165s
+     0     0 3207.47154    0   83          - 3207.47154      -     -  174s
+     0     2 3207.47154    0   92          - 3207.47154      -     -  251s
+     1     5 3215.82865    1   92          - 3207.58491      -  3137  270s
+     3     8 3223.54286    2   83          - 3207.68794      -  4021  284s
+     7    16 3226.24030    3  122          - 3207.68794      -  2841  290s
+    15    28 3226.24030    4   87          - 3210.77789      -  1959  308s
+    31    54 4326.76167    5  124          - 3212.41172      -  2109  329s
+    59    82 5484.77451    6  116          - 3212.57664      -  1813  355s
+    91   162 5485.28766    7  121          - 3212.58634      -  1806  380s
+   175   236 6463.35283    9  132          - 3214.22236      -  1525  400s
+   255   310 infeasible   10               - 3214.22236      -  1444  439s
+   331   378 6633.40304   10  105          - 3214.22236      -  1299  453s
+   403   443 6633.40304   12  144          - 3214.22236      -  1219  486s
+   476   474 6635.64391   14  151          - 3214.22236      -  1182  513s
+   509   556 6657.34826   15  146          - 3214.22236      -  1170  525s
+   597   628 infeasible   18               - 3214.22238      -  1139  545s
+   681   683 infeasible   18               - 3214.22238      -  1118  577s
+   760   754 infeasible   18               - 3214.22238      -  1123  603s
+   853   811 infeasible   18               - 3214.22238      -  1105  643s
+   940   895 infeasible   17               - 3214.22238      -  1103  670s
+  1042   991 3254.41816   25   83          - 3214.22238      -  1070  693s
+  1148  1116 3254.45055   27  103          - 3214.22238      -  1048  720s
+  1285  1245 3254.45055   28   95          - 3214.22238      -  1011  742s
+  1430  1346 3257.93998   29   89          - 3214.22238      -   975  767s
+  1555  1503 3257.95504   29   84          - 3214.22238      -   966  783s
+  1728  1656 3258.14391   32   76          - 3214.22238      -   920  800s
+  1919  1806 3259.01006   34   71          - 3214.22238      -   874  817s
+  2105  1984 3260.59628   38   84          - 3214.23985      -   842  912s
+  2333  2090 3260.85248   42   79          - 3214.23985      -   802  935s
+  2517  2188 3261.11302   49   79          - 3214.23985      -   783  956s
+  2733  2297 4581.81066   54   74          - 3214.23985      -   757  981s
+  2974  2397 5334.58876   58   81          - 3214.84976      -   733 1013s
+  3172  2523 6574.77628   60   85          - 3214.84976      -   722 1049s
+  3376  2687 7686.33625   61   87          - 3214.84976      -   713 1081s
+  3654  2849 9544.26052   62   87          - 3214.84976      -   687 1110s
+  3920  3024 9964.26372   62   87          - 3214.84976      -   669 1144s
+  4097  3024 3223.35338   36   86          - 3214.84976      -   661 1145s
+  NLP heuristic elapsed time = 5.10s
+  NLP heuristic elapsed time = 10.15s
+  NLP heuristic elapsed time = 15.68s
+  NLP heuristic elapsed time = 20.38s
+  NLP heuristic elapsed time = 25.54s
+  NLP heuristic elapsed time = 30.02s
+  NLP heuristic elapsed time = 35.47s
+  NLP heuristic elapsed time = 40.37s
+  NLP heuristic elapsed time = 45.27s
+  NLP heuristic elapsed time = 50.18s
+  NLP heuristic elapsed time = 55.31s
+  NLP heuristic elapsed time = 60.32s
+  NLP heuristic elapsed time = 65.48s
+  NLP heuristic elapsed time = 70.40s
+  NLP heuristic elapsed time = 75.09s
+  NLP heuristic elapsed time = 80.01s
+  NLP heuristic elapsed time = 85.26s
+  NLP heuristic elapsed time = 90.00s
+  NLP heuristic elapsed time = 95.10s
+  NLP heuristic elapsed time = 100.19s
+  NLP heuristic elapsed time = 105.36s
+  NLP heuristic elapsed time = 110.24s
+  NLP heuristic elapsed time = 115.29s
+  NLP heuristic elapsed time = 120.56s
+  NLP heuristic elapsed time = 125.05s
+  NLP heuristic elapsed time = 130.22s
+  NLP heuristic elapsed time = 135.15s
+  NLP heuristic elapsed time = 140.10s
+  NLP heuristic elapsed time = 145.19s
+  NLP heuristic elapsed time = 150.10s
+  NLP heuristic elapsed time = 155.37s
+  NLP heuristic elapsed time = 160.10s
+  NLP heuristic elapsed time = 165.25s
+  NLP heuristic elapsed time = 170.09s
+  NLP heuristic elapsed time = 175.15s
+  NLP heuristic elapsed time = 180.17s
+  4185  3026 3439.65851   42   29          - 3214.84976      -   656 1329s
+  4186  3026 3440.35802   44   26          - 3214.84976      -   656 1349s
+  4187  3027 3229.01263   39   28          - 3214.84976      -   655 1359s
+  4188  3028 3225.55213   11   25          - 3214.84976      -   655 1363s
+  4189  3028 3234.52921   20   28          - 3214.84976      -   655 1367s
+  4190  3029 4273.66374   28   30          - 3214.84976      -   655 1374s
+  4191  3030 6754.00956   29   33          - 3214.84976      -   655 1380s
+  4192  3030 3984.76236   56   29          - 3214.84976      -   655 1385s
+  4193  3031 3245.55180   25   33          - 3214.84976      -   654 1390s
+  4194  3032 3216.35523   11   23          - 3214.84976      -   654 1395s
+  4195  3032 5656.42645   17   30          - 3214.84976      -   654 1407s
+  4196  3033 3316.57014   11   30          - 3214.84976      -   654 1411s
+  4197  3034 3244.11464   29   27          - 3214.84976      -   654 1421s
+  4198  3034 6869.70138   34   23          - 3214.84976      -   654 1427s
+  4199  3035 3923.48594   37   27          - 3214.84976      -   654 1434s
+  4200  3036 12202.0686   73   23          - 3214.84976      -   653 1440s
+  4202  3037 3224.00529   16   29          - 3214.84976      -   653 1449s
+  4203  3038 3260.59628   39   24          - 3214.84976      -   653 1460s
+  4204  3038 3225.92368   35   25          - 3214.84976      -   653 1466s
+  4205  3039 3252.30941   47   24          - 3214.84976      -   653 1477s
+  4206  3040 3232.89204   20   23          - 3214.84976      -   652 1541s
+  NLP heuristic elapsed time = 5.07s
+  NLP heuristic elapsed time = 10.07s
+  NLP heuristic elapsed time = 15.05s
+  NLP heuristic elapsed time = 20.00s
+  NLP heuristic elapsed time = 25.05s
+  NLP heuristic elapsed time = 30.09s
+  NLP heuristic elapsed time = 35.06s
+  NLP heuristic elapsed time = 40.04s
+  4207  3040 3315.31749   49   23          - 3214.84976      -   652 1654s
+  4208  3044 3214.84976   13  131          - 3214.84976      -   657 1763s
+  4210  3047 3214.84976   14   90          - 3214.84976      -   657 1792s
+  4214  3054 3226.32402   15  103          - 3214.84976      -   658 1824s
+  4222  3067 3232.72113   16   80          - 3214.84976      -   659 1841s
+  4238  3082 3239.28183   17   84          - 3214.84976      -   660 1863s
+  4270  3103 3262.63504   18   92          - 3214.84976      -   660 1886s
+  4302  3145 3265.39882   19   91          - 3214.84976      -   664 2056s
+  4360  3174 4509.97758   20   87          - 3214.84976      -   670 2086s
+  4418  3209 infeasible   21               - 3214.84976      -   678 2120s
+  4482  3234 3371.55915   23   90          - 3214.84976      -   686 2154s
+  4550  3249 infeasible   24               - 3214.84976      -   707 2196s
+  4618  3279 infeasible   25               - 3214.84976      -   720 2224s
+  4691  3305 5139.38314   27  111          - 3229.05199      -   735 2250s
+  4759  3353 12875.2834   28  106          - 3229.05199      -   744 2325s
+  4846  3392 12098.4701   30   94          - 3229.05199      -   747 2372s
+  4924  3445 11441.4949   31  107          - 3229.05199      -   750 2397s
+  5011  3493 14631.0702   34  104          - 3229.05199      -   750 2419s
+  5094  3535 15114.5878   37  102          - 3229.05199      -   752 2433s
+  5165  3588 15109.0497   40  100          - 3229.05199      -   757 2449s
+  5252  3652 15163.5392   43   75          - 3229.05199      -   758 2463s
+  5361  3707 15163.9490   46   72          - 3229.05199      -   756 2474s
+  5470  3726 20757.7107   47   96          - 3229.05199      -   755 2488s
+  5540  3764 15174.6920   47   75          - 3229.05199      -   765 2502s
+  5621  3825 15183.5598   49  117          - 3229.05199      -   772 2511s
+  5731  3878 15183.6170   50   71          - 3229.05199      -   771 2534s
+  5861  3971 15197.9991   52   77          - 3229.05199      -   769 2547s
+  6027  4041 18231.7219   54   93          - 3229.05199      -   765 2568s
+  6172  4155 20500.7473   55   75          - 3229.05199      -   760 2589s
+  6367  4241 18612.5654   55   94          - 3229.05199      -   752 2626s
+  6538  4357 18613.7093   58   95          - 3229.05199      -   749 2649s
+  6751  4449 18778.9258   65   82          - 3229.05199      -   742 2672s
+  6956  4541 18992.5020   73   74          - 3235.82227      -   737 2714s
+  7162  4681 19428.8491   82   87          - 3235.82227      -   731 2744s
+  7407  4770 19225.8691   87   84          - 3235.82227      -   723 2781s
+  7615  4858 19301.9115   97   86          - 3235.82227      -   721 2809s
+  7811  5029 19501.8330  104   89          - 3235.82227      -   719 2838s
+  8097  5142 19664.9573  115   87          - 3235.82227      -   709 2867s
+  8371  5206 20269.7574  126   90          - 3235.82227      -   699 2897s
+  8563  5319 infeasible  127               - 3235.82227      -   704 2941s
+  8796  5407 20739.0311  141  112          - 3235.82227      -   707 2973s
+  9019  5575 21563.7360  150  148          - 3235.82227      -   708 2986s
+  9314  5716 24256.6274  153  109          - 3235.82227      -   705 2999s
+  9599  5977 24260.7628  158   96          - 3235.82227      -   704 3047s
+ 10013  6074 24465.4899  166   74          - 3235.82227      -   695 3086s
+ 10314  6342 24532.8890  175   83          - 3235.82227      -   692 3105s
+ 10794  6584 infeasible  176               - 3245.46183      -   681 3120s
+ 11276  6744 3560.25226   34   90          - 3245.46183      -   670 3137s
+ 11691  7071 4655.57105   36   97          - 3254.82972      -   662 3155s
+ 12252  7362 4891.04457   46   93          - 3254.82972      -   650 3181s
+ 12826  7461 7617.03227   23   90          - 3255.34205      -   640 3238s
+ 13217  7853 12478.9012   25  103          - 3255.34205      -   638 3288s
+ 13901  8274 10539.5331   31  112          - 3255.34205      -   626 3331s
+ 14497  8622 10542.2301   35  111          - 3255.34205      -   621 3356s
+ 14969  9136 10580.7888   40  105          - 3255.34205      -   619 3384s
+ 15623  9576 11653.5295   47   98          - 3255.71960      -   611 3409s
+ 16221 10011 14941.3882   49  102          - 3255.71960      -   609 3432s
+ 16766 10548 infeasible   63               - 3255.71960      -   605 3473s
+ 17389 11114 16338.4239   69  112          - 3255.71960      -   606 3492s
+ 18089 11670 infeasible   73               - 3255.71960      -   603 3554s
+ 18753 12368 22949.3075   76  104          - 3255.76124      -   598 3600s
+
+Cutting planes:
+  Gomory: 3
+  Implied bound: 1
+  Projected implied bound: 7
+  MIR: 9
+  Flow cover: 32
+  RLT: 8
+  Relax-and-lift: 10
+
+Explored 19589 nodes (11613085 simplex iterations) in 3600.36 seconds (135.37 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 3.255761241269e+03, gap -
+Gurobi 12.0.1: time limit, without a feasible solution
+1.16131e+07 simplex iterations
+47 barrier iterations
+19589 branching nodes

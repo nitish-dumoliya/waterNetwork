@@ -1,0 +1,108 @@
+Water Network: ../data/d13.dat
+*******************************************************************************
+
+-------------------------------- Solving with scip --------------------------
+min_demand: 0.0
+max_demand: 0.0068
+max_flow: 0.024900000000000002
+eps: 2.6752347348876494e-13 
+
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+reading user parameter file <scip.set>
+===========================
+
+[paramset.c:2526] ERROR: expected "emphasis:" at beginning of line.
+[paramset.c:2678] ERROR: input error in file <scip.set> line 7
+limits/time = 3600
+lp/initalgorithm = b
+
+read problem </tmp/at245878.nl>
+============
+
+original problem has 146 variables (0 bin, 0 int, 0 impl, 146 cont) and 26 constraints
+
+solve problem
+=============
+
+presolving:
+(round 1, fast)       5 del vars, 5 del conss, 0 add conss, 15 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2, fast)       6 del vars, 6 del conss, 0 add conss, 66 chg bounds, 0 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs
+(round 3, fast)       6 del vars, 6 del conss, 0 add conss, 72 chg bounds, 0 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) no symmetry present
+presolving (4 rounds: 4 fast, 1 medium, 1 exhaustive):
+ 6 deleted vars, 6 deleted constraints, 0 added constraints, 73 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 140 variables (0 bin, 0 int, 0 impl, 140 cont) and 20 constraints
+     17 constraints of type <linear>
+      3 constraints of type <nonlinear>
+Presolving Time: 0.02
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.0s|     1 |     0 |    94 |     - |  2637k |   0 | 203 |  20 | 126 |   0 |  0 |   0 |   0 | 1.317288e+07 |      --      |    Inf | unknown
+L 0.3s|     1 |     0 |    94 |     - |  subnlp|   0 | 203 |  20 | 126 |   0 |  0 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.3s|     1 |     0 |   123 |     - |  2664k |   0 | 203 |  20 | 145 |  19 |  1 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.3s|     1 |     0 |   123 |     - |  2664k |   0 | 203 |  20 | 145 |  19 |  1 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.3s|     1 |     0 |   134 |     - |  2664k |   0 | 203 |  20 | 150 |  24 |  2 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.3s|     1 |     0 |   169 |     - |  2664k |   0 | 203 |  20 | 153 |  27 |  3 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.3s|     1 |     0 |   185 |     - |  2664k |   0 | 203 |  20 | 162 |  36 |  4 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.3s|     1 |     0 |   189 |     - |  2664k |   0 | 203 |  20 | 164 |  38 |  5 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.4s|     1 |     0 |  2326 |     - |  2705k |   0 | 203 |  20 | 164 |  38 |  7 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.4s|     1 |     0 |  2329 |     - |  2705k |   0 | 203 |  20 | 165 |  39 |  8 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+  0.4s|     1 |     0 |  2330 |     - |  2705k |   0 | 203 |  20 | 166 |  40 |  9 |   0 |   0 | 1.317288e+07 | 1.568419e+07 |  19.06%| unknown
+L 0.5s|     1 |     0 |  2330 |     - |  subnlp|   0 | 203 |  20 | 166 |  40 | 11 |   0 |   0 | 1.317288e+07 | 1.489633e+07 |  13.08%| unknown
+  0.6s|     1 |     0 |  2330 |     - |  2705k |   0 | 203 |  20 | 166 |  40 | 11 |   0 |   0 | 1.317288e+07 | 1.489633e+07 |  13.08%| unknown
+  0.6s|     1 |     2 |  2330 |     - |  2748k |   0 | 203 |  20 | 166 |  40 | 13 |   0 |   0 | 1.317288e+07 | 1.489633e+07 |  13.08%| unknown
+L 0.6s|     3 |     2 |  2435 |1058.5 |  subnlp|   1 | 203 |  20 | 183 |  64 |  4 |   0 |   0 | 1.318609e+07 | 1.489633e+07 |  12.97%|  50.24%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  1.4s|   100 |     3 |  4771 |  45.0 |  3427k |  18 | 203 |  20 | 257 |1221 |  0 |   0 |   0 | 1.489632e+07 | 1.489633e+07 |   0.00%|  92.73%
+* 1.4s|   114 |     3 |  4780 |  39.5 |    LP  |  25 | 203 |  20 | 261 |1225 |  4 |   0 |   0 | 1.489632e+07 | 1.489633e+07 |   0.00%|  92.73%
+
+SCIP Status        : problem is solved [optimal solution found]
+Solving Time (sec) : 1.40
+Solving Nodes      : 117
+Primal Bound       : +1.48963251692172e+07 (4 solutions)
+Dual Bound         : +1.48963251692172e+07
+Gap                : 0.00 %
+optimal solution found
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 1.5288403021340713e-06
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 1.4210854715202004e-14
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 4.596323321948148e-14
+Con2 sum of relative violation: 3.383319730296726e-15
+*******************************************************************************
+
+Total cost using scip: 14896325.169217218
+scip solve time: 1.44 seconds
+*******************************************************************************
+

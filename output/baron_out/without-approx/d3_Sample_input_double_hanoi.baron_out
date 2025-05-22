@@ -1,13 +1,24 @@
-Water Network: ../data/d3_Sample_input_double_hanoi.dat 
-
-*******************************************************************************
+Water Network: ../data/d3_Sample_input_double_hanoi.dat
 *******************************************************************************
 
-baron solver outputs:
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.016666
+max_demand: 0.375
+max_flow: 10.830509600000001
+eps: 2.048650385807272e-09 
 
 BARON 24.5.8 (2024.05.08): maxtime = 3600
-outlev = 1
-lsolver = conopt
+outlev = 2
+version 
+objbound 
+wantsol = 2
+iisfind = 4
+threads = 8
+epsr = 1e-9
+Time-limited version (expiring midnight 20250531 GMT)
+License 67b523f8-1 for A7052: IE 647 Applied Integer Programming, Prof. Ashutosh Mahajan, Indian Institute of Technology Bombay
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20241227), liccheck(20211124), ASL(20241202)
+
 ===========================================================================
  BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
  Running on machine kanjur
@@ -18,141 +29,70 @@ lsolver = conopt
  If you publish work using this software, please cite publications from
  https://minlp.com/baron-publications, such as: 
 
- Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
- nonlinear programs with BARON, Comput Optim Appl (2024). 
- https://doi.org/10.1007/s10589-024-00633-0
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
- For NLP: External NLP, IPOPT, FILTERSQP
+ For NLP: IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
  Preprocessing found feasible solution with value 0.122382E+08
  Solving bounding LP
  Starting multi-start local search
+ Preprocessing found feasible solution with value 0.120798E+08
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
-          1           0.78    16MB    0.359723E+07    0.122382E+08    NA
-*         2           1.23    16MB    0.359723E+07    0.120814E+08    0.03%
-*        12           4.75    18MB    0.359723E+07    0.120813E+08    0.72%
-*        20           5.72    18MB    0.359723E+07    0.120694E+08    0.72%
-        143         497.04    18MB    0.359723E+07    0.120694E+08    1.61%
-*       201         498.72    18MB    0.359723E+07    0.120644E+08    1.81%
-        645         528.88    18MB    0.359723E+07    0.120644E+08    2.61%
-        655         753.88    18MB    0.359723E+07    0.120644E+08    2.61%
-        810         783.89    18MB    0.359723E+07    0.120644E+08    2.68%
-        819        1192.45    18MB    0.359723E+07    0.120644E+08    2.68%
-        925        1586.17    18MB    0.359723E+07    0.120644E+08    2.79%
-        959        2201.95    18MB    0.359723E+07    0.120644E+08    2.85%
-        959        3601.43    18MB    0.359723E+07    0.120644E+08    2.85%
+          1           1.57    14MB    0.359723E+07    0.120798E+08    NA
+*         2           1.78    14MB    0.359723E+07    0.120729E+08    0.00%
+*         6           4.11    14MB    0.359723E+07    0.120694E+08    0.00%
+*        31           8.13    14MB    0.359723E+07    0.120644E+08    0.26%
+        304         211.29    14MB    0.359723E+07    0.120644E+08    1.02%
+       1271        3877.26    14MB    0.359723E+07    0.120644E+08    1.61%
 
                     *** Max. allowable time exceeded ***      
 
- Wall clock time:                  3603.15
- Total CPU time used:              3601.43
+ Wall clock time:                  3877.26
+ Total CPU time used:              3876.74
 
- Total no. of BaR iterations:     959
- Best solution found at node:     201
- Max. no. of nodes in memory:     100
+ Total no. of BaR iterations:    1271
+ Best solution found at node:      31
+ Max. no. of nodes in memory:     183
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 959 iterations, CPU time limit reached.
+BARON 24.5.8 (2024.05.08): 1271 iterations, CPU time limit reached.
 Objective 12064445.12
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
 *******************************************************************************
 
-q [*,*] (tr)
-:       1         2         3         4         5         6         7       :=
-2    10830.5       .         .          .        .         .         .
-3         .    5291.64       .          .        .         .         .
-4         .        .     2213.21        .        .         .         .
-5         .        .         .      2177.1       .         .         .
-6         .        .         .          .    1975.71       .         .
-7         .        .         .          .        .     1696.55       .
-8         .        .         .          .        .         .     1321.55
-19        .        .      666.947       .        .         .         .
-20        .        .     2175.37        .        .         .         .
-33        .    5291.64       .          .        .         .         .
+Constraints violation:
 
-:      8         9        10        11       12       14        15        16 :=
-9   1168.77       .        .         .        .        .        .         .
-10
-        .     1022.93      .         .        .        .        .         .
-11
-        .         .     555.54       .        .        .        .         .
-12
-        .         .        .      416.66      .        .        .         .
-13
-        .         .        .         .     261.11      .        .         .
-14
-        .         .     321.561      .        .        .        .         .
-15
-        .         .        .         .        .     150.728     .         .
-16
-        .         .        .         .        .        .      72.9514     .
-27
-        .         .        .         .        .        .        .       23.2333
 
-:      17       18       19         20        21        23        24       :=
-16   36.393      .        .          .         .         .         .
-17     .      276.67      .          .         .         .         .
-18     .         .     650.281       .         .         .         .
-21     .         .        .       393.055      .         .         .
-22     .         .        .          .      134.722      .         .
-23     .         .        .      1428.15       .         .         .
-24     .         .        .          .         .      972.434      .
-25     .         .        .          .         .         .      744.657
-28     .         .        .          .         .      165.441      .
+Sum of constraints violation: 5.048551088293607e-08
+*******************************************************************************
 
-:      25         26         27        28         29         30        32    :=
-25      .      -329.544      .         .          .           .         .
-26      .          .      -79.5437     .          .           .         .
-29      .          .         .       84.8864      .           .         .
-30      .          .         .         .       -15.1136       .         .
-31      .          .         .         .          .       -115.114   144.28
-32   367.891       .         .         .          .           .         .
+*******************************************************************************
 
-:       33        34       35        36        37        38        39       :=
-34   2213.21        .        .         .         .         .         .
-35       .      2177.1       .         .         .         .         .
-36       .          .    1975.71       .         .         .         .
-37       .          .        .     1696.55       .         .         .
-38       .          .        .         .     1321.55       .         .
-39       .          .        .         .         .     1168.77       .
-40       .          .        .         .         .         .     1022.93
-49    666.947       .        .         .         .         .         .
-50   2175.37        .        .         .         .         .         .
+Constraint 2 violations:
 
-:      40        41       42       44        45        46        47       48 :=
-41   555.54       .        .        .        .         .         .         .
-42      .      416.66      .        .        .         .         .         .
-43      .         .     261.11      .        .         .         .         .
-44   321.561      .        .        .        .         .         .         .
-45      .         .        .     150.728     .         .         .         .
-46      .         .        .        .      72.9514     .       36.393      .
-47      .         .        .        .        .         .         .      276.67
-57      .         .        .        .        .       23.2333     .         .
 
-:      49         50        51        53        54        55         56      :=
-48   650.281       .         .         .         .         .          .
-51      .       393.055      .         .         .         .          .
-52      .          .      134.722      .         .         .          .
-53      .      1428.15       .         .         .         .          .
-54      .          .         .      972.434      .         .          .
-55      .          .         .         .      744.657      .      -329.544
-58      .          .         .      165.441      .         .          .
-62      .          .         .         .         .      367.891       .
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
 
-:       57        58         59         60        62      :=
-56   -79.5437     .          .           .         .
-59      .       84.8864      .           .         .
-60      .         .       -15.1136       .         .
-61      .         .          .       -115.114   144.28
-;
+Absolute and relative violations between original and approximation constraint 2:
 
-total_cost using baron: 12064445.116438616
-solve_time using baron: 3603.193121 
 
+Con2 sum of absolute violation: 8.495593117885392e-12
+Con2 sum of relative violation: 2.3875479433142614e-11
+*******************************************************************************
+
+Total cost using baron: 12064445.116438618
+baron solve time: 3877.30 seconds
 *******************************************************************************
 

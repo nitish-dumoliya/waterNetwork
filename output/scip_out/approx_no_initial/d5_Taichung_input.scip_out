@@ -1,0 +1,186 @@
+Water Network: ../data/d5_Taichung_input.dat
+*******************************************************************************
+
+-------------------------------- Solving with scip --------------------------
+min_demand: 0.0115741
+max_demand: 0.0347222
+max_flow: 0.4629623999999999
+eps: 2.319246950319185e-08 
+
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+reading user parameter file <scip.set>
+===========================
+
+[paramset.c:2526] ERROR: expected "emphasis:" at beginning of line.
+[paramset.c:2678] ERROR: input error in file <scip.set> line 7
+limits/time = 3600
+
+read problem </tmp/at722181.nl>
+============
+
+original problem has 453 variables (0 bin, 0 int, 0 impl, 453 cont) and 81 constraints
+
+solve problem
+=============
+
+presolving:
+(round 1, fast)       3 del vars, 3 del conss, 0 add conss, 19 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.1s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.1s) no symmetry present
+presolving (2 rounds: 2 fast, 1 medium, 1 exhaustive):
+ 3 deleted vars, 3 deleted constraints, 0 added constraints, 19 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 450 variables (0 bin, 0 int, 0 impl, 450 cont) and 78 constraints
+     47 constraints of type <linear>
+     31 constraints of type <nonlinear>
+Presolving Time: 0.07
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.1s|     1 |     0 |   303 |     - |  7913k |   0 | 673 |  78 | 711 |   0 |  0 |   0 |   0 | 5.366400e+06 |      --      |    Inf | unknown
+L 1.1s|     1 |     0 |   303 |     - |  subnlp|   0 | 673 |  78 | 711 |   0 |  0 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.1s|     1 |     0 |   340 |     - |  8742k |   0 | 673 |  78 | 742 |  31 |  1 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.1s|     1 |     0 |   360 |     - |  8982k |   0 | 673 |  78 | 775 |  64 |  2 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.1s|     1 |     0 |   406 |     - |  8982k |   0 | 673 |  78 | 810 |  99 |  3 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   460 |     - |  8985k |   0 | 673 |  78 | 847 | 136 |  4 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   499 |     - |  8992k |   0 | 673 |  78 | 885 | 174 |  5 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   532 |     - |  9058k |   0 | 673 |  78 | 926 | 215 |  6 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   575 |     - |  9058k |   0 | 673 |  78 | 971 | 260 |  7 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   615 |     - |  9058k |   0 | 673 |  78 |1012 | 301 |  8 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   652 |     - |  9059k |   0 | 673 |  78 |1054 | 343 |  9 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   693 |     - |  9188k |   0 | 673 |  78 |1098 | 387 | 10 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+  1.2s|     1 |     0 |   730 |     - |  9188k |   0 | 673 |  78 | 576 | 426 | 11 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+(node 1) unresolved numerical troubles in LP 303 -- using pseudo solution instead (loop 1)
+  1.6s|     1 |     2 |  2532 |     - |  9334k |   0 | 673 |  78 | 576 | 426 | 11 |   0 |   0 | 5.366400e+06 | 9.495234e+06 |  76.94%| unknown
+L 2.8s|     2 |     3 |  3348 |2403.0 |  subnlp|   1 | 673 |  78 | 733 |1008 | 20 |   0 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%| unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  6.0s|   100 |    53 | 37274 | 367.0 |    11M |  43 | 673 |  78 | 812 |  11k|  0 |   0 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%| unknown
+  7.8s|   200 |   109 | 60553 | 299.5 |    11M |  53 | 673 |  79 | 747 |  17k|  0 |   1 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%|   9.33%
+ 10.3s|   300 |   189 | 95077 | 314.8 |    13M |  63 | 673 |  79 |1119 |  23k| 15 |   1 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%|   9.35%
+ 14.5s|   400 |   243 |180402 | 449.8 |    13M |  77 | 673 |  79 |   0 |  26k|  0 |   1 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%|   9.35%
+ 16.9s|   500 |   299 |245221 | 489.5 |    13M |  79 | 673 |  79 |1506 |  27k|  0 |   1 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%|   9.35%
+ 20.8s|   600 |   363 |313043 | 521.0 |    15M |  92 | 673 |  79 |1596 |  31k|  1 |   1 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%|   9.35%
+ 22.1s|   700 |   401 |327024 | 466.5 |    16M | 101 | 673 |  80 |   0 |  36k|  0 |   2 |   0 | 5.366400e+06 | 9.200160e+06 |  71.44%|   9.35%
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 3600.00
+Solving Nodes      : 704
+Primal Bound       : +9.20016040478308e+06 (2 solutions)
+Dual Bound         : +5.36640000000000e+06
+Gap                : 71.44 %
+time limit reached
+eps [*,*] (tr)
+:         1             2             3             4             6         :=
+1     .            2.31925e-08    .             .             .
+2     .             .            2.31925e-08    .             .
+3     .             .             .            2.31925e-08    .
+5     .             .             .            2.31925e-08    .
+6    2.31925e-08    .             .             .             .
+11    .             .             .             .            2.31925e-08
+
+:         7             8             9            10            11         :=
+2    2.31925e-08    .             .             .             .
+3     .            2.31925e-08    .             .             .
+4     .             .            2.31925e-08    .             .
+5     .             .             .            2.31925e-08    .
+6    2.31925e-08    .             .             .             .
+7     .            2.31925e-08    .             .             .
+8     .             .            2.31925e-08    .             .
+9     .             .             .            2.31925e-08    .
+12   2.31925e-08    .             .             .             .
+13    .            2.31925e-08    .             .             .
+14    .             .            2.31925e-08    .             .
+15    .             .             .             .            2.31925e-08
+16    .             .             .             .            2.31925e-08
+
+:        12            13            14            15            17         :=
+11   2.31925e-08    .             .             .             .
+12    .            2.31925e-08    .             .             .
+13    .             .            2.31925e-08    .             .
+16    .             .             .            2.31925e-08   2.31925e-08
+17   2.31925e-08    .             .             .             .
+18    .            2.31925e-08    .             .             .
+19    .             .            2.31925e-08    .             .
+
+:        18            19            20         :=
+10    .             .            2.31925e-08
+17   2.31925e-08    .             .
+18    .            2.31925e-08    .
+20    .            2.31925e-08    .
+;
+
+q [*,*] (tr)
+:       1         2         3          4          6         7           8    :=
+1     .        29.4808     .           .        .          .           .
+2     .          .       -3.18755      .        .        55.8164       .
+3     .          .         .         12.3793    .          .          7.58124
+5     .          .         .        -25.8391    .          .           .
+6    6.33267     .         .           .        .        10.8937       .
+7     .          .         .           .        .          .         94.921
+11    .          .         .           .       5.65223     .           .
+12    .          .         .           .        .         5.06282      .
+13    .          .         .           .        .          .        -36.3624
+
+:       9          10         11         12         13         14        :=
+4     9.68835      .         .          .           .          .
+5      .         48.9872     .          .           .          .
+8    89.2879       .         .          .           .          .
+9      .        140.901      .          .           .          .
+11     .           .         .        11.2326       .          .
+12     .           .         .          .         24.7452      .
+13     .           .         .          .           .        -1.98785
+14    7.2027       .         .          .           .          .
+15     .           .       11.385       .           .          .
+16     .           .       -6.07422     .           .          .
+17     .           .         .        -4.57266      .          .
+18     .           .         .          .        -97.8177      .
+19     .           .         .          .           .       -25.5316
+
+:       15        17        18         19        20       :=
+10      .         .         .           .      224.611
+16   -11.7631   29.4115     .           .         .
+17      .         .       57.1322       .         .
+18      .         .         .        178.098      .
+20      .         .         .       -238.352      .
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 1.229488733045514e-12
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 7.105427357601002e-15
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 2.315327306906534e-06
+Con2 sum of relative violation: 5.299116407448965e-06
+*******************************************************************************
+
+Total cost using scip: 9200160.40478308
+scip solve time: 3600.05 seconds
+*******************************************************************************
+

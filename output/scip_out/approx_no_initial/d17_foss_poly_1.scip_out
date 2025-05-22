@@ -1,0 +1,196 @@
+Water Network: ../data/d17_foss_poly_1.dat
+*******************************************************************************
+
+-------------------------------- Solving with scip --------------------------
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 3.4029363594102267e-12 
+
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+reading user parameter file <scip.set>
+===========================
+
+[paramset.c:2526] ERROR: expected "emphasis:" at beginning of line.
+[paramset.c:2678] ERROR: input error in file <scip.set> line 7
+limits/time = 3600
+
+read problem </tmp/at722353.nl>
+============
+
+original problem has 1370 variables (0 bin, 0 int, 0 impl, 1370 cont) and 152 constraints
+
+solve problem
+=============
+
+Changing lower bound for child of pow(.,-1) from 1.44965e-12 to 1e-09.
+Check your model formulation or use option expr/pow/minzerodistance to avoid this warning.
+Expression: ((1.44965e-12+((<t_x1276>*(1000)^(-1)))^2))^(-1)
+presolving:
+(round 1, fast)       0 del vars, 0 del conss, 0 add conss, 49 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.1s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.1s) no symmetry present
+presolving (2 rounds: 2 fast, 1 medium, 1 exhaustive):
+ 0 deleted vars, 0 deleted constraints, 0 added constraints, 49 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 1370 variables (0 bin, 0 int, 0 impl, 1370 cont) and 152 constraints
+     94 constraints of type <linear>
+     58 constraints of type <nonlinear>
+Presolving Time: 0.09
+
+(node 1) unresolved numerical troubles in LP 1 -- using pseudo solution instead (loop 1)
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  2.0s|     1 |     2 |   506 |     - |    21M |   0 |1776 | 152 |1316 |   0 |  0 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  9.1s|   100 |    71 | 74853 | 751.0 |    23M |  40 |1776 | 152 |2080 |7187 | 12 |   0 |   0 | 0.000000e+00 |      --      |    Inf |  50.00%
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 3600.00
+Solving Nodes      : 174
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +0.00000000000000e+00
+Gap                : infinite
+time limit reached
+eps [*,*]
+:         1             2             3             4             5         :=
+2     .             .            3.40294e-12    .             .
+3     .             .             .            3.40294e-12    .
+4     .             .             .             .            3.40294e-12
+12    .             .             .            3.40294e-12    .
+17    .            3.40294e-12    .             .             .
+36   3.40294e-12    .             .             .             .
+37   3.40294e-12    .             .             .             .
+
+:         6             7             8             9            10         :=
+5    3.40294e-12    .             .             .             .
+6     .            3.40294e-12    .             .             .
+18    .             .             .             .            3.40294e-12
+21   3.40294e-12    .             .             .             .
+22    .            3.40294e-12    .             .             .
+24    .             .            3.40294e-12    .             .
+25    .             .            3.40294e-12    .             .
+28    .             .             .            3.40294e-12    .
+30    .             .             .            3.40294e-12    .
+31    .             .             .             .            3.40294e-12
+
+:        11            12            13            14            15         :=
+3    3.40294e-12    .             .             .             .
+5     .             .            3.40294e-12    .             .
+10   3.40294e-12    .             .             .             .
+12    .             .            3.40294e-12    .             .
+13    .             .             .            3.40294e-12    .
+19    .            3.40294e-12    .             .             .
+20    .             .             .             .            3.40294e-12
+26    .             .             .             .            3.40294e-12
+
+:        16            17            18            19            20         :=
+1     .            3.40294e-12    .             .             .
+2     .             .            3.40294e-12    .             .
+11    .             .             .            3.40294e-12    .
+14    .             .             .             .            3.40294e-12
+15   3.40294e-12    .             .             .             .
+17    .             .            3.40294e-12    .             .
+19    .             .             .             .            3.40294e-12
+27   3.40294e-12    .             .             .             .
+
+:        21            22            23            24            25         :=
+7     .             .             .            3.40294e-12    .
+14   3.40294e-12    .             .             .             .
+15    .            3.40294e-12    .             .             .
+16    .             .             .             .            3.40294e-12
+21    .            3.40294e-12    .             .             .
+22    .             .            3.40294e-12    .             .
+23    .             .             .             .            3.40294e-12
+24    .             .            3.40294e-12    .             .
+
+:        26            27            28            29            30         :=
+8     .             .            3.40294e-12    .             .
+11   3.40294e-12    .             .             .             .
+16    .             .             .            3.40294e-12    .
+26    .            3.40294e-12    .             .             .
+28    .             .             .            3.40294e-12    .
+29    .             .             .             .            3.40294e-12
+32    .            3.40294e-12    .             .             .
+
+:        31            32            33            34            35         :=
+1    3.40294e-12    .             .             .             .
+10    .            3.40294e-12    .             .             .
+29    .             .            3.40294e-12    .             .
+30    .             .             .             .            3.40294e-12
+31    .             .             .            3.40294e-12    .
+32    .             .            3.40294e-12    .             .
+33    .             .             .            3.40294e-12    .
+34    .             .             .             .            3.40294e-12
+
+:        36         :=
+9    3.40294e-12
+35   3.40294e-12
+;
+
+q [*,*]
+:    1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19 :=
+1    .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .
+2    .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .
+3    .   .   .   0   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .
+4    .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+5    .   .   .   .   .   0   .   .   .   .   .   .   0   .   .   .   .   .   .
+6    .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .
+10   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .
+11   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0
+12   .   .   .   0   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .
+13   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .
+15   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .
+17   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .
+18   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .
+19   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .
+20   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .
+21   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .
+22   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .
+24   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .
+25   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .
+26   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .
+27   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .
+28   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .
+30   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .
+31   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .
+36   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+37   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+
+:   20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36    :=
+1    .   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .
+7    .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .
+8    .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .
+9    .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0
+10   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .   .   .
+11   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .
+14   0   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+15   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+16   .   .   .   .   .   0   .   .   .   0   .   .   .   .   .   .   .
+19   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+21   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .   .
+22   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .
+23   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .
+24   .   .   .   0   .   .   .   .   .   .   .   .   .   .   .   .   .
+26   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .   .   .
+28   .   .   .   .   .   .   .   .   .   0   .   .   .   .   .   .   .
+29   .   .   .   .   .   .   .   .   .   .   0   .   .   0   .   .   .
+30   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .
+31   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .
+32   .   .   .   .   .   .   .   0   .   .   .   .   .   0   .   .   .
+33   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .   .
+34   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0   .
+35   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   0
+;
+

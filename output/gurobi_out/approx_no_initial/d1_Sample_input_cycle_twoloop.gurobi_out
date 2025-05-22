@@ -1,0 +1,179 @@
+Water Network: ../data/d1_Sample_input_cycle_twoloop.dat
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+min_demand: 0.027777
+max_demand: 0.091666
+max_flow: 0.3111087
+eps: 2.9050092637079635e-11 
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+Set parameter Method to value 2
+  alg:method = 2
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 22 rows, 190 columns and 150 nonzeros
+Model fingerprint: 0xbc4ab134
+Model has 8 general nonlinear constraints (264 nonlinear terms)
+Variable types: 190 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 6e+02]
+  Bounds range     [1e-11, 7e+16]
+  RHS range        [3e+01, 1e+03]
+Warning: Model contains large bounds
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+Presolve model has 8 nlconstr
+Added 312 variables to disaggregate expressions.
+Presolve removed 0 rows and 56 columns
+Presolve time: 0.01s
+Presolved: 862 rows, 447 columns, 2171 nonzeros
+Presolved model has 136 bilinear constraint(s)
+Presolved model has 24 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 447 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 1.300e+01
+ Factor NZ  : 3.800e+01
+ Factor Ops : 1.580e+02 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   6.90185019e+12 -1.08570529e+17  8.91e+15 0.00e+00  4.95e+10     4s
+   1   6.90185019e+12 -8.41996597e+28  8.91e+15 2.44e-04  6.88e+20     4s
+   2   6.90185018e+12 -1.24033302e+29  8.91e+15 2.44e-04  1.00e+21     4s
+   3   6.90185000e+12 -1.62176501e+29  8.91e+15 2.44e-04  1.33e+21     4s
+   4   6.90185019e+12 -1.33634401e+20  8.91e+15 0.00e+00  1.29e+12     4s
+   5   6.90185019e+12 -5.08580856e+31  8.91e+15 6.25e-02  4.09e+23     4s
+   6   6.90185019e+12 -1.33634401e+20  8.91e+15 0.00e+00  1.29e+12     4s
+   7   1.25969112e+13 -1.33620132e+20  8.91e+15 1.21e+02  3.78e+14     4s
+   8*  1.30835170e+12 -2.39862221e+19  5.91e+10 7.42e-02  9.64e+08     4s
+   9*  3.41320592e+11  1.15030507e+18  4.21e+10 1.24e-02  6.93e+08     4s
+  10*  1.68705228e+10  2.93562462e+18  9.91e+08 7.27e-03  2.34e+07     4s
+  11*  5.19771165e+06  1.65819762e+16  2.71e+05 1.63e-05  2.57e+04     4s
+  12*  5.86958143e+05  5.22288970e+13  5.95e+02 5.87e-08  9.86e+01     4s
+  13*  5.76827966e+05  1.69227780e+11  1.34e+00 4.37e-10  2.99e-01     4s
+  14*  5.76798276e+05  6.83974568e+08  4.04e-03 3.99e-11  1.16e-03     4s
+  15*  5.75328592e+05  1.33458626e+07  3.67e-05 8.48e-07  1.79e-05     4s
+  16*  5.22392235e+05  3.51326884e+06  5.69e-05 1.25e-04  1.74e-06     4s
+  17*  3.78097440e+05  2.10348479e+06  5.40e-05 3.31e-05  4.12e-07     4s
+  18   5.20876085e+04  3.24359832e+05  2.89e+00 5.49e-06  1.30e+03     4s
+  19   2.27092297e+04  3.73744469e+04  1.45e+00 9.20e+02  5.36e+01     4s
+  20   1.87231513e+04  9.25546550e+06  2.35e+00 4.60e+05  7.30e+01     4s
+  21   1.60008519e+04  1.60008709e+04  1.17e+00 4.88e-06  1.13e-02     4s
+  22   1.60000000e+04  1.54471028e+04  1.17e+00 1.59e+02  1.05e-08     4s
+  23   1.60000000e+04  1.71071170e+04  2.35e+00 3.18e+02  1.07e-10     4s
+  24   1.60000000e+04  1.34239144e+04  1.17e+00 9.17e+02  1.07e-10     4s
+  25   1.60000000e+04  1.34552425e+04  1.17e+00 3.90e+02  1.07e-10     4s
+  26   1.60000000e+04  4.30341397e+03  1.17e+00 6.05e+02  1.07e-10     4s
+  27   1.60000000e+04  9.86507934e+03  1.17e+00 1.86e+02  1.07e-10     4s
+  28   1.60000000e+04  1.71685854e+12  2.90e+00 8.62e+10  1.43e-10     4s
+  29   1.60000000e+04  7.38985966e+10  1.45e+00 8.96e+10  1.43e-10     4s
+  30   1.60000000e+04  2.32895832e+09  2.90e+00 8.98e+10  1.43e-10     4s
+  31   1.60000000e+04  1.01822658e+09  2.90e+00 8.98e+10  1.43e-10     4s
+  32   1.60000000e+04 -2.66024736e+12  2.90e+00 4.38e+10  1.43e-10     4s
+  33   1.60000000e+04 -3.95162672e+08  2.06e-14 6.50e+06  1.43e-10     4s
+  34   1.60000000e+04 -1.80352020e+07  1.93e-15 2.97e+05  1.43e-10     4s
+  35   1.60000000e+04 -9.00960102e+06  1.93e-15 1.49e+05  1.44e-10     4s
+  36   1.60000000e+04 -9.00960102e+06  2.90e+00 1.49e+05  1.45e-10     4s
+  37   1.60000000e+04 -1.82094082e+14  5.94e+00 9.15e+12  4.52e-08     4s
+
+Barrier performed 37 iterations in 4.22 seconds (0.03 work units)
+Numerical trouble encountered
+
+Extra simplex iterations after uncrush: 8
+
+Root relaxation: objective 1.600000e+04, 10 iterations, 0.28 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 16000.0000    0   28          - 16000.0000      -     -    4s
+     0     0 16000.0000    0   23          - 16000.0000      -     -    4s
+     0     0 16000.0000    0   25          - 16000.0000      -     -    4s
+     0     0 16000.0000    0   24          - 16000.0000      -     -    4s
+     0     0 16000.0000    0   21          - 16000.0000      -     -    4s
+     0     0 16000.0000    0   21          - 16000.0000      -     -    4s
+     0     0 16000.0000    0   20          - 16000.0000      -     -    5s
+     0     2 16000.0000    0   20          - 16000.0000      -     -    9s
+     7    16 16000.0000    3   20          - 16000.0000      -   1.0   10s
+   415   576 16000.0002   12   20          - 16000.0000      -   0.0   16s
+   745   610 16192.4473   16   21          - 16000.0000      -   0.9   23s
+   907   571 infeasible   17               - 16000.0000      -   1.1   26s
+  1310   899 infeasible   22               - 16000.0000      -   2.4   32s
+  1598  1103 29803.2568   27   43          - 16000.0000      -   6.3   35s
+  2390  1601 29803.2637   39   43          - 16000.0000      -   9.6   40s
+  3420  2082 82248.0921   57   45          - 16000.0000      -  11.0   50s
+
+Cutting planes:
+  RLT: 12
+
+Explored 4747 nodes (57257 simplex iterations) in 54.67 seconds (0.36 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi 12.0.1: infeasible problem
+57257 simplex iterations
+37 barrier iterations
+4747 branching nodes
+
+suffix dunbdd OUT;
+eps :=
+1 2   2.90501e-11
+2 3   2.90501e-11
+2 4   2.90501e-11
+3 5   2.90501e-11
+4 5   2.90501e-11
+4 6   2.90501e-11
+6 7   2.90501e-11
+7 5   2.90501e-11
+;
+
+q :=
+1 2   0
+2 3   0
+2 4   0
+3 5   0
+4 5   0
+4 6   0
+6 7   0
+7 5   0
+;
+
