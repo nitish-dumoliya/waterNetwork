@@ -1,0 +1,284 @@
+Water Network: ../data/d6_modena.dat
+*******************************************************************************
+
+-------------------------------- Solving with IPOPT --------------------------
+min_demand: 0
+max_demand: 0.00947
+max_flow: 0.4069399999999997
+eps: 3.919527346039423e-08 
+
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 2535304.1451029615 
+
+*******************************************************************************
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 1.474178884160242e-11
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 2.1316282072803006e-14
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.0023123137358929493
+Con2 sum of relative violation: 2.502585968131803
+*******************************************************************************
+
+Total cost using ipopt: 2535304.1451029615
+IPOPT solve time: 159.55 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with gurobi --------------------------
+min_demand: 0
+max_demand: 0.00947
+max_flow: 0.4069399999999997
+eps: 3.919527346039423e-08 
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+Set parameter Method to value 2
+  alg:method = 2
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 902 rows, 6925 columns and 5698 nonzeros
+Model fingerprint: 0xbdc51115
+Model has 317 general nonlinear constraints (9827 nonlinear terms)
+Variable types: 6925 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [3e+01, 4e+02]
+  Bounds range     [2e-08, 3e+11]
+  RHS range        [1e-05, 1e+03]
+Warning: Model contains large bounds
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+
+User MIP start produced solution with objective 2.5353e+06 (0.05s)
+Loaded user MIP start with objective 2.5353e+06
+
+Presolve model has 317 nlconstr
+Added 11095 variables to disaggregate expressions.
+Presolve removed 3 rows and 1905 columns
+Presolve time: 0.58s
+Presolved: 32916 rows, 16116 columns, 83991 nonzeros
+Presolved model has 5072 bilinear constraint(s)
+Presolved model has 951 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 16116 continuous, 0 integer (0 binary)
+  NLP heuristic elapsed time = 5.01s
+  NLP heuristic elapsed time = 10.52s
+  NLP heuristic elapsed time = 15.25s
+  NLP heuristic elapsed time = 20.36s
+  NLP heuristic elapsed time = 25.26s
+  NLP heuristic elapsed time = 30.66s
+  NLP heuristic elapsed time = 35.17s
+  NLP heuristic elapsed time = 40.33s
+  NLP heuristic elapsed time = 45.05s
+  NLP heuristic elapsed time = 50.04s
+  NLP heuristic elapsed time = 55.32s
+  NLP heuristic elapsed time = 60.07s
+  NLP heuristic elapsed time = 65.51s
+Root barrier log...
+
+Ordering time: 0.04s
+
+Barrier statistics:
+ AA' NZ     : 1.335e+03
+ Factor NZ  : 5.191e+03
+ Factor Ops : 7.142e+04 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.98902961e+06 -4.68437369e+11  3.00e+10 0.00e+00  9.96e+08    77s
+   1   1.98902961e+06 -2.91876774e+11  6.41e+09 4.74e-03  3.34e+08    77s
+   2   1.98902961e+06 -8.33223366e+09  3.50e+06 2.43e-04  7.20e+06    77s
+   3   1.98902961e+06 -5.83820860e+06  3.12e+03 6.77e-07  7.19e+03    77s
+   4   1.98902961e+06  1.98084565e+06  2.86e-01 8.35e-10  7.17e+00    77s
+   5   1.98902961e+06  1.98902072e+06  7.63e-06 3.90e-13  7.66e-03    77s
+   6   1.98902961e+06  1.98902960e+06  3.81e-06 3.98e-16  7.66e-06    77s
+   7   1.98902961e+06  1.98902961e+06  3.81e-06 2.14e-18  7.66e-09    77s
+   8   1.98902961e+06  1.98902961e+06  3.81e-06 2.33e-18  7.66e-12    77s
+   9   1.98902961e+06  1.98902961e+06  3.81e-06 2.44e-18  7.66e-18    77s
+  10   1.98902961e+06  1.98902961e+06  3.81e-06 2.24e-18  6.09e-21    77s
+  11   1.98902961e+06 -4.68437369e+11  3.00e+10 0.00e+00  9.96e+08    77s
+  12   1.98902961e+06 -1.15407658e+11  3.16e+09 2.34e-02  1.88e+08    77s
+  13   1.98902961e+06 -4.57024282e+09  8.28e+06 3.68e-03  5.52e+06    77s
+  14   1.98902961e+06 -1.87863032e+08  3.47e+05 1.58e-04  2.33e+05    77s
+  15   1.98902961e+06 -7.21226001e+06  1.71e+04 7.95e-06  1.15e+04    77s
+  16   1.98902961e+06  1.53976546e+06  8.53e+02 4.02e-07  5.74e+02    77s
+  17   1.98902961e+06  1.98894815e+06  3.72e-01 3.99e-10  1.14e-01    77s
+  18   1.98902961e+06  1.98901955e+06  4.56e-02 5.05e-11  1.46e-02    77s
+  19   1.98902961e+06  1.98902941e+06  8.45e-04 1.01e-12  3.02e-04    78s
+  20   1.98902961e+06  1.98902961e+06  9.06e-06 1.15e-14  3.54e-06    78s
+  21   1.98902961e+06  1.98902961e+06  6.59e-06 1.30e-16  4.14e-08    78s
+  22   1.98902961e+06  1.98902961e+06  3.29e-06 2.64e-18  4.85e-10    78s
+  23   1.98902961e+06  1.98902961e+06  3.29e-06 1.92e-18  5.68e-12    78s
+  24   1.98902961e+06  1.98902961e+06  3.29e-06 2.20e-18  6.65e-17    78s
+  25   1.98902961e+06  1.98902961e+06  3.29e-06 1.76e-18  5.20e-21    78s
+  26   1.98902961e+06  1.98902961e+06  3.29e-06 1.37e-18  5.04e-21    78s
+  27   1.98902961e+06  1.98902961e+06  3.29e-06 8.61e-19  5.03e-21    78s
+  28   1.98902961e+06  1.98902961e+06  3.29e-06 8.61e-19  5.03e-21    78s
+  29   1.98902961e+06  1.98902961e+06  3.29e-06 1.00e-18  5.52e-21    78s
+  30   1.98902961e+06  1.98902961e+06  3.29e-06 1.13e-18  5.74e-21    78s
+
+Barrier solved model in 30 iterations and 77.76 seconds (0.72 work units)
+Optimal objective 1.98902961e+06
+
+
+Root crossover log...
+
+      72 DPushes remaining with DInf 0.0000000e+00                78s
+Warning: Markowitz tolerance tightened to 0.5
+
+     374 PPushes remaining with PInf 0.0000000e+00                78s
+       0 PPushes remaining with PInf 0.0000000e+00                78s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 0.0000000e+00     78s
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+     377    1.9890296e+06   0.000000e+00   0.000000e+00     78s
+     694    1.9890296e+06   0.000000e+00   0.000000e+00     79s
+Extra simplex iterations after uncrush: 317
+
+Root relaxation: objective 1.989030e+06, 694 iterations, 3.02 seconds (0.04 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1989029.61    0 1554 2535304.15 1989029.61  21.5%     -   79s
+     0     0 1989029.61    0 1555 2535304.15 1989029.61  21.5%     -   81s
+     0     0 1989029.61    0 1549 2535304.15 1989029.61  21.5%     -   83s
+     0     0 1989029.61    0 1537 2535304.15 1989029.61  21.5%     -   85s
+     0     0 1989029.61    0 1506 2535304.15 1989029.61  21.5%     -   86s
+     0     0 1989029.61    0 1501 2535304.15 1989029.61  21.5%     -   89s
+     0     0 1989029.61    0 1501 2535304.15 1989029.61  21.5%     -   92s
+     0     0 1989029.61    0 1399 2535304.15 1989029.61  21.5%     -  206s
+  NLP heuristic elapsed time = 5.33s
+  NLP heuristic elapsed time = 10.09s
+  NLP heuristic elapsed time = 15.04s
+  NLP heuristic elapsed time = 20.42s
+  NLP heuristic elapsed time = 25.44s
+  NLP heuristic elapsed time = 30.31s
+  NLP heuristic elapsed time = 35.19s
+  NLP heuristic elapsed time = 40.50s
+  NLP heuristic elapsed time = 45.48s
+     0     2 1989029.61    0 1399 2535304.15 1989029.61  21.5%     - 1049s
+     1     5 1989029.61    1 1375 2535304.15 1989029.61  21.5%  41.0 1132s
+     3     6 1989029.61    2 1342 2535304.15 1989029.61  21.5%  71.7 1330s
+     7    12 1989029.61    3 1355 2535304.15 1989029.61  21.5%  62.6 1544s
+    13    24 1989029.61    4 1344 2535304.15 1989029.61  21.5%  61.1 1750s
+    25    48 1989029.61    5 1327 2535304.15 1989029.61  21.5%   142 1981s
+    49    80 1989029.61    6 1430 2535304.15 1989029.61  21.5%   262 2245s
+    81   176 1989029.61    7 1436 2535304.15 1989029.61  21.5%   221 2957s
+   177   367 1989029.61    9 1429 2535304.15 1989029.61  21.5%   226 3149s
+   372   712 1989029.61   12 1407 2535304.15 1989029.61  21.5%   190 3491s
+   735   927 1989029.61   17 1419 2535304.15 1989029.61  21.5%   161 3600s
+
+Cutting planes:
+  RLT: 179
+
+Explored 950 nodes (157601 simplex iterations) in 3600.12 seconds (131.71 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 1: 2.5353e+06 
+
+Time limit reached
+Best objective 2.535304145103e+06, best bound 1.989029607100e+06, gap 21.5467%
+Gurobi 12.0.1: time limit, feasible solution; objective 2535304.145
+157601 simplex iterations
+30 barrier iterations
+950 branching nodes
+absmipgap=546275, relmipgap=0.215467
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 1.6679958796290718e-11
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 2.1316282072803006e-14
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.002312313735892933
+Con2 sum of relative violation: 2.502585968131802
+*******************************************************************************
+
+Total cost using gurobi: 2535304.1451029615
+gurobi solve time: 3600.66 seconds
+*******************************************************************************
+

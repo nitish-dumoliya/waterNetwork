@@ -1,0 +1,95 @@
+Water Network: ../data/d8_fossolo_iron.dat
+*******************************************************************************
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.00026
+max_demand: 0.00202
+max_flow: 0.033909999999999996
+eps: 2.6698776186750192e-09 
+
+The license for this solver will expire in 1.6 days.
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 2
+barstats 
+version 
+objbound
+Time-limited version (expiring midnight 20250531 GMT)
+License 67b523f8-1 for A7052: IE 647 Applied Integer Programming, Prof. Ashutosh Mahajan, Indian Institute of Technology Bombay
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20241227), liccheck(20211124), ASL(20241202)
+
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 171727.
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 171724.
+ Preprocessing found feasible solution with value 171724.
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           8.62    18MB     166436.         171724.       64.98%
+        129          38.67    18MB     166436.         171724.       64.98%
+        357          68.73    18MB     166436.         171724.       64.98%
+        655          98.82    18MB     166436.         171724.       64.98%
+        946         525.48    18MB     166436.         171724.       64.98%
+*      1411         554.83    18MB     166436.         171724.       64.98%
+       1860         584.89    18MB     166436.         171724.       64.98%
+       2193         614.91    18MB     166436.         171724.       64.98%
+       2339         645.07    18MB     166436.         171724.       64.98%
+       2390         675.41    18MB     166436.         171724.       64.98%
+       2544         705.42    18MB     166436.         171724.       64.98%
+       2704         735.46    18MB     166436.         171724.       64.98%
+       2865         765.45    18MB     166436.         171724.       64.98%
+       3075         795.47    18MB     166436.         171724.       64.98%
+       3238         825.46    18MB     166436.         171724.       64.98%
+       3482         855.54    18MB     166436.         171724.       64.98%
+       3643         885.56    18MB     166436.         171724.       64.98%
+       3804         915.61    18MB     166436.         171724.       64.98%
+       4018         945.62    18MB     166436.         171724.       64.98%
+       4204         975.61    18MB     166436.         171724.       64.98%
+       4411        1005.64    18MB     166436.         171724.       64.98%
+       4606        1035.77    18MB     166436.         171724.       64.98%
+       4746        4073.87    18MB     166436.         171724.       64.98%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  4086.34
+ Total CPU time used:              4073.88
+
+ Total no. of BaR iterations:    4746
+ Best solution found at node:    1411
+ Max. no. of nodes in memory:      42
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 4746 iterations, CPU time limit reached.
+Objective 171724.2971
+Objective lower bound = 166436.028, upper bound = 171724.29707718495
+barstatus = 4, modelstatus = 4
+max nodes in memory = 42
+optimum found at node 1411
+Baron run time (excluding setup) = 4073.87 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+Total cost using baron: 171724.297077185
+baron solve time: 4086.38 seconds
+*******************************************************************************
+

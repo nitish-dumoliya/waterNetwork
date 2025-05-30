@@ -18,7 +18,7 @@ JOB_LOG="$LOG_DIR/parallel.log"
 
 echo "Starting Parallel Execution at $(date)" | tee -a "$JOB_LOG"
 
-parallel --eta -j 7 --joblog "$JOB_LOG" '{}; echo Job {#} done at $(date)' < "$INPUT_FILE"
+parallel --eta -j 14 --joblog "$JOB_LOG" '{}; echo Job {#} done at $(date)' < "$INPUT_FILE"
 
 
 echo "Parallel Execution Completed at $(date)" | tee -a "$JOB_LOG"

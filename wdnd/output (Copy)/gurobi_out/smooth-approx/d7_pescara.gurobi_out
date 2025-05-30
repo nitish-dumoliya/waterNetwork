@@ -1,0 +1,406 @@
+Water Network: ../data/d7_pescara.dat
+*******************************************************************************
+
+-------------------------------- Solving with IPOPT --------------------------
+min_demand: 0
+max_demand: 0.0336
+max_flow: 0.49827499999999986
+eps: 3.919527346039423e-08 
+
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 1787952.147922569 
+
+*******************************************************************************
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 9.707656432489007e-12
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 2.8506891958102187e-07
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.0012969184035815243
+Con2 sum of relative violation: 0.06348935643868135
+*******************************************************************************
+
+Total cost using ipopt: 1787952.147922569
+IPOPT solve time: 13.20 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with gurobi --------------------------
+min_demand: 0
+max_demand: 0.0336
+max_flow: 0.49827499999999986
+eps: 3.919527346039423e-08 
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+Set parameter Method to value 2
+  alg:method = 2
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 262 rows, 2115 columns and 1800 nonzeros
+Model fingerprint: 0x861aabc0
+Model has 95 general nonlinear constraints (2945 nonlinear terms)
+Variable types: 2115 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [3e-08, 1e+00]
+  Objective range  [3e+01, 4e+02]
+  Bounds range     [2e-08, 1e+12]
+  RHS range        [5e-06, 2e+03]
+Warning: Model contains large bounds
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+
+User MIP start produced solution with objective 1.78795e+06 (0.02s)
+Loaded user MIP start with objective 1.78795e+06
+
+Presolve model has 95 nlconstr
+Added 3325 variables to disaggregate expressions.
+Presolve removed 8 rows and 615 columns
+Presolve time: 0.17s
+Presolved: 9849 rows, 4826 columns, 25197 nonzeros
+Presolved model has 1520 bilinear constraint(s)
+Presolved model has 285 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 4826 continuous, 0 integer (0 binary)
+  NLP heuristic elapsed time = 5.04s
+  NLP heuristic elapsed time = 10.04s
+  NLP heuristic elapsed time = 15.01s
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 2.510e+02
+ Factor NZ  : 1.515e+03
+ Factor Ops : 2.078e+04 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.52920001e+14 -1.25755253e+15  1.33e+11 0.00e+00  2.32e+12    19s
+   1   8.56446541e+13 -3.90264437e+15  7.49e+10 9.05e+01  5.55e+12    19s
+   2   5.51556422e+12 -3.83439167e+15  4.80e+09 3.52e+00  8.68e+12    19s
+   3   6.64954932e+09 -8.96520586e+12  5.78e+06 3.18e-04  2.09e+10    19s
+   4   1.62883685e+07 -2.86696227e+10  1.29e+04 4.55e-13  6.67e+07    19s
+   5   1.42074159e+06 -2.73776014e+07  1.53e-05 2.53e-09  6.69e+04    19s
+   6   1.36168060e+06  6.74486090e+05  1.53e-05 1.16e-06  1.19e+03    19s
+   7   1.34614354e+06  1.33411396e+06  1.53e-05 2.04e-08  2.07e+01    19s
+   8   1.34600616e+06  1.34600603e+06  1.53e-05 4.55e-13  2.23e-04    19s
+   9   1.34600616e+06  1.34600616e+06  1.53e-05 2.27e-13  2.23e-07    19s
+  10   1.34600616e+06  1.34600616e+06  1.53e-05 9.09e-13  2.23e-10    19s
+
+Barrier solved model in 10 iterations and 19.28 seconds (0.23 work units)
+Optimal objective 1.34600616e+06
+
+
+Root crossover log...
+
+      49 DPushes remaining with DInf 0.0000000e+00                19s
+       0 DPushes remaining with DInf 0.0000000e+00                19s
+
+      93 PPushes remaining with PInf 0.0000000e+00                19s
+       0 PPushes remaining with PInf 0.0000000e+00                19s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 0.0000000e+00     19s
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+     145    1.3460062e+06   0.000000e+00   0.000000e+00     19s
+     240    1.3460062e+06   0.000000e+00   0.000000e+00     19s
+Extra simplex iterations after uncrush: 95
+
+Root relaxation: objective 1.346006e+06, 240 iterations, 0.69 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1346006.16    0  416 1787952.15 1346006.16  24.7%     -   19s
+     0     0 1346006.16    0  423 1787952.15 1346006.16  24.7%     -   20s
+     0     0 1346006.16    0  412 1787952.15 1346006.16  24.7%     -   21s
+     0     0 1346006.16    0  406 1787952.15 1346006.16  24.7%     -   21s
+     0     0 1346006.16    0  405 1787952.15 1346006.16  24.7%     -   22s
+     0     0 1346006.16    0  402 1787952.15 1346006.16  24.7%     -   36s
+     0     2 1346006.16    0  391 1787952.15 1346006.16  24.7%     -  126s
+     1     5 1346006.16    1  378 1787952.15 1346006.16  24.7%   381  155s
+     3     8 1346006.16    2  373 1787952.15 1346006.16  24.7%   182  180s
+     7    16 1346006.16    3  369 1787952.15 1346006.16  24.7%   137  196s
+    15    32 1346006.16    4  372 1787952.15 1346006.16  24.7%   214  210s
+    31    64 1346006.16    5  370 1787952.15 1346006.16  24.7%   159  231s
+    63    96 1346006.16    6  355 1787952.15 1346006.16  24.7%   198  236s
+    95   269 1346006.16    7  358 1787952.15 1346006.16  24.7%   156  268s
+   284  1213 1346006.16    9  379 1787952.15 1346006.16  24.7%   155  288s
+  1228  3667 1346006.16   24  365 1787952.15 1346006.16  24.7%   188  340s
+  3786  5695 1346006.16   84  381 1787952.15 1346006.16  24.7%   151  386s
+  6242  7411 1346006.16   62  385 1787952.15 1346006.16  24.7%   137  423s
+  8642  9515 1346006.16  105  390 1787952.15 1346006.16  24.7%   124  454s
+ 10370  9515 infeasible  115      1787952.15 1346006.16  24.7%   113  455s
+ 11362 11507 1346006.16  111  383 1787952.15 1346006.16  24.7%   108  487s
+ 14152 13283 1346006.16  125  426 1787952.15 1346006.16  24.7%  96.3  519s
+ 14763 13283 1346006.16  238  388 1787952.15 1346006.16  24.7%  93.9  520s
+ 17009 13284 1346006.16  164    0 1787952.15 1346006.16  24.7%  86.8  529s
+  NLP heuristic elapsed time = 5.05s
+  NLP heuristic elapsed time = 10.15s
+  NLP heuristic elapsed time = 15.04s
+  NLP heuristic elapsed time = 20.09s
+  NLP heuristic elapsed time = 25.02s
+  NLP heuristic elapsed time = 30.11s
+  NLP heuristic elapsed time = 35.08s
+  NLP heuristic elapsed time = 40.13s
+  NLP heuristic elapsed time = 45.26s
+  NLP heuristic elapsed time = 50.50s
+  NLP heuristic elapsed time = 55.01s
+  NLP heuristic elapsed time = 60.15s
+  NLP heuristic elapsed time = 65.19s
+  NLP heuristic elapsed time = 70.31s
+  NLP heuristic elapsed time = 75.54s
+  NLP heuristic elapsed time = 80.06s
+  NLP heuristic elapsed time = 85.42s
+  NLP heuristic elapsed time = 90.28s
+  NLP heuristic elapsed time = 95.29s
+  NLP heuristic elapsed time = 100.06s
+  NLP heuristic elapsed time = 105.41s
+  NLP heuristic elapsed time = 110.32s
+  NLP heuristic elapsed time = 115.29s
+  NLP heuristic elapsed time = 120.29s
+  NLP heuristic elapsed time = 125.70s
+  NLP heuristic elapsed time = 130.10s
+  NLP heuristic elapsed time = 135.25s
+  NLP heuristic elapsed time = 140.02s
+  NLP heuristic elapsed time = 145.34s
+  NLP heuristic elapsed time = 150.18s
+  NLP heuristic elapsed time = 155.09s
+  NLP heuristic elapsed time = 160.07s
+  NLP heuristic elapsed time = 165.66s
+  NLP heuristic elapsed time = 170.18s
+  NLP heuristic elapsed time = 175.68s
+ 17010 13285 1346006.16  237    0 1787952.15 1346006.16  24.7%  86.8  707s
+ 17011 13285 1346006.16  119    0 1787952.15 1346006.16  24.7%  86.8  746s
+ 17014 13287 1346006.16   65    0 1787952.15 1346006.16  24.7%  86.8  750s
+ 17019 13291 1346006.16  173    0 1787952.15 1346006.16  24.7%  86.7  756s
+ 17025 13295 1346006.16   12    0 1787952.15 1346006.16  24.7%  86.7  760s
+ 17027 13296 1346006.16  231    0 1787952.15 1346006.16  24.7%  86.7  765s
+ 17028 13297 1346006.16  126    0 1787952.15 1346006.16  24.7%  86.7  831s
+  NLP heuristic elapsed time = 5.11s
+  NLP heuristic elapsed time = 10.10s
+  NLP heuristic elapsed time = 15.09s
+  NLP heuristic elapsed time = 20.10s
+  NLP heuristic elapsed time = 25.24s
+  NLP heuristic elapsed time = 30.05s
+  NLP heuristic elapsed time = 35.15s
+  NLP heuristic elapsed time = 40.05s
+  NLP heuristic elapsed time = 45.08s
+  NLP heuristic elapsed time = 50.20s
+  NLP heuristic elapsed time = 55.12s
+  NLP heuristic elapsed time = 60.15s
+  NLP heuristic elapsed time = 65.04s
+  NLP heuristic elapsed time = 70.16s
+  NLP heuristic elapsed time = 75.07s
+  NLP heuristic elapsed time = 80.02s
+  NLP heuristic elapsed time = 85.11s
+  NLP heuristic elapsed time = 90.21s
+ 17031 13300 1346006.16  119    0 1787952.15 1346006.16  24.7%  86.8  926s
+ 17032 13300 1346006.16  179    0 1787952.15 1346006.16  24.7%  86.8  955s
+ 17034 13302 1346006.16   67    0 1787952.15 1346006.16  24.7%  86.7  960s
+ 17038 13304 1346006.16   51    0 1787952.15 1346006.16  24.7%  86.7  965s
+ 17044 13308 1346006.16   23    0 1787952.15 1346006.16  24.7%  86.7  971s
+ 17047 13310 1346371.36   79    0 1787952.15 1346006.16  24.7%  86.7  975s
+ 17049 13312 1346334.25  174    0 1787952.15 1346006.16  24.7%  86.7 1247s
+  NLP heuristic elapsed time = 5.12s
+  NLP heuristic elapsed time = 10.11s
+  NLP heuristic elapsed time = 15.19s
+  NLP heuristic elapsed time = 20.08s
+  NLP heuristic elapsed time = 25.02s
+  NLP heuristic elapsed time = 30.11s
+  NLP heuristic elapsed time = 35.30s
+  NLP heuristic elapsed time = 40.27s
+  NLP heuristic elapsed time = 45.16s
+  NLP heuristic elapsed time = 50.01s
+  NLP heuristic elapsed time = 55.07s
+  NLP heuristic elapsed time = 60.16s
+  NLP heuristic elapsed time = 65.14s
+  NLP heuristic elapsed time = 70.01s
+  NLP heuristic elapsed time = 75.01s
+  NLP heuristic elapsed time = 80.07s
+  NLP heuristic elapsed time = 85.17s
+  NLP heuristic elapsed time = 90.20s
+ 17052 13315 1346480.20  163    0 1787952.15 1346006.16  24.7%  86.7 1342s
+ 17053 13315 1346006.16   14    0 1787952.15 1346006.16  24.7%  86.7 1365s
+ 17057 13318 1346006.16  234    0 1787952.15 1346006.16  24.7%  86.7 1370s
+ 17063 13322 1346006.16  230    0 1787952.15 1346006.16  24.7%  86.7 1375s
+ 17067 13325 1346006.16   17    0 1787952.15 1346006.16  24.7%  86.7 1443s
+ 17068 13325 1346006.16   55    0 1787952.15 1346006.16  24.7%  86.7 1449s
+ 17069 13329 1346006.16   33  412 1787952.15 1346006.16  24.7%  86.7 1664s
+ 17071 13332 1346006.16   34  400 1787952.15 1346006.16  24.7%  86.8 1781s
+ 17075 13337 1346006.16   35  406 1787952.15 1346006.16  24.7%  86.8 1801s
+ 17083 13348 1346006.16   36  392 1787952.15 1346006.16  24.7%  86.8 1822s
+ 17097 13366 1346006.16   37  398 1787952.15 1346006.16  24.7%  86.8 1872s
+ 17125 13378 1346006.16   38  398 1787952.15 1346006.16  24.7%  86.9 1882s
+ 17157 13596 1346006.16   39  384 1787952.15 1346006.16  24.7%  87.0 1908s
+ 17457 13930 1346006.16   43  380 1787952.15 1346006.16  24.7%  87.1 1921s
+ 18173 14754 1346006.16   49  368 1787952.15 1346006.16  24.7%  86.1 1937s
+ 19542 16446 infeasible   92      1787952.15 1346006.16  24.7%  83.1 1968s
+ 21751 15709 1346006.16   74  374 1787952.15 1346006.16  24.7%  77.8 1970s
+ 22284 17285 1346006.16  209  357 1787952.15 1346006.16  24.7%  77.3 1994s
+ 24425 18420 1346006.16  281  357 1787952.15 1346006.16  24.7%  73.8 2012s
+ 26546 19330 1346006.16  347  357 1787952.15 1346006.16  24.7%  70.4 2033s
+ 28341 20648 1346006.16  408  357 1787952.15 1346006.16  24.7%  68.1 2061s
+ 30513 22050 1346006.16  469  357 1787952.15 1346006.16  24.7%  64.9 2090s
+ 32913 23870 1346006.16  527  357 1787952.15 1346006.16  24.7%  61.4 2137s
+ 35841 22943 1346006.16  596  357 1787952.15 1346006.16  24.7%  57.8 2289s
+ 35896 26853 1346006.16  597  357 1787952.15 1346006.16  24.7%  57.7 2332s
+ 40643 29102 1346006.16  692  357 1787952.15 1346006.16  24.7%  52.1 2361s
+ 44922 31090 1346006.16  774  357 1787952.15 1346006.16  24.7%  47.8 2419s
+ 46498 30564 1346006.16  314  354 1787952.15 1346006.16  24.7%  46.2 2420s
+ 48656 33281 1346006.16  848  357 1787952.15 1346006.16  24.7%  45.0 2445s
+ 52318 35622 1346006.16  919  357 1787952.15 1346006.16  24.7%  42.4 2473s
+ 56038 37923 1346006.16  985  357 1787952.15 1346006.16  24.7%  39.8 2502s
+ 59755 41224 1346006.16 1047  357 1787952.15 1346006.16  24.7%  37.5 2531s
+ 63509 45015 1346006.16 1111  357 1787952.15 1346006.16  24.7%  35.4 2560s
+ 67440 49028 1346006.16 1177  357 1787952.15 1346006.16  24.7%  33.4 2584s
+ 71537 53411 1346006.16 1244  357 1787952.15 1346006.16  24.7%  31.6 2609s
+ 75030 53411 1346009.00  536  376 1787952.15 1346006.16  24.7%  30.2 2610s
+ 75926 57954 1346006.16 1316  357 1787952.15 1346006.16  24.7%  29.9 2634s
+ 80555 62633 1346006.16 1390  357 1787952.15 1346006.16  24.7%  28.2 2658s
+ 85358 67717 1346006.16 1468  357 1787952.15 1346006.16  24.7%  26.7 2684s
+ 90444 73065 1346006.16 1548  357 1787952.15 1346006.16  24.7%  25.2 2719s
+ 95792 78632 1346006.16 1632  357 1787952.15 1346006.16  24.7%  23.8 2756s
+ 101359 84131 1346006.16 1719  357 1787952.15 1346006.16  24.7%  22.5 2795s
+ 106858 89482 1346006.16 1805  357 1787952.15 1346006.16  24.7%  21.3 2828s
+ 112209 94720 1346006.16 1888  357 1787952.15 1346006.16  24.7%  20.3 2860s
+ 117447 99846 1346006.16 1970  357 1787952.15 1346006.16  24.7%  19.4 2891s
+ 122573 104879 1346006.16 2050  357 1787952.15 1346006.16  24.7%  18.6 2914s
+ 127606 109836 1346006.16 2129  357 1787952.15 1346006.16  24.7%  17.9 2938s
+ 132563 114715 1346006.16 2207  357 1787952.15 1346006.16  24.7%  17.2 2967s
+ 137442 119523 1346006.16 2283  357 1787952.15 1346006.16  24.7%  16.6 2997s
+ 142250 124269 1346006.16 2358  357 1787952.15 1346006.16  24.7%  16.0 3032s
+ 146996 128967 1346006.16 2433  357 1787952.15 1346006.16  24.7%  15.5 3062s
+ 151694 133608 1346006.16 2506  357 1787952.15 1346006.16  24.7%  15.0 3088s
+ 156335 138206 1346006.16 2579  357 1787952.15 1346006.16  24.7%  14.6 3116s
+ 160933 142754 1346006.16 2651  357 1787952.15 1346006.16  24.7%  14.2 3144s
+ 165481 147265 1346006.16 2722  357 1787952.15 1346006.16  24.7%  13.8 3170s
+ 169992 151741 1346006.16 2792  357 1787952.15 1346006.16  24.7%  13.4 3198s
+ 174468 156182 1346006.16 2862  357 1787952.15 1346006.16  24.7%  13.1 3229s
+ 178909 160588 1346006.16 2932  357 1787952.15 1346006.16  24.7%  12.7 3261s
+ 183315 164962 1346006.16 3001  357 1787952.15 1346006.16  24.7%  12.4 3294s
+ 187689 169308 1346006.16 3069  357 1787952.15 1346006.16  24.7%  12.1 3322s
+ 192035 173626 1346006.16 3137  357 1787952.15 1346006.16  24.7%  11.9 3350s
+ 196353 177913 1346006.16 3205  357 1787952.15 1346006.16  24.7%  11.6 3376s
+ 200640 182174 1346006.16 3272  357 1787952.15 1346006.16  24.7%  11.4 3401s
+ 204901 186408 1346006.16 3338  357 1787952.15 1346006.16  24.7%  11.1 3427s
+ 209135 190629 1346006.16 3405  357 1787952.15 1346006.16  24.7%  10.9 3454s
+ 213356 194821 1346006.16 3471  357 1787952.15 1346006.16  24.7%  10.7 3481s
+ 217548 198991 1346006.16 3536  357 1787952.15 1346006.16  24.7%  10.5 3511s
+ 221718 203149 1346006.16 3602  357 1787952.15 1346006.16  24.7%  10.3 3536s
+ 225876 207282 1346006.16 3667  357 1787952.15 1346006.16  24.7%  10.1 3565s
+ 230009 211405 1346006.16 3731  357 1787952.15 1346006.16  24.7%   9.9 3589s
+ 234132 213515 1346006.16 3796  357 1787952.15 1346006.16  24.7%   9.7 3601s
+
+Cutting planes:
+  RLT: 87
+
+Explored 236242 nodes (2280916 simplex iterations) in 3601.92 seconds (59.64 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 1: 1.78795e+06 
+
+Time limit reached
+Best objective 1.787952147923e+06, best bound 1.346006156000e+06, gap 24.7180%
+Gurobi 12.0.1: time limit, feasible solution; objective 1787952.148
+2.28092e+06 simplex iterations
+61 barrier iterations
+236242 branching nodes
+absmipgap=441946, relmipgap=0.24718
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 9.157950127098126e-12
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 2.850689249100924e-07
+Sum of violation of approx con2: 5.329070518200751e-15
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.0012969184035718393
+Con2 sum of relative violation: 0.06348935643868034
+*******************************************************************************
+
+Total cost using gurobi: 1787952.147922569
+gurobi solve time: 3617.35 seconds
+*******************************************************************************
+

@@ -15,7 +15,7 @@ param C{pipes};		   # Cost per unit length of each commercial pipe
 param R{pipes};		   # Roughness of each commercial pipe
 param omega := 10.67;  # SI Unit Constant for Hazen Williams Equation
 param vmax{arcs} default (sum {k in nodes diff Source} D[k])/((3.14/4)*(d[1])^2);
-param delta := 0.1;
+param delta := 0.0001;
 param p:= 1.852;
 param Q_max = sum{k in nodes diff Source} D[k];
 param D_min = min{i in nodes diff Source} D[i];
@@ -27,7 +27,6 @@ param d_min = min{i in pipes} d[i];
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
-var t{nodes}>=0;
 var eps{arcs}>=0;
 
 #****************************************OBJECTIVE****************************************#
@@ -48,6 +47,12 @@ subject to con2{(i,j) in arcs}:
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = (q[i,j]*abs(q[i,j])) *(((abs(q[i,j]) + eps[i,j])^0.852) /(abs(q[i,j]) + 0.852*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
 
+#subject to con2{(i,j) in arcs }: 
+#    (if -delta<=q[i,j]<=delta  then  
+#        (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87))
+#    else 
+#		(q[i,j] * abs(q[i,j])^0.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)) = h[i] - h[j]  
+#;
 
 subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]

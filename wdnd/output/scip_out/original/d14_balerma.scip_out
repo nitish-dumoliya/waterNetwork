@@ -1,0 +1,63 @@
+Water Network: ../data/d14_balerma.dat
+*******************************************************************************
+
+-------------------------------- Solving with scip --------------------------
+min_demand: 0
+max_demand: 0.00555
+max_flow: 2.4530999999999903
+eps: 7.453886032244145e-08 
+
+SCIP version 8.0.3 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: Soplex 6.0.3] [GitHash: 62fab8a2e3]
+Copyright (C) 2002-2022 Konrad-Zuse-Zentrum fuer Informationstechnik Berlin (ZIB)
+
+External libraries: 
+  Soplex 6.0.3         Linear Programming Solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: f900e3d0]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.11          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.5.3          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4e2d45c4     AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 2.1.2         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 2fe2543]
+  bliss 0.77           Computing Graph Automorphism Groups by T. Junttila and P. Kaski (www.tcs.hut.fi/Software/bliss/)
+  Ipopt 3.13.2         Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+reading user parameter file <scip.set>
+===========================
+
+[paramset.c:2526] ERROR: expected "emphasis:" at beginning of line.
+[paramset.c:2678] ERROR: input error in file <scip.set> line 7
+limits/time = 3600
+
+read problem </tmp/at8257.nl>
+============
+
+original problem has 5149 variables (0 bin, 0 int, 0 impl, 5149 cont) and 1063 constraints
+
+solve problem
+=============
+
+presolving:
+(round 1, fast)       139 del vars, 139 del conss, 0 add conss, 208 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2, fast)       186 del vars, 166 del conss, 0 add conss, 417 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 3, fast)       244 del vars, 193 del conss, 0 add conss, 533 chg bounds, 20 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 4, fast)       447 del vars, 224 del conss, 0 add conss, 551 chg bounds, 51 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 5, fast)       740 del vars, 261 del conss, 0 add conss, 568 chg bounds, 63 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 6, fast)       848 del vars, 273 del conss, 0 add conss, 572 chg bounds, 71 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 7, fast)       920 del vars, 281 del conss, 0 add conss, 574 chg bounds, 71 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.3s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.3s) no symmetry present
+presolving (8 rounds: 8 fast, 1 medium, 1 exhaustive):
+ 1668 deleted vars, 417 deleted constraints, 0 added constraints, 574 tightened bounds, 0 added holes, 71 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolving was interrupted.
+Presolving Time: 3601.67
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 3601.73
+Solving Nodes      : 0
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+time limit reached
+Total cost using scip: 0.0
+scip solve time: 3601.96 seconds
+*******************************************************************************
+
