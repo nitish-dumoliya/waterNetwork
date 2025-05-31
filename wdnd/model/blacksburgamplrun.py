@@ -24,14 +24,18 @@ class WaterNetworkSolver:
         self.source = self.ampl.getSet('Source')
         self.arcs = self.ampl.getSet('arcs')
         self.pipes = self.ampl.getSet('pipes')
+        self.fixarcs = self.ampl.getSet('fixarcs')
         
         self.L = self.ampl.getParameter('L').to_dict()
         self.D = self.ampl.getParameter('D').to_dict()
         self.C = self.ampl.getParameter('C').to_dict()
         self.P = self.ampl.getParameter('P').to_dict()
         self.R = self.ampl.getParameter('R').to_dict()
+        self.fix_r = self.ampl.getParameter('fix_r').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
+        self.exdiam = self.ampl.getParameter('fixdiam').to_dict()
+        self.fix_r = self.ampl.getParameter('fix_r').to_dict()
  
 
     def compute_adaptive_eps(self, demand):
@@ -71,37 +75,72 @@ class WaterNetworkSolver:
         con2_relative_constraint_violation = 0
         con2_original_violation = 0
         con2_approx_violation = 0
-        for (i, j) in q_values.keys():
+        for (i, j) in self.arcs:
+            if (i,j) not in self.fixarcs:
+                # Original constraint value
+                lhs = h_values[i] - h_values[j]
+                alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs  
+                #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
+        
+                # Approximated constraint value
+                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
+
+                #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
+
+                con2_original_violation =  lhs - original_rhs
+                con2_original_gap[f"con2_{i}_{j}"] = con2_original_violation
+                con2_original_violation += abs(con2_original_violation) 
+                
+                con2_approx_violation =  lhs - approx_rhs
+                con2_approx_gap[f"con2_{i}_{j}"] = con2_approx_violation
+                
+                total_absolute_constraint_violation += abs(con2_approx_violation)    
+                con2_approx_violation += abs(con2_approx_violation) 
+
+                 # Compute absolute violation
+                absolute_violation =  original_rhs - approx_rhs
+                absolute_violations[f"con2_{i},{j}"] = absolute_violation
+                con2_absolute_constraint_violation += abs(absolute_violation)
+
+                # Compute relative violation between original_rhs and approx_rhs
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violations[f"con2_{i},{j}"] = relative_violation
+                con2_relative_constraint_violation += abs(relative_violation)
+               
+        #print("con2_gap:", con2_gap)
+        for (i, j) in self.fixarcs:
             # Original constraint value
             lhs = h_values[i] - h_values[j]
-            alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+            alpha_rhs = 10.67 * self.L[i, j] / ((self.fix_r[i,j] ** 1.852) * ((self.exdiam[i,j]) ** 4.87))
             #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
-            original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs 
+            original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
             #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
-            
+    
             # Approximated constraint value
-            approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
+            approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
 
             #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
             con2_original_violation =  lhs - original_rhs
-            con2_original_gap[f"con2_{i}_{j}"] = con2_original_violation
+            con2_original_gap[f"con2_fix_{i}_{j}"] = con2_original_violation
             con2_original_violation += abs(con2_original_violation) 
             
             con2_approx_violation =  lhs - approx_rhs
-            con2_approx_gap[f"con2_{i}_{j}"] = con2_approx_violation
+            con2_approx_gap[f"con2_fix_{i}_{j}"] = con2_approx_violation
             
             total_absolute_constraint_violation += abs(con2_approx_violation)    
             con2_approx_violation += abs(con2_approx_violation) 
 
              # Compute absolute violation
             absolute_violation =  original_rhs - approx_rhs
-            absolute_violations[f"con2_{i},{j}"] = absolute_violation
+            absolute_violations[f"con2_fix_{i},{j}"] = absolute_violation
             con2_absolute_constraint_violation += abs(absolute_violation)
 
             # Compute relative violation between original_rhs and approx_rhs
             relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
-            relative_violations[f"con2_{i},{j}"] = relative_violation
+            relative_violations[f"con2_fix_{i},{j}"] = relative_violation
             con2_relative_constraint_violation += abs(relative_violation)
            
         #print("con2_gap:", con2_gap)
@@ -185,8 +224,8 @@ class WaterNetworkSolver:
 
         print("*******************************************************************************\n")
         print("Absolute and relative violations between original and approximation constraint 2:\n")
-        #headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
-        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
         print("Con2 sum of relative violation:", con2_relative_constraint_violation)
 
@@ -350,8 +389,7 @@ class WaterNetworkSolver:
         MaxK = 10.67/((R_min**1.852) * (d_min**4.87))
  
         epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
-        #epsilon = (10**(-6)/(0.04001571*MaxK))**(1/1.852)
- 
+        #epsilon = (10**(-6)/(0.04001571*MaxK))**(1/1.852) 
 
         #epsilon = 1e-3
         #epsilon = self.compute_adaptive_eps(min_demand/1000)
@@ -394,7 +432,8 @@ class WaterNetworkSolver:
         l_sol = self.ampl.get_variable('l').get_values().to_dict()
 
         #self.ampl.eval("display l;")
-        #self.ampl.eval("display q;")
+        #self.ampl.eval("display q1;")
+        #self.ampl.eval("display q2;")
         #self.ampl.eval("display h;")
 
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j] - q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));")
@@ -423,27 +462,19 @@ if __name__ == "__main__":
     model = sys.argv[1]
 
     data_list = [
-        "d1_bessa",
-        "d2_shamir",
-        "d3_hanoi",
-        "d4_double_hanoi",
-        "d5_triple_hanoi",
-        "d6_newyork",
-        "d7_blacksburg",
-        "d8_fossolo_iron",
-        "d9_fossolo_poly_0",
-        "d10_fossolo_poly_1",
-        "d11_kadu",
-        "d12_pescara",
-        "d13_modena",
-        "d14_balerma"
+        "d1_shamir",
+        "d2_hanoi",
+        "d3_fossolo_iron",
+        "d4_fossolo_poly_0",
+        "d5_fossolo_poly_1",
+        "d6_modena",
+        "d7_pescara"
     ]
 
     # Select the data number here (0 to 18)
     #data_number = int(sys.argv[3]) -1
     #data = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
     data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
-    #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/data/minlplib_data/{data_list1[(data_number)]}.dat"
     #print("Water Network:", f"{data_list[(data_number)]}.dat")
     print("Water Network:", f"{sys.argv[3]}")

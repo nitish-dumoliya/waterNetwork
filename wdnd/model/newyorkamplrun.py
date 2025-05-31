@@ -77,7 +77,7 @@ class WaterNetworkSolver:
             lhs = 2*(h_values[i] - h_values[j])
             alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[i,j] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
             #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
-            original_rhs = q1[i, j] * (abs(q1[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87)+ q2[i, j] * (abs(q2[i, j])) ** 0.852 * alpha_rhs  
+            original_rhs = q1[i, j] * (abs(q1[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + q2[i, j] * (abs(q2[i, j])) ** 0.852 * alpha_rhs  
             #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
             
             # Approximated constraint value
@@ -186,8 +186,8 @@ class WaterNetworkSolver:
 
         print("*******************************************************************************\n")
         print("Absolute and relative violations between original and approximation constraint 2:\n")
-        #headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
-        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
         print("Con2 sum of relative violation:", con2_relative_constraint_violation)
 
@@ -218,7 +218,7 @@ class WaterNetworkSolver:
         d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
         d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
         #max_L = max(self.L[i,j] for (i,j) in self.arcs)
-        R_min = min(self.R[k] for k in self.pipes)
+        R_min = min(self.R[i,j] for (i,j) in self.arcs)
         MaxK = 10.67 / ((R_min ** 1.852) * ((d_min) ** 4.87))
         
         epsilon = (10**(-6)/(0.07508*MaxK))**(1/0.926)
@@ -243,6 +243,8 @@ class WaterNetworkSolver:
 
         l_init = self.ampl.getVariable('l').getValues().to_dict()
         q_init = self.ampl.getVariable('q').getValues().to_dict()
+        q1 = self.ampl.getVariable('q1').getValues().to_dict()
+        q2 = self.ampl.getVariable('q2').getValues().to_dict()
         h_init = self.ampl.getVariable('h').getValues().to_dict()
         eps = self.ampl.getVariable('eps').getValues().to_dict()
         #eps = self.ampl.getParameter('eps').getValues().to_dict()
@@ -259,7 +261,7 @@ class WaterNetworkSolver:
         #ampl.eval("display q;")
         #ampl.eval("display h;")
 
-        self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
+        self.constraint_violations(q_init,q1, q2, h_init, l_init, eps, "ipopt")
         #ampl.eval("display con1.body;")
         #ampl.eval("display con2.body;")
         #ampl.eval("display con3.body;")
@@ -356,7 +358,7 @@ class WaterNetworkSolver:
         #epsilon = 1e-3
         #epsilon = self.compute_adaptive_eps(min_demand/1000)
         
-        #print("eps:", epsilon,"\n")
+        print("eps:", epsilon,"\n")
         
         
         #eps = ampl.getParameter('eps').to_list()
@@ -396,8 +398,8 @@ class WaterNetworkSolver:
         l_sol = self.ampl.get_variable('l').get_values().to_dict()
 
         #self.ampl.eval("display l;")
-        self.ampl.eval("display q1;")
-        self.ampl.eval("display q2;")
+        #self.ampl.eval("display q1;")
+        #self.ampl.eval("display q2;")
         #self.ampl.eval("display h;")
 
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j] - q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));")
@@ -417,7 +419,7 @@ class WaterNetworkSolver:
         self.read_model_and_data()
 
         # First solve: IPOPT
-        #self.solve_ipopt()
+        self.solve_ipopt()
 
         # Second solve: self.solver_name
         self.second_solve()
