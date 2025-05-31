@@ -32,6 +32,7 @@ class WaterNetworkSolver:
         self.R = self.ampl.getParameter('R').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
+        self.exdiam = self.ampl.getParameter('exdiam').to_dict()
  
 
     def compute_adaptive_eps(self, demand):
@@ -48,7 +49,7 @@ class WaterNetworkSolver:
         
         return epsilon
 
-    def constraint_violations(self, q_values, h_values, l_values, epsilon, solver):
+    def constraint_violations(self, q_values, q1, q2, h_values, l_values, epsilon, solver):
         total_absolute_constraint_violation = 0
         total_relative_constraint_violation = 0
          
@@ -73,14 +74,14 @@ class WaterNetworkSolver:
         con2_approx_violation = 0
         for (i, j) in q_values.keys():
             # Original constraint value
-            lhs = h_values[i] - h_values[j]
+            lhs = 2*(h_values[i] - h_values[j])
             alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[i,j] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
             #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
-            original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs 
+            original_rhs = q1[i, j] * (abs(q1[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87)+ q2[i, j] * (abs(q2[i, j])) ** 0.852 * alpha_rhs  
             #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
             
             # Approximated constraint value
-            approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
+            approx_rhs = (q1[i, j]**3 * ((q1[i, j]**2 + epsilon[i,j]) ** 0.426)/(q1[i,j]**2 + 0.426*epsilon[i,j])) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j]**3 * ((q2[i, j]**2 + epsilon[i,j]) ** 0.426)/(q2[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
 
             #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
@@ -370,6 +371,8 @@ class WaterNetworkSolver:
 
         # Check constraint violations
         q = self.ampl.get_variable('q').get_values().to_dict()
+        q1 = self.ampl.get_variable('q1').get_values().to_dict()
+        q2 = self.ampl.get_variable('q2').get_values().to_dict()
         h = self.ampl.get_variable('h').get_values().to_dict()
         l = self.ampl.get_variable('l').get_values().to_dict()
         eps = self.ampl.get_variable('eps').get_values().to_dict()
@@ -379,7 +382,7 @@ class WaterNetworkSolver:
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display z;")
 
-        self.constraint_violations(q, h, l, eps, self.solver_name)
+        self.constraint_violations(q, q1, q2, h, l, eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         total_cost = self.ampl.getObjective("total_cost").value()

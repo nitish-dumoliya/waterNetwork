@@ -220,7 +220,7 @@ class WaterNetworkSolver:
         R_min = min(self.R[k] for k in self.pipes)
         MaxK = 10.67 / ((R_min ** 1.852) * ((d_min) ** 4.87))
         
-        epsilon = (10**(-6)/(0.07508*MaxK))**(1/0.926)
+        epsilon = (10**(-7)/(0.07508*MaxK))**(1/0.926)
         #epsilon = (10**(-6)/(0.04001571*MaxK))**(1/1.852)
         #epsilon = self.compute_adaptive_eps(min_demand/1000)
         #epsilon = 1e-5
@@ -349,7 +349,7 @@ class WaterNetworkSolver:
         R_min = min(self.R[k] for k in self.pipes)
         MaxK = 10.67/((R_min**1.852) * (d_min**4.87))
  
-        epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
+        epsilon = ((10**(-7))/(0.07508*MaxK))**(1/0.926)
         #epsilon = (10**(-6)/(0.04001571*MaxK))**(1/1.852)
  
 
@@ -380,7 +380,7 @@ class WaterNetworkSolver:
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display z;")
 
-        #self.constraint_violations(q, h, l, eps, self.solver_name)
+        self.constraint_violations(q, h, l, eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         total_cost = self.ampl.getObjective("total_cost").value()
