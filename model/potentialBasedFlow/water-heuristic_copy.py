@@ -1456,9 +1456,9 @@ class WaterNetworkOptimizer:
         #    return self.objective(params, self.data_file)
 
         #num_cores = multiprocessing.cpu_count()
-        best_params, best_cost = pso(self.objective, lb, ub, swarmsize=2, maxiter=2)
-        self.bound_push , self.bound_frac = best_params
-        #self.bound_push , self.bound_frac = (0.001, 0.001)
+        #best_params, best_cost = pso(self.objective, lb, ub, swarmsize=2, maxiter=2)
+        #self.bound_push , self.bound_frac = best_params
+        self.bound_push , self.bound_frac = (0.001, 0.001)
  
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()
