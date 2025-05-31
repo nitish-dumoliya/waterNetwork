@@ -1,0 +1,206 @@
+Water Network: ../data/d1_shamir.dat
+*******************************************************************************
+
+-------------------------------- Solving with IPOPT --------------------------
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+eps: 2.9050092637079635e-11 
+
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 417178.7280692525 
+
+*******************************************************************************
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.204828317812883e-13
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 9.237055564881302e-14
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 2.8424031150997564e-06
+Con2 sum of relative violation: 5.052820371452458e-07
+*******************************************************************************
+
+Total cost using ipopt: 417178.7280692525
+IPOPT solve time: 0.44 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with gurobi --------------------------
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+eps: 2.9050092637079635e-11 
+
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+Set parameter Method to value 2
+  alg:method = 2
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 32 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+Method  2
+BarConvTol  1e-09
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 22 rows, 182 columns and 150 nonzeros
+Model fingerprint: 0xc336de63
+Model has 8 general nonlinear constraints (264 nonlinear terms)
+Variable types: 182 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 6e+02]
+  Bounds range     [1e-11, 7e+16]
+  RHS range        [3e-02, 1e+03]
+Warning: Model contains large bounds
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+
+User MIP start produced solution with objective 417179 (0.00s)
+Loaded user MIP start with objective 417179
+
+Presolve model has 8 nlconstr
+Added 296 variables to disaggregate expressions.
+Presolve removed 0 rows and 48 columns
+Presolve time: 0.00s
+Presolved: 846 rows, 431 columns, 2139 nonzeros
+Presolved model has 136 bilinear constraint(s)
+Presolved model has 24 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 431 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 1.300e+01
+ Factor NZ  : 3.400e+01
+ Factor Ops : 1.540e+02 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.60000000e+04 -1.33603462e+16  8.91e+15 0.00e+00  1.00e+09     1s
+   1   1.60000000e+04 -1.03634644e+28  8.91e+15 1.53e-05  3.91e+20     1s
+   2   1.60000000e+04 -1.57952038e+28  8.91e+15 3.05e-05  5.87e+20     1s
+   3   1.60000000e+04 -2.08880253e+28  8.91e+15 3.05e-05  7.81e+20     1s
+   4   1.60000000e+04 -1.33603462e+20  8.91e+15 0.00e+00  1.00e+13     1s
+   5   1.60000000e+04 -5.18342496e+31  8.91e+15 1.25e-01  1.95e+24     1s
+   6   1.60000000e+04 -1.33603462e+20  8.91e+15 0.00e+00  1.00e+13     1s
+   7   1.60000000e+04 -1.33600129e+20  8.90e+15 6.61e+02  1.28e+16     1s
+   8*  1.60000000e+04 -7.67023075e+19  2.53e+13 1.26e+00  1.34e+12     1s
+   9*  1.60000000e+04  1.92885606e+19  1.70e+12 8.06e-01  1.85e+11     1s
+  10*  1.60000000e+04  1.14735959e+18  3.55e+10 3.86e-02  5.97e+09     1s
+  11*  1.60000000e+04  3.15859624e+15  8.71e+07 8.84e-05  1.91e+07     1s
+  12*  1.60000000e+04  1.21481828e+13  2.82e+05 3.11e-07  7.76e+04     1s
+  13*  1.60000000e+04  5.86444797e+10  1.14e+03 1.43e-09  3.81e+02     1s
+  14*  1.60000000e+04  3.71140423e+08  6.26e+00 9.25e-12  2.46e+00     1s
+
+Barrier performed 14 iterations in 0.75 seconds (0.02 work units)
+Objective cutoff exceeded
+
+
+Root relaxation: cutoff, 0 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0     cutoff    0      417178.728 417178.728  0.00%     -    0s
+
+Explored 1 nodes (0 simplex iterations) in 0.75 seconds (0.02 work units)
+Thread count was 32 (of 32 available processors)
+
+Solution count 1: 417179 
+
+Optimal solution found (tolerance 1.00e-09)
+Best objective 4.171787280693e+05, best bound 4.171787280693e+05, gap 0.0000%
+Gurobi 12.0.1: optimal solution; objective 417178.7281
+0 simplex iterations
+14 barrier iterations
+1 branching node
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 8.065631496023684e-13
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 1.5276668818842154e-13
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 2.842403114211578e-06
+Con2 sum of relative violation: 5.052820369676103e-07
+*******************************************************************************
+
+Total cost using gurobi: 417178.7280692525
+gurobi solve time: 0.80 seconds
+*******************************************************************************
+
