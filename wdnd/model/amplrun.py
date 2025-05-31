@@ -299,16 +299,16 @@ class WaterNetworkSolver:
         self.read_model_and_data()
 
         # Set initial values
-        q_var = self.ampl.get_variable('q')
-        h_var = self.ampl.get_variable('h')
-        l_var = self.ampl.get_variable('l')
+        #q_var = self.ampl.get_variable('q')
+        #h_var = self.ampl.get_variable('h')
+        #l_var = self.ampl.get_variable('l')
 
-        for idx in self.q_init:
-            q_var[idx].set_value(self.q_init[idx])
-        for idx in self.h_init:
-            h_var[idx].set_value(self.h_init[idx])
-        for idx in self.l_init:
-            l_var[idx].set_value(self.l_init[idx])
+        #for idx in self.q_init:
+        #    q_var[idx].set_value(self.q_init[idx])
+        #for idx in self.h_init:
+        #    h_var[idx].set_value(self.h_init[idx])
+        #for idx in self.l_init:
+        #    l_var[idx].set_value(self.l_init[idx])
 
         # Change solver and solve
         self.ampl.option['solver'] = self.solver_name
@@ -356,13 +356,13 @@ class WaterNetworkSolver:
         #epsilon = 1e-3
         #epsilon = self.compute_adaptive_eps(min_demand/1000)
         
-        #print("eps:", epsilon,"\n")
+        print("eps:", epsilon,"\n")
         
         
         #eps = ampl.getParameter('eps').to_list()
         #for (i,j) in eps.items():
             #eps[i,j].setValue(epsilon)
-        #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
+        self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
         #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = 1e-6 + q[i,j]^2;")
         
         #self.ampl.eval("display {i in 1.._ncons} (_conname[i]);")
@@ -380,7 +380,7 @@ class WaterNetworkSolver:
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display z;")
 
-        self.constraint_violations(q, h, l, eps, self.solver_name)
+        #self.constraint_violations(q, h, l, eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         total_cost = self.ampl.getObjective("total_cost").value()
@@ -423,19 +423,27 @@ if __name__ == "__main__":
     model = sys.argv[1]
 
     data_list = [
-        "d1_shamir",
-        "d2_hanoi",
-        "d3_fossolo_iron",
-        "d4_fossolo_poly_0",
-        "d5_fossolo_poly_1",
-        "d6_modena",
-        "d7_pescara"
+        "d1_bessa",
+        "d2_shamir",
+        "d3_hanoi",
+        "d4_double_hanoi",
+        "d5_triple_hanoi",
+        "d6_newyork",
+        "d7_blacksburg",
+        "d8_fossolo_iron",
+        "d9_fossolo_poly_0",
+        "d10_fossolo_poly_1",
+        "d11_kadu",
+        "d12_pescara",
+        "d13_modena",
+        "d14_balerma"
     ]
 
     # Select the data number here (0 to 18)
     #data_number = int(sys.argv[3]) -1
     #data = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
     data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
+    #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/data/minlplib_data/{data_list1[(data_number)]}.dat"
     #print("Water Network:", f"{data_list[(data_number)]}.dat")
     print("Water Network:", f"{sys.argv[3]}")

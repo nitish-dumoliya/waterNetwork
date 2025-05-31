@@ -1,0 +1,90 @@
+Water Network: ../data/d14_balerma.dat
+*******************************************************************************
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0
+max_demand: 0.00555
+max_flow: 2.4530999999999903
+eps: 7.453886032244145e-08 
+
+The license for this solver will expire in 1.5 days.
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 2
+barstats 
+version 
+objbound
+Time-limited version (expiring midnight 20250531 GMT)
+License 67b523f8-1 for A7052: IE 647 Applied Integer Programming, Prof. Ashutosh Mahajan, Indian Institute of Technology Bombay
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20241227), liccheck(20211124), ASL(20241202)
+
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 0.390079E+07
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1+         92.34    65MB     723896.        0.390079E+07    NA
+          1          92.75    65MB     723896.        0.390079E+07    NA
+          4+        139.49    65MB     723896.        0.390079E+07    0.15%
+          7         181.48    65MB     723896.        0.390079E+07    0.44%
+         19         215.03    65MB     723896.        0.390079E+07    0.86%
+         28         281.69    65MB     723896.        0.390079E+07    0.87%
+         60         332.82    65MB     723896.        0.390079E+07    1.04%
+         84         393.67    65MB     723896.        0.390079E+07    1.17%
+        169         466.88    65MB     723896.        0.390079E+07    1.32%
+        220         517.43    65MB     723896.        0.390079E+07    1.49%
+        347         547.45    65MB     723896.        0.390079E+07    1.59%
+        442         577.61    75MB     723896.        0.390079E+07    1.63%
+        596         656.39    75MB     723896.        0.390079E+07    1.65%
+        699         686.50    75MB     723896.        0.390079E+07    1.73%
+        882         716.60    75MB     723896.        0.390079E+07    1.82%
+       1003         746.63    75MB     723896.        0.390079E+07    1.88%
+       1155         776.84    85MB     723896.        0.390079E+07    1.91%
+       1210         824.05    85MB     723896.        0.390079E+07    1.97%
+       1336         854.17    95MB     723896.        0.390079E+07    1.98%
+       1432        3604.35    94MB     723896.        0.390079E+07    1.98%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3604.37
+ Total CPU time used:              3604.35
+
+ Total no. of BaR iterations:    1432
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:     298
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 1432 iterations, CPU time limit reached.
+Objective 3900790.148
+Objective lower bound = 723895.9720000001, upper bound = 3900790.1475235336
+barstatus = 4, modelstatus = 4
+max nodes in memory = 298
+optimum found at node -1
+Baron run time (excluding setup) = 3604.35 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+Total cost using baron: 3900790.147523536
+baron solve time: 3604.49 seconds
+*******************************************************************************
+
