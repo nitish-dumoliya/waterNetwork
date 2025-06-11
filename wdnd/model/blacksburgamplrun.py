@@ -434,8 +434,10 @@ class WaterNetworkSolver:
         #self.ampl.eval("display l;")
         #self.ampl.eval("display q1;")
         #self.ampl.eval("display q2;")
-        #self.ampl.eval("display h;")
-
+        self.ampl.eval("display h;")
+        #self.ampl.eval("display sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[k] + sum{(i,j) in fixarcs} L[i,j]*fix_c[i,j] ;")
+        #self.ampl.eval("display {(i,j) in arcs, k in pipes :l[i,j,k] >0.000001}: l[i,j,k]*3.28084 ;")
+        #self.ampl.eval("display {i in nodes}: h[i]/0.3048;")
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j] - q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));")
 
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j]  - (q[i,j])^3 *((((q[i,j])^2 + 1e+6 * eps[i,j] )^0.426) /((q[i,j])^2 + 0.426 * 1e+6 *eps[i,j])) * (1000^3.018)  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")

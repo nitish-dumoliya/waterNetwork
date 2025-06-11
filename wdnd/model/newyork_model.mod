@@ -45,7 +45,10 @@ subject to con1{j in nodes diff Source}:
 #    2*(h[i] - h[j])  = q1[i,j]*abs(q1[i,j])^0.852 *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) + q2[i,j]*abs(q2[i,j])^0.852 * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
 
 subject to con2{(i,j) in arcs}: 
-    2*(h[i] - h[j])  = (q1[i,j])^3 *((((q1[i,j])^2 + eps[i,j])^0.426) /((q1[i,j])^2 + 0.426*eps[i,j])) *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) + (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j])^0.426) /((q2[i,j])^2 + 0.426*eps[i,j])) * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
+    (h[i] - h[j])  = (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j])^0.426) /((q2[i,j])^2 + 0.426*eps[i,j])) * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
+
+subject to con2_{(i,j) in arcs}: 
+    h[i] - h[j]  = (q1[i,j])^3 *((((q1[i,j])^2 + eps[i,j])^0.426) /((q1[i,j])^2 + 0.426*eps[i,j])) *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) ;
 
 
 subject to con3{(i,j) in arcs}: 

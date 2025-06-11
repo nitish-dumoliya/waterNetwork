@@ -30,13 +30,13 @@ var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs},<=Q_max, >= -Q_max;	            # Flow variable
 #var q1{fixarcs};	            # Flow variable
 #var q2{fixarcs};	            # Flow variable
-var h{nodes}>=0;	            # Head
+var h{nodes};	            # Head
 var eps{arcs}>=0;
 
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
-#minimize total_cost : sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[k] + sum{(i,j) in fixarcs} L[i,j]*fix_c[i,j] ;	
-minimize total_cost : sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[k] ;	
+minimize total_cost : sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[k] + sum{(i,j) in fixarcs} L[i,j]*fix_c[i,j] ;	
+#minimize total_cost : sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[k] ;	
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
@@ -65,9 +65,9 @@ subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];
 
 subject to con4{(i,j) in arcs diff fixarcs, k in pipes}: l[i,j,k] <= L[i,j];
 
-subject to con5{i in Source}:E[i] = h[i];
+subject to con5{i in Source}: h[i] = E[i];
 
-subject to con6{i in nodes diff Source}: P[i] + E[i] <= h[i] <= E[i] + pmax[i];
+subject to con6{i in nodes diff Source}: E[i] + P[i] <= h[i] <= E[i] + pmax[i];
 
 #subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
 
