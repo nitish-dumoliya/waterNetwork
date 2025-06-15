@@ -1,0 +1,197 @@
+Water Network: d6_newyork.dat
+*******************************************************************************
+
+-------------------------------- Solving with knitro --------------------------
+min_demand: 0.02831685
+max_demand: 4.8138645
+max_flow: 57.1292449
+eps: 0.002631083676236705 
+
+Artelys Knitro 14.0.0: maxtime_real = 300
+outlev = 4
+threads=8
+feastol = 1.0e-7
+feastol_abs = 1.0e-7
+ms_enable = 1
+ms_maxsolves = 10
+
+=======================================
+          Commercial License
+         Artelys Knitro 14.0.0
+=======================================
+
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+concurrent_evals:        0
+datacheck:               0
+feastol:                 1e-07
+feastol_abs:             1e-07
+hessian_no_f:            1
+maxtime_real:            300
+ms_enable:               1
+ms_maxsolves:            10
+numthreads:              8
+outlev:                  4
+
+Problem Characteristics                                 (   Presolved)
+-----------------------
+Objective goal:  Minimize
+Objective type:  linear
+Number of variables:                                376 (         376)
+    bounded below only:                              19 (          19)
+    bounded above only:                               0 (           0)
+    bounded below and above:                        336 (         336)
+    fixed:                                            0 (           0)
+    free:                                            21 (          21)
+Number of constraints:                               82 (          82)
+    linear equalities:                               40 (          40)
+    quadratic equalities:                             0 (           0)
+    gen. nonlinear equalities:                       42 (          42)
+    linear one-sided inequalities:                    0 (           0)
+    quadratic one-sided inequalities:                 0 (           0)
+    gen. nonlinear one-sided inequalities:            0 (           0)
+    linear two-sided inequalities:                    0 (           0)
+    quadratic two-sided inequalities:                 0 (           0)
+    gen. nonlinear two-sided inequalities:            0 (           0)
+Number of nonzeros in Jacobian:                     832 (         832)
+Number of nonzeros in Hessian:                      357 (         357)
+
+Multistart will generate 10 start points as follows:
+    336 variables will vary within their upper and lower bounds
+     40 variables will vary over a range of 1000
+
+Knitro parallel multistart will run with 8 threads.
+
+ Solve #  ThreadID  Status     Objective     FeasError   OptError   Real Time 
+--------  --------  ------  --------------  ----------  ---------- ----------
+       4         6       0    6.042859e+07   3.638e-12   4.772e-08     40.080
+       1         0       0    5.851533e+07   2.096e-11   5.729e-07     98.971
+       8         7       0    5.873790e+07   7.532e-12   5.021e-07    152.906
+       3         4       0    5.832314e+07   2.582e-09   3.295e-05    163.928
+       2         1       0    5.943020e+07   4.263e-12   7.771e-08    172.834
+       9         6       0    5.934854e+07   7.859e-11   7.563e-06    148.763
+      10         0       0    5.791882e+07   5.235e-10   3.898e-05     91.296
+       7         3       0    5.834766e+07   4.415e-09   4.169e-05    194.142
+       6         5       0    5.954937e+07   5.457e-12   2.304e-07    219.382
+       5         2       0    5.980023e+07   4.116e-10   6.661e-06    244.787
+Multistart stopping, reached ms_maxsolves limit.
+
+MULTISTART: Best locally optimal solution is returned.
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   5.79188224741751e+07
+Final feasibility error (abs / rel) =   5.24e-10 / 3.04e-16
+Final optimality error  (abs / rel) =   3.90e-05 / 3.90e-07
+# of iterations                     =       4337 
+# of CG iterations                  =       1406 
+# of function evaluations           =       4595
+# of gradient evaluations           =       4348
+# of Hessian evaluations            =       4359
+Total program time (secs)           =     244.92575 (   135.095 CPU time)
+
+===============================================================================
+
+Knitro 14.0.0: Locally optimal or satisfactory solution.
+objective 57918822.47; feasibility error 5.24e-10
+4337 iterations; 4595 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 5.39003057464793e-10
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.0167634632262982
+Con2 sum of relative violation: 0.20859917815555284
+*******************************************************************************
+
+Total cost using knitro: 57918822.47417514
+knitro solve time: 245.51 seconds
+q1 [*,*] (tr)
+:       1         2         3        4         5         6         7       :=
+2    24.5609     .         .         .        .         .        .
+3      .       21.9819     .         .        .         .        .
+4      .         .       19.4028     .        .         .        .
+5      .         .         .       16.941     .         .        .
+6      .         .         .         .      14.4792     .        .
+7      .         .         .         .        .       12.0174    .
+8      .         .         .         .        .         .       6.09759
+15   31.8786     .         .         .        .         .        .
+
+:       8         9         10        11         12        13        14      :=
+9    6.96816    .         .         3.75745     .          .         .
+10    .        1.62913    .          .          .          .         .
+11    .         .         .          .        13.5732      .         .
+12    .         .         .          .          .        23.4182     .
+13    .         .         .          .          .          .       26.6998
+16    .        2.32474    .          .          .          .         .
+17    .         .        0.619544    .          .          .         .
+18    .         .         .          .         2.11868     .         .
+20    .         .         .         1.95103     .          .         .
+
+:      15         18         20       :=
+14   29.2892    .          .
+16     .        .         0.227766
+19     .       0.995267    .
+;
+
+q2 [*,*] (tr)
+:       1          2          3          4         5          6          7   :=
+2    0.356658    .          .          .         .          .          .
+3     .         0.319212    .          .         .          .          .
+4     .          .         0.281768    .         .          .          .
+5     .          .          .         0.24603    .          .          .
+6     .          .          .          .        0.210299    .          .
+7     .          .          .          .         .         0.174584    .
+8     .          .          .          .         .          .         3.59684
+15   0.333031    .          .          .         .          .          .
+
+:      8           9         10         11          12         13         14 :=
+9   0.228727    .           .        0.0415603    .          .          .
+10
+     .         0.0274027    .         .           .          .          .
+11
+     .          .           .         .          0.141934    .          .
+12
+     .          .           .         .           .         0.244667    .
+13
+     .          .           .         .           .          .         0.278939
+16
+     .         2.20075      .         .           .          .          .
+17
+     .          .          1.00867    .           .          .          .
+18
+     .          .           .         .          4.51313     .          .
+20
+     .          .           .        3.15121      .          .          .
+
+:       15        18         20        :=
+14   0.305984    .         .
+16    .          .        0.0606087
+19    .         2.32064    .
+;
+
+*******************************************************************************
+

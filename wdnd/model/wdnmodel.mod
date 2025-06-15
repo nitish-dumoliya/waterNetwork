@@ -15,13 +15,18 @@ param C{pipes};		   # Cost per unit length of each commercial pipe
 param R{pipes};		   # Roughness of each commercial pipe
 param omega := 10.67;  # SI Unit Constant for Hazen Williams Equation
 param vmax{arcs} default (sum {k in nodes diff Source} D[k])/((3.14/4)*(d[1])^2);
-param delta := 0.0001;
 param p:= 1.852;
 param Q_max = sum{k in nodes diff Source} D[k];
 param D_min = min{i in nodes diff Source} D[i];
 param D_max = max{i in nodes diff Source} D[i];
 param d_max = max{i in pipes} d[i];
 param d_min = min{i in pipes} d[i];
+
+param delta := 0.01;
+param a := (15/8)*delta**(p-1) + (1/8)*(p-1)*p*delta**(p-1) - (7/8)*p*delta**(p-1);
+param b := - (5/4)*delta**(p-3) - (1/4)*(p-1)*p*delta**(p-3) - (5/4)*p*delta**(p-3);
+param c := (3/8)*delta**(p-5) + (1/8)*(p-1)*p*delta**(p-5) - (3/8)*p*delta**(p-5);
+
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
@@ -38,9 +43,11 @@ subject to con1{j in nodes diff Source}:
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
 ;
 
+# hazen-Williams Constraint 
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
 
+# Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs}: 
      h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
 
@@ -50,6 +57,14 @@ subject to con2{(i,j) in arcs}:
 #subject to con2{(i,j) in arcs }: 
 #    (if -delta<=q[i,j]<=delta  then  
 #        (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87))
+#    else 
+#		(q[i,j] * abs(q[i,j])^0.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)) = h[i] - h[j]  
+#;
+
+# Bragalli approximation
+#subject to con2{(i,j) in arcs }: 
+#    (if -delta<=q[i,j]<=delta  then 
+#        (c*(q[i,j]^5) + b*(q[i,j]^3) + a*q[i,j])*(sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)) 
 #    else 
 #		(q[i,j] * abs(q[i,j])^0.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)) = h[i] - h[j]  
 #;

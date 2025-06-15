@@ -1,8 +1,14 @@
-python3 amplrun.py wdnmodel.mod scip  ../data/d1_shamir.dat > ../output/scip_out/original/d1_shamir.scip_out
-python3 amplrun.py wdnmodel.mod scip  ../data/d2_hanoi.dat > ../output/scip_out/original/d2_hanoi.scip_out
-python3 amplrun.py wdnmodel.mod scip  ../data/d3_fossolo_iron.dat > ../output/scip_out/original/d3_fossolo_iron.scip_out
-python3 amplrun.py wdnmodel.mod scip  ../data/d4_fossolo_poly_0.dat > ../output/scip_out/original/d4_fossolo_poly_0.scip_out
-python3 amplrun.py wdnmodel.mod scip  ../data/d5_fossolo_poly_1.dat > ../output/scip_out/original/d5_fossolo_poly_1.scip_out
-python3 amplrun.py wdnmodel.mod scip  ../data/d6_modena.dat > ../output/scip_out/original/d6_modena.scip_out
-python3 amplrun.py wdnmodel.mod scip  ../data/d7_pescara.dat > ../output/scip_out/original/d7_pescara.scip_out
-
+python3 amplrun.py wdnmodel.mod knitro d1_bessa.dat > ../output/knitro_out/original/d1_bessa.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d2_shamir.dat > ../output/knitro_out/original/d2_shamir.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d3_hanoi.dat > ../output/knitro_out/original/d3_hanoi.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d4_double_hanoi.dat > ../output/knitro_out/original/d4_double_hanoi.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d5_triple_hanoi.dat > ../output/knitro_out/original/d5_triple_hanoi.knitro_out
+python3 newyorkamplrun.py newyork_model.mod knitro d6_newyork.dat > ../output/knitro_out/original/d6_newyork.knitro_out
+python3 blacksburgamplrun.py blacksburg_model.mod knitro d7_blacksburg.dat > ../output/knitro_out/original/d7_blacksburg.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d8_fossolo_iron.dat > ../output/knitro_out/original/d8_fossolo_iron.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d9_fossolo_poly_0.dat > ../output/knitro_out/original/d9_fossolo_poly_0.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d10_fossolo_poly_1.dat > ../output/knitro_out/original/d10_fossolo_poly_1.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d11_kadu.dat > ../output/knitro_out/original/d11_kadu.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d12_pescara.dat > ../output/knitro_out/original/d12_pescara.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d13_modena.dat > ../output/knitro_out/original/d13_modena.knitro_out
+python3 amplrun.py wdnmodel.mod knitro d14_balerma.dat > ../output/knitro_out/original/d14_balerma.knitro_out

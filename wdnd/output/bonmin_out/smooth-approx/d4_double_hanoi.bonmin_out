@@ -1,0 +1,103 @@
+Water Network: d4_double_hanoi.dat
+*******************************************************************************
+
+-------------------------------- Solving with bonmin --------------------------
+min_demand: 0.01667
+max_demand: 0.375
+max_flow: 10.830579999999996
+eps: 1.376433248637255e-05 
+
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 5
+bonmin.nlp_log_level 2
+warm_start_init_point = no
+bonmin.num_resolve_at_root = 10
+
+Cbc3007W No integer variables - nothing to do
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0010I Ipopt return (for initialSolve): status  1, iter count  197, time 1.376235
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1         OPT 12398623      197 1.376235
+NLP0001I After 1 tries found a solution of 12398623 (previous best 12398623).
+NLP3003W Trying to resolve NLP with different starting point (1 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  737, time 5.507611
+NLP0011I Solution of value 12069206 found on 1'th attempt
+NLP0014I *           1         OPT 12069206      737 5.507611         resolve cost
+NLP0001I After 2 tries found a solution of 12069206 (previous best 12069206).
+NLP3003W Trying to resolve NLP with different starting point (2 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count 1321, time 11.095839
+NLP0011I Solution of value 12066927 found on 2'th attempt
+NLP0014I *           2         OPT 12066927     1321 11.095839         resolve cost
+NLP0001I After 3 tries found a solution of 12066927 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (3 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  538, time 4.118034
+NLP0014I             3         OPT 12271306      538 4.118034         resolve cost
+NLP0001I After 4 tries found a solution of 12271306 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (4 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count 1866, time 15.479486
+NLP0014I             4         OPT 12301850     1866 15.479486         resolve cost
+NLP0001I After 5 tries found a solution of 12301850 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (5 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  870, time 6.232715
+NLP0014I             5         OPT 12071701      870 6.232715         resolve cost
+NLP0001I After 6 tries found a solution of 12071701 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (6 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  704, time 5.046854
+NLP0014I             6         OPT 12292819      704 5.046854         resolve cost
+NLP0001I After 7 tries found a solution of 12292819 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (7 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  631, time 4.911612
+NLP0014I             7         OPT 12718027      631 4.911612         resolve cost
+NLP0001I After 8 tries found a solution of 12718027 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (8 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  794, time 6.722912
+NLP0014I             8         OPT 12072136      794 6.722912         resolve cost
+NLP0001I After 9 tries found a solution of 12072136 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (9 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  210, time 1.479662
+NLP0014I             9         OPT 12501348      210 1.479662         resolve cost
+NLP0001I After 10 tries found a solution of 12501348 (previous best 12066927).
+NLP3003W Trying to resolve NLP with different starting point (10 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  808, time 7.168988
+NLP0014I            10         OPT 12283257      808 7.168988         resolve cost
+NLP0001I After 11 tries found a solution of 12283257 (previous best 12066927).
+Cbc3007W No integer variables - nothing to do
+
+ 	"Finished"
+
+bonmin: Optimal
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 5.0050050188973905e-06
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.000526032872847082
+Con2 sum of relative violation: 0.0051768283009973794
+*******************************************************************************
+
+Total cost using bonmin: 12066927.330058118
+bonmin solve time: 73.34 seconds
+*******************************************************************************
+

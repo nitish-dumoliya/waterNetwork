@@ -63,7 +63,7 @@ def search_best(arr0, st0, st1, ab, minmax, fl0):
     return 1, fl0
 
 
-def InstanceOutput(instance,output):
+def MmultistartInstanceOutput(instance,output):
     file_data = output.read().split('\n')
     time = 0
     find, time = find_float(file_data, "MultiStart: wall clock time used", time)
@@ -186,93 +186,6 @@ def BaronInstanceOutput(instance, output):
             Objective = 1e+51
     return Objective, lower_bound, time, violation_con, violation_abs, violation_rel
 
-def KnitroInstanceOutput(instance, output):
-    file_data = output.read().split('\n')
-    time = 0
-    find, time = find_float(file_data, "Total program time", time)
-    Objective = 0
-    find, Objective = find_float(file_data, "objective  ", Objective)
-    # Objective = 0
-    FEA_ERR =0 
-    for line in file_data:
-        find1 = re.search("objective", line)
-        if (find1):
-            Objective = line.partition("objective")[2]
-            # print(Objective)
-            Objective = Objective.partition(";")[0]
-            # FEA_ERR= line.partition("feasibility error")[2]
-            # print(FEA_ERR)
-            # a,b = FEA_ERR.split("e")
-            # FEA_ERR = float(a)*(10**float(b))
-            # print(FEA_ERR)
-            # FEA_ERR = float(FEA_ERR)
-            # if FEA_ERR >0:
-            #     Objective = "infeasible"
-
-    # print("model instance:",instance)
-    # print("Objective:",Objective)
-    # print("Lower bound:",lb1)
-    # print("Uper bound:",ub1)
-    # print("Time:",time) 
-    # print(" ")
-    return Objective, time
-
-
-def IpoptInstanceOutput(instance, output):
-    output_content = output.read()  # Read the entire output content
-
-    # Extract total relative constraint violation
-    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_rel = re.search(r'Con2 sum of relative violation:\s*([\d.eE+-]+)', output_content)
-    #
-    violation_con = float(violation_match_con.group(1)) if violation_match_con else None
-    violation_abs = float(violation_match_abs.group(1)) if violation_match_abs else None
-    violation_rel = float(violation_match_rel.group(1)) if violation_match_rel else None
-
-    # Extract objective value
-    objective_match = re.search(r'Total cost using ipopt:\s*([\d.eE+-]+)', output_content)
-    objective = float(objective_match.group(1)) if objective_match else None
-
-    # Extract solve time
-    time_match = re.search(r'IPOPT solve time:\s*([\d.eE+-]+)', output_content)
-    solve_time = float(time_match.group(1)) if time_match else None
-
-    return objective, solve_time, violation_con, violation_abs, violation_rel
-
-
-def BonminInstanceOutput(instance, output):
-    file_data = output.read().split('\n')
-    time = 0
-    # find, time = find_float(file_data, "Total CPU secs in IPOPT", time)
-    Objective = 0
-    find, Objective = find_float(file_data, "total_cost using baron", Objective)
-    find, time = find_float(file_data, "solve_time using baron", time)
-    
-    # T = []
-    # for line in file_data:
-    #     find1 = re.search("NLP0014I", line)
-    #     if (find1):
-    #         find2 = re.search("OPT",line)
-    #         if find2:
-    #             time = line.partition("OPT")[2]
-    #             time = str(time).split()[2]
-    #             time = float(time)
-    #             # print(time)
-    #             T.append(time)
-
-    #         find2 = re.search("INFEAS",line)
-    #         if find2:
-    #             time = line.partition("INFEAS")[2]
-    #             time = str(time).split()[2]
-    #             time = float(time)
-    #             T.append(time)
-    #             # print(time)
-
-    #             Objective = "INFEAS"
-    # time = sum(T)
-    return Objective, time
-
 def GurobiInstanceOutput(instance, output):
     # Match best objective using a robust regex pattern
     #obj_match = re.search(r'Best objective\s+([-\d\.eE]+)', output)
@@ -360,10 +273,16 @@ def SCIPInstanceOutput(instance, output):
         try:
             # Ensure no truncation and remove any extra spaces or unwanted characters
             objective = float(obj_match.group(1))
-            dual_bound = float(dual_bound.group(1))
         except ValueError:
             print(f"Warning: Could not convert extracted objective '{extracted_obj}' to float.")
+    if dual_bound:
+        try:
+            # Ensure no truncation and remove any extra spaces or unwanted characters
+            dual_bound = float(dual_bound.group(1))
+        except ValueError:
+            print(f"Warning: Could not convert extracted dual bound '{extracted_obj}' to float.")
     
+
     # Match solver time (ensure correct extraction)
     #time_match = re.search(r"Solving Time \(sec\)\s*:\s*([\d\.]+)", output)
     #time_match = re.search(r'Solving Time (sec) :\s*([\d\.]+)', output)
@@ -409,6 +328,78 @@ def SCIPInstanceOutput(instance, output):
     
     return objective, dual_bound, solver_time, violation_con, violation_abs, violation_rel
 
+def KnitroInstanceOutput(instance, output):
+    file_data = output.read().split('\n')
+    time = 0
+    Objective = 0
+    find, Objective = find_float(file_data, "Total cost using knitro", Objective)
+    find, time = find_float(file_data, "knitro solve time:", time)
+    
+
+    # print("model instance:",instance)
+    # print("Objective:",Objective)
+    # print("Lower bound:",lb1)
+    # print("Uper bound:",ub1)
+    # print("Time:",time) 
+    # print(" ")
+    return Objective, time
+
+
+def IpoptInstanceOutput(instance, output):
+    output_content = output.read()  # Read the entire output content
+
+    # Extract total relative constraint violation
+    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
+    violation_match_abs = re.search(r'Con2 sum of absolute violation:\s*([\d.eE+-]+)', output_content)
+    violation_match_rel = re.search(r'Con2 sum of relative violation:\s*([\d.eE+-]+)', output_content)
+    #
+    violation_con = float(violation_match_con.group(1)) if violation_match_con else None
+    violation_abs = float(violation_match_abs.group(1)) if violation_match_abs else None
+    violation_rel = float(violation_match_rel.group(1)) if violation_match_rel else None
+
+    # Extract objective value
+    objective_match = re.search(r'Total cost using ipopt:\s*([\d.eE+-]+)', output_content)
+    objective = float(objective_match.group(1)) if objective_match else None
+
+    # Extract solve time
+    time_match = re.search(r'ipopt solve time:\s*([\d.eE+-]+)', output_content)
+    solve_time = float(time_match.group(1)) if time_match else None
+
+    return objective, solve_time, violation_con, violation_abs, violation_rel
+
+
+def BonminInstanceOutput(instance, output):
+    file_data = output.read().split('\n')
+    time = 0
+    # find, time = find_float(file_data, "Total CPU secs in IPOPT", time)
+    Objective = 0
+    find, Objective = find_float(file_data, "Total cost using bonmin", Objective)
+    find, time = find_float(file_data, "bonmin solve time:", time)
+    
+    # T = []
+    # for line in file_data:
+    #     find1 = re.search("NLP0014I", line)
+    #     if (find1):
+    #         find2 = re.search("OPT",line)
+    #         if find2:
+    #             time = line.partition("OPT")[2]
+    #             time = str(time).split()[2]
+    #             time = float(time)
+    #             # print(time)
+    #             T.append(time)
+
+    #         find2 = re.search("INFEAS",line)
+    #         if find2:
+    #             time = line.partition("INFEAS")[2]
+    #             time = str(time).split()[2]
+    #             time = float(time)
+    #             T.append(time)
+    #             # print(time)
+
+    #             Objective = "INFEAS"
+    # time = sum(T)
+    return Objective, time
+
 
 
 
@@ -438,14 +429,22 @@ def HeuristicInstanceOutput(instance, output):
     return Objective, time, violation
 
 data_list = [
-        "d1_shamir",
-        "d2_hanoi",
-        "d3_fossolo_iron",
-        "d4_fossolo_poly_0",
-        "d5_fossolo_poly_1",
-        "d6_modena",
-        "d7_pescara"
-    ]
+    "d1_bessa",
+    "d2_shamir",
+    "d3_hanoi",
+    "d4_double_hanoi",
+    "d5_triple_hanoi",
+    "d6_newyork",
+    "d7_blacksburg",
+    "d8_fossolo_iron",
+    "d9_fossolo_poly_0",
+    "d10_fossolo_poly_1",
+    "d11_kadu",
+    "d12_pescara",
+    "d13_modena",
+    "d14_balerma"
+]
+
 
 
 # !python3 ampl_run.py m1_basic.mod d1_Sample_input_cycle_twoloop.dat > output/d1_Sample_input_cycle_twoloop.baro_out
@@ -454,8 +453,6 @@ import pandas as pd
 import csv
 
 Ins = []
-Mmultistart_Objective = []
-Mmultistart_Time_taken = []
 Baron_Objective = []
 Baron_Lower_bound = []
 Baron_Time_taken = []
@@ -480,33 +477,27 @@ Scip_Time_taken = []
 Scip_Con_vio = []
 Scip_Abs_vio = []
 Scip_Rel_vio = []
-Heuristic_Objective = []
-Heuristic_Time_taken = []
-Heuristic_Rel_vio = []
 InitialIpopt_Objective = []
 InitialIpopt_Time_taken = []
 InitialIpopt_Con_vio = []
 InitialIpopt_Abs_vio = []
 InitialIpopt_Rel_vio = []
 
-approx_folder = "original"
+Knitro_Objective = []
+Knitro_Time_taken = []
+Bonmin_Objective = []
+Bonmin_Time_taken = []
+Mmultistart_Objective = []
+Mmultistart_Time_taken = []
+Heuristic_Objective = []
+Heuristic_Time_taken = []
+Heuristic_Rel_vio = []
 
-print("****************************Results of Mmultistart Solver *********************************")
-
-#for ins in data_list:
-#    with open(f"../output/m_out/{ins}.m_out") as output:
-#        print("Model Name:",ins)
-#        obj, time,ub = InstanceOutput(ins,output)
-#        print("Objective :",obj)
-#        print("Time :",time)
-#        print(" ")
-#        Ins.append(ins)
-#        Mmultistart_Objective.append(obj)
-#        Mmultistart_Time_taken.append(time)
+dir = "smooth-approx"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
 for ins in data_list:
-    with open(f"../output/baron_out/{approx_folder}/{ins}.baron_out") as output:
+    with open(f"../output/ipopt_out/{dir}/{ins}.ipopt_out") as output:
         print("Model Name:",ins)
         out = output
         obj, time, violation_con,violation_abs, violation_rel = IpoptInstanceOutput(ins,out)
@@ -517,7 +508,7 @@ for ins in data_list:
         print("Relative violation :",violation_rel)
 
         print(" ")
-
+        Ins.append(ins)
         InitialIpopt_Objective.append(obj)
         InitialIpopt_Time_taken.append(time)
         InitialIpopt_Con_vio.append(violation_con)
@@ -527,7 +518,7 @@ for ins in data_list:
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../output/baron_out/{approx_folder}/{ins}.baron_out") as output:
+    with open(f"../output/baron_out/{dir}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         out = output
         obj, lower_bound, time, violation_con,violation_abs, violation_rel= BaronInstanceOutput(ins,out)
@@ -546,49 +537,10 @@ for ins in data_list:
         Baron_Abs_vio.append(violation_abs)
         Baron_Rel_vio.append(violation_rel)
 
-print("**********************Results of Knitro Solver *********************************")
- 
-#for ins in data_list:
-#    with open(f"../output/knitro_out/{ins}.knitro_out") as output:
-#        print("Model Name:",ins)
-#        obj, time = KnitroInstanceOutput(ins,output)
-#        print("Objective :",obj)
-#        print("Time :",time)
-#        print(" ")
-#        Knitro_Objective.append(obj)
-#        Knitro_Time_taken.append(time)
-
-#print("**********************Results of IPOPT Solver *********************************")
-#
-#for ins in data_list:
-#    with open(f"../output/ipopt_out/{ins}.ipopt_out") as output:
-#        print("Model Name:",ins)
-#        #output = output.read()
-#        obj, time, violation = IpoptInstanceOutput(ins,output)
-#        print("Objective :",obj)
-#        print("Time :",time)
-#        print("Relative violation", violation)
-#        print(" ")
-#        Ipopt_Objective.append(obj)
-#        Ipopt_Time_taken.append(time)
-#
-print("**********************Results of BONMIN Solver *********************************")
-        
-#for ins in data_list:
-#    with open(f"../output/bonmin_out/{ins}.bonmin_out") as output:
-#        print("Model Name:",ins)
-#        obj, time = BonminInstanceOutput(ins,output)
-#        print("Objective :",obj)
-#        print("Time :",time)
-#        print(" ")
-#        Bonmin_Objective.append(obj)
-#        Bonmin_Time_taken.append(time)
-# Solver_name = [" ","mmultistart", " ", "Baron", " ", "Knitro "," "]
-
 print("**********************Results of GUROBI Solver *********************************")
 
 for ins in data_list:
-    with open(f"../output/gurobi_out/{approx_folder}/{ins}.gurobi_out") as output:
+    with open(f"../output/gurobi_out/{dir}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, best_bound, time, violation_con,violation_abs, violation_rel = GurobiInstanceOutput(ins,output)
@@ -609,7 +561,7 @@ for ins in data_list:
 print("**********************Results of SCIP Solver *********************************")
 
 for ins in data_list:
-    with open(f"../output/scip_out/{approx_folder}/{ins}.scip_out") as output:
+    with open(f"../output/scip_out/{dir}/{ins}.scip_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, dual_bound, time, violation_con,violation_abs, violation_rel = SCIPInstanceOutput(ins,output)
@@ -628,8 +580,58 @@ for ins in data_list:
         Scip_Abs_vio.append(violation_abs)
         Scip_Rel_vio.append(violation_rel)
 
+#print("**********************Results of IPOPT Solver *********************************")
+#
+#for ins in data_list:
+#    with open(f"../output/ipopt_out/{ins}.ipopt_out") as output:
+#        print("Model Name:",ins)
+#        #output = output.read()
+#        obj, time, violation = IpoptInstanceOutput(ins,output)
+#        print("Objective :",obj)
+#        print("Time :",time)
+#        print("Relative violation", violation)
+#        print(" ")
+#        Ipopt_Objective.append(obj)
+#        Ipopt_Time_taken.append(time)
 
-print("**********************Results of Heuristic *********************************")
+
+print("**********************Results of Knitro Solver *********************************")
+ 
+for ins in data_list:
+    with open(f"../output/knitro_out/{dir}/{ins}.knitro_out") as output:
+        print("Model Name:",ins)
+        obj, time = KnitroInstanceOutput(ins,output)
+        print("Objective :",obj)
+        print("Time :",time)
+        print(" ")
+        Knitro_Objective.append(obj)
+        Knitro_Time_taken.append(time)
+
+print("**********************Results of BONMIN Solver *********************************")
+
+for ins in data_list:
+    with open(f"../output/bonmin_out/{dir}/{ins}.bonmin_out") as output:
+        print("Model Name:",ins)
+        obj, time = BonminInstanceOutput(ins,output)
+        print("Objective :",obj)
+        print("Time :",time)
+        print(" ")
+        Bonmin_Objective.append(obj)
+        Bonmin_Time_taken.append(time)
+
+print("****************************Results of Mmultistart Solver *********************************")
+
+for ins in data_list:
+    with open(f"../output/mmultistart_out/{dir}/{ins}.mmultistart_out") as output:
+        print("Model Name:",ins)
+        obj, time, ub = MmultistartInstanceOutput(ins,output)
+        print("Objective :",obj)
+        print("Time :",time)
+        print(" ")
+        Mmultistart_Objective.append(obj)
+        Mmultistart_Time_taken.append(time)
+
+#print("**********************Results of Heuristic *********************************")
 
 #for ins in data_list:
 #    with open(f"../output/heuristic_out/{approx_folder}/{ins}.heuristic_out") as output:
@@ -643,20 +645,20 @@ print("**********************Results of Heuristic ******************************
 #        Heuristic_Time_taken.append(time)
 #        Heuristic_Rel_vio.append(violation)
 
-fields = ["Instances","Mmultistart Objective","Mmultistart time taken","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Vio","Ini Ipopt Rel Vio","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Vio","Baron Rel Vio","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Vio","Gurobi Rel Vio","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Vio", "Scip Rel Vio","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Heuristic Objective","Heuristic time taken", "Heuristic Rel Vio"  ]
+fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Vio","Ini Ipopt Rel Vio","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Vio","Baron Rel Vio","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Vio","Gurobi Rel Vio","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Vio", "Scip Rel Vio","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Rel Vio"  ]
 
 filename = "mmultistart_results.csv"
-
-with open(filename, 'w') as csvfile:
-    csvwriter = csv.writer(csvfile)
-    # csvwriter.writerow(Solver_name)
-    csvwriter.writerow(fields)
+#
+#with open(filename, 'w') as csvfile:
+#    csvwriter = csv.writer(csvfile)
+#    # csvwriter.writerow(Solver_name)
+#    csvwriter.writerow(fields)
 
 import pandas as pd
 csv_input = pd.read_csv(filename)
 csv_input['Instances'] = Ins
-#csv_input['Mmultistart Objective'] = Mmultistart_Objective
-#csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
+csv_input['Mmultistart Objective'] = Mmultistart_Objective
+csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
 csv_input['Ini Ipopt Objective'] = InitialIpopt_Objective
 csv_input['Ini Ipopt time taken'] = InitialIpopt_Time_taken
 csv_input['Ini Ipopt Con Vio'] = InitialIpopt_Con_vio
@@ -680,12 +682,12 @@ csv_input['Scip time taken'] = Scip_Time_taken
 csv_input['Scip Con Vio'] = Scip_Con_vio
 csv_input['Scip Abs Vio'] = Scip_Abs_vio
 csv_input['Scip Rel Vio'] = Scip_Rel_vio
-#csv_input['Knitro Objective'] = Knitro_Objective
-#csv_input['Knitro time taken'] = Knitro_Time_taken
+csv_input['Knitro Objective'] = Knitro_Objective
+csv_input['Knitro time taken'] = Knitro_Time_taken
 #csv_input['Ipopt Objective'] = Ipopt_Objective
 #csv_input['Ipopt time taken'] = Ipopt_Time_taken
-#csv_input['Bonmin Objective'] = Bonmin_Objective
-#csv_input['Bonmin time taken'] = Bonmin_Time_taken
+csv_input['Bonmin Objective'] = Bonmin_Objective
+csv_input['Bonmin time taken'] = Bonmin_Time_taken
 #csv_input['Heuristic Objective'] = Heuristic_Objective
 #csv_input['Heuristic time taken'] = Heuristic_Time_taken
 #csv_input['Heuristic Rel Vio'] = Heuristic_Rel_vio

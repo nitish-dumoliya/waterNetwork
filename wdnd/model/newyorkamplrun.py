@@ -49,7 +49,7 @@ class WaterNetworkSolver:
         
         return epsilon
 
-    def constraint_violations(self, q_values, q1, q2, h_values, l_values, epsilon, solver):
+    def constraint_violations(self, q1, q2, h_values, l_values, epsilon, solver):
         total_absolute_constraint_violation = 0
         total_relative_constraint_violation = 0
          
@@ -57,8 +57,8 @@ class WaterNetworkSolver:
         for i in self.nodes:
             if i not in self.source:
                 con1_rhs = self.D[i]
-                incoming_flow = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
-                outgoing_flow = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
+                incoming_flow = sum(q1[j, i] + q2[j,i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing_flow = sum(q1[i, j] + q2[i,j] for j in self.nodes if (i, j) in self.arcs)
                 con1_lhs = incoming_flow - outgoing_flow
                 con1_violation = con1_lhs - con1_rhs
                 con1_gap[f"con1_{i}"] = con1_violation
@@ -72,7 +72,7 @@ class WaterNetworkSolver:
         con2_relative_constraint_violation = 0
         con2_original_violation = 0
         con2_approx_violation = 0
-        for (i, j) in q_values.keys():
+        for (i, j) in q1.keys():
             # Original constraint value
             lhs = 2*(h_values[i] - h_values[j])
             alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[i,j] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
@@ -186,8 +186,8 @@ class WaterNetworkSolver:
 
         print("*******************************************************************************\n")
         print("Absolute and relative violations between original and approximation constraint 2:\n")
-        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        #headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
         print("Con2 sum of relative violation:", con2_relative_constraint_violation)
 
@@ -261,7 +261,7 @@ class WaterNetworkSolver:
         #ampl.eval("display q;")
         #ampl.eval("display h;")
 
-        self.constraint_violations(q_init,q1, q2, h_init, l_init, eps, "ipopt")
+        self.constraint_violations(q1, q2, h_init, l_init, eps, "ipopt")
         #ampl.eval("display con1.body;")
         #ampl.eval("display con2.body;")
         #ampl.eval("display con3.body;")
@@ -384,7 +384,7 @@ class WaterNetworkSolver:
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display z;")
 
-        self.constraint_violations(q, q1, q2, h, l, eps, self.solver_name)
+        self.constraint_violations(q1, q2, h, l, eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         total_cost = self.ampl.getObjective("total_cost").value()
@@ -393,13 +393,13 @@ class WaterNetworkSolver:
         print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
 
         # Extract solutions
-        q_sol = self.ampl.get_variable('q').get_values().to_dict()
+        #q_sol = self.ampl.get_variable('q').get_values().to_dict()
         h_sol = self.ampl.get_variable('h').get_values().to_dict()
         l_sol = self.ampl.get_variable('l').get_values().to_dict()
 
         #self.ampl.eval("display l;")
-        #self.ampl.eval("display q1;")
-        #self.ampl.eval("display q2;")
+        self.ampl.eval("display q1;")
+        self.ampl.eval("display q2;")
         #self.ampl.eval("display h;")
 
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j] - q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));")
@@ -419,7 +419,7 @@ class WaterNetworkSolver:
         self.read_model_and_data()
 
         # First solve: IPOPT
-        self.solve_ipopt()
+        #self.solve_ipopt()
 
         # Second solve: self.solver_name
         self.second_solve()

@@ -92,14 +92,14 @@ class WaterNetworkSolver:
                 con2_original_violation =  lhs - original_rhs
                 con2_original_gap[f"con2_{i}_{j}"] = con2_original_violation
                 con2_original_violation += abs(con2_original_violation) 
-                
+
                 con2_approx_violation =  lhs - approx_rhs
                 con2_approx_gap[f"con2_{i}_{j}"] = con2_approx_violation
-                
+
                 total_absolute_constraint_violation += abs(con2_approx_violation)    
                 con2_approx_violation += abs(con2_approx_violation) 
 
-                 # Compute absolute violation
+                # Compute absolute violation
                 absolute_violation =  original_rhs - approx_rhs
                 absolute_violations[f"con2_{i},{j}"] = absolute_violation
                 con2_absolute_constraint_violation += abs(absolute_violation)
@@ -108,7 +108,7 @@ class WaterNetworkSolver:
                 relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"con2_{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
-               
+
         #print("con2_gap:", con2_gap)
         for (i, j) in self.fixarcs:
             # Original constraint value
@@ -117,7 +117,7 @@ class WaterNetworkSolver:
             #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
             original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
             #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
-    
+
             # Approximated constraint value
             approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
 
@@ -126,14 +126,14 @@ class WaterNetworkSolver:
             con2_original_violation =  lhs - original_rhs
             con2_original_gap[f"con2_fix_{i}_{j}"] = con2_original_violation
             con2_original_violation += abs(con2_original_violation) 
-            
+
             con2_approx_violation =  lhs - approx_rhs
             con2_approx_gap[f"con2_fix_{i}_{j}"] = con2_approx_violation
-            
+
             total_absolute_constraint_violation += abs(con2_approx_violation)    
             con2_approx_violation += abs(con2_approx_violation) 
 
-             # Compute absolute violation
+            # Compute absolute violation
             absolute_violation =  original_rhs - approx_rhs
             absolute_violations[f"con2_fix_{i},{j}"] = absolute_violation
             con2_absolute_constraint_violation += abs(absolute_violation)
@@ -142,16 +142,17 @@ class WaterNetworkSolver:
             relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
             relative_violations[f"con2_fix_{i},{j}"] = relative_violation
             con2_relative_constraint_violation += abs(relative_violation)
-           
+
         #print("con2_gap:", con2_gap)
-        
+
         con3_gap = {}
         for (i,j) in self.arcs:
-            con3_rhs = self.L[i,j]
-            con3_lhs = sum(l_values[i,j,k] for k in self.pipes) 
-            con3_violation = con3_lhs - con3_rhs
-            con3_gap[f"con3_{i}"] = con3_violation 
-            total_absolute_constraint_violation += abs(con3_violation)
+            if (i,j) not in self.fixarcs:
+                con3_rhs = self.L[i,j]
+                con3_lhs = sum(l_values[i,j,k] for k in self.pipes) 
+                con3_violation = con3_lhs - con3_rhs
+                con3_gap[f"con3_{i}"] = con3_violation 
+                total_absolute_constraint_violation += abs(con3_violation)
         #print("con3_gap:", con3_gap)
 
         con4_gap = {}
@@ -200,8 +201,8 @@ class WaterNetworkSolver:
         for constraint, vio in con6_gap.items():
                table_data.append([constraint, f"{con6_gap[constraint]:.8f}"])
 
-        #headers = ["Constraint ID", "Violation"]
-        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        headers = ["Constraint ID", "Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nSum of constraints violation:", total_absolute_constraint_violation)
 
         print("*******************************************************************************\n")
@@ -434,7 +435,7 @@ class WaterNetworkSolver:
         #self.ampl.eval("display l;")
         #self.ampl.eval("display q1;")
         #self.ampl.eval("display q2;")
-        self.ampl.eval("display h;")
+        #self.ampl.eval("display h;")
         #self.ampl.eval("display sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[k] + sum{(i,j) in fixarcs} L[i,j]*fix_c[i,j] ;")
         #self.ampl.eval("display {(i,j) in arcs, k in pipes :l[i,j,k] >0.000001}: l[i,j,k]*3.28084 ;")
         #self.ampl.eval("display {i in nodes}: h[i]/0.3048;")
@@ -455,7 +456,7 @@ class WaterNetworkSolver:
         self.read_model_and_data()
 
         # First solve: IPOPT
-        self.solve_ipopt()
+        #self.solve_ipopt()
 
         # Second solve: self.solver_name
         self.second_solve()

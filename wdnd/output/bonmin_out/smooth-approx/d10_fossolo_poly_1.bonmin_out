@@ -1,0 +1,92 @@
+Water Network: d10_fossolo_poly_1.dat
+*******************************************************************************
+
+-------------------------------- Solving with bonmin --------------------------
+min_demand: 0.00026
+max_demand: 0.00202
+max_flow: 0.033909999999999996
+eps: 3.4029363594102267e-12 
+
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 5
+bonmin.nlp_log_level 2
+warm_start_init_point = no
+bonmin.num_resolve_at_root = 10
+
+Cbc3007W No integer variables - nothing to do
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0010I Ipopt return (for initialSolve): status  1, iter count  601, time 10.787277
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1         OPT 21027.541      601 10.787277
+NLP0001I After 1 tries found a solution of 21027.541 (previous best 21027.541).
+NLP3003W Trying to resolve NLP with different starting point (1 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 57.36308
+NLP0014I             1      FAILED 89197.334     3000 57.36308         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (2 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 54.123697
+NLP0014I             2      FAILED 117364.19     3000 54.123697         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (3 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 50.377746
+NLP0014I             3      FAILED 26734.778     3000 50.377746         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (4 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 39.327099
+NLP0014I             4      FAILED 33069.173     3000 39.327099         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (5 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 31.371953
+NLP0014I             5      FAILED 81102.378     3000 31.371953         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (6 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 29.764668
+NLP0014I             6      FAILED 91590.68     3000 29.764668         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (7 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 29.557988
+NLP0014I             7      FAILED 97653.259     3000 29.557988         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (8 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 29.79136
+NLP0014I             8      FAILED 289622.44     3000 29.79136         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (9 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count 2350, time 22.349062
+NLP0014I             9         OPT 26011.874     2350 22.349062         resolve cost
+NLP0001I After 10 tries found a solution of 26011.874 (previous best 21027.541).
+NLP3003W Trying to resolve NLP with different starting point (10 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 3000, time 27.783079
+NLP0014I            10      FAILED 120402.19     3000 27.783079         resolve cost
+Cbc3007W No integer variables - nothing to do
+
+ 	"Finished"
+
+bonmin: Optimal
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 5.518245299030838e-05
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 4.901841364923776e-06
+Con2 sum of relative violation: 1.3756379562987965e-05
+*******************************************************************************
+
+Total cost using bonmin: 21027.54169356791
+bonmin solve time: 388.43 seconds
+*******************************************************************************
+
