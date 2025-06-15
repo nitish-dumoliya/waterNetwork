@@ -1,75 +1,13 @@
 Water Network: d2_shamir.dat
 *******************************************************************************
 
--------------------------------- Solving with IPOPT --------------------------
-min_demand: 0.02777
-max_demand: 0.09167
-max_flow: 0.31109
-eps: 2.9050092637079635e-11 
-
-Ipopt solver outputs: 
-
-Ipopt 3.14.13: outlev = 0
-expect_infeasible_problem = yes
-tol = 1e-9
-bound_relax_factor=0
-bound_push = 0.01
-bound_frac = 0.01
-nlp_scaling_method = none
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit https://github.com/coin-or/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.14.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-total_cost: 417178.7280692525 
-
-*******************************************************************************
-
-*******************************************************************************
-
-Constraints violation:
-
-
-Sum of constraints violation: 7.350578479226044e-13
-*******************************************************************************
-
-*******************************************************************************
-
-Constraint 2 violations:
-
-
-Sum of violation of original con2: 0.0
-Sum of violation of approx con2: 9.237055564881302e-14
-*******************************************************************************
-
-Absolute and relative violations between original and approximation constraint 2:
-
-
-Con2 sum of absolute violation: 2.8424031150997564e-06
-Con2 sum of relative violation: 5.052820371452458e-07
-*******************************************************************************
-
-Total cost using ipopt: 417178.7280692525
-IPOPT solve time: 4.20 seconds
-*******************************************************************************
-
-
 -------------------------------- Solving with gurobi --------------------------
 min_demand: 0.02777
 max_demand: 0.09167
 max_flow: 0.31109
 eps: 2.9050092637079635e-11 
 
-The license for this solver will expire in 2.3 hours.
-Gurobi 12.0.1: Set parameter LogToConsole to value 1
+Gurobi 11.0.2: Set parameter LogToConsole to value 1
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
@@ -86,103 +24,132 @@ Set parameter FeasibilityTol to value 1e-05
 Set parameter MIPGap to value 1e-09
   mip:gap = 1e-09
 Set parameter InfUnbdInfo to value 1
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 11 (bullseye)")
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
 
-CPU model: Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz, instruction set [SSE2|AVX|AVX2]
-Thread count: 12 physical cores, 12 logical processors, using up to 12 threads
+CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
 
-Non-default parameters:
-TimeLimit  3600
-FeasibilityTol  1e-05
-MIPGap  1e-09
-Method  2
-BarConvTol  1e-09
-InfUnbdInfo  1
-Presolve  1
-
-Optimize a model with 22 rows, 182 columns and 150 nonzeros
-Model fingerprint: 0xc336de63
-Model has 8 general nonlinear constraints (264 nonlinear terms)
-Variable types: 182 continuous, 0 integer (0 binary)
+Optimize a model with 14 rows, 174 columns and 127 nonzeros
+Model fingerprint: 0x24cb7343
+Model has 40 quadratic constraints
+Model has 16 general constraints
+Variable types: 174 continuous, 0 integer (0 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
+  QMatrix range    [1e-02, 8e+04]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [2e+00, 6e+02]
-  Bounds range     [1e-11, 7e+16]
+  Bounds range     [1e-11, 3e+10]
   RHS range        [3e-02, 1e+03]
+  QRHS range       [1e-11, 2e+02]
 Warning: Model contains large bounds
          Consider reformulating model or setting NumericFocus parameter
          to avoid numerical issues.
+Presolve added 48 rows and 167 columns
+Presolve time: 0.02s
+Presolved: 646 rows, 461 columns, 2348 nonzeros
+Presolved model has 16 SOS constraint(s)
+Presolved model has 144 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
 
-User MIP start produced solution with objective 417179 (0.00s)
-Loaded user MIP start with objective 417179
 
-Presolve model has 8 nlconstr
-Added 296 variables to disaggregate expressions.
-Presolve removed 0 rows and 48 columns
-Presolve time: 0.00s
-Presolved: 846 rows, 431 columns, 2139 nonzeros
-Presolved model has 136 bilinear constraint(s)
-Presolved model has 24 nonlinear constraint(s)
+Solving non-convex MIQCP
 
-Solving non-convex MINLP
+Variable types: 461 continuous, 0 integer (0 binary)
+Root barrier log...
 
-Variable types: 431 continuous, 0 integer (0 binary)
+Ordering time: 0.01s
+
+Barrier statistics:
+ AA' NZ     : 7.235e+03
+ Factor NZ  : 9.907e+03 (roughly 1 MB of memory)
+ Factor Ops : 2.200e+05 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   2.26093750e+11 -1.42510986e+16  8.91e+15 0.00e+00  8.93e+08     0s
+   1   2.24814806e+11 -4.25274379e+23  8.86e+15 4.77e-02  1.58e+18     0s
+   2   2.23552124e+11 -9.31004656e+23  8.81e+15 5.67e-02  6.91e+18     0s
+   3   2.23624623e+11 -9.30912323e+23  8.81e+15 6.13e-02  6.92e+18     0s
+   4   2.26093750e+11 -1.42510986e+20  8.91e+15 0.00e+00  6.94e+12     0s
+   5   2.22876311e+11 -1.11823340e+28  8.78e+15 3.94e+02  1.10e+23     0s
+   6   2.07725884e+11 -4.07444152e+28  8.18e+15 1.49e+02  2.28e+24     0s
+
+Barrier performed 6 iterations in 0.08 seconds (0.01 work units)
+Numerical trouble encountered
+
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
+
+Warning: 1 variables dropped from basis
+Warning: switch to quad precision
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: very big Kappa = 3.23747e+16, try parameter NumericFocus
 Root barrier log...
 
 Ordering time: 0.00s
 
 Barrier statistics:
- AA' NZ     : 1.300e+01
- Factor NZ  : 3.400e+01
- Factor Ops : 1.540e+02 (less than 1 second per iteration)
+ AA' NZ     : 7.287e+03
+ Factor NZ  : 9.741e+03 (roughly 1 MB of memory)
+ Factor Ops : 2.032e+05 (less than 1 second per iteration)
  Threads    : 1
 
                   Objective                Residual
 Iter       Primal          Dual         Primal    Dual     Compl     Time
-   0   1.60000000e+04 -1.33603462e+16  8.91e+15 0.00e+00  1.00e+09     1s
-   1   1.60000000e+04 -1.03634644e+28  8.91e+15 1.53e-05  3.91e+20     1s
-   2   1.60000000e+04 -1.57952038e+28  8.91e+15 3.05e-05  5.87e+20     1s
-   3   1.60000000e+04 -2.08880253e+28  8.91e+15 3.05e-05  7.81e+20     1s
-   4   1.60000000e+04 -1.33603462e+20  8.91e+15 0.00e+00  1.00e+13     1s
-   5   1.60000000e+04 -5.18342496e+31  8.91e+15 1.25e-01  1.95e+24     1s
-   6   1.60000000e+04 -1.33603462e+20  8.91e+15 0.00e+00  1.00e+13     1s
-   7   1.60000000e+04 -1.33600129e+20  8.90e+15 6.61e+02  1.28e+16     1s
-   8*  1.60000000e+04 -7.67023075e+19  2.53e+13 1.26e+00  1.34e+12     1s
-   9*  1.60000000e+04  1.92885606e+19  1.70e+12 8.06e-01  1.85e+11     1s
-  10*  1.60000000e+04  1.14735959e+18  3.55e+10 3.86e-02  5.97e+09     1s
-  11*  1.60000000e+04  3.15859624e+15  8.71e+07 8.84e-05  1.91e+07     1s
-  12*  1.60000000e+04  1.21481828e+13  2.82e+05 3.11e-07  7.76e+04     1s
-  13*  1.60000000e+04  5.86444797e+10  1.14e+03 1.43e-09  3.81e+02     1s
-  14*  1.60000000e+04  3.71140423e+08  6.26e+00 9.25e-12  2.46e+00     1s
+   0   2.26093750e+11 -1.42510986e+16  8.91e+15 0.00e+00  8.83e+08     0s
+   1   2.24816532e+11 -4.22703085e+23  8.86e+15 4.74e-02  1.53e+18     0s
+   2   2.23555581e+11 -9.25822448e+23  8.81e+15 5.64e-02  6.70e+18     0s
+   3   2.23626533e+11 -9.25729963e+23  8.81e+15 6.12e-02  6.71e+18     0s
+   4   2.26093750e+11 -1.42510986e+20  8.91e+15 0.00e+00  6.88e+12     0s
+   5   2.22830614e+11 -1.10866508e+28  8.78e+15 3.93e+02  1.08e+23     0s
+   6   2.07709859e+11 -4.05882543e+28  8.18e+15 1.50e+02  2.22e+24     0s
 
-Barrier performed 14 iterations in 1.04 seconds (0.02 work units)
-Objective cutoff exceeded
+Barrier performed 6 iterations in 0.14 seconds (0.02 work units)
+Numerical trouble encountered
 
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
 
-Root relaxation: cutoff, 0 iterations, 0.02 seconds (0.00 work units)
+Warning: 1 variables dropped from basis
+Warning: switch to quad precision
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: very big Kappa = 6.76461e+16, try parameter NumericFocus
+
+Root relaxation: infeasible, 2268 iterations, 0.15 seconds (0.03 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0     cutoff    0      417178.728 417178.728  0.00%     -    1s
+     0     0 infeasible    0               - infeasible      -     -    0s
 
-Explored 1 nodes (0 simplex iterations) in 1.11 seconds (0.02 work units)
-Thread count was 12 (of 12 available processors)
+Explored 1 nodes (2268 simplex iterations) in 0.19 seconds (0.03 work units)
+Thread count was 8 (of 8 available processors)
 
-Solution count 1: 417179 
+Solution count 0
 
-Optimal solution found (tolerance 1.00e-09)
-Best objective 4.171787280693e+05, best bound 4.171787280693e+05, gap 0.0000%
-Gurobi 12.0.1: optimal solution; objective 417178.7281
-0 simplex iterations
-14 barrier iterations
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi 11.0.2: infeasible problem
+2268 simplex iterations
+12 barrier iterations
 1 branching node
+
+suffix dunbdd OUT;
 *******************************************************************************
 
 Constraints violation:
 
 
-Sum of constraints violation: 9.206940765338345e-13
+Sum of constraints violation: 9330.31109
 *******************************************************************************
 
 *******************************************************************************
@@ -191,17 +158,17 @@ Constraint 2 violations:
 
 
 Sum of violation of original con2: 0.0
-Sum of violation of approx con2: 1.5276668818842154e-13
+Sum of violation of approx con2: 0.0
 *******************************************************************************
 
 Absolute and relative violations between original and approximation constraint 2:
 
 
-Con2 sum of absolute violation: 2.842403114211578e-06
-Con2 sum of relative violation: 5.052820369676103e-07
+Con2 sum of absolute violation: 0.0
+Con2 sum of relative violation: 0.0
 *******************************************************************************
 
-Total cost using gurobi: 417178.7280692525
-gurobi solve time: 1.26 seconds
+Total cost using gurobi: 0.0
+gurobi solve time: 0.23 seconds
 *******************************************************************************
 

@@ -59,3 +59,55 @@ Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
        2766           452           958.83     0.579164E+08     0.663998E+08             
        3006           513           988.39     0.579164E+08     0.663998E+08             
        3178           570          1017.76     0.579164E+08     0.663998E+08             
+       3426           624          1047.11     0.579164E+08     0.663998E+08             
+       3474           635          3609.13     0.579164E+08     0.663998E+08             
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3856.94
+ Total CPU time used:              3609.13
+
+ Total no. of BaR iterations:    3474
+ Best solution found at node:      15
+ Max. no. of nodes in memory:     635
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 3474 iterations, CPU time limit reached.
+Objective 66399768.83
+Objective lower bound = 57916375.40000002, upper bound = 66399768.83387908
+barstatus = 4, modelstatus = 4
+max nodes in memory = 635
+optimum found at node 15
+Baron run time (excluding setup) = 3609.12 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 2.357726351862586e-08
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.00046730959562644927
+Con2 sum of relative violation: 0.4295814625988195
+*******************************************************************************
+
+Total cost using baron: 66399768.83387908
+baron solve time: 3857.04 seconds
+*******************************************************************************
+
