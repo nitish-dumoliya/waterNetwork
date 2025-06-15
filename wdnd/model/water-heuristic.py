@@ -1559,20 +1559,24 @@ if __name__ == "__main__":
         "d18_pescara",
         "d19_modena"
     ]
+
     data_list = [
-        "d1_shamir",
-        "d2_hanoi",
-        "d3_fossolo_iron",
-        "d4_fossolo_poly_0",
-        "d5_fossolo_poly_1",
-        "d6_modena",
-        "d7_pescara",
-        "bessa",
-        "kadu",
-        "balerma",
-        "d3_double_hanoi",
-        "d4_triple_hanoi"
+        "d1_bessa",
+        "d2_shamir",
+        "d3_hanoi",
+        "d4_double_hanoi",
+        "d5_triple_hanoi",
+        "d6_newyork",
+        "d7_blacksburg",
+        "d8_fossolo_iron",
+        "d9_fossolo_poly_0",
+        "d10_fossolo_poly_1",
+        "d11_kadu",
+        "d12_pescara",
+        "d13_modena",
+        "d14_balerma"
     ]
+
 
 
     # Select the data number here (0 to 18)
