@@ -30,11 +30,14 @@ param c := (3/8)*delta**(p-5) + (1/8)*(p-1)*p*delta**(p-5) - (3/8)*p*delta**(p-5
 param R_min = min{k in pipes} R[k];
 
 param MaxK{(i,j) in arcs} := 10.67 * L[i,j] / (R_min^1.852 * d_min^4.87);
+
+param eps{(i,j) in arcs} := (1e-6 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
+
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
-var eps{arcs}>=0;
+#var eps{arcs}>=0;
 
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
@@ -48,9 +51,6 @@ subject to con1{j in nodes diff Source}:
 # hazen-Williams Constraint 
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-
-# Constraint for epsilon selection
-subject to Epsilon_Selection{(i,j) in arcs}:eps[i,j] = (1e-2 / (0.07508 * MaxK[i,j]))^(1 / 0.0926);
 
 
 # Smooth-Approximation of Hazen-Williams Constraint

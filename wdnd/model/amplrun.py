@@ -380,7 +380,7 @@ class WaterNetworkSolver:
         q = self.ampl.get_variable('q').get_values().to_dict()
         h = self.ampl.get_variable('h').get_values().to_dict()
         l = self.ampl.get_variable('l').get_values().to_dict()
-        eps = self.ampl.get_variable('eps').get_values().to_dict()
+        eps = self.ampl.getParameter('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
         #self.ampl.eval("display q;")
         #self.ampl.eval("display q1;")
