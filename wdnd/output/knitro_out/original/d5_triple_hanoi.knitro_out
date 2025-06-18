@@ -1,0 +1,145 @@
+Water Network: d5_triple_hanoi.dat
+*******************************************************************************
+
+-------------------------------- Solving with knitro --------------------------
+min_demand: 0
+max_demand: 0.375
+max_flow: 15.886149999999995
+eps: 1.376433248637255e-05 
+
+Artelys Knitro 14.2.0: maxtime_real = 3600
+outlev = 4
+threads=8
+feastol = 1.0e-7
+feastol_abs = 1.0e-7
+ms_enable = 1
+ms_maxsolves = 10
+WARNING:  Option 'threads' is deprecated, please use 'numthreads'.
+
+=======================================
+          Commercial License
+         Artelys Knitro 14.2.0
+=======================================
+
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+concurrent_evals         0
+datacheck                0
+feastol                  1e-07
+feastol_abs              1e-07
+findiff_numthreads       1
+hessian_no_f             1
+hessopt                  1
+maxtime_real             3600
+ms_enable                1
+ms_maxsolves             10
+numthreads               8
+outlev                   4
+
+Problem Characteristics                                 (   Presolved)
+-----------------------
+Objective goal:  Minimize
+Objective type:  linear
+Number of variables:                                776 (         776)
+    bounded below only:                              91 (         144)
+    bounded above only:                               0 (          28)
+    bounded below and above:                        685 (         604)
+    fixed:                                            0 (           0)
+    free:                                             0 (           0)
+Number of constraints:                              276 (         276)
+    linear equalities:                              191 (         191)
+    quadratic equalities:                             0 (           0)
+    gen. nonlinear equalities:                       85 (          85)
+    linear one-sided inequalities:                    0 (           0)
+    quadratic one-sided inequalities:                 0 (           0)
+    gen. nonlinear one-sided inequalities:            0 (           0)
+    linear two-sided inequalities:                    0 (           0)
+    quadratic two-sided inequalities:                 0 (           0)
+    gen. nonlinear two-sided inequalities:            0 (           0)
+Number of nonzeros in Jacobian:                    1653 (        1653)
+Number of nonzeros in Hessian:                      595 (         595)
+
+Knitro parallel multistart will run with 8 threads.
+
+Return codes description
+------------------------
+  0:  The final solution satisfies the termination conditions for verifying optimality.
+  -100 to -199:  A feasible approximate solution was found.
+  -200 to -299:  Knitro terminated at an infeasible point.
+  -300 to -301:  The problem was determined to be unbounded.
+  -400 to -499:  Knitro terminated because it reached a pre-defined limit.
+    -400 to -409:  A feasible point was found.
+    -410 to -419:  No feasible point was found.
+  -500 to -599:  Knitro terminated with an input error or some non-standard error.
+A more detailed description of individual return codes and their corresponding
+termination messages is provided at
+https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
+
+ Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
+--------  --------  ------  --------------   ----------   ----------  ----------
+      0          4       0     1.88229e+07  7.62279e-13  2.17560e-05      11.4305
+      7          6       0     1.87587e+07  2.62162e-08  7.25877e-06      11.6802
+      2          7       0     1.86678e+07  6.03961e-13  1.78814e-07      11.8586
+      5          2       0     1.87478e+07  1.59008e-08  3.94881e-07      12.0854
+      1          5       0     1.86306e+07  7.24754e-13  2.08383e-08      12.0578
+      8          4       0     1.88325e+07  4.23271e-08  4.76837e-07      4.09376
+      3          3       0     1.86213e+07  1.80518e-09  1.52271e-07      13.1430
+      9          6       0     1.83700e+07  3.48237e-11  9.53674e-05      4.75495
+      6          1       0     1.85913e+07  5.42034e-09  3.81470e-06      12.8744
+      4          0       0     1.85690e+07  3.28413e-11  3.71933e-05      13.5774
+
+MULTISTART: Best locally optimal solution is returned.
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   1.83699778696966e+07
+Final feasibility error (abs / rel) =   3.48e-11 / 4.97e-15
+Final optimality error  (abs / rel) =   9.54e-05 / 9.54e-07
+# of iterations                     =      17536 
+# of CG iterations                  =          0 
+# of function evaluations           =      21823
+# of gradient evaluations           =      17602
+# of Hessian evaluations            =      17585
+Total program time (secs)           =      16.49792 (    69.869 CPU time)
+
+===============================================================================
+
+Knitro 14.2.0: Locally optimal or satisfactory solution.
+objective 18369977.87; feasibility error 3.48e-11
+17536 iterations; 21823 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 0.0005492541317394066
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 2.4084931116163943e-07
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 0.0005492541341799995
+Con2 sum of relative violation: 0.0015281867845898787
+*******************************************************************************
+
+Total cost using knitro: 18369977.869696572
+knitro solve time: 17.84 seconds
+*******************************************************************************
+

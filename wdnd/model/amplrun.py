@@ -328,7 +328,7 @@ class WaterNetworkSolver:
         #self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
         self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 barstats version objbound" # lsolver = conopt
         #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
-        self.ampl.option["scip_options"] = "outlev  1 timelimit 300 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        self.ampl.option["scip_options"] = "outlev  1 timelimit 3600 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=0 " #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         self.ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "1"
