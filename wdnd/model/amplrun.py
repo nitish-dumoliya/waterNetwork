@@ -185,8 +185,8 @@ class WaterNetworkSolver:
 
         print("*******************************************************************************\n")
         print("Absolute and relative violations between original and approximation constraint 2:\n")
-        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        #headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
         print("Con2 sum of relative violation:", con2_relative_constraint_violation)
 
@@ -320,8 +320,8 @@ class WaterNetworkSolver:
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 method = 2 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 " 
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 method = 2 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9 NumericFocus = 1" 
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
@@ -385,7 +385,7 @@ class WaterNetworkSolver:
         #self.ampl.eval("display q;")
         #self.ampl.eval("display q1;")
         #self.ampl.eval("display q2;")
-        self.ampl.eval("display eps;")
+        #self.ampl.eval("display eps;")
 
         self.constraint_violations(q, h, l, eps, self.solver_name)
 

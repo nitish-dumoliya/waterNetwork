@@ -348,25 +348,25 @@ class WaterNetworkSolver:
         print("min_demand:", min_demand)
         print("max_demand:", max_demand)
         print("max_flow:", max_flow)
-        d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
-        d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
+        #d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
+        #d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
         #max_L = max(self.L[i,j] for (i,j) in self.arcs)
-        R_min = min(self.R[i,j] for (i,j) in self.arcs)
-        MaxK = 10.67/((R_min**1.852) * (d_min**4.87))
+        #R_min = min(self.R[i,j] for (i,j) in self.arcs)
+        #MaxK = 10.67/((R_min**1.852) * (d_min**4.87))
  
-        epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
+        #epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
         #epsilon = (10**(-6)/(0.04001571*MaxK))**(1/1.852) 
 
         #epsilon = 1e-3
         #epsilon = self.compute_adaptive_eps(min_demand/1000)
         
-        print("eps:", epsilon,"\n")
+        #print("eps:", epsilon,"\n")
         
         
         #eps = ampl.getParameter('eps').to_list()
         #for (i,j) in eps.items():
             #eps[i,j].setValue(epsilon)
-        self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
+        #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
         #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = 1e-6 + q[i,j]^2;")
         
         #self.ampl.eval("display {i in 1.._ncons} (_conname[i]);")
@@ -379,7 +379,7 @@ class WaterNetworkSolver:
         q2 = self.ampl.get_variable('q2').get_values().to_dict()
         h = self.ampl.get_variable('h').get_values().to_dict()
         l = self.ampl.get_variable('l').get_values().to_dict()
-        eps = self.ampl.get_variable('eps').get_values().to_dict()
+        eps = self.ampl.getParameter('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
         #self.ampl.eval("display q;")
         #self.ampl.eval("display q1;")

@@ -24,13 +24,19 @@ param D_max = max{i in nodes diff Source} D[i];
 param d_min = min{i in pipes} d[i];
 param d_max = max{i in pipes} d[i];
 
+param R_min = min{(i,j) in arcs} R[i,j];
+
+param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
+
+param eps{(i,j) in arcs} := (1e-12 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
+
+
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var q1{arcs},>=-Q_max,<=Q_max;	            # Flow variable
 var q2{arcs};	            # Flow variable
 var h{nodes};	            # Head
-var eps{arcs}>=0;
 
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
