@@ -5,7 +5,11 @@ Water Network: d6_newyork.dat
 min_demand: 0.02831685
 max_demand: 4.8138645
 max_flow: 57.1292449
+<<<<<<< HEAD
 Gurobi 12.0.1: Set parameter LogToConsole to value 1
+=======
+Gurobi 11.0.2: Set parameter LogToConsole to value 1
+>>>>>>> 084e68c (add approximation result using gurobi solver)
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
@@ -21,21 +25,10 @@ Set parameter FeasibilityTol to value 1e-05
   sol:chk:feastolrel = 0
 Set parameter MIPGap to value 1e-09
   mip:gap = 1e-09
-
-AMPL MP initial flat model has 376 variables (0 integer, 0 binary);
-Objectives: 1 linear; 
-Constraints:  40 linear; 147 quadratic;
-Algebraic expressions:  42 div; 84 powconstexp;
-
-AMPL MP final model has 649 variables (0 integer, 0 binary);
-Objectives: 1 linear; 
-Constraints:  82 linear; 147 quadratic;
-Algebraic expressions:  42 div; 84 powconstexp;
-
-
 Set parameter InfUnbdInfo to value 1
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
 
+<<<<<<< HEAD
 CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
@@ -52,14 +45,32 @@ Optimize a model with 82 rows, 649 columns and 517 nonzeros
 Model fingerprint: 0xe56f8048
 Model has 42 general nonlinear constraints (861 nonlinear terms)
 Variable types: 649 continuous, 0 integer (0 binary)
+=======
+CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 40 rows, 607 columns and 395 nonzeros
+Model fingerprint: 0x10b9db39
+Model has 189 quadratic constraints
+Model has 84 general constraints
+Variable types: 607 continuous, 0 integer (0 binary)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
+  QMatrix range    [7e-07, 3e+00]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [3e+02, 3e+03]
+<<<<<<< HEAD
   Bounds range     [5e-08, 4e+14]
+=======
+  Bounds range     [2e-14, 2e+15]
+>>>>>>> 084e68c (add approximation result using gurobi solver)
   RHS range        [3e-02, 1e+04]
+  QRHS range       [2e-14, 9e+01]
 Warning: Model contains large bounds
          Consider reformulating model or setting NumericFocus parameter
          to avoid numerical issues.
+<<<<<<< HEAD
 Presolve model has 42 nlconstr
 Added 987 variables to disaggregate expressions.
 Presolve removed 2 rows and 235 columns
@@ -67,23 +78,42 @@ Presolve time: 0.01s
 Presolved: 3146 rows, 1402 columns, 7614 nonzeros
 Presolved model has 441 bilinear constraint(s)
 Presolved model has 126 nonlinear constraint(s)
+=======
+Presolve added 252 rows and 14512 columns
+Presolve time: 0.09s
+Presolved: 2140 rows, 15456 columns, 48505 nonzeros
+Presolved model has 84 SOS constraint(s)
+Presolved model has 462 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 
-Solving non-convex MINLP
 
-Variable types: 1402 continuous, 0 integer (0 binary)
+Solving non-convex MIQCP
+
+Variable types: 15456 continuous, 0 integer (0 binary)
 Root barrier log...
 
 Ordering time: 0.00s
 
 Barrier statistics:
+<<<<<<< HEAD
  Free vars  : 6
  AA' NZ     : 1.350e+02
  Factor NZ  : 2.850e+02
  Factor Ops : 2.115e+03 (less than 1 second per iteration)
+=======
+ AA' NZ     : 1.589e+03
+ Factor NZ  : 5.321e+03 (roughly 6 MB of memory)
+ Factor Ops : 6.535e+04 (less than 1 second per iteration)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
  Threads    : 1
 
                   Objective                Residual
 Iter       Primal          Dual         Primal    Dual     Compl     Time
+<<<<<<< HEAD
    0   5.21078780e+12 -7.64380379e+14  5.12e+13 0.00e+00  6.50e+10     2s
    1   5.02531177e+12 -5.74798014e+18  4.94e+13 1.30e+00  2.13e+15     2s
    2   4.40447113e+12 -1.12829217e+19  4.33e+13 2.58e+00  1.79e+16     2s
@@ -114,10 +144,34 @@ Optimal objective 3.42014594e+07
 Extra simplex iterations after uncrush: 297
 
 Root relaxation: objective 3.420146e+07, 311 iterations, 0.01 seconds (0.00 work units)
+=======
+   0   5.15340000e+14 -9.15796384e+16  1.95e+12 0.00e+00  1.86e+09     0s
+   1   5.15340000e+14 -2.13143297e+19  1.95e+12 1.94e-01  3.24e+09     0s
+   2   5.15339999e+14 -3.45245689e+20  1.95e+12 2.00e-01  1.96e+10     0s
+   3   5.15339997e+14 -1.79365856e+22  1.95e+12 2.05e-01  8.27e+11     0s
+   4   5.15340000e+14 -1.50936509e+20  1.95e+12 0.00e+00  3.08e+12     0s
+   5   5.15340000e+14 -3.50700306e+22  1.95e+12 3.31e+02  5.36e+12     0s
+   6   5.15339999e+14 -5.67843005e+23  1.95e+12 3.40e+02  3.23e+13     0s
+   7   5.15339997e+14 -2.95038801e+25  1.95e+12 3.48e+02  1.36e+15     0s
+   8   5.15339996e+14 -7.61824607e+26  1.95e+12 3.80e+02  3.33e+16     0s
+   9   5.15339994e+14 -3.21817334e+28  1.95e+12 3.42e+02  1.37e+18     0s
+  10   5.15339990e+14 -5.80850595e+30  1.95e+12 3.48e+02  2.44e+20     0s
+
+Barrier performed 10 iterations in 0.23 seconds (0.12 work units)
+Numerical trouble encountered
+
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
+
+Extra simplex iterations after uncrush: 315
+
+Root relaxation: objective 3.420146e+07, 5060 iterations, 0.18 seconds (0.11 work units)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
+<<<<<<< HEAD
      0     0 3.4201e+07    0  417          - 3.4201e+07      -     -    1s
      0     0 3.4201e+07    0  419          - 3.4201e+07      -     -    1s
      0     0 3.4201e+07    0  428          - 3.4201e+07      -     -    1s
@@ -622,6 +676,79 @@ Gurobi 12.0.1: time limit, without a feasible solution
 336667 simplex iterations
 46 barrier iterations
 6.85954e+06 branching nodes
+=======
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  446          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  464          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  463          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  462          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  464          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  464          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  467          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  466          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  468          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  474          - 3.4201e+07      -     -    1s
+     0     0 3.4201e+07    0  457          - 3.4201e+07      -     -    1s
+     0     2 3.4201e+07    0  457          - 3.4201e+07      -     -    2s
+   532   464 3.4205e+07   65  258          - 3.4201e+07      -  71.4    5s
+  2051  1025 3.4201e+07   38  193          - 3.4201e+07      -  51.2   12s
+  2052  1026 3.4201e+07   57  215          - 3.4201e+07      -  51.2   15s
+  2056  1029 3.4201e+07   25  246          - 3.4201e+07      -  51.1   21s
+  2060  1031 3.4205e+07   66  149          - 3.4201e+07      -  51.0   26s
+  2068  1037 3.4201e+07   42  137          - 3.4201e+07      -  50.8   30s
+
+Cutting planes:
+  Gomory: 7
+  Implied bound: 7
+  Projected implied bound: 5
+  Clique: 2
+  MIR: 9
+  Flow cover: 6
+  RLT: 43
+  Relax-and-lift: 12
+
+Explored 2077 nodes (176853 simplex iterations) in 34.38 seconds (21.79 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi 11.0.2: infeasible problem
+176853 simplex iterations
+99 barrier iterations
+2077 branching nodes
+
+suffix dunbdd OUT;
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 *******************************************************************************
 
 Constraints violation:
@@ -647,7 +774,11 @@ Con2 sum of relative violation: 0.0
 *******************************************************************************
 
 Total cost using gurobi: 0.0
+<<<<<<< HEAD
 gurobi solve time: 3607.91 seconds
+=======
+gurobi solve time: 34.42 seconds
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 q1 [*,*] (tr)
 :    1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  18  20    :=
 2    0   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .

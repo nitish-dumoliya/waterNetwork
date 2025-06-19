@@ -5,7 +5,11 @@ Water Network: d9_fossolo_poly_0.dat
 min_demand: 0.00026
 max_demand: 0.00202
 max_flow: 0.033909999999999996
+<<<<<<< HEAD
 Gurobi 12.0.1: Set parameter LogToConsole to value 1
+=======
+Gurobi 11.0.2: Set parameter LogToConsole to value 1
+>>>>>>> 084e68c (add approximation result using gurobi solver)
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
@@ -20,6 +24,7 @@ Set parameter MIPGap to value 1e-09
   mip:gap = 1e-09
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
+<<<<<<< HEAD
 
 AMPL MP initial flat model has 500 variables (0 integer, 0 binary);
 Objectives: 1 linear; 
@@ -32,9 +37,12 @@ Constraints:  152 linear; 232 quadratic;
 Algebraic expressions:  58 div; 116 powconstexp;
 
 
+=======
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 Set parameter InfUnbdInfo to value 1
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
 
+<<<<<<< HEAD
 CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
@@ -51,12 +59,30 @@ Optimize a model with 152 rows, 906 columns and 694 nonzeros
 Model fingerprint: 0x11d059bd
 Model has 58 general nonlinear constraints (1102 nonlinear terms)
 Variable types: 906 continuous, 0 integer (0 binary)
+=======
+CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 94 rows, 848 columns and 521 nonzeros
+Model fingerprint: 0x388c39f6
+Model has 290 quadratic constraints
+Model has 116 general constraints
+Variable types: 848 continuous, 0 integer (0 binary)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
+  QMatrix range    [7e-01, 2e+03]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [7e+03, 1e+05]
+<<<<<<< HEAD
   Bounds range     [1e-12, 2e+12]
+=======
+  Bounds range     [4e-19, 2e+17]
+>>>>>>> 084e68c (add approximation result using gurobi solver)
   RHS range        [3e-04, 4e+02]
+  QRHS range       [4e-19, 1e+02]
 Warning: Model contains large bounds
+<<<<<<< HEAD
 Presolve model has 58 nlconstr
 Added 1334 variables to disaggregate expressions.
 Presolve removed 1 rows and 349 columns
@@ -64,16 +90,35 @@ Presolve time: 0.02s
 Presolved: 4098 rows, 1892 columns, 9924 nonzeros
 Presolved model has 580 bilinear constraint(s)
 Presolved model has 174 nonlinear constraint(s)
+=======
+Presolve added 464 rows and 406 columns
+Presolve time: 0.01s
+Presolved: 3168 rows, 1718 columns, 9333 nonzeros
+Presolved model has 58 SOS constraint(s)
+Presolved model has 638 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 
-Solving non-convex MINLP
 
+<<<<<<< HEAD
 Variable types: 1892 continuous, 0 integer (0 binary)
 
 Root relaxation: objective 5.791638e+07, 1000 iterations, 0.10 seconds (0.01 work units)
+=======
+Solving non-convex MIQCP
+
+Variable types: 1660 continuous, 58 integer (58 binary)
+
+Root relaxation: infeasible, 74 iterations, 0.03 seconds (0.00 work units)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
+<<<<<<< HEAD
      0     0 5.7916e+07    0  166          - 5.7916e+07      -     -    1s
      0     0 5.7916e+07    0  192          - 5.7916e+07      -     -    2s
      0     0 5.7916e+07    0  190          - 5.7916e+07      -     -    2s
@@ -769,6 +814,22 @@ Best objective -, best bound 5.791637540000e+07, gap -
 Gurobi 12.0.1: time limit, without a feasible solution
 4.70369e+07 simplex iterations
 4.09725e+06 branching nodes
+=======
+     0     0 infeasible    0               - infeasible      -     -    0s
+
+Explored 1 nodes (74 simplex iterations) in 0.27 seconds (0.04 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi 11.0.2: infeasible problem
+74 simplex iterations
+1 branching node
+
+suffix dunbdd OUT;
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 *******************************************************************************
 
 Constraints violation:
@@ -794,6 +855,10 @@ Con2 sum of relative violation: 0.0
 *******************************************************************************
 
 Total cost using gurobi: 0.0
+<<<<<<< HEAD
 gurobi solve time: 3603.69 seconds
+=======
+gurobi solve time: 0.32 seconds
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 *******************************************************************************
 

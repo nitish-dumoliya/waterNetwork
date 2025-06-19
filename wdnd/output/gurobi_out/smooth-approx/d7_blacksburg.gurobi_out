@@ -5,7 +5,11 @@ Water Network: d7_blacksburg.dat
 min_demand: 0.00065488
 max_demand: 0.01265463
 max_flow: 0.09770338999999997
+<<<<<<< HEAD
 Gurobi 12.0.1: Set parameter LogToConsole to value 1
+=======
+Gurobi 11.0.2: Set parameter LogToConsole to value 1
+>>>>>>> 084e68c (add approximation result using gurobi solver)
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
@@ -21,6 +25,7 @@ Set parameter FeasibilityTol to value 1e-05
   sol:chk:feastolrel = 0
 Set parameter MIPGap to value 1e-09
   mip:gap = 1e-09
+<<<<<<< HEAD
 
 AMPL MP initial flat model has 379 variables (0 integer, 0 binary);
 Objectives: 1 linear; 
@@ -69,9 +74,12 @@ Warning: small constant in general constraint NL will be treated as zero (node 8
 Warning: small constant in general constraint NL will be treated as zero (node 14)
 Warning: small constant in general constraint NL will be treated as zero (node 8)
 Warning: small constant in general constraint NL will be treated as zero (node 14)
+=======
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 Set parameter InfUnbdInfo to value 1
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
 
+<<<<<<< HEAD
 CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
@@ -88,9 +96,22 @@ Optimize a model with 80 rows, 563 columns and 497 nonzeros
 Model fingerprint: 0x212a4111
 Model has 27 general nonlinear constraints (729 nonlinear terms)
 Variable types: 563 continuous, 0 integer (0 binary)
+=======
+CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 53 rows, 536 columns and 418 nonzeros
+Model fingerprint: 0xb3b8b1eb
+Model has 129 quadratic constraints
+Model has 54 general constraints
+Variable types: 536 continuous, 0 integer (0 binary)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 Coefficient statistics:
   Matrix range     [2e-08, 2e+00]
+  QMatrix range    [2e-02, 9e+04]
+  QLMatrix range   [1e+00, 1e+00]
   Objective range  [5e-01, 3e+02]
+<<<<<<< HEAD
   Bounds range     [1e-14, 6e+17]
   RHS range        [7e-04, 7e+02]
 Warning: Model contains large bounds
@@ -103,22 +124,51 @@ Presolve time: 0.04s
 Presolved: 2318 rows, 1173 columns, 5919 nonzeros
 Presolved model has 375 bilinear constraint(s)
 Presolved model has 66 nonlinear constraint(s)
+=======
+  Bounds range     [4e-21, 4e+19]
+  RHS range        [7e-04, 6e+02]
+  QRHS range       [4e-21, 7e+02]
+Warning: Model contains large bounds
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+Presolve added 156 rows and 261 columns
+Presolve time: 0.00s
+Presolved: 1808 rows, 1112 columns, 5917 nonzeros
+Presolved model has 54 SOS constraint(s)
+Presolved model has 396 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 
-Solving non-convex MINLP
 
+<<<<<<< HEAD
 Variable types: 1173 continuous, 0 integer (0 binary)
+=======
+Solving non-convex MIQCP
+
+Variable types: 1112 continuous, 0 integer (0 binary)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 Root barrier log...
 
 Ordering time: 0.00s
 
 Barrier statistics:
+<<<<<<< HEAD
  AA' NZ     : 1.074e+04
  Factor NZ  : 1.362e+04 (roughly 1 MB of memory)
  Factor Ops : 2.784e+05 (less than 1 second per iteration)
+=======
+ AA' NZ     : 1.311e+04
+ Factor NZ  : 2.026e+04 (roughly 1 MB of memory)
+ Factor Ops : 3.513e+05 (less than 1 second per iteration)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
  Threads    : 1
 
                   Objective                Residual
 Iter       Primal          Dual         Primal    Dual     Compl     Time
+<<<<<<< HEAD
    0   5.00612188e+13 -3.27031376e+13  4.92e+09 0.00e+00  1.24e+11     1s
    1   6.02708317e+12 -6.33825375e+11  8.01e+08 1.42e-12  1.66e+10     1s
    2   1.03202240e+11 -7.35180266e+10  1.32e+07 7.67e-13  3.08e+08     1s
@@ -144,10 +194,53 @@ Optimal objective 5.78556586e+04
 Extra simplex iterations after uncrush: 12
 
 Root relaxation: objective 5.787421e+04, 141 iterations, 0.19 seconds (0.01 work units)
+=======
+   0   2.19751567e+14 -9.42382343e+25  2.18e+23 8.88e-16  4.90e+11     0s
+   1   2.19751567e+14 -9.42382343e+25  2.18e+23 8.88e-16  4.90e+11     0s
+   2   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.48e+12     0s
+   3   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.48e+12     0s
+   4   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.48e+12     0s
+   5   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.48e+12     0s
+
+Barrier performed 5 iterations in 0.03 seconds (0.01 work units)
+Numerical trouble encountered
+
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
+
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 1.968e+04
+ Factor NZ  : 2.812e+04 (roughly 1 MB of memory)
+ Factor Ops : 5.930e+05 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   2.19751567e+14 -9.42382334e+25  2.18e+23 8.88e-16  4.80e+11     0s
+   1   2.19751567e+14 -9.42382334e+25  2.18e+23 8.88e-16  4.80e+11     0s
+   2   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.42e+12     0s
+   3   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.42e+12     0s
+   4   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.42e+12     0s
+   5   2.19751567e+14 -1.77057530e+27  2.18e+23 3.64e-14  7.42e+12     0s
+
+Barrier performed 5 iterations in 0.04 seconds (0.02 work units)
+Numerical trouble encountered
+
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
+
+
+Root relaxation: infeasible, 130 iterations, 0.03 seconds (0.02 work units)
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
+<<<<<<< HEAD
      0     0 57874.2066    0  135          - 57874.2066      -     -    0s
      0     0 60310.3743    0  110          - 60310.3743      -     -    0s
      0     0 60321.5492    0  114          - 60321.5492      -     -    1s
@@ -864,6 +957,23 @@ Gurobi 12.0.1: time limit, without a feasible solution
 4.60352e+07 simplex iterations
 43 barrier iterations
 3.99112e+06 branching nodes
+=======
+     0     0 infeasible    0               - infeasible      -     -    0s
+
+Explored 1 nodes (130 simplex iterations) in 0.04 seconds (0.03 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi 11.0.2: infeasible problem
+130 simplex iterations
+5 barrier iterations
+1 branching node
+
+suffix dunbdd OUT;
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 *******************************************************************************
 
 Constraints violation:
@@ -2159,11 +2269,12 @@ Absolute and relative violations between original and approximation constraint 2
 +-----------------+----------------------+----------------------+
 | con2_fix_26,27  |                    0 |                    0 |
 +-----------------+----------------------+----------------------+
-| con2_fix_26,28  |                    0 |                    0 |
+| con2_fix_26,28  |                   -0 |                   -0 |
 +-----------------+----------------------+----------------------+
 | con2_fix_29,26  |                    0 |                    0 |
 +-----------------+----------------------+----------------------+
 
+<<<<<<< HEAD
 Con2 sum of absolute violation: 2.2551405187698492e-17
 Con2 sum of relative violation: 5.730728791512985e-16
 *******************************************************************************
@@ -2206,5 +2317,13 @@ Con2 sum of relative violation: 8.074220784322512e-16
 
 Total cost using gurobi: 55583.42331599999
 gurobi solve time: 3607.04 seconds
+=======
+Con2 sum of absolute violation: 1.9081958235744878e-17
+Con2 sum of relative violation: 8.074220784322512e-16
+*******************************************************************************
+
+Total cost using gurobi: 55583.42331599999
+gurobi solve time: 0.06 seconds
+>>>>>>> 084e68c (add approximation result using gurobi solver)
 *******************************************************************************
 
