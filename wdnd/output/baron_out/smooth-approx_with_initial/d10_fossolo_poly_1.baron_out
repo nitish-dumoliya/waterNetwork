@@ -1,0 +1,163 @@
+Water Network: d10_fossolo_poly_1.dat
+*******************************************************************************
+
+-------------------------------- Solving with IPOPT --------------------------
+min_demand: 0.00026
+max_demand: 0.00202
+max_flow: 0.033909999999999996
+Ipopt solver outputs: 
+
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 21338.06366582986 
+
+*******************************************************************************
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 7.98969725015336e-11
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 2.7737585839293644e-10
+Con2 sum of relative violation: 3.0758524120222656e-09
+*******************************************************************************
+
+Total cost using ipopt: 21338.06366582986
+IPOPT solve time: 21.97 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.00026
+max_demand: 0.00202
+max_flow: 0.033909999999999996
+eps: {(1, 17): 1.7343015899470837e-14, (1, 31): 3.194425529053478e-14, (2, 3): 1.9388087833588338e-14, (2, 18): 1.38985232897554e-14, (3, 4): 6.875452425446803e-15, (3, 11): 1.1304915453721636e-14, (4, 5): 7.484292095858768e-15, (5, 6): 6.355727465903282e-15, (5, 13): 3.106256837616435e-14, (6, 7): 1.6922783896420186e-14, (7, 24): 1.1066105085843659e-14, (8, 28): 1.580753414906387e-14, (9, 36): 2.0804824893911533e-14, (10, 11): 1.554053563046084e-14, (10, 32): 4.998094348899958e-14, (11, 19): 1.3924356875643038e-14, (11, 26): 2.868951166867969e-14, (12, 4): 4.676940751629464e-14, (12, 13): 1.0915503647716004e-14, (13, 14): 2.076483946218476e-14, (14, 20): 6.824037322391225e-14, (14, 21): 3.7384803331407535e-14, (15, 16): 1.227619135518019e-14, (15, 22): 2.964136981440824e-14, (16, 25): 2.906996256985671e-14, (16, 29): 1.6894570813752066e-14, (17, 2): 5.656174781559801e-15, (17, 18): 9.377873252495509e-15, (18, 10): 2.8446040851577816e-14, (19, 12): 2.3643842713977994e-14, (19, 20): 8.829951718558126e-15, (20, 15): 2.1490923933388663e-14, (21, 6): 1.0564687501729839e-14, (21, 22): 1.5471174697453736e-14, (22, 7): 6.262376484117073e-15, (22, 23): 2.2622201732151696e-14, (23, 25): 3.2095907108141984e-14, (24, 8): 1.7375521438481152e-14, (24, 23): 1.0518183133252998e-14, (25, 8): 1.5480237220533032e-14, (26, 15): 2.048320071129032e-14, (26, 27): 1.2462333172835102e-14, (27, 16): 2.3739024834678802e-14, (28, 9): 1.2812706385418802e-14, (28, 29): 1.5305342380317916e-14, (29, 30): 4.346459337240499e-14, (29, 33): 1.0301791118672805e-14, (30, 9): 1.865678388921159e-14, (30, 35): 1.9347950743809464e-14, (31, 10): 1.237852751382175e-14, (31, 34): 4.094035304218292e-14, (32, 27): 3.058850851807668e-14, (32, 33): 1.583353662844881e-14, (33, 34): 7.377186196055876e-14, (34, 35): 1.3654071491460056e-14, (35, 36): 2.8737941831624857e-14, (36, 1): 1.0529502427428623e-14, (37, 1): 3.402936359410228e-12}
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 2
+barstats 
+version 
+objbound
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20240508), liccheck(20211124), ASL(20231111)
+Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
+Temporary license expires 20260603.
+Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
+
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of   21338.1          
+ Doing local search
+ Preprocessing found feasible solution with value 21338.1
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+          1             1             7.88      3194.23          21338.1                 
+         12             7            43.27      3194.23          21338.1                 
+         68            31            74.50      3194.23          21338.1                 
+*       415           134           109.45      3194.23          21212.8                 
+*       933           131           146.55      3194.23          21003.1                 
+       1569           129           176.54      3194.23          21003.1                 
+       2951           145           208.42      3194.23          21003.1                 
+       6015           148           242.95      3194.23          21003.1                 
+       8658            72           272.95      3194.23          21003.1                 
+       8676            72          3607.43      3194.23          21003.1                 
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3608.11
+ Total CPU time used:              3607.43
+
+ Total no. of BaR iterations:    8676
+ Best solution found at node:     933
+ Max. no. of nodes in memory:     153
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 8676 iterations, CPU time limit reached.
+Objective 21003.11894
+Objective lower bound = 3194.2268000000004, upper bound = 21003.11894389361
+barstatus = 4, modelstatus = 4
+max nodes in memory = 153
+optimum found at node 933
+Baron run time (excluding setup) = 3607.42 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.806464353890424e-05
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 3.40170742268997e-10
+Con2 sum of relative violation: 1.1834499886110166e-08
+*******************************************************************************
+
+Total cost using baron: 21003.11894389361
+baron solve time: 3608.14 seconds
+*******************************************************************************
+

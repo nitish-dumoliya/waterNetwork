@@ -1,0 +1,110 @@
+Water Network: d2_shamir.dat
+*******************************************************************************
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+BARON 24.5.8 (2024.05.08): maxtime = 300
+outlev = 2
+barstats 
+version 
+objbound
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20240508), liccheck(20211124), ASL(20231111)
+Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
+Temporary license expires 20260603.
+Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
+
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+          1             1             0.30      71253.6         0.100000E+52             
+          7             0             0.46     infinity         0.100000E+52             
+ Problem is infeasible
+
+                         *** Normal completion ***            
+
+                       *** Problem is infeasible ***
+
+ Wall clock time:                     0.73
+ Total CPU time used:                 0.46
+
+ Total no. of BaR iterations:       7
+ Best solution found at node:      -3
+ Max. no. of nodes in memory:       2
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 7 iterations, infeasible.
+Objective lower bound = 1e+51, upper bound = 1e+51
+barstatus = 1, modelstatus = 2
+max nodes in memory = 2
+optimum found at node -3
+Baron run time (excluding setup) = 0.45 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 9330.31109
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |            0 |                      210 |                    210 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 210.0
+Sum of violation of approx headloss constraint: 210.0
+
+Con2 sum of absolute violation between original function and approximate function: 0.0
+Con2 sum of relative violation between original function and approximate function: 0.0
+*******************************************************************************
+
+Total cost using baron: 0.0
+baron solve time: 0.77 seconds
+*******************************************************************************
+

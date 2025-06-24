@@ -5,283 +5,59 @@ Water Network: d10_fossolo_poly_1.dat
 min_demand: 0.00026
 max_demand: 0.00202
 max_flow: 0.033909999999999996
-<<<<<<< HEAD
-Gurobi 12.0.1: Set parameter LogToConsole to value 1
-=======
 Gurobi 11.0.2: Set parameter LogToConsole to value 1
->>>>>>> 084e68c (add approximation result using gurobi solver)
   tech:outlev = 1
-Set parameter Presolve to value 1
-  pre:solve = 1
+Set parameter Presolve to value 0
+  pre:solve = 0
 Set parameter TimeLimit to value 3600
   lim:time = 3600
-Set parameter BarConvTol to value 1e-09
-  bar:convtol = 1e-09
-Set parameter FeasibilityTol to value 1e-05
-  alg:feastol = 1e-05
-  sol:chk:feastolrel = 0
-Set parameter MIPGap to value 1e-09
-  mip:gap = 1e-09
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
-<<<<<<< HEAD
-
-AMPL MP initial flat model has 1370 variables (0 integer, 0 binary);
-Objectives: 1 linear; 
-Constraints:  94 linear; 232 quadratic;
-Algebraic expressions:  58 div; 116 powconstexp;
-
-AMPL MP final model has 1776 variables (0 integer, 0 binary);
-Objectives: 1 linear; 
-Constraints:  152 linear; 232 quadratic;
-Algebraic expressions:  58 div; 116 powconstexp;
-
-
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-=======
->>>>>>> 084e68c (add approximation result using gurobi solver)
 Set parameter InfUnbdInfo to value 1
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
 
-<<<<<<< HEAD
-CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
-Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
-
-Non-default parameters:
-TimeLimit  3600
-FeasibilityTol  1e-05
-MIPGap  1e-09
-BarConvTol  1e-09
-InfUnbdInfo  1
-NumericFocus  1
-Presolve  1
-
-Optimize a model with 152 rows, 1776 columns and 1564 nonzeros
-Model fingerprint: 0xf050fc57
-Model has 58 general nonlinear constraints (2842 nonlinear terms)
-Variable types: 1776 continuous, 0 integer (0 binary)
-=======
 CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
 
 Optimize a model with 94 rows, 1718 columns and 1391 nonzeros
-Model fingerprint: 0xd2cbadf7
+Model fingerprint: 0x971b60d2
 Model has 290 quadratic constraints
 Model has 116 general constraints
 Variable types: 1718 continuous, 0 integer (0 binary)
->>>>>>> 084e68c (add approximation result using gurobi solver)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   QMatrix range    [8e-02, 6e+05]
   QLMatrix range   [1e+00, 1e+00]
   Objective range  [4e-01, 2e+02]
-<<<<<<< HEAD
-  Bounds range     [2e-15, 3e+17]
-=======
-  Bounds range     [8e-22, 7e+19]
->>>>>>> 084e68c (add approximation result using gurobi solver)
+  Bounds range     [2e-15, 2e+13]
   RHS range        [3e-04, 4e+02]
-  QRHS range       [8e-22, 1e+02]
+  QRHS range       [2e-15, 1e+02]
 Warning: Model contains large bounds
-<<<<<<< HEAD
-Presolve model has 58 nlconstr
-Added 2903 variables to disaggregate expressions.
-Presolve removed 0 rows and 348 columns
-Presolve time: 0.04s
-Presolved: 8047 rows, 4332 columns, 21412 nonzeros
-Presolved model has 1450 bilinear constraint(s)
-Presolved model has 117 nonlinear constraint(s)
-=======
-Presolve added 464 rows and 406 columns
-Presolve time: 0.01s
-Presolved: 6648 rows, 3458 columns, 20642 nonzeros
-Presolved model has 58 SOS constraint(s)
-Presolved model has 1508 bilinear constraint(s)
 Warning: Model contains variables with very large bounds participating
          in product terms.
-         Presolve was not able to compute smaller bounds for these variables.
          Consider bounding these variables or reformulating the model.
->>>>>>> 084e68c (add approximation result using gurobi solver)
 
 
-<<<<<<< HEAD
-Variable types: 4332 continuous, 0 integer (0 binary)
-Warning: 1 variables dropped from basis
-Warning: switch to quad precision
-Warning: 1 variables dropped from basis
-Warning: 2 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-
-Root simplex log...
-
-Iteration    Objective       Primal Inf.    Dual Inf.      Time
-    9243    4.3773666e+03   2.133208e+10   4.858990e+12      5s
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-   13507    3.1942268e+03   0.000000e+00   0.000000e+00      9s
-
-Root relaxation: objective 3.194227e+03, 13507 iterations, 6.99 seconds (1.41 work units)
-=======
 Solving non-convex MIQCP
 
-Variable types: 3400 continuous, 58 integer (58 binary)
+Variable types: 3458 continuous, 0 integer (0 binary)
 
-Root relaxation: infeasible, 394 iterations, 0.02 seconds (0.00 work units)
->>>>>>> 084e68c (add approximation result using gurobi solver)
+Root relaxation: infeasible, 926 iterations, 0.02 seconds (0.01 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-<<<<<<< HEAD
-     0     0 3194.22680    0  418          - 3194.22680      -     -    8s
-     0     0 infeasible    0               - infeasible      -     -   15s
-
-Cutting planes:
-  RLT: 62
-
-Explored 1 nodes (50007 simplex iterations) in 15.81 seconds (3.35 work units)
-Thread count was 32 (of 64 available processors)
-=======
      0     0 infeasible    0               - infeasible      -     -    0s
 
-Explored 1 nodes (394 simplex iterations) in 0.52 seconds (0.12 work units)
+Explored 1 nodes (926 simplex iterations) in 0.53 seconds (0.15 work units)
 Thread count was 8 (of 8 available processors)
->>>>>>> 084e68c (add approximation result using gurobi solver)
 
 Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
-<<<<<<< HEAD
-Gurobi 12.0.1: infeasible problem
-50007 simplex iterations
-=======
 Gurobi 11.0.2: infeasible problem
-394 simplex iterations
->>>>>>> 084e68c (add approximation result using gurobi solver)
+926 simplex iterations
 1 branching node
 
 suffix dunbdd OUT;
@@ -295,25 +71,136 @@ Sum of constraints violation: 12281.053909999997
 
 *******************************************************************************
 
-Constraint 2 violations:
-
-
-Sum of violation of original con2: 242.0
-Sum of violation of approx con2: 242.0
-*******************************************************************************
-
 Absolute and relative violations between original and approximation constraint 2:
 
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,17            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 1,31            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,18            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,11            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,6             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,13            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,24            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 8,28            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 9,36            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 10,11           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 10,32           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 11,19           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 11,26           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 12,4            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 12,13           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 13,14           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 14,20           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 14,21           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 15,16           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 15,22           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 16,25           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 16,29           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 17,2            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 17,18           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 18,10           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 19,12           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 19,20           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 20,15           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 21,6            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 21,22           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 22,7            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 22,23           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 23,25           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 24,8            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 24,23           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 25,8            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,15           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,27           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 27,16           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 28,9            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 28,29           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 29,30           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 29,33           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 30,9            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 30,35           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 31,10           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 31,34           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 32,27           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 32,33           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 33,34           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 34,35           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 35,36           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 36,1            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 37,1            |            0 |                      121 |                    121 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 
-Con2 sum of absolute violation: 0.0
-Con2 sum of relative violation: 0.0
+Sum of violation of original headloss constraint: 121.0
+Sum of violation of approx headloss constraint: 121.0
+
+Con2 sum of absolute violation between original function and approximate function: 0.0
+Con2 sum of relative violation between original function and approximate function: 0.0
 *******************************************************************************
 
 Total cost using gurobi: 0.0
-<<<<<<< HEAD
-gurobi solve time: 15.92 seconds
-=======
-gurobi solve time: 0.55 seconds
->>>>>>> 084e68c (add approximation result using gurobi solver)
+gurobi solve time: 0.57 seconds
 *******************************************************************************
 

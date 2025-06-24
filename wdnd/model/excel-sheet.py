@@ -136,8 +136,8 @@ def BaronInstanceOutput(instance, output):
     output_content = output.read() 
 
     violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_rel = re.search(r'Con2 sum of relative violation:\s*([\d.eE+-]+)', output_content)
+    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
 
     # Regular expression to find the lower bound
     lower_bound = re.search(r"lower bound\s*=\s*([0-9.]+)", output_content)
@@ -229,8 +229,8 @@ def GurobiInstanceOutput(instance, output):
    
     # Extract total relative constraint violation
     violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation:\s*([\d.eE+-]+)', output)
-    violation_match_rel = re.search(r'Con2 sum of relative violation:\s*([\d.eE+-]+)', output)
+    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output)
+    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output)
     #print(violation_match)
     
     violation_con = None
@@ -303,8 +303,8 @@ def SCIPInstanceOutput(instance, output):
  
     # Extract total relative constraint violation
     violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation:\s*([\d.eE+-]+)', output)
-    violation_match_rel = re.search(r'Con2 sum of relative violation:\s*([\d.eE+-]+)', output)
+    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output)
+    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output)
     #print(violation_match)
     
     violation_con = None
@@ -350,8 +350,8 @@ def IpoptInstanceOutput(instance, output):
 
     # Extract total relative constraint violation
     violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_rel = re.search(r'Con2 sum of relative violation:\s*([\d.eE+-]+)', output_content)
+    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
     #
     violation_con = float(violation_match_con.group(1)) if violation_match_con else None
     violation_abs = float(violation_match_abs.group(1)) if violation_match_abs else None
@@ -493,7 +493,7 @@ Heuristic_Objective = []
 Heuristic_Time_taken = []
 Heuristic_Rel_vio = []
 
-dir = "smooth-approx"
+dir = "original_no_initial"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
 for ins in data_list:

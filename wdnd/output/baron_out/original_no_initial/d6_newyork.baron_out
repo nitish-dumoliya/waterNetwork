@@ -1,0 +1,153 @@
+Water Network: d6_newyork.dat
+*******************************************************************************
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.02831685
+max_demand: 4.8138645
+max_flow: 57.1292449
+BARON 24.5.8 (2024.05.08): maxtime = 300
+outlev = 2
+barstats 
+version 
+objbound
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20240508), liccheck(20211124), ASL(20231111)
+Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
+Temporary license expires 20260603.
+Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
+
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 0.583254E+08
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 0.581452E+08
+ Preprocessing found feasible solution with value 0.578694E+08
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+          1             0             1.95     0.578694E+08     0.578694E+08             
+
+                         *** Normal completion ***            
+
+ Wall clock time:                     3.40
+ Total CPU time used:                 1.95
+
+ Total no. of BaR iterations:       1
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:       1
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 1 iterations, optimal within tolerances.
+Objective 57869390.67
+Objective lower bound = 57869390.66613356, upper bound = 57869390.66613356
+barstatus = 1, modelstatus = 1
+max nodes in memory = 1
+optimum found at node -1
+Baron run time (excluding setup) = 1.94 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.787550410961019e-08
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Sum of violation of original headloss constraint: 6.49845476423383e-08
+Sum of violation of approx headloss constraint: 6.389326241001969e-08
+
+Con2 sum of absolute violation between original function and approximate function: 1.1003336748693915e-09
+Con2 sum of relative violation between original function and approximate function: 4.698958135523339e-08
+*******************************************************************************
+
+Total cost using baron: 57869390.66613356
+baron solve time: 3.47 seconds
+q1 [*,*] (tr)
+:       1         2         3         4        5        6         7       :=
+2    24.3516     .         .         .         .       .        .
+3      .       21.7726     .         .         .       .        .
+4      .         .       19.1936     .         .       .        .
+5      .         .         .       16.7318     .       .        .
+6      .         .         .         .       14.27     .        .
+7      .         .         .         .         .     11.8082    .
+8      .         .         .         .         .       .       7.88136
+15   32.0888     .         .         .         .       .        .
+
+:       8         9         10        11         12        13       14      :=
+9    6.76259    .         .         4.01218     .          .         .
+10    .        1.63283    .          .          .          .         .
+11    .         .         .          .        13.7835      .         .
+12    .         .         .          .          .        23.6283     .
+13    .         .         .          .          .          .       26.91
+16    .        2.28978    .          .          .          .         .
+17    .         .        0.502869    .          .          .         .
+18    .         .         .          .         2.11647     .         .
+20    .         .         .         1.93469     .          .         .
+
+:      15         18         20       :=
+14   29.4994    .          .
+16     .        .         0.194798
+19     .       0.968865    .
+;
+
+q2 [*,*] (tr)
+:       1          2          3          4          5          6          7  :=
+2    0.353609    .          .          .          .          .          .
+3     .         0.316159    .          .          .          .          .
+4     .          .         0.278709    .          .          .          .
+5     .          .          .         0.242961    .          .          .
+6     .          .          .          .         0.207214    .          .
+7     .          .          .          .          .         0.171466    .
+8     .          .          .          .          .          .         1.60072
+15   0.335215    .          .          .          .          .          .
+
+:      8           9         10         11          12         13         14 :=
+9   0.221944    .           .        0.0419131    .          .          .
+10
+     .         0.0237102    .         .           .          .          .
+11
+     .          .           .         .          0.143989    .          .
+12
+     .          .           .         .           .         0.246833    .
+13
+     .          .           .         .           .          .         0.281114
+16
+     .         2.27845      .         .           .          .          .
+17
+     .          .          1.12535    .           .          .          .
+18
+     .          .           .         .          4.51533     .          .
+20
+     .          .           .        3.12482      .          .          .
+
+:       15        18         20        :=
+14   0.308164    .         .
+16    .          .        0.0508408
+19    .         2.34704    .
+;
+
+*******************************************************************************
+

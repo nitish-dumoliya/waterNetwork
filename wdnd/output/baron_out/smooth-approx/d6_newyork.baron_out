@@ -1,7 +1,5 @@
 Water Network: d6_newyork.dat
 *******************************************************************************
-<<<<<<< HEAD
-=======
 
 -------------------------------- Solving with baron --------------------------
 min_demand: 0.02831685
@@ -44,12 +42,12 @@ Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
  Done with local search
 ===========================================================================
   Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             0             2.31     0.578694E+08     0.578694E+08             
+          1             0             2.13     0.578694E+08     0.578694E+08             
 
                          *** Normal completion ***            
 
- Wall clock time:                     3.00
- Total CPU time used:                 2.31
+ Wall clock time:                     4.37
+ Total CPU time used:                 2.13
 
  Total no. of BaR iterations:       1
  Best solution found at node:      -1
@@ -63,7 +61,7 @@ Objective lower bound = 57869390.66613356, upper bound = 57869390.66613356
 barstatus = 1, modelstatus = 1
 max nodes in memory = 1
 optimum found at node -1
-Baron run time (excluding setup) = 2.31 seconds
+Baron run time (excluding setup) = 2.12 seconds
 
 suffix obj_ub OUT;
 suffix obj_lb OUT;
@@ -75,24 +73,18 @@ Constraints violation:
 Sum of constraints violation: 6.787550410961019e-08
 *******************************************************************************
 
-*******************************************************************************
-
-Constraint 2 violations:
-
-
-Sum of violation of original con2: 0.0
-Sum of violation of approx con2: 0.0
-*******************************************************************************
-
 Absolute and relative violations between original and approximation constraint 2:
 
 
-Con2 sum of absolute violation: 1.1003336748693915e-09
-Con2 sum of relative violation: 4.698958135523339e-08
+Sum of violation of original headloss constraint: 6.49845476423383e-08
+Sum of violation of approx headloss constraint: 6.389326241001969e-08
+
+Con2 sum of absolute violation between original function and approximate function: 1.1003336748693915e-09
+Con2 sum of relative violation between original function and approximate function: 4.698958135523339e-08
 *******************************************************************************
 
 Total cost using baron: 57869390.66613356
-baron solve time: 3.08 seconds
+baron solve time: 4.42 seconds
 q1 [*,*] (tr)
 :       1         2         3         4        5        6         7       :=
 2    24.3516     .         .         .         .       .        .
@@ -159,4 +151,3 @@ q2 [*,*] (tr)
 
 *******************************************************************************
 
->>>>>>> f939416 (add approximation result using baron solver)

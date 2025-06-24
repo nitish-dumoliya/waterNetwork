@@ -88,16 +88,24 @@ class WaterNetworkSolver:
                 approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
+                con2_original_gap[f"{i},{j}"] = lhs - original_rhs
+                con2_original_violation += abs(lhs - original_rhs) 
+                
+                con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs
+                
+                total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+                con2_approx_violation += abs(lhs - approx_rhs) 
 
-                con2_original_violation =  lhs - original_rhs
-                con2_original_gap[f"con2_{i}_{j}"] = con2_original_violation
-                con2_original_violation += abs(con2_original_violation) 
+
+                con2_original_gap[f"con2_{i}_{j}"] = lhs - original_rhs
+                con2_original_violation += abs(lhs - original_rhs) 
 
                 con2_approx_violation =  lhs - approx_rhs
-                con2_approx_gap[f"con2_{i}_{j}"] = con2_approx_violation
+                con2_approx_gap[f"con2_{i}_{j}"] = lhs - approx_rhs
 
-                total_absolute_constraint_violation += abs(con2_approx_violation)    
-                con2_approx_violation += abs(con2_approx_violation) 
+
+                total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+                con2_approx_violation += abs(lhs - approx_rhs) 
 
                 # Compute absolute violation
                 absolute_violation =  original_rhs - approx_rhs
@@ -123,15 +131,15 @@ class WaterNetworkSolver:
 
             #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
-            con2_original_violation =  lhs - original_rhs
-            con2_original_gap[f"con2_fix_{i}_{j}"] = con2_original_violation
-            con2_original_violation += abs(con2_original_violation) 
+            #con2_original_violation =  lhs - original_rhs
+            con2_original_gap[f"con2_fix_{i}_{j}"] = lhs - original_rhs
+            con2_original_violation += abs(lhs - original_rhs) 
 
-            con2_approx_violation =  lhs - approx_rhs
-            con2_approx_gap[f"con2_fix_{i}_{j}"] = con2_approx_violation
+            #con2_approx_violation =  lhs - approx_rhs
+            con2_approx_gap[f"con2_fix_{i}_{j}"] = lhs - approx_rhs
 
-            total_absolute_constraint_violation += abs(con2_approx_violation)    
-            con2_approx_violation += abs(con2_approx_violation) 
+            total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+            con2_approx_violation += abs(lhs - approx_rhs) 
 
             # Compute absolute violation
             absolute_violation =  original_rhs - approx_rhs
@@ -202,33 +210,39 @@ class WaterNetworkSolver:
                table_data.append([constraint, f"{con6_gap[constraint]:.8f}"])
 
         headers = ["Constraint ID", "Violation"]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nSum of constraints violation:", total_absolute_constraint_violation)
 
-        print("*******************************************************************************\n")
-        table_data = []
-        for constraint, vio in con2_original_gap.items():
-               table_data.append([constraint, f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}"])
+        #print("*******************************************************************************\n")
+        #table_data = []
+        #for constraint, vio in con2_original_gap.items():
+        #       table_data.append([constraint, f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}"])
 
-        print("*******************************************************************************\n")
-        print("Constraint 2 violations:\n")
+        #print("*******************************************************************************\n")
+        #print("Constraint 2 violations:\n")
         #headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
         #print(tabulate(table_data, headers=headers, tablefmt="grid"))
         
-        print("\nSum of violation of original con2:", con2_original_violation)
-        print("Sum of violation of approx con2:", con2_approx_violation)
+        #print("\nSum of violation of original con2:", con2_original_violation)
+        #print("Sum of violation of approx con2:", con2_approx_violation)
 
 
-        table_data = []
-        for constraint, vio in relative_violations.items():
-               table_data.append([constraint, f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
+        #table_data = []
+        #for constraint, vio in relative_violations.items():
+        #       table_data.append([constraint, f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
 
         print("*******************************************************************************\n")
-        print("Absolute and relative violations between original and approximation constraint 2:\n")
-        headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
-        print("Con2 sum of relative violation:", con2_relative_constraint_violation)
+        #print("Absolute and relative violations between original and approximation constraint 2:\n")
+       # headers = ["Constraint ID", "Absolute Violation", "Relative Violation"]
+        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print("\nSum of violation of original headloss constraint:", con2_original_violation) 
+        print("Sum of violation of approx headloss constraint:", con2_approx_violation)
+        print("\nCon2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
+        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation)
+
+
+        #print("\nCon2 sum of absolute violation:", con2_absolute_constraint_violation)
+        #print("Con2 sum of relative violation:", con2_relative_constraint_violation)
 
         # Print total violations
         #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
@@ -360,13 +374,13 @@ class WaterNetworkSolver:
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         #self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 method = 2 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 " 
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
         #self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
-        self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 barstats version objbound" # lsolver = conopt
+        self.ampl.option["baron_options"]= "maxtime = 300  outlev = 2 barstats version objbound" # lsolver = conopt
         #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
         #self.ampl.option["scip_options"] = "outlev  1 timelimit 300 wantsol lpmethod = b" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         

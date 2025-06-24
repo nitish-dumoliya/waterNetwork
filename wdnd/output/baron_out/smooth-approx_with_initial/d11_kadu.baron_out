@@ -1,0 +1,154 @@
+Water Network: d11_kadu.dat
+*******************************************************************************
+
+-------------------------------- Solving with IPOPT --------------------------
+min_demand: 0.0333
+max_demand: 0.3067
+max_flow: 3.0869000000000004
+Ipopt solver outputs: 
+
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 123757644.99784257 
+
+*******************************************************************************
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 4.405756488801149e-10
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 2.145617654901455e-09
+Con2 sum of relative violation: 3.2064657489377955e-07
+*******************************************************************************
+
+Total cost using ipopt: 123757644.99784257
+IPOPT solve time: 10.56 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.0333
+max_demand: 0.3067
+max_flow: 3.0869000000000004
+eps: {(1, 3): 6.986380715324507e-10, (2, 14): 1.0269114179434754e-09, (3, 4): 2.3586416872379857e-10, (4, 5): 2.035204119857003e-10, (4, 9): 2.4223830460496623e-10, (5, 6): 2.6741630252937966e-10, (6, 7): 1.1306554006400186e-10, (6, 10): 1.3236791328829453e-10, (7, 8): 3.304957354585707e-10, (8, 13): 1.5993868884732526e-10, (8, 14): 2.5972360257697503e-10, (9, 10): 2.7981378804841253e-10, (9, 15): 2.1330572570047926e-10, (10, 11): 6.743320544281526e-10, (10, 19): 3.031278145480006e-10, (11, 12): 4.024155599562231e-10, (12, 13): 9.204009715054436e-11, (13, 16): 1.7174648309268992e-10, (13, 20): 2.5603503688670813e-10, (14, 17): 2.981709548045572e-10, (15, 18): 2.2688711825471655e-10, (16, 21): 2.9336788084386765e-10, (17, 21): 1.7518366511616257e-10, (17, 22): 2.6741630252937966e-10, (18, 23): 2.5972360257697503e-10, (19, 20): 1.6067693423483798e-10, (19, 24): 2.1330572570047926e-10, (20, 21): 1.945644348109188e-10, (20, 25): 3.031278145480006e-10, (21, 26): 1.1942141109897966e-10, (22, 26): 5.330875868065554e-11, (23, 24): 1.6067693423483798e-10, (24, 25): 1.1084714349418177e-10, (25, 26): 1.4105190228806352e-10}
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 2
+barstats 
+version 
+objbound
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20240508), liccheck(20211124), ASL(20231111)
+Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
+Temporary license expires 20260603.
+Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
+
+===========================================================================
+ BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
+ Running on machine asus
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.123758E+09      
+ Doing local search
+ Preprocessing found feasible solution with value 0.123758E+09
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+          1             0             3.64     0.123758E+09     0.123758E+09             
+
+                         *** Normal completion ***            
+
+ Wall clock time:                     4.46
+ Total CPU time used:                 3.64
+
+ Total no. of BaR iterations:       1
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:       1
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 1 iterations, optimal within tolerances.
+Objective 123757641.5
+Objective lower bound = 123757641.53079249, upper bound = 123757641.53079249
+barstatus = 1, modelstatus = 1
+max nodes in memory = 1
+optimum found at node -1
+Baron run time (excluding setup) = 3.63 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 3.2271267178137636e-05
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 2.145926812115173e-09
+Con2 sum of relative violation: 3.2075056695136517e-07
+*******************************************************************************
+
+Total cost using baron: 123757641.53079249
+baron solve time: 4.51 seconds
+*******************************************************************************
+

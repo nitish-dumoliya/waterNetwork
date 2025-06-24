@@ -5,161 +5,59 @@ Water Network: d2_shamir.dat
 min_demand: 0.02777
 max_demand: 0.09167
 max_flow: 0.31109
-<<<<<<< HEAD
-Gurobi 12.0.1: Set parameter LogToConsole to value 1
-=======
 Gurobi 11.0.2: Set parameter LogToConsole to value 1
->>>>>>> 084e68c (add approximation result using gurobi solver)
   tech:outlev = 1
-Set parameter Presolve to value 1
-  pre:solve = 1
+Set parameter Presolve to value 0
+  pre:solve = 0
 Set parameter TimeLimit to value 3600
   lim:time = 3600
-Set parameter BarConvTol to value 1e-09
-  bar:convtol = 1e-09
-Set parameter FeasibilityTol to value 1e-05
-  alg:feastol = 1e-05
-  sol:chk:feastolrel = 0
-Set parameter MIPGap to value 1e-09
-  mip:gap = 1e-09
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
-<<<<<<< HEAD
-
-AMPL MP initial flat model has 126 variables (0 integer, 0 binary);
-Objectives: 1 linear; 
-Constraints:  14 linear; 32 quadratic;
-Algebraic expressions:  8 div; 16 powconstexp;
-
-AMPL MP final model has 182 variables (0 integer, 0 binary);
-Objectives: 1 linear; 
-Constraints:  22 linear; 32 quadratic;
-Algebraic expressions:  8 div; 16 powconstexp;
-
-
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-Warning: small constant in general constraint NL will be treated as zero (node 5)
-Warning: small constant in general constraint NL will be treated as zero (node 11)
-=======
->>>>>>> 084e68c (add approximation result using gurobi solver)
 Set parameter InfUnbdInfo to value 1
 Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
 
-<<<<<<< HEAD
-CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
-Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
-
-Non-default parameters:
-TimeLimit  3600
-FeasibilityTol  1e-05
-MIPGap  1e-09
-BarConvTol  1e-09
-InfUnbdInfo  1
-NumericFocus  1
-Presolve  1
-
-Optimize a model with 22 rows, 182 columns and 150 nonzeros
-Model fingerprint: 0x76a8201d
-Model has 8 general nonlinear constraints (264 nonlinear terms)
-Variable types: 182 continuous, 0 integer (0 binary)
-=======
 CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
 
 Optimize a model with 14 rows, 174 columns and 127 nonzeros
-Model fingerprint: 0x6fefbed4
+Model fingerprint: 0xf584f3d9
 Model has 40 quadratic constraints
 Model has 16 general constraints
 Variable types: 174 continuous, 0 integer (0 binary)
->>>>>>> 084e68c (add approximation result using gurobi solver)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   QMatrix range    [1e-02, 8e+04]
   QLMatrix range   [1e+00, 1e+00]
   Objective range  [2e+00, 6e+02]
-<<<<<<< HEAD
-  Bounds range     [7e-15, 2e+06]
+  Bounds range     [7e-15, 5e+13]
   RHS range        [3e-02, 1e+03]
-Presolve model has 8 nlconstr
-Added 272 variables to disaggregate expressions.
-Presolve removed 1 rows and 49 columns
-Presolve time: 0.00s
-Presolved: 789 rows, 406 columns, 2057 nonzeros
-Presolved model has 136 bilinear constraint(s)
-Presolved model has 16 nonlinear constraint(s)
-=======
-  Bounds range     [2e-21, 5e+18]
-  RHS range        [3e-02, 1e+03]
-  QRHS range       [2e-21, 2e+02]
+  QRHS range       [7e-15, 2e+02]
 Warning: Model contains large bounds
-Presolve added 48 rows and 167 columns
-Presolve time: 0.00s
-Presolved: 646 rows, 462 columns, 2316 nonzeros
-Presolved model has 16 SOS constraint(s)
-Presolved model has 144 bilinear constraint(s)
 Warning: Model contains variables with very large bounds participating
          in product terms.
-         Presolve was not able to compute smaller bounds for these variables.
          Consider bounding these variables or reformulating the model.
->>>>>>> 084e68c (add approximation result using gurobi solver)
 
 
-<<<<<<< HEAD
-Variable types: 406 continuous, 0 integer (0 binary)
-Warning: 1 variables dropped from basis
-Warning: switch to quad precision
-Warning: 1 variables dropped from basis
-Warning: 1 variables dropped from basis
-Warning: very big Kappa = 1.26539e+17, try parameter NumericFocus
-
-Root relaxation: infeasible, 3693 iterations, 0.81 seconds (0.07 work units)
-=======
 Solving non-convex MIQCP
 
-Variable types: 462 continuous, 0 integer (0 binary)
+Variable types: 478 continuous, 0 integer (0 binary)
 
-Root relaxation: infeasible, 141 iterations, 0.01 seconds (0.00 work units)
->>>>>>> 084e68c (add approximation result using gurobi solver)
+Root relaxation: infeasible, 32 iterations, 0.00 seconds (0.00 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-<<<<<<< HEAD
-     0     0 infeasible    0               - infeasible      -     -    1s
-
-Explored 1 nodes (3693 simplex iterations) in 1.28 seconds (0.08 work units)
-Thread count was 32 (of 64 available processors)
-=======
      0     0 infeasible    0               - infeasible      -     -    0s
 
-Explored 1 nodes (141 simplex iterations) in 0.02 seconds (0.00 work units)
+Explored 1 nodes (32 simplex iterations) in 0.03 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
->>>>>>> 084e68c (add approximation result using gurobi solver)
 
 Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
-<<<<<<< HEAD
-Gurobi 12.0.1: infeasible problem
-3693 simplex iterations
-=======
 Gurobi 11.0.2: infeasible problem
-141 simplex iterations
->>>>>>> 084e68c (add approximation result using gurobi solver)
+32 simplex iterations
 1 branching node
 
 suffix dunbdd OUT;
@@ -173,25 +71,36 @@ Sum of constraints violation: 9330.31109
 
 *******************************************************************************
 
-Constraint 2 violations:
-
-
-Sum of violation of original con2: 0.0
-Sum of violation of approx con2: 0.0
-*******************************************************************************
-
 Absolute and relative violations between original and approximation constraint 2:
 
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |            0 |                      210 |                    210 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 
-Con2 sum of absolute violation: 0.0
-Con2 sum of relative violation: 0.0
+Sum of violation of original headloss constraint: 210.0
+Sum of violation of approx headloss constraint: 210.0
+
+Con2 sum of absolute violation between original function and approximate function: 0.0
+Con2 sum of relative violation between original function and approximate function: 0.0
 *******************************************************************************
 
 Total cost using gurobi: 0.0
-<<<<<<< HEAD
-gurobi solve time: 1.37 seconds
-=======
-gurobi solve time: 0.15 seconds
->>>>>>> 084e68c (add approximation result using gurobi solver)
+gurobi solve time: 0.06 seconds
 *******************************************************************************
 
