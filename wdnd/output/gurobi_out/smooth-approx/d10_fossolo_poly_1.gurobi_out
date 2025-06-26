@@ -5,59 +5,228 @@ Water Network: d10_fossolo_poly_1.dat
 min_demand: 0.00026
 max_demand: 0.00202
 max_flow: 0.033909999999999996
-Gurobi 11.0.2: Set parameter LogToConsole to value 1
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
   tech:outlev = 1
-Set parameter Presolve to value 0
-  pre:solve = 0
+Set parameter Presolve to value 1
+  pre:solve = 1
 Set parameter TimeLimit to value 3600
   lim:time = 3600
+  alg:start = 1
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
+
+AMPL MP initial flat model has 1370 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  94 linear; 232 quadratic;
+Algebraic expressions:  58 div; 116 powconstexp;
+
+AMPL MP final model has 1776 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  152 linear; 232 quadratic;
+Algebraic expressions:  58 div; 116 powconstexp;
+
+
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
 Set parameter InfUnbdInfo to value 1
-Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 25.04")
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
 
-CPU model: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz, instruction set [SSE2|AVX|AVX2|AVX512]
-Thread count: 4 physical cores, 8 logical processors, using up to 8 threads
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
-Optimize a model with 94 rows, 1718 columns and 1391 nonzeros
-Model fingerprint: 0x971b60d2
-Model has 290 quadratic constraints
-Model has 116 general constraints
-Variable types: 1718 continuous, 0 integer (0 binary)
+Non-default parameters:
+TimeLimit  3600
+FeasibilityTol  1e-05
+MIPGap  1e-09
+BarConvTol  1e-09
+InfUnbdInfo  1
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 152 rows, 1776 columns and 1564 nonzeros
+Model fingerprint: 0xf050fc57
+Model has 58 general nonlinear constraints (2842 nonlinear terms)
+Variable types: 1776 continuous, 0 integer (0 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
-  QMatrix range    [8e-02, 6e+05]
-  QLMatrix range   [1e+00, 1e+00]
   Objective range  [4e-01, 2e+02]
-  Bounds range     [2e-15, 2e+13]
+  Bounds range     [2e-15, 3e+17]
   RHS range        [3e-04, 4e+02]
-  QRHS range       [2e-15, 1e+02]
 Warning: Model contains large bounds
-Warning: Model contains variables with very large bounds participating
-         in product terms.
-         Consider bounding these variables or reformulating the model.
+Presolve model has 58 nlconstr
+Added 2903 variables to disaggregate expressions.
+Presolve removed 0 rows and 348 columns
+Presolve time: 0.02s
+Presolved: 8047 rows, 4332 columns, 21412 nonzeros
+Presolved model has 1450 bilinear constraint(s)
+Presolved model has 117 nonlinear constraint(s)
 
+Solving non-convex MINLP
 
-Solving non-convex MIQCP
+Variable types: 4332 continuous, 0 integer (0 binary)
+Warning: 1 variables dropped from basis
+Warning: switch to quad precision
+Warning: 1 variables dropped from basis
+Warning: 2 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
 
-Variable types: 3458 continuous, 0 integer (0 binary)
+Root simplex log...
 
-Root relaxation: infeasible, 926 iterations, 0.02 seconds (0.01 work units)
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+    6910    4.9821275e+03   8.243941e+10   5.726847e+10      5s
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+Warning: 1 variables dropped from basis
+   13507    3.1942268e+03   0.000000e+00   0.000000e+00      9s
+
+Root relaxation: objective 3.194227e+03, 13507 iterations, 7.65 seconds (1.41 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0 infeasible    0               - infeasible      -     -    0s
+     0     0 3194.22680    0  418          - 3194.22680      -     -    9s
+     0     0 infeasible    0               - infeasible      -     -   18s
 
-Explored 1 nodes (926 simplex iterations) in 0.53 seconds (0.15 work units)
-Thread count was 8 (of 8 available processors)
+Cutting planes:
+  RLT: 62
+
+Explored 1 nodes (50007 simplex iterations) in 18.87 seconds (3.35 work units)
+Thread count was 32 (of 64 available processors)
 
 Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
-Gurobi 11.0.2: infeasible problem
-926 simplex iterations
+Gurobi 12.0.1: infeasible problem
+50007 simplex iterations
 1 branching node
 
 suffix dunbdd OUT;
@@ -201,6 +370,6 @@ Con2 sum of relative violation between original function and approximate functio
 *******************************************************************************
 
 Total cost using gurobi: 0.0
-gurobi solve time: 0.57 seconds
+gurobi solve time: 19.42 seconds
 *******************************************************************************
 

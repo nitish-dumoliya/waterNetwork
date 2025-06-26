@@ -5,19 +5,19 @@ Water Network: d7_blacksburg.dat
 min_demand: 0.00065488
 max_demand: 0.01265463
 max_flow: 0.09770338999999997
-BARON 24.5.8 (2024.05.08): maxtime = 300
+BARON 24.5.8 (2024.05.08): maxtime = 3600
 outlev = 2
 barstats 
 version 
 objbound
-BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20240508), liccheck(20211124), ASL(20231111)
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20250308), liccheck(20211124), ASL(20241202)
 Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
 Temporary license expires 20260603.
 Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
 
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -25,9 +25,9 @@ Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
  If you publish work using this software, please cite publications from
  https://minlp.com/baron-publications, such as: 
 
- Khajavirad, A. and N. V. Sahinidis,
- A hybrid LP/NLP paradigm for global optimization relaxations,
- Mathematical Programming Computation, 10, 383-421, 2018.
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
@@ -37,29 +37,98 @@ Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
  Preprocessing found feasible solution with value 118927.
  Solving bounding LP
  Starting multi-start local search
+ Preprocessing found feasible solution with value 118627.
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             0             1.91      118927.          118927.                 
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+*         1           1.30    15MB     57846.3         118532.        0.00%
+          1           1.50    15MB     57846.3         118532.        0.00%
+*         2           1.67    15MB     57846.3         117915.        0.00%
+*        71           4.51    15MB     57846.3         117915.        1.64%
+*       386           6.75    15MB     57846.3         117774.        2.90%
+*       477           7.53    15MB     57847.3         117727.        3.07%
+       5837          37.54    15MB     59739.5         117727.        8.15%
+      11504          67.53    25MB     62792.7         117727.        9.99%
+      16959          97.53    25MB     62904.5         117727.       11.03%
+      22974         127.54    25MB     63000.9         117727.       12.18%
+      28920         157.54    25MB     63057.6         117727.       13.11%
+      35150         187.54    25MB     63090.6         117727.       13.86%
+      40923         217.53    35MB     63114.7         117727.       14.51%
+      47228         247.53    35MB     63142.7         117727.       15.21%
+      53155         277.43    35MB     63171.9         117727.       15.92%
+      59485         307.43    35MB     63183.7         117727.       16.25%
+      65732         337.43    35MB     63183.7         117727.       16.25%
+      71304         367.42    35MB     63217.7         117727.       16.76%
+      76812         397.42    35MB     63250.1         117727.       17.31%
+      82451         427.42    35MB     63311.9         117727.       17.82%
+      88760         457.42    45MB     63338.8         117727.       18.06%
+      95517         487.42    45MB     63340.5         117727.       18.10%
+     101866         517.43    45MB     63369.8         117727.       18.64%
+     108561         547.43    45MB     63371.5         117727.       18.71%
+     114692         577.44    45MB     63374.9         117727.       18.80%
+     120527         607.44    45MB     63377.6         117727.       18.91%
+     126264         637.44    45MB     63377.6         117727.       18.91%
+*    127631         646.44    45MB     63378.7         117523.       18.96%
+     133976         676.44    45MB     63383.1         117523.       19.07%
+     139897         706.45    45MB     63383.1         117523.       19.07%
+     146103         736.45    45MB     63396.4         117523.       19.53%
+     152466         766.45    45MB     63408.4         117523.       20.04%
+     158519         796.45    45MB     63421.9         117523.       20.57%
+     165332         826.45    55MB     63566.7         117523.       20.89%
+     170757         856.46    55MB     63786.1         117523.       21.29%
+     176474         886.46    55MB     63881.1         117523.       21.51%
+     182129         916.46    55MB     63920.5         117523.       21.61%
+     186950         946.46    64MB     63976.8         117523.       21.91%
+     191440         976.46    65MB     64036.7         117523.       22.20%
+     196578        1006.46    65MB     64100.7         117523.       22.50%
+     201080        1036.47    65MB     64100.7         117523.       22.50%
+     205462        1066.48    65MB     64100.7         117523.       22.50%
+     209524+       1096.48    65MB     64132.8         117523.       22.64%
+     210752        1126.49    65MB     64176.2         117523.       22.66%
+     216403        1156.51    65MB     64365.5         117523.       23.01%
+     222170        1186.51    65MB     64459.3         117523.       23.34%
+     227357        1216.52    65MB     64543.1         117523.       23.67%
+     232661        1246.52    65MB     64654.4         117523.       23.98%
+     237821        1276.53    65MB     64828.5         117523.       24.29%
+     242857        1306.53    74MB     65020.1         117523.       24.53%
+     248654        1336.53    74MB     65127.8         117523.       24.82%
+     254506        1366.53    74MB     65247.0         117523.       25.04%
+     259651        1396.53    74MB     65309.6         117523.       25.31%
+     264991        1426.53    74MB     65355.7         117523.       25.56%
+     270583        1456.53    74MB     65389.0         117523.       25.77%
+     276141        1486.54    74MB     65422.5         117523.       26.02%
+     281438        1516.55    84MB     65457.8         117523.       26.28%
+     284894+       1546.55    84MB     65477.5         117523.       26.44%
+     286265+       1576.56    84MB     65564.4         117523.       26.46%
+     287661        1606.56    84MB     66299.1         117523.       26.47%
+     289098        1636.56    84MB     66682.5         117523.       26.51%
+     290513+       1666.56    84MB     67045.6         117523.       26.54%
+     291834+       1696.57    84MB     67698.1         117523.       26.56%
+     294079        1726.56    84MB     68408.6         117523.       26.68%
+     297064        1792.94    84MB     68895.1         117523.       26.97%
+     301882        1822.94    84MB     69449.1         117523.       27.35%
+     307131        1852.94    84MB     69606.1         117523.       27.68%
+     309443        1882.94    84MB     69665.2         117523.       27.83%
+     313539        3635.40    84MB     70135.4         117523.       28.09%
 
-                         *** Normal completion ***            
+                    *** Max. allowable time exceeded ***      
 
- Wall clock time:                     3.09
- Total CPU time used:                 1.91
+ Wall clock time:                  3635.58
+ Total CPU time used:              3635.40
 
- Total no. of BaR iterations:       1
- Best solution found at node:      -1
- Max. no. of nodes in memory:       1
+ Total no. of BaR iterations:  313539
+ Best solution found at node:  143294
+ Max. no. of nodes in memory:    5592
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 1 iterations, optimal within tolerances.
-Objective 118927.3428
-Objective lower bound = 118927.34283512992, upper bound = 118927.34283512992
-barstatus = 1, modelstatus = 1
-max nodes in memory = 1
-optimum found at node -1
-Baron run time (excluding setup) = 1.9 seconds
+BARON 24.5.8 (2024.05.08): 313539 iterations, CPU time limit reached.
+Objective 117522.5359
+Objective lower bound = 70135.35065507893, upper bound = 117522.53594823941
+barstatus = 4, modelstatus = 4
+max nodes in memory = 5592
+optimum found at node 143294
+Baron run time (excluding setup) = 3635.4 seconds
 
 suffix obj_ub OUT;
 suffix obj_lb OUT;
@@ -68,18 +137,18 @@ suffix obj_lb OUT;
 Constraints violation:
 
 
-Sum of constraints violation: 3.935953535467041e-05
+Sum of constraints violation: 8.049920365710284e-11
 *******************************************************************************
 
 
-Sum of violation of original headloss constraint: 3.935013750304157e-05
-Sum of violation of approx headloss constraint: 2.0724109072497304e-07
+Sum of violation of original headloss constraint: 2.235254516202989e-12
+Sum of violation of approx headloss constraint: 3.8475733016296587e-13
 
-Con2 sum of absolute violation between original function and approximate function: 4.0642291615489157e-11
-Con2 sum of relative violation between original function and approximate function: 2.6091349781797417e-10
+Con2 sum of absolute violation between original function and approximate function: 3.934287097495659e-11
+Con2 sum of relative violation between original function and approximate function: 2.5995174208888056e-10
 *******************************************************************************
 
-Total cost using baron: 118927.34283512992
-baron solve time: 3.14 seconds
+Total cost using baron: 117522.53594823941
+baron solve time: 3635.61 seconds
 *******************************************************************************
 

@@ -10,14 +10,14 @@ outlev = 2
 barstats 
 version 
 objbound
-BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20240508), liccheck(20211124), ASL(20231111)
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20250308), liccheck(20211124), ASL(20241202)
 Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
 Temporary license expires 20260603.
 Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
 
 ===========================================================================
- BARON version 24.5.8. Built: LNX-64 Wed May 8 10:06:40 EDT 2024 
- Running on machine asus
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
 
  BARON is a product of The Optimization Firm.
  For information on BARON, see https://minlp.com/about-baron
@@ -25,43 +25,106 @@ Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
  If you publish work using this software, please cite publications from
  https://minlp.com/baron-publications, such as: 
 
- Khajavirad, A. and N. V. Sahinidis,
- A hybrid LP/NLP paradigm for global optimization relaxations,
- Mathematical Programming Computation, 10, 383-421, 2018.
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
 ===========================================================================
  This BARON run may utilize the following subsolver(s)
  For LP/MIP/QP: CLP/CBC                                         
  For NLP: IPOPT, FILTERSQP
 ===========================================================================
  Doing local search
- Preprocessing found feasible solution with value 0.583254E+08
+ Preprocessing found feasible solution with value 0.581562E+08
  Solving bounding LP
  Starting multi-start local search
- Preprocessing found feasible solution with value 0.581452E+08
- Preprocessing found feasible solution with value 0.578694E+08
  Done with local search
 ===========================================================================
-  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
-          1             0             2.13     0.578694E+08     0.578694E+08             
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           1.60    16MB     0.00000        0.581562E+08    NA
+*         8           4.36    16MB     0.00000        0.578701E+08    2.97%
+       2266          34.36    26MB    0.342015E+08    0.578701E+08   14.55%
+       4425          64.36    26MB    0.342015E+08    0.578701E+08   14.69%
+*      5895          79.28    26MB    0.342015E+08    0.578701E+08   14.73%
+       8876         109.28    36MB    0.342015E+08    0.578701E+08   14.82%
+      11566         139.28    46MB    0.342015E+08    0.578701E+08   14.90%
+      13603         169.28    46MB    0.342015E+08    0.578701E+08   14.99%
+      15307         199.29    56MB    0.342015E+08    0.578701E+08   15.04%
+      17729         229.29    56MB    0.342015E+08    0.578701E+08   15.10%
+      20288         259.32    65MB    0.342015E+08    0.578701E+08   15.16%
+      22857         289.32    75MB    0.342015E+08    0.578701E+08   15.20%
+      26235         319.32    75MB    0.342015E+08    0.578701E+08   15.22%
+      30415         349.32    75MB    0.342015E+08    0.578701E+08   15.22%
+      33187         379.32    75MB    0.342015E+08    0.578701E+08   15.25%
+      36269         409.33    85MB    0.342015E+08    0.578701E+08   15.28%
+      39131         439.33    85MB    0.342015E+08    0.578701E+08   15.31%
+      41707         469.34    95MB    0.342015E+08    0.578701E+08   15.34%
+      44077         499.37    95MB    0.342015E+08    0.578701E+08   15.36%
+      46717         529.39   105MB    0.342015E+08    0.578701E+08   15.38%
+      50058         559.39   105MB    0.342015E+08    0.578701E+08   15.39%
+      53660         589.39   105MB    0.342015E+08    0.578701E+08   15.39%
+      57061         619.49   105MB    0.342015E+08    0.578701E+08   15.40%
+      59241         649.49   114MB    0.342015E+08    0.578701E+08   15.41%
+      61378         679.51   114MB    0.342015E+08    0.578701E+08   15.43%
+      64094         709.52   124MB    0.342015E+08    0.578701E+08   15.45%
+      67054         739.52   124MB    0.342015E+08    0.578701E+08   15.46%
+      69515         769.53   134MB    0.342015E+08    0.578701E+08   15.48%
+*     70041         777.80   134MB    0.342015E+08    0.578164E+08   15.48%
+      72405         807.80   144MB    0.342015E+08    0.578164E+08   15.51%
+      73982         837.80   144MB    0.342015E+08    0.578164E+08   15.52%
+      76193         868.04   153MB    0.342015E+08    0.578164E+08   15.54%
+      78269         898.04   153MB    0.342015E+08    0.578164E+08   15.55%
+      80161         928.04   163MB    0.342015E+08    0.578164E+08   15.57%
+      83068         958.04   163MB    0.342015E+08    0.578164E+08   15.57%
+      86643         988.04   163MB    0.342015E+08    0.578164E+08   15.58%
+      90236        1018.04   173MB    0.342015E+08    0.578164E+08   15.59%
+      93775        1048.06   173MB    0.342015E+08    0.578164E+08   15.60%
+      96435        1078.06   173MB    0.342015E+08    0.578164E+08   15.61%
+      99488        1108.06   183MB    0.342015E+08    0.578164E+08   15.63%
+     102922        1138.06   183MB    0.342015E+08    0.578164E+08   15.63%
+     106156        1168.07   193MB    0.342015E+08    0.578164E+08   15.65%
+     108788        1198.07   202MB    0.342015E+08    0.578164E+08   15.66%
+*    111207        1227.44   212MB    0.342015E+08    0.578053E+08   15.68%
+     113721        1257.45   212MB    0.342015E+08    0.578053E+08   15.69%
+     116015        1287.45   222MB    0.342015E+08    0.578053E+08   15.70%
+     118523        1317.46   222MB    0.342015E+08    0.578053E+08   15.71%
+     121186        1347.46   232MB    0.342015E+08    0.578053E+08   15.73%
+     123429        1377.47   241MB    0.342015E+08    0.578053E+08   15.74%
+     125390        1407.47   251MB    0.342015E+08    0.578053E+08   15.75%
+     127542        1437.47   251MB    0.342015E+08    0.578053E+08   15.76%
+     129980        1467.47   261MB    0.342015E+08    0.578053E+08   15.77%
+     133023        1497.49   271MB    0.342015E+08    0.578053E+08   15.78%
+     136410        1527.49   271MB    0.342015E+08    0.578053E+08   15.79%
+     139661        1557.49   281MB    0.342015E+08    0.578053E+08   15.80%
+     144389        1587.50   281MB    0.342015E+08    0.578053E+08   15.80%
+     148022        1617.50   281MB    0.342015E+08    0.578053E+08   15.80%
+     151984        1647.51   281MB    0.342015E+08    0.578053E+08   15.81%
+     154804        1677.51   290MB    0.342015E+08    0.578053E+08   15.81%
+     157158        1707.53   300MB    0.342015E+08    0.578053E+08   15.83%
+     159058        1739.04   300MB    0.342015E+08    0.578053E+08   15.83%
+     161203        1769.04   310MB    0.342015E+08    0.578053E+08   15.84%
+     163714        1799.05   310MB    0.342015E+08    0.578053E+08   15.85%
+     165485        1831.16   310MB    0.342015E+08    0.578053E+08   15.85%
+     167876        1861.17   320MB    0.342015E+08    0.578053E+08   15.86%
+     169325        3610.69   320MB    0.342015E+08    0.578053E+08   15.86%
 
-                         *** Normal completion ***            
+                    *** Max. allowable time exceeded ***      
 
- Wall clock time:                     4.37
- Total CPU time used:                 2.13
+ Wall clock time:                  3610.72
+ Total CPU time used:              3610.69
 
- Total no. of BaR iterations:       1
- Best solution found at node:      -1
- Max. no. of nodes in memory:       1
+ Total no. of BaR iterations:  169325
+ Best solution found at node:  138765
+ Max. no. of nodes in memory:   15186
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 1 iterations, optimal within tolerances.
-Objective 57869390.67
-Objective lower bound = 57869390.66613356, upper bound = 57869390.66613356
-barstatus = 1, modelstatus = 1
-max nodes in memory = 1
-optimum found at node -1
-Baron run time (excluding setup) = 2.12 seconds
+BARON 24.5.8 (2024.05.08): 169325 iterations, CPU time limit reached.
+Objective 57805288.92
+Objective lower bound = 34201459.35, upper bound = 57805288.92046366
+barstatus = 4, modelstatus = 4
+max nodes in memory = 15186
+optimum found at node 138765
+Baron run time (excluding setup) = 3610.68 seconds
 
 suffix obj_ub OUT;
 suffix obj_lb OUT;
@@ -70,83 +133,83 @@ suffix obj_lb OUT;
 Constraints violation:
 
 
-Sum of constraints violation: 6.787550410961019e-08
+Sum of constraints violation: 6.777441744626467e-08
 *******************************************************************************
 
 Absolute and relative violations between original and approximation constraint 2:
 
 
-Sum of violation of original headloss constraint: 6.49845476423383e-08
-Sum of violation of approx headloss constraint: 6.389326241001969e-08
+Sum of violation of original headloss constraint: 6.499298053561087e-08
+Sum of violation of approx headloss constraint: 6.389630756095666e-08
 
-Con2 sum of absolute violation between original function and approximate function: 1.1003336748693915e-09
-Con2 sum of relative violation between original function and approximate function: 4.698958135523339e-08
+Con2 sum of absolute violation between original function and approximate function: 1.1058590432266868e-09
+Con2 sum of relative violation between original function and approximate function: 4.725532268429075e-08
 *******************************************************************************
 
-Total cost using baron: 57869390.66613356
-baron solve time: 4.42 seconds
+Total cost using baron: 57805288.92046365
+baron solve time: 3610.75 seconds
 q1 [*,*] (tr)
-:       1         2         3         4        5        6         7       :=
-2    24.3516     .         .         .         .       .        .
-3      .       21.7726     .         .         .       .        .
-4      .         .       19.1936     .         .       .        .
-5      .         .         .       16.7318     .       .        .
-6      .         .         .         .       14.27     .        .
-7      .         .         .         .         .     11.8082    .
-8      .         .         .         .         .       .       7.88136
-15   32.0888     .         .         .         .       .        .
+:       1         2         3         4         5         6         7       :=
+2    24.4221     .         .         .         .         .        .
+3      .       21.8431     .         .         .         .        .
+4      .         .       19.2641     .         .         .        .
+5      .         .         .       16.8023     .         .        .
+6      .         .         .         .       14.3405     .        .
+7      .         .         .         .         .       11.8787    .
+8      .         .         .         .         .         .       7.32293
+15   32.018      .         .         .         .         .        .
 
-:       8         9         10        11         12        13       14      :=
-9    6.76259    .         .         4.01218     .          .         .
+:       8         9         10        11         12        13        14      :=
+9    6.83187    .         .         3.92697     .          .         .
 10    .        1.63283    .          .          .          .         .
-11    .         .         .          .        13.7835      .         .
-12    .         .         .          .          .        23.6283     .
-13    .         .         .          .          .          .       26.91
-16    .        2.28978    .          .          .          .         .
-17    .         .        0.502869    .          .          .         .
-18    .         .         .          .         2.11647     .         .
-20    .         .         .         1.93469     .          .         .
+11    .         .         .          .        13.7127      .         .
+12    .         .         .          .          .        23.5575     .
+13    .         .         .          .          .          .       26.8391
+16    .        2.30164    .          .          .          .         .
+17    .         .        0.544647    .          .          .         .
+18    .         .         .          .         2.11868     .         .
+20    .         .         .         1.94025     .          .         .
 
 :      15         18         20       :=
-14   29.4994    .          .
-16     .        .         0.194798
-19     .       0.968865    .
+14   29.4286    .          .
+16     .        .         0.206337
+19     .       0.976337    .
 ;
 
 q2 [*,*] (tr)
-:       1          2          3          4          5          6          7  :=
-2    0.353609    .          .          .          .          .          .
-3     .         0.316159    .          .          .          .          .
-4     .          .         0.278709    .          .          .          .
-5     .          .          .         0.242961    .          .          .
-6     .          .          .          .         0.207214    .          .
-7     .          .          .          .          .         0.171466    .
-8     .          .          .          .          .          .         1.60072
-15   0.335215    .          .          .          .          .          .
+:       1          2          3          4          5          6         7   :=
+2    0.354633    .          .          .          .          .         .
+3     .         0.317183    .          .          .          .         .
+4     .          .         0.279733    .          .          .         .
+5     .          .          .         0.243986    .          .         .
+6     .          .          .          .         0.208238    .         .
+7     .          .          .          .          .         0.17249    .
+8     .          .          .          .          .          .        2.23071
+15   0.334475    .          .          .          .          .         .
 
 :      8           9         10         11          12         13         14 :=
-9   0.221944    .           .        0.0419131    .          .          .
+9   0.224217    .           .        0.0410229    .          .          .
 10
      .         0.0237102    .         .           .          .          .
 11
-     .          .           .         .          0.143989    .          .
+     .          .           .         .          0.143249    .          .
 12
-     .          .           .         .           .         0.246833    .
+     .          .           .         .           .         0.246093    .
 13
-     .          .           .         .           .          .         0.281114
+     .          .           .         .           .          .         0.280374
 16
-     .         2.27845      .         .           .          .          .
+     .         2.25204      .         .           .          .          .
 17
-     .          .          1.12535    .           .          .          .
+     .          .          1.08357    .           .          .          .
 18
-     .          .           .         .          4.51533     .          .
+     .          .           .         .          4.51313     .          .
 20
-     .          .           .        3.12482      .          .          .
+     .          .           .        3.1338       .          .          .
 
 :       15        18         20        :=
-14   0.308164    .         .
-16    .          .        0.0508408
-19    .         2.34704    .
+14   0.307424    .         .
+16    .          .        0.0538525
+19    .         2.33957    .
 ;
 
 *******************************************************************************
