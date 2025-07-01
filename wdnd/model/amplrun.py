@@ -372,6 +372,14 @@ class WaterNetworkSolver:
         #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = ((10^(-6))/(0.07508*MaxK[i,j]))^(1/0.0926);")
         #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = 1e-6 + q[i,j]^2;")
         
+        self.ampl.eval(f"subject to flow_1_2: q[1,2] >= 0;")
+        self.ampl.eval(f"subject to flow_2_3: q[2,3] >= 0;")
+        self.ampl.eval(f"subject to flow_2_4: q[2,4] >= 0;")
+        self.ampl.eval(f"subject to flow_3_5: q[3,5] >= 0;")
+        self.ampl.eval(f"subject to flow_4_5: q[4,5] >= 0;")
+        self.ampl.eval(f"subject to flow_4_6: q[4,6] >= 0;")
+        self.ampl.eval(f"subject to flow_6_7: q[6,7] >= 0;")
+        self.ampl.eval(f"subject to flow_7_5: q[7,5] >= 0;")
         # Define MaxK as a computed parameter
         #self.ampl.eval(f"""param MaxK{{(i,j) in arcs}} := 10.67 * L[i,j] / ({R_min}^1.852 * {d_min}^4.87);""")
         
