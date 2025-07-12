@@ -281,7 +281,7 @@ def SCIPInstanceOutput(instance, output):
             dual_bound = float(dual_bound.group(1))
         except ValueError:
             print(f"Warning: Could not convert extracted dual bound '{extracted_obj}' to float.")
-    
+
 
     # Match solver time (ensure correct extraction)
     #time_match = re.search(r"Solving Time \(sec\)\s*:\s*([\d\.]+)", output)
@@ -403,19 +403,27 @@ def BonminInstanceOutput(instance, output):
 
 
 
-def HeuristicInstanceOutput(instance, output):
-    
+def HeuristicInstanceOutput(instance, output):    
     output_content = output.read() 
-
     # Extract total relative constraint violation
-    violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output_content)
+    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
+    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    #
+    violation_con = float(violation_match_con.group(1)) if violation_match_con else None
+    violation_abs = float(violation_match_abs.group(1)) if violation_match_abs else None
+    violation_rel = float(violation_match_rel.group(1)) if violation_match_rel else None
+
+ 
+    # Extract total relative constraint violation
+    # violation_match = re.search(r'Total relative constraint violation:\s*([\d.eE+-]+)', output_content)
     
-    violation = None
-    if violation_match:
-        try:
-            violation = float(violation_match.group(1).strip())  # Convert extracted value to float
-        except ValueError:
-            print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
+    #violation = None
+    #if violation_match:
+    #    try:
+    #        violation = float(violation_match.group(1).strip())  # Convert extracted value to float
+    #    except ValueError:
+    #        print(f"Warning: Could not convert extracted violation '{violation_match.group(1)}' to float.")
 
     #file_data = output.read().split('\n')
     file_data = output_content.split('\n')
@@ -426,7 +434,7 @@ def HeuristicInstanceOutput(instance, output):
     find, time = find_float(file_data, "Heuristic elapsed time:", time)
 
   
-    return Objective, time, violation
+    return Objective, time, violation_con,violation_abs, violation_rel
 
 data_list = [
     "d1_bessa",
@@ -491,6 +499,8 @@ Mmultistart_Objective = []
 Mmultistart_Time_taken = []
 Heuristic_Objective = []
 Heuristic_Time_taken = []
+Heuristic_Con_vio = []
+Heuristic_Abs_vio = []
 Heuristic_Rel_vio = []
 
 dir = "smooth-approx"
@@ -631,24 +641,32 @@ for ins in data_list:
         Mmultistart_Objective.append(obj)
         Mmultistart_Time_taken.append(time)
 
-#print("**********************Results of Heuristic *********************************")
+print("**********************Results of Heuristic *********************************")
 
-#for ins in data_list:
-#    with open(f"../output/heuristic_out/{approx_folder}/{ins}.heuristic_out") as output:
-#        print("Model Name:",ins)
-#        obj, time, violation = HeuristicInstanceOutput(ins,output)
-#        print("Objective :",obj)
-#        print("Time :",time)
-#        print("Relative violation :",violation)
-#        print(" ")
-#        Heuristic_Objective.append(obj)
-#        Heuristic_Time_taken.append(time)
-#        Heuristic_Rel_vio.append(violation)
+for ins in data_list:
+    with open(f"../output/heuristic_out/{ins}.heuristic_out") as output:
+        print("Model Name:",ins)
+        obj, time, violation_con,violation_abs, violation_rel = HeuristicInstanceOutput(ins,output)
+        print("Objective :",obj)
+        print("Time :",time)
+        print("Constraint violation :",violation_con)
+        print("Absolute violation :",violation_abs)
+        print("Relative violation :",violation_rel)
 
-fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Vio","Ini Ipopt Rel Vio","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Vio","Baron Rel Vio","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Vio","Gurobi Rel Vio","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Vio", "Scip Rel Vio","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Rel Vio"  ]
+        print(" ")
+        Heuristic_Con_vio.append(violation_con)
+        Heuristic_Abs_vio.append(violation_abs)
+        Heuristic_Rel_vio.append(violation_rel)
+
+        #print("Relative violation :",violation)
+        print(" ")
+        Heuristic_Objective.append(obj)
+        Heuristic_Time_taken.append(time)
+
+fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Vio","Ini Ipopt Rel Vio","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Vio","Baron Rel Vio","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Vio","Gurobi Rel Vio","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Vio", "Scip Rel Vio","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Con Vio", "Heuristic Abs Vio", "Heuristic Rel Vio"  ]
 
 filename = "mmultistart_results.csv"
-#
+
 #with open(filename, 'w') as csvfile:
 #    csvwriter = csv.writer(csvfile)
 #    # csvwriter.writerow(Solver_name)
@@ -688,9 +706,11 @@ csv_input['Knitro time taken'] = Knitro_Time_taken
 #csv_input['Ipopt time taken'] = Ipopt_Time_taken
 csv_input['Bonmin Objective'] = Bonmin_Objective
 csv_input['Bonmin time taken'] = Bonmin_Time_taken
-#csv_input['Heuristic Objective'] = Heuristic_Objective
-#csv_input['Heuristic time taken'] = Heuristic_Time_taken
-#csv_input['Heuristic Rel Vio'] = Heuristic_Rel_vio
+csv_input['Heuristic Objective'] = Heuristic_Objective
+csv_input['Heuristic time taken'] = Heuristic_Time_taken
+csv_input['Heuristic Con Vio'] = Heuristic_Con_vio
+csv_input['Heuristic Abs Vio'] = Heuristic_Abs_vio
+csv_input['Heuristic Rel Vio'] = Heuristic_Rel_vio
 
 csv_input.to_csv('output.csv', index=False)
 

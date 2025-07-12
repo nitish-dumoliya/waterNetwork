@@ -24,11 +24,18 @@ param D_max = max{i in nodes diff Source} D[i];
 param d_min = min{i in pipes} d[i];
 param d_max = max{i in pipes} d[i];
 
+param R_min = min{(i,j) in arcs} R[i,j];
+
+param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
+
+param eps{(i,j) in arcs} := (1e-8 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
+
+
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
-var q{arcs};	            # Flow variable
+var q{arcs},>=-Q_max,<=Q_max;	            # Flow variable
 var q1{arcs},>=-Q_max,<=Q_max;	            # Flow variable
-var q2{arcs};	            # Flow variable
+var q2{arcs},>=-Q_max,<=Q_max;	            # Flow variable
 var h{nodes};	            # Head
 var eps{arcs}>=0;
 
@@ -86,7 +93,7 @@ subject to con6{i in nodes diff Source}: h[i] >= (E[i] + P[i]) ;
 #subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
 #subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
 
-#subject to con9{(i,j) in arcs}: q[i,j] = q1[i,j] + q2[i,j];
+subject to con9{(i,j) in arcs}: q[i,j] = q1[i,j] + q2[i,j];
 
 #subject to con10{(i,j) in arcs}: q1[i,j]*q2[i,j] >= 0;
 #subject to con10{(i,j) in arcs}: q1[i,j]*(q2[i,j]^2 + eps[i,j])^0.5 = q2[i,j]*(q1[i,j]^2 + eps[i,j])^0.5;

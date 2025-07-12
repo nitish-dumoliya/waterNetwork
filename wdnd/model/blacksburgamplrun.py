@@ -88,15 +88,6 @@ class WaterNetworkSolver:
                 approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
-                con2_original_gap[f"{i},{j}"] = lhs - original_rhs
-                con2_original_violation += abs(lhs - original_rhs) 
-                
-                con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs
-                
-                total_absolute_constraint_violation += abs(lhs - approx_rhs)    
-                con2_approx_violation += abs(lhs - approx_rhs) 
-
-
                 con2_original_gap[f"con2_{i}_{j}"] = lhs - original_rhs
                 con2_original_violation += abs(lhs - original_rhs) 
 

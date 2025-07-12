@@ -536,15 +536,18 @@ class WaterNetworkOptimizer:
         # print("fixed arc direction:",set_, "\n") 
         return set_
 
-    def update_initial_points(self,l_solution, q_solution, h_solution):
+    def update_initial_points(self,edge, l_solution, q_solution, h_solution):
         for (i, j, k), val in l_solution.items():
             self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
         for (i, j), val in q_solution.items():
+            #if (i,j) != edge:
             self.ampl.eval(f'let q[{i},{j}] := {val};')
+            #else:
+            #    self.ampl.eval(f'let q[{i},{j}] := {-val};')
         for i, val in h_solution.items():
             self.ampl.eval(f'let h[{i}] := {val};')
 
-    def update_initial_points1(self, l_solution, q_solution, h_solution,all_duals, inarc):
+    def update_initial_points1(self,l_solution, q_solution, h_solution,all_duals, inarc):
         for (i, j, k), val in l_solution.items():
             self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
         
@@ -554,8 +557,9 @@ class WaterNetworkOptimizer:
             self.ampl.eval(f'let h[{i}] := {val};')
         
         for (i, j), val in q_solution.items():
-            edge = (i, j) 
+            edge = (i, j)
             if edge in edge_list_network:
+                 
                 if (i,j) not in inarc:
                     # print(f"self.ampl.eval(let q[{i},{j}] := {val};)")
                     self.ampl.eval(f"let q[{i},{j}] := {val} ;")
@@ -1011,7 +1015,7 @@ class WaterNetworkOptimizer:
 
         print("*******************************************************************************\n")
  
-    def iterate_arc(self, iteration, improved, current_cost, best_arc):
+    def iterate_arc(self, iteration, improved, best_arc):
         improved = False
         self.network_graph = self.best_acyclic_flow.copy()
         
@@ -1042,7 +1046,7 @@ class WaterNetworkOptimizer:
         
         acyclic_arc_set = self.acyclic_arcs()
         delta_arc = {}
-        print("indegree_2_or_more", self.indegree_2_or_more)
+        #print("indegree_2_or_more", self.indegree_2_or_more)
         for node in self.indegree_2_or_more:
 
             for (u,v) in self.network_graph.in_edges(node):
@@ -1055,160 +1059,255 @@ class WaterNetworkOptimizer:
 
         # print("self.sorted_nodes:",self.sorted_nodes,"\n")
         # print("delta_arc:", delta_arc)
-        for node in  self.sorted_nodes:
-            print("node:",node)
-            #node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node)]
-            #print("node_arcs:", node_arcs)
-            #edge = max(node_arcs, key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]))  # Pick the arc with max absolute delta_arc
-            #sorted_node_arcs = [edge]
 
-            node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node)]
-            print("node-in-arcs:", node_arcs)
-            sorted_node_arcs = sorted(node_arcs, key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
-            print("decreasing-in-flow-arcs:",sorted_node_arcs)
-            for edge in sorted_node_arcs:
-                (u,v) = edge
-                acy_check = True
-                in_arc_check = True
-                #def parallel_objective_function(params):
-                #    """ Wrapper for parallel evaluation of objective function inside PSO. """
-                #    return self.objective(params, self.data_file)
+        all_sorted_node_arcs = []  # List of lists for each node's sorted incoming arcs                   
+        sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+        #print("sorted_nodes:", sorted_nodes)
+        for node1 in sorted_nodes:
+            # Get in-edges, convert to forward direction if necessary
+            node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node1)]
+            # Remove fixed arcs
+            node_arcs = [arc for arc in node_arcs if arc not in self.fix_arc_set]
+            all_sorted_node_arcs.append(node_arcs)
+        # Flatten the list of lists
+        flattened_arcs = [arc for sublist in all_sorted_node_arcs for arc in sublist]
+        # Sort all arcs by flow value (ascending)
+        sorted_all_arcs = sorted(
+            flattened_arcs,
+            key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
+        #print("All arcs sorted by flow value:", sorted_all_arcs)
 
-                def objective(params):
-                   bound_push, bound_frac = params 
-                   #print(f"Testing bound_push={bound_push}, bound_frac={bound_frac}")
-                   self.bound_push = bound_push
-                   self.bound_frac = bound_frac
-                   self.load_model()
-                   self.ampl.eval(f"set inarc := {{{inarc_set}}};")
-                   self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
-                   #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
-                   fix_arc_set = self.fix_leaf_arc_flow()
-                   self.update_initial_points1(self.l, self.q, self.h, self.all_duals, self.inarc)
-                   
-                   if self.q[u,v]>=0:
-                       self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=0;")
-                       # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
-                   else:
-                       self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
-                       # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
-                   
-                   #flow_str = ''
-                   #flow_str = '+'.join(
-                   #    f"(q[{i},{j}])" if (i, j) in self.arcs else f"(-q[{j},{i}])"
-                   #    for (i, j) in node_arcs if (i, j) != (u, v))
-                   # print("flow_str",flow_str)
-                   #if flow_str:
-                   #   self.ampl.eval(f"s.t. inc_arc_flow: {flow_str}>={self.D[node]};")
 
-                   self.solve1()
-                   total_cost = self.ampl.getObjective("total_cost").value()   
-                   #print(f"Total cost: {total_cost}")
-                   return total_cost
-                lb = [1e-6, 1e-6]  # Lower bounds (0)
-                ub = [0.01, 0.01]  # Upper bounds (0.5)
-                #with self.suppress_output():
-                #    best_params, best_cost = pso(objective, lb, ub, swarmsize=2, maxiter=2)
-                #    self.bound_push , self.bound_frac = best_params
-                #self.bound_push , self.bound_frac = (0.001, 0.001)
-                self.load_model()
-                self.ampl.eval(f"set inarc := {{{inarc_set}}};")
-                self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
-                #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
-                fix_arc_set = self.fix_leaf_arc_flow()
-                self.update_initial_points1(self.l, self.q, self.h, self.all_duals, self.inarc)
+        #for node in  self.sorted_nodes:
+        #    print("node:",node)
+        #    #node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node)]
+        #    #print("node_arcs:", node_arcs)
+        #    #edge = max(node_arcs, key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]))  # Pick the arc with max absolute delta_arc
+        #    #sorted_node_arcs = [edge]
+
+        #    node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node)]
+        #    node_arcs = [arc for arc in node_arcs if arc not in self.fix_arc_set]
+        #    print("node-in-arcs:", node_arcs)
+        #    sorted_node_arcs = sorted(node_arcs, key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
+        #    print("decreasing-in-flow-arcs:",sorted_node_arcs)
+        for edge in sorted_all_arcs:
+            (u,v) = edge
+            acy_check = True
+            in_arc_check = True 
+            lb = [1e-6, 1e-6]  # Lower bounds (0)
+            ub = [0.01, 0.01]  # Upper bounds (0.5)
+            #with self.suppress_output():
+            #    best_params, best_cost = pso(objective, lb, ub, swarmsize=5, maxiter=2)
+            #    self.bound_push , self.bound_frac = best_params
+            #self.bound_push , self.bound_frac = (0.0001, 0.001)
+            self.load_model()
+            self.ampl.eval(f"set inarc := {{{inarc_set}}};")
+            self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
+            #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
+            fix_arc_set = self.fix_leaf_arc_flow()
+            #self.update_initial_points1(self.l, self.q, self.h, self.all_duals, self.inarc)
+            #self.update_initial_points(edge, self.l, self.q, self.h)
+            
+            if self.q[u,v]>= 0:
+                #self.ampl.eval(f"let q[{u},{v}] := {-self.q[u,v]} ;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-0;")
+                #self.ampl.eval(f"s.t. head_bound1{u}_{v}: h[{u}] - h[{v}] <= 0;")
+                # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
+            else:
+                #self.ampl.eval(f"let q[{u},{v}] := {-self.q[u,v]} ;")
+                self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
+                #self.ampl.eval(f"s.t. head_bound1{u}_{v}: h[{u}] - h[{v}] >= 0;")
+                # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
+
+            self.solve1()
+            
+            l = self.ampl.getVariable('l').getValues().to_dict()
+            q = self.ampl.getVariable('q').getValues().to_dict()
+            h = self.ampl.getVariable('h').getValues().to_dict()
+             
+            # self.visited_node.append(node)
+            if self.solve_result == "solved":
+                # trac_arc.append(edge)
                 
-                if self.q[u,v]>= 0:
-                    self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=0;")
-                    # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
-                else:
-                    self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
-                    # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
-                
-                #flow_str = ''
-                #flow_str = '+'.join(
-                #    f"(q[{i},{j}])" if (i, j) in self.arcs else f"(-q[{j},{i}])"
-                #    for (i, j) in node_arcs if (i, j) != (u, v))
-                # print("flow_str",flow_str)
-                #if flow_str:
-                #   self.ampl.eval(f"s.t. inc_arc_flow: {flow_str}>={self.D[node]};")
-                
-                self.solve1()
-                
-                l = self.ampl.getVariable('l').getValues().to_dict()
-                q = self.ampl.getVariable('q').getValues().to_dict()
-                h = self.ampl.getVariable('h').getValues().to_dict()
-                
-                # self.visited_node.append(node)
-                if self.solve_result == "solved" or self.solve_result == "solved?":
-                    # trac_arc.append(edge)
-                    
-                    if self.total_cost < current_cost:
-                        self.visited_nodes.append(node)
-                        self.visited_arc.append((v,u))
-                        
-                        print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
-                          f"{self.format_indian_number(round(current_cost)):<14}"
-                          f"{self.format_indian_number(round(self.total_cost)):<14}"
-                          f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
-                          f"{self.solve_result:<14}{'Yes':<10}"
-                          f"{round(time.time() - self.start_time, 2)}s")
-                        current_cost = self.total_cost
-                        improved = True
-                        self.network_graph = self.generate_random_acyclic_from_solution(q)
-                        
-                        self.best_acyclic_flow = self.network_graph.copy()
-                        self.indegree_2_or_more = [node for node, indeg in self.best_acyclic_flow.in_degree() if indeg >= 2]
-                        # print("indegree_2_or_more:", self.indegree_2_or_more)
-                        
-                        best_arc = (v,u)
-                        self.l = l 
-                        self.q = q
-                        self.h = h 
-                        # print("q",self.q)
-                        self.all_duals = {}
-                        for con_name, val in self.ampl.get_constraints():
-                            # Get dual values for each constraint
-                            dual_values = val.getValues()
-                            self.all_duals[con_name] = dual_values
-                        
-                        self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
-                        
-                        print("\nvisited_nodes:", self.visited_nodes)
-                        if self.visited_nodes:
-                            self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
-                        print("sorted_nodes", self.sorted_nodes) 
-                               
-                        fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
-                        # self.plot_graph(fix_arc_set, current_cost, iteration, self.q, self.h, self.D,best_arc, self.l, self.C)
-                        # self.ampl.eval("display (min {i in 1.._ncons: _con[i].slack < 0} _con[i].slack);")
-                        # self.ampl.eval("display (min {j in 1.._nvars: _var[j].slack < 0} _var[j].slack);")
-                        break
-                    else:
-                        self.visited_nodes.append(node)
-                        self.visited_arc.append(edge)
-                    
-                        print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
-                          f"{self.format_indian_number(round(current_cost)):<14}"
-                          f"{self.format_indian_number(round(self.total_cost)):<14}"
-                          f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
-                          f"{self.solve_result:<14}{'No':<10}"
-                          f"{round(time.time() - self.start_time, 2)}s")
-                else:
+                if self.total_cost < self.current_cost:
                     self.visited_nodes.append(node)
-                    self.visited_arc.append(edge)
+                    self.visited_arc.append((v,u))
                     
                     print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
-                      f"{self.format_indian_number(round(current_cost)):<14}"
+                      f"{self.format_indian_number(round(self.current_cost)):<14}"
+                      f"{self.format_indian_number(round(self.total_cost)):<14}"
+                      f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
+                      f"{self.solve_result:<14}{'Yes':<10}"
+                      f"{round(time.time() - self.start_time, 2)}s")
+                    
+                    print("\n")
+                    self.current_cost = self.total_cost
+                    improved = True
+                    self.network_graph = self.generate_random_acyclic_from_solution(q)
+                    
+                    self.best_acyclic_flow = self.network_graph.copy()
+                    self.indegree_2_or_more = [node for node, indeg in self.best_acyclic_flow.in_degree() if indeg >= 2]
+                    # print("indegree_2_or_more:", self.indegree_2_or_more)
+                    
+                    best_arc = (v,u)
+                    self.l = l 
+                    self.q = q
+                    self.h = h 
+                    #print("l",self.l)
+                    self.all_duals = {}
+                    for con_name, val in self.ampl.get_constraints():
+                        # Get dual values for each constraint
+                        dual_values = val.getValues()
+                        self.all_duals[con_name] = dual_values
+                    
+                    #self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+                    
+                    #print("\nvisited_nodes:", self.visited_nodes)
+                    #if self.visited_nodes:
+                    #    self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
+                    #print("sorted_nodes", self.sorted_nodes) 
+
+                    fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+                else:
+                    print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
+                      f"{self.format_indian_number(round(self.current_cost)):<14}"
                       f"{self.format_indian_number(round(self.total_cost)):<14}"
                       f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
                       f"{self.solve_result:<14}{'No':<10}"
                       f"{round(time.time() - self.start_time, 2)}s")
-                                                 
-            # print(" ")
+                    print("\n")
+                    
+                    self.network_graph = self.generate_random_acyclic_from_solution(q)
+                    
+                    #all_sorted_node_arcs = []  # List of lists for each node's sorted incoming arcs                   
+                    #sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+                    #print("sorted_nodes:", sorted_nodes)
+                    #for node1 in sorted_nodes:
+                    #    # Get in-edges, convert to forward direction if necessary
+                    #    node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node1)]
+                    #    # Remove fixed arcs
+                    #    node_arcs = [arc for arc in node_arcs if arc not in fix_arc_set]
+                    #    all_sorted_node_arcs.append(node_arcs)
+                    ## Flatten the list of lists
+                    #flattened_arcs = [arc for sublist in all_sorted_node_arcs for arc in sublist]
+                    ## Sort all arcs by flow value (ascending)
+                    #sorted_all_arcs = sorted(
+                    #    flattened_arcs,
+                    #    key=lambda arc: abs(q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
+                    #print("All arcs sorted by flow value:", sorted_all_arcs)
+
+                    arc_max_dia = {}
+                    for (i, j, d), val in l.items():
+                        if val > 1e-6:
+                            if (i, j) not in arc_max_dia:
+                                arc_max_dia[(i, j)] = d
+                            else:
+                                arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+                    #print(arc_max_dia)
+                    sorted_arcs = sorted(list(self.arcs), key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=False)
+                    #print(sorted_arcs)
+                    for (i,j) in sorted_arcs:
+                        #(i,j) = max_flow_arc
+                        if arc_max_dia[i,j]!=1:
+                            ampl = AMPL()
+                            ampl.reset()
+                            ampl.read("reduced_wdnmodel.mod")
+                            ampl.read_data(self.data_file)
+                            #ampl.set['arc_max_dia'] = arc_max_dia
+                            new_arcs = [arc for arc in self.arcs if arc != (i, j)]
+                            ampl.eval(f"set new_arcs := {{{set(new_arcs)}}};")
+                            
+                            #for (x, y, k), val in self.l.items():
+                            #    ampl.eval(f'let l[{x},{y},{k}] := {val};')
+                            #for (x, y), val in self.q.items():
+                            #    ampl.eval(f'let q[{x},{y}] := {val};')
+                            #for x, val in self.h.items():
+                            #    ampl.eval(f'let h[{x}] := {val};')
+                                                
+                            ampl.eval(f"subject to con3{{(i,j) in new_arcs}}: sum{{k in pipes}} l[i,j,k] = L[i,j];")
+                            ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
+                            
+                            #ampl.eval(f"subject to con2{{(i,j) in new_arcs}}: h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{{k in pipes}} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")
+                            #ampl.eval(f"subject to con2_{i}_{j}: h[{i}] - h[{j}]  = (q[{i},{j}])^3 *((((q[{i},{j}])^2 + eps[{i},{j}])^0.426) /((q[{i},{j}])^2 + 0.426*eps[{i},{j}]))  * sum{{k in pipes: k <= {arc_max_dia[i,j]-1}}} (omega * l[{i},{j},k] / ( (R[k]^1.852) * (d[k])^4.87));")
+                            
+                            if q[u,v]>= 0:
+                                #ampl.eval(f"let q[{u},{v}] := {-self.q[u,v]} ;")
+                                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=0;")
+                                #ampl.eval(f"s.t. head_bound1{u}_{v}: h[{u}] - h[{v}] <= 0;")
+                            else:
+                                #ampl.eval(f"let q[{u},{v}] := {-self.q[u,v]} ;")
+                                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
+                                #ampl.eval(f"s.t. head_bound1{u}_{v}: h[{u}] - h[{v}] >= 0;")
+
+                            ampl.option['solver'] = "ipopt" 
+                            ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+                            with self.suppress_output():
+                                ampl.solve()
+            
+                            l = ampl.getVariable('l').getValues().to_dict()
+                            q = ampl.getVariable('q').getValues().to_dict()
+                            h = ampl.getVariable('h').getValues().to_dict()
+                            total_cost = ampl.getObjective("total_cost").value()
+                            
+                            if ampl.solve_result == "solved":
+                                #print(f"arc:{(i,j)}, Total cost using ipopt:", total_cost)
+                                if total_cost < self.current_cost:
+                                    #print(f"New optimal solution:", total_cost)
+                                    print(f"{(i,j)} {self.current_cost} {total_cost} Yes" )
+                                    self.current_cost = total_cost
+                                    improved = True
+                                    self.network_graph = self.generate_random_acyclic_from_solution(q)
+                                    
+                                    self.best_acyclic_flow = self.network_graph.copy()
+                                    self.indegree_2_or_more = [node for node, indeg in self.best_acyclic_flow.in_degree() if indeg >= 2]
+                                    # print("indegree_2_or_more:", self.indegree_2_or_more)
+                                    
+                                    best_arc = (v,u)
+                                    self.l = l 
+                                    self.q = q
+                                    self.h = h 
+                                    #print("l",self.l)
+                                    self.all_duals = {}
+                                    for con_name, val in self.ampl.get_constraints():
+                                        # Get dual values for each constraint
+                                        dual_values = val.getValues()
+                                        self.all_duals[con_name] = dual_values
+                                    
+                                    self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+                                    
+                                    #print("\nvisited_nodes:", self.visited_nodes)
+                                    #if self.visited_nodes:
+                                    #    self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
+                                    #print("sorted_nodes", self.sorted_nodes) 
+                                           
+                                    #fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+                                else:
+                                    print(f"{(i,j)} {self.current_cost} {total_cost} No" )
+                    #self.visited_nodes.append(node)
+                    #self.visited_arc.append(edge)
+                
+                    #print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
+                    #  f"{self.format_indian_number(round(self.current_cost)):<14}"
+                    #  f"{self.format_indian_number(round(self.total_cost)):<14}"
+                    #  f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
+                    #  f"{self.solve_result:<14}{'No':<10}"
+                    #  f"{round(time.time() - self.start_time, 2)}s")
+                    print("\n")
+            else:
+                #self.visited_nodes.append(node)
+                #self.visited_arc.append(edge)
+                
+                print(f"{str((u, v)):<10}{str(acy_check and in_arc_check):<8}"
+                  f"{self.format_indian_number(round(self.current_cost)):<14}"
+                  f"{self.format_indian_number(round(self.total_cost)):<14}"
+                  f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
+                  f"{self.solve_result:<14}{'No':<10}"
+                  f"{round(time.time() - self.start_time, 2)}s")
+                                             
+                print("\n")
             if improved:
                 break
-        return self.best_acyclic_flow, improved, current_cost, self.l, self.q, self.h, best_arc
+        return self.best_acyclic_flow, improved, self.current_cost, self.l, self.q, self.h, best_arc
     
     def iterate_acyclic_flows(self):
         """Iterate to find improved acyclic flows by attempting arc reversals while maintaining acyclicity."""
@@ -1219,43 +1318,44 @@ class WaterNetworkOptimizer:
         self.indegree_2_or_more = [node for node, indeg in self.best_acyclic_flow.in_degree() if indeg >= 2]
         # print("indegree_2_or_more:", self.indegree_2_or_more)
         
-        if self.solve_result == "solved" or "solved?":
-            current_cost = self.total_cost
-            self.l = self.ampl.getVariable('l').getValues().to_dict()
-            self.q = self.ampl.getVariable('q').getValues().to_dict()
-            self.h = self.ampl.getVariable('h').getValues().to_dict()
-            #self.t = self.ampl.getVariable('t').getValues().to_dict()
-            
-            self.all_duals = {}
-            for con_name, val in self.ampl.get_constraints():
-                # Get dual values for each constraint
-                dual_values = val.getValues()
-                self.all_duals[con_name] = dual_values
-        
-        elif self.solve_result != "solved":
-            current_cost = 10e+14
-            self.l = None
-            self.q = None
-            self.h = None
+        #if self.solve_result == "solved" or "solved?":
+        #    current_cost = self.total_cost
+        #    self.l = self.ampl.getVariable('l').getValues().to_dict()
+        #    self.q = self.ampl.getVariable('q').getValues().to_dict()
+        #    self.h = self.ampl.getVariable('h').getValues().to_dict()
+        #    #self.t = self.ampl.getVariable('t').getValues().to_dict()
+        #    
+        #    self.all_duals = {}
+        #    for con_name, val in self.ampl.get_constraints():
+        #        # Get dual values for each constraint
+        #        dual_values = val.getValues()
+        #        self.all_duals[con_name] = dual_values
+        #
+        #elif self.solve_result != "solved":
+        #    current_cost = 10e+14
+        #    self.l = None
+        #    self.q = None
+        #    self.h = None
         
         iteration = 1
         best_arc = None
             
         # self.plot_graph(self.super_source_out_arc, current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
         self.visited_arc = []
-        self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+        #self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
         while improved:
             print("\n**********************************************************************************************")
             print("Iteration :",iteration, "\n")
             print("self.sorted_nodes:",self.sorted_nodes,"\n")
             print(f"{'Arc':<10}{'Acyclic':<8}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
-            self.best_acyclic_flow, improved, current_cost, self.l, self.q, self.h, best_arc = self.iterate_arc(iteration, improved, current_cost, best_arc)
+            self.best_acyclic_flow, improved, self.current_cost, self.l, self.q, self.h, best_arc = self.iterate_arc(iteration, improved, best_arc)
             # print("Current best acyclic network:")
             # plt.figure(figsize=(10, 8))
             # nx.draw_spectral(best_acyclic_flow, with_labels=True)
             # plt.show()
             # super_source_out_arc = self.fix_arc()
             # super_source_out_arc.append(best_arc)
+            # self.ampl.eval("display q;")
             iteration += 1
             # print(f"Current best solution: {current_cost}")
             # print(" ")
@@ -1268,9 +1368,11 @@ class WaterNetworkOptimizer:
         self.eps = self.ampl.getParameter('eps').getValues().to_dict()
         #self.constraint_relative_gap(self.q, self.h, self.l, self.eps)
         #self.constraint_violations(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
-        self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
-        print(f"Final best objective: {current_cost}")
-
+        #self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
+        print(f"Final best objective: {self.current_cost}")
+        #for (i,j) in self.arcs:
+        #    print(f"q[{i},{j}]:",self.q[i,j])
+        #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
         print("Total number of iteration:", iteration-1)
 
@@ -1286,7 +1388,7 @@ class WaterNetworkOptimizer:
         # best_acyclic_flow, improved, current_cost, l, q, h = self.multistart(self.inarc, current_cost, self.best_acyclic_flow, improved, self.super_source_out_arc, iteration-1)
         # print("final best cost:", current_cost)
         # print("length of the arcs: ", l, "\n")
-        # print("flow in the arcs: ", q, "\n")
+        # print("flow in the arcs: ", self.q, "\n")
         # print("head value at node: ", h, "\n")
         # self.network_graph = best_acyclic_flow
         # self.load_model()
@@ -1369,7 +1471,6 @@ class WaterNetworkOptimizer:
         total_cost = ampl.getObjective("total_cost").value()
 
         print(f"Total cost: {total_cost}")
-
  
         return total_cost  # Minimize total cost
 
@@ -1433,6 +1534,7 @@ class WaterNetworkOptimizer:
         self.ampl.solve()
         self.solve_result = self.ampl.solve_result
         self.total_cost = self.ampl.get_objective("total_cost").value()
+        #self.ampl.eval("display q;")
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
         solve_time = self.ampl.get_value('_solve_elapsed_time')
@@ -1442,6 +1544,7 @@ class WaterNetworkOptimizer:
     def solve1(self):
         with self.suppress_output():
             # """Solve the optimization problem."""
+            #self.ampl.option["solver"] = "ipopt"
             self.ampl.option["solver"] = "ipopt"
             # self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 0 --eval_within_bnds 1 --nlp_engine IPOPT"
             # self.ampl.option["loqo_options"]="maxit 10000"
@@ -1449,8 +1552,8 @@ class WaterNetworkOptimizer:
             # self.ampl.set_option("snopt_options", "meminc = 1 major_iterations_limit = 200")
             print("bound_push:", self.bound_push)
             print("bound_frac:", self.bound_frac)
-            #self.bound_push , self.bound_frac = (0.01, 0.01)
-            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes  bound_relax_factor=0 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes ")   #max_iter = 1000
+            #self.bound_push , self.bound_frac = (0.001, 0.000001)
+            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes  bound_relax_factor=0 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no ")   #max_iter = 1000
             #self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-9  bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 600 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
@@ -1479,8 +1582,10 @@ class WaterNetworkOptimizer:
             #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
 
             self.ampl.solve()
+            #self.ampl.eval("display q;")
             self.solve_result = self.ampl.solve_result
             self.total_cost = self.ampl.get_objective("total_cost").value()
+        #self.ampl.eval("display q;")
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
         # print("eps:", epsilon)
@@ -1521,16 +1626,20 @@ class WaterNetworkOptimizer:
         #print("fix_arc_set:",fix_arc_set)
         #self.super_source_out_arc = self.fix_arc_set()
         #print("super_source_out_arc:", self.super_source_out_arc, "\n")
-        
 
         print("Objective: ",self.total_cost)
         print("Solve_result: ",self.solve_result)
         print("Solve_time:", self.ampl.get_value('_solve_elapsed_time'),"\n")
         
+        self.current_cost = self.total_cost
+        
         self.l = self.ampl.getVariable('l').getValues().to_dict()
         self.q = self.ampl.getVariable('q').getValues().to_dict()
         self.h = self.ampl.getVariable('h').getValues().to_dict()
-        
+        #for (i,j,k), val in self.l.items():
+        #    if val>1e-6:
+        #        print(f"l[{i},{j},{k}]:",round(val,2))
+        #print(self.q) 
         self.super_source_out_arc = self.fix_arc_set()
         self.network_graph = self.generate_random_acyclic_from_solution(self.q)
         
@@ -1556,11 +1665,104 @@ class WaterNetworkOptimizer:
                 inarc_set.append(f"({j},{i})")
         inarc_set = ", ".join(inarc_set)
         
-        fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+        self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
         self.visited_nodes = []
         self.sorted_nodes = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
         # self.display_results()
+        arc_max_dia = {}
+        for (i, j, d), val in self.l.items():
+            if val > 1e-6:
+                if (i, j) not in arc_max_dia:
+                    arc_max_dia[(i, j)] = d
+                else:
+                    arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+        #print(arc_max_dia)
+        #sorted_arcs = sorted(list(self.arcs), key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=False)
+        #print(sorted_arcs)
+        
+        self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+        print("sorted_nodes:", self.sorted_nodes)
+        for node in self.sorted_nodes:
+            node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node)]
+            node_arcs = [arc for arc in node_arcs if arc not in fix_arc_set]
+            print("node-in-arcs:", node_arcs)
+            sorted_node_arcs = sorted(node_arcs, key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=False)
+            print("decreasing-in-flow-arcs:",sorted_node_arcs)
+            for (i,j) in sorted_node_arcs:
+                if arc_max_dia[i,j]!=1:
+                    ampl = AMPL()
+                    ampl.reset()
+                    ampl.read("reduced_wdnmodel.mod")
+                    ampl.read_data(self.data_file)
+                    #ampl.set['arc_max_dia'] = arc_max_dia
+                    new_arcs = [arc for arc in self.arcs if arc != (i, j)]
+                    ampl.eval(f"set new_arcs := {{{set(new_arcs)}}};")
+                    
+                    #for (x, y, k), val in self.l.items():
+                    #    ampl.eval(f'let l[{x},{y},{k}] := {val};')
+                    #for (x, y), val in self.q.items():
+                    #    ampl.eval(f'let q[{x},{y}] := {val};')
+                    #for x, val in self.h.items():
+                    #    ampl.eval(f'let h[{x}] := {val};')
+                    #for edge in self.network_graph.edges:
+                    #    if edge in self.arcs:
+                    #        ampl.eval(f"s.t. flow_direction{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] >=0;")
+                    #    else:
+                    #        ampl.eval(f"s.t. flow_direction{edge[0]}_{edge[1]}: q[{edge[1]},{edge[0]}] <=0;")
+                            
+                    ampl.eval(f"subject to con3{{(i,j) in new_arcs}}: sum{{k in pipes}} l[i,j,k] = L[i,j];")
+                    ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
+                    
+                    #ampl.eval(f"subject to con2{{(i,j) in new_arcs}}: h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{{k in pipes}} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")
+                    #ampl.eval(f"subject to con2_{i}_{j}: h[{i}] - h[{j}]  = (q[{i},{j}])^3 *((((q[{i},{j}])^2 + eps[{i},{j}])^0.426) /((q[{i},{j}])^2 + 0.426*eps[{i},{j}]))  * sum{{k in pipes: k <= {arc_max_dia[i,j]-1}}} (omega * l[{i},{j},k] / ( (R[k]^1.852) * (d[k])^4.87));")
+                    
+                    ampl.option['solver'] = "ipopt" 
+                    ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+                    with self.suppress_output():
+                        ampl.solve()
+        
+                    l = ampl.getVariable('l').getValues().to_dict()
+                    q = ampl.getVariable('q').getValues().to_dict()
+                    h = ampl.getVariable('h').getValues().to_dict()
+                    total_cost = ampl.getObjective("total_cost").value()
+                    #print(f"arc:{(i,j)}, Total cost using ipopt:", total_cost)
+                    if ampl.solve_result == "solved":
+                        print(f"arc:{(i,j)} C_Best_Solution: {self.total_cost} New Solution: {total_cost}" )
+                        if total_cost < self.total_cost:
+                            print(f"New optimal solution:", total_cost)
+                            self.total_cost = total_cost
+                            #improved = True
+                            self.current_cost = total_cost
+                            self.network_graph = self.generate_random_acyclic_from_solution(q)
+                            
+                            self.best_acyclic_flow = self.network_graph.copy()
+                            self.indegree_2_or_more = [node for node, indeg in self.best_acyclic_flow.in_degree() if indeg >= 2]
+                            # print("indegree_2_or_more:", self.indegree_2_or_more)
+
+                            best_arc = (v,u)
+                            self.l = l 
+                            self.q = q
+                            self.h = h
+                            #for (i,j,k), val in self.l.items():
+                            #    if val>1e-6:
+                            #        print(f"l[{i},{j},{k}]:",round(val,2))
+                            #print("q",self.q)
+                            self.all_duals = {}
+                            for con_name, val in self.ampl.get_constraints():
+                                # Get dual values for each constraint
+                                dual_values = val.getValues()
+                                self.all_duals[con_name] = dual_values
+                            
+                            self.sorted_nodes = sorted(self.indegree_2_or_more, key=lambda node: self.D[node], reverse=True)
+                            
+                            print("\nvisited_nodes:", self.visited_nodes)
+                            if self.visited_nodes:
+                                self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
+                            print("sorted_nodes", self.sorted_nodes) 
+                            #break 
+                            #fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+
         self.iterate_acyclic_flows()
         elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
