@@ -493,7 +493,7 @@ Heuristic_Objective = []
 Heuristic_Time_taken = []
 Heuristic_Rel_vio = []
 
-dir = "original_no_initial"
+dir = "smooth-approx"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
 for ins in data_list:
