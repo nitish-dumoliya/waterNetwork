@@ -1,0 +1,89 @@
+Water Network: d7_blacksburg 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(9, 10), (8, 30), (21, 20), (5, 21), (26, 27), (9, 25), (15, 16), (26, 28)}
+super_source_out_arc: [(0, 1), (0, 4)] 
+
+min_demand: 0.00065488
+max_demand: 0.01265463
+max_flow: 0.09770338999999997
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+tol=1e-9
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  117914.94188508317
+Solve_result:  solved
+Solve_time: 3.222146 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [24, 23, 12, 8, 17] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 24
+node-in-arcs: [(18, 24), (24, 19)]
+decreasing-in-flow-arcs: [(24, 19), (18, 24)]
+(24, 19)  True    1,17,915      1,46,643      2.13s       solved        No        5.5s
+
+
+(18, 24)  True    1,17,915      2,49,128      2.82s       infeasible    No        8.38s
+
+
+node: 23
+node-in-arcs: [(14, 23), (23, 22)]
+decreasing-in-flow-arcs: [(23, 22), (14, 23)]
+(23, 22)  True    1,17,915      1,76,229      3.28s       infeasible    No        11.7s
+
+
+(14, 23)  True    1,17,915      1,19,645      2.06s       infeasible    No        13.82s
+
+
+node: 12
+node-in-arcs: [(9, 12)]
+decreasing-in-flow-arcs: [(9, 12)]
+(9, 12)   True    1,17,915      1,19,071      2.73s       solved        No        16.61s
+
+
+node: 8
+node-in-arcs: [(1, 8)]
+decreasing-in-flow-arcs: [(1, 8)]
+(1, 8)    True    1,17,915      1,34,125      1.45s       solved        No        18.12s
+
+
+node: 17
+node-in-arcs: [(3, 17), (15, 17)]
+decreasing-in-flow-arcs: [(3, 17), (15, 17)]
+(3, 17)   True    1,17,915      1,26,108      1.89s       solved        No        20.08s
+
+
+(15, 17)  True    1,17,915      1,34,351      3.99s       solved        No        24.13s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d7_blacksburg
+Final best objective: 117914.94188508317
+Number of nlp problem solved: 9
+Total number of iteration: 1
+Solver_time: 23.57 seconds
+Heuristic elapsed time: 24.13 seconds
+
