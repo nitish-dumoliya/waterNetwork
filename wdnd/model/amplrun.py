@@ -2,6 +2,8 @@ import time
 import sys
 from tabulate import tabulate
 from amplpy import AMPL
+import contextlib
+import os
 
 class WaterNetworkSolver:
     def __init__(self, model_file, solver_name, data_file):
@@ -172,7 +174,7 @@ class WaterNetworkSolver:
         #print("Constraint 2 violations:\n")
         #headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
         #print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        
+
         #print("\nSum of violation of original con2:", con2_original_violation) 
         #print("Sum of violation of approx con2:", con2_approx_violation)
 
@@ -291,6 +293,82 @@ class WaterNetworkSolver:
             self.l_init[idx] = l_sol[idx]
         print("*******************************************************************************\n")
 
+    @contextlib.contextmanager
+    def suppress_output(self):
+        # Open devnull to suppress the output
+        with open(os.devnull, 'w') as devnull:
+            # Redirect stdout and stderr
+            old_stdout = sys.stdout
+            old_stderr = sys.stderr
+            sys.stdout = devnull
+            sys.stderr = devnull
+            try:
+                yield
+            finally:
+                # Restore original stdout and stderr
+                sys.stdout = old_stdout
+                sys.stderr = old_stderr
+
+
+    def reduced_diameter(self):
+        arc_max_dia = {}
+        for (i, j, d), val in self.l.items():
+            if val > 1e-6:
+                if (i, j) not in arc_max_dia:
+                    arc_max_dia[(i, j)] = d
+                else:
+                    arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+        print(arc_max_dia)
+        sorted_arcs = sorted(list(self.arcs), key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
+        print(sorted_arcs)
+        for (i,j) in sorted_arcs:
+            print("arc:",(i,j))
+            ampl = AMPL()
+            ampl.reset()
+            ampl.read("reduced_wdnmodel.mod")
+            ampl.read_data(self.data_file)
+            #ampl.set['arc_max_dia'] = arc_max_dia
+            new_arcs = [arc for arc in self.arcs if arc != (i, j)]
+            ampl.eval(f"set new_arcs := {{{set(new_arcs)}}};")
+            
+            #for (x, y, k), val in self.l.items():
+            #    ampl.eval(f'let l[{x},{y},{k}] := {val};')
+            #for (x, y), val in self.q.items():
+            #    ampl.eval(f'let q[{x},{y}] := {val};')
+            #for x, val in self.h.items():
+            #    ampl.eval(f'let h[{x}] := {val};')
+            #self.ampl.eval(f"subject to flow_2_4: q[2,4] >= 0;")
+            #self.ampl.eval(f"subject to flow_3_5: q[3,5] >= 0;")
+            #self.ampl.eval(f"subject to flow_4_5: q[4,5] >= 0;")
+            ampl.eval(f"subject to flow_4_6: q[4,6] >= 0;")
+            #ampl.eval(f"subject to flow_6_7: q[6,7] <= 0;")
+                   
+            #ampl.eval(f"subject to flow_7_5: q[5,7] <= 0;")
+            #ampl.eval(f"subject to flow_7_5: h[7] - h[5] <= 0;")
+            ampl.eval(f"subject to con3{{(i,j) in new_arcs}}: sum{{k in pipes}} l[i,j,k] = L[i,j];")
+            ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
+            #ampl.eval(f"subject to con3_{i}_{j}: l[{i},{j},{arc_max_dia[i,j]-2}] + l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i},{j}];")
+            
+            #ampl.eval(f"subject to con2{{(i,j) in new_arcs}}: h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{{k in pipes}} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")
+            #ampl.eval(f"subject to con2_{i}_{j}: h[{i}] - h[{j}]  = (q[{i},{j}])^3 *((((q[{i},{j}])^2 + eps[{i},{j}])^0.426) /((q[{i},{j}])^2 + 0.426*eps[{i},{j}]))  * sum{{k in pipes: k <= {arc_max_dia[i,j]-1}}} (omega * l[{i},{j},k] / ( (R[k]^1.852) * (d[k])^4.87));")
+            
+            ampl.option['solver'] = "ipopt" 
+            ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes halt_on_ampl_error = yes "
+            with self.suppress_output():
+                ampl.solve()
+        
+            l = ampl.getVariable('l').getValues().to_dict()
+            q = ampl.getVariable('q').getValues().to_dict()
+            h = ampl.getVariable('h').getValues().to_dict()
+            total_cost = ampl.getObjective("total_cost").value()
+            if ampl.solve_result == "solved":
+                print(f"Total cost using ipopt:", total_cost)
+                if total_cost < self.total_cost:
+                    print(f"New optimal solution:", total_cost)
+                    self.total_cost = total_cost
+                    ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
+ 
+        print("best optimal solution:", self.total_cost)
 
     def second_solve(self):
         """
@@ -302,16 +380,16 @@ class WaterNetworkSolver:
         self.read_model_and_data()
 
         # Set initial values
-        q_var = self.ampl.get_variable('q')
-        h_var = self.ampl.get_variable('h')
-        l_var = self.ampl.get_variable('l')
+        #q_var = self.ampl.get_variable('q')
+        #h_var = self.ampl.get_variable('h')
+        #l_var = self.ampl.get_variable('l')
 
-        for idx in self.q_init:
-            q_var[idx].set_value(self.q_init[idx])
-        for idx in self.h_init:
-            h_var[idx].set_value(self.h_init[idx])
-        for idx in self.l_init:
-            l_var[idx].set_value(self.l_init[idx])
+        #for idx in self.q_init:
+        #    q_var[idx].set_value(self.q_init[idx])
+        #for idx in self.h_init:
+        #    h_var[idx].set_value(self.h_init[idx])
+        #for idx in self.l_init:
+        #    l_var[idx].set_value(self.l_init[idx])
 
         # Change solver and solve
         self.ampl.option['solver'] = self.solver_name
@@ -339,15 +417,15 @@ class WaterNetworkSolver:
         
         #print(f"{self.solver_name} solver outputs:\n")
         
-        min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
-        max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
-        max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
+        #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
+        #max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
+        #max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
 
-        print("min_demand:", min_demand)
-        print("max_demand:", max_demand)
-        print("max_flow:", max_flow)
-        d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
-        d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
+        #print("min_demand:", min_demand)
+        #print("max_demand:", max_demand)
+        #print("max_flow:", max_flow)
+        #d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
+        #d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
         #max_L = max(self.L[i,j] for (i,j) in self.arcs)
         #R_min = min(self.R[k] for k in self.pipes)
         #MaxK = 10.67*max_L/((R_min**1.852) * (d_min**4.87))
@@ -372,14 +450,17 @@ class WaterNetworkSolver:
         #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = ((10^(-6))/(0.07508*MaxK[i,j]))^(1/0.0926);")
         #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = 1e-6 + q[i,j]^2;")
         
-        self.ampl.eval(f"subject to flow_1_2: q[1,2] >= 0;")
-        self.ampl.eval(f"subject to flow_2_3: q[2,3] >= 0;")
-        self.ampl.eval(f"subject to flow_2_4: q[2,4] >= 0;")
-        self.ampl.eval(f"subject to flow_3_5: q[3,5] >= 0;")
-        self.ampl.eval(f"subject to flow_4_5: q[4,5] >= 0;")
+        #self.ampl.eval(f"subject to flow_1_2: q[1,2] >= 0;")
+        #self.ampl.eval(f"subject to flow_2_3: q[2,3] >= 0;")
+        #self.ampl.eval(f"subject to flow_2_4: q[2,4] >= 0;")
+        #self.ampl.eval(f"subject to flow_3_5: q[3,5] >= 0;")
+        #self.ampl.eval(f"subject to flow_4_5: q[4,5] >= 0;")
         self.ampl.eval(f"subject to flow_4_6: q[4,6] >= 0;")
-        self.ampl.eval(f"subject to flow_6_7: q[6,7] >= 0;")
-        self.ampl.eval(f"subject to flow_7_5: q[7,5] >= 0;")
+        #self.ampl.eval(f"subject to flow_6_7: q[6,7] <= 0;")
+        #self.ampl.eval(f"subject to flow_7_5: q[5,7] <= 0;")
+        #self.ampl.eval(f"subject to flow_7_5: h[7] - h[5] <= 0;")
+        #self.ampl.eval(f"subject to flow_7: abs(q[6,7]) - abs(q[5,7]) = D[7];")
+        #self.ampl.eval(f"subject to flow_5: abs(q[5,7]) + abs(q[3,5]) + abs(q[4,5]) = D[5];")
         # Define MaxK as a computed parameter
         #self.ampl.eval(f"""param MaxK{{(i,j) in arcs}} := 10.67 * L[i,j] / ({R_min}^1.852 * {d_min}^4.87);""")
         
@@ -390,10 +471,10 @@ class WaterNetworkSolver:
         self.ampl.solve()
 
         # Check constraint violations
-        q = self.ampl.get_variable('q').get_values().to_dict()
-        h = self.ampl.get_variable('h').get_values().to_dict()
-        l = self.ampl.get_variable('l').get_values().to_dict()
-        eps = self.ampl.getParameter('eps').get_values().to_dict()
+        self.q = self.ampl.get_variable('q').get_values().to_dict()
+        self.h = self.ampl.get_variable('h').get_values().to_dict()
+        self.l = self.ampl.get_variable('l').get_values().to_dict()
+        self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         #eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
         #self.ampl.eval("display q;")
@@ -401,12 +482,12 @@ class WaterNetworkSolver:
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display eps;")
 
-        self.constraint_violations(q, h, l, eps, self.solver_name)
+        #self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
-        total_cost = self.ampl.getObjective("total_cost").value()
+        self.total_cost = self.ampl.getObjective("total_cost").value()
 
-        print(f"Total cost using {self.solver_name}:", total_cost)
+        print(f"Total cost using {self.solver_name}:", self.total_cost)
         print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
 
         # Extract solutions
@@ -416,8 +497,9 @@ class WaterNetworkSolver:
 
         #self.ampl.eval("display q;")
         #self.ampl.eval("display q2;")
-        #self.ampl.eval("display eps;")
-
+        #self.ampl.eval("display l;")
+        #self.ampl.eval("display {(i,j) in arcs}: h[i] - h[j];")
+        self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j] - q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));")
 
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j]  - (q[i,j])^3 *((((q[i,j])^2 + 1e+6 * eps[i,j] )^0.426) /((q[i,j])^2 + 0.426 * 1e+6 *eps[i,j])) * (1000^3.018)  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")
@@ -439,7 +521,7 @@ class WaterNetworkSolver:
 
         # Second solve: self.solver_name
         self.second_solve()
-
+        self.reduced_diameter()
 if __name__ == "__main__":
     model = sys.argv[1]
 

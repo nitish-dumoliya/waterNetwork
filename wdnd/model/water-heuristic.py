@@ -536,15 +536,18 @@ class WaterNetworkOptimizer:
         # print("fixed arc direction:",set_, "\n") 
         return set_
 
-    def update_initial_points(self,l_solution, q_solution, h_solution):
+    def update_initial_points(self,edge, l_solution, q_solution, h_solution):
         for (i, j, k), val in l_solution.items():
             self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
         for (i, j), val in q_solution.items():
+            #if (i,j) != edge:
             self.ampl.eval(f'let q[{i},{j}] := {val};')
+            #else:
+            #    self.ampl.eval(f'let q[{i},{j}] := {-val};')
         for i, val in h_solution.items():
             self.ampl.eval(f'let h[{i}] := {val};')
 
-    def update_initial_points1(self, l_solution, q_solution, h_solution,all_duals, inarc):
+    def update_initial_points1(self,l_solution, q_solution, h_solution,all_duals, inarc):
         for (i, j, k), val in l_solution.items():
             self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
         
@@ -554,8 +557,9 @@ class WaterNetworkOptimizer:
             self.ampl.eval(f'let h[{i}] := {val};')
         
         for (i, j), val in q_solution.items():
-            edge = (i, j) 
+            edge = (i, j)
             if edge in edge_list_network:
+                 
                 if (i,j) not in inarc:
                     # print(f"self.ampl.eval(let q[{i},{j}] := {val};)")
                     self.ampl.eval(f"let q[{i},{j}] := {val} ;")
@@ -1063,6 +1067,7 @@ class WaterNetworkOptimizer:
             #sorted_node_arcs = [edge]
 
             node_arcs = [(u, v) if (u, v) in self.arcs else (v, u) for (u, v) in self.network_graph.in_edges(node)]
+            node_arcs = [arc for arc in node_arcs if arc not in self.fix_arc_set]
             print("node-in-arcs:", node_arcs)
             sorted_node_arcs = sorted(node_arcs, key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
             print("decreasing-in-flow-arcs:",sorted_node_arcs)
@@ -1108,21 +1113,42 @@ class WaterNetworkOptimizer:
                 lb = [1e-6, 1e-6]  # Lower bounds (0)
                 ub = [0.01, 0.01]  # Upper bounds (0.5)
                 #with self.suppress_output():
-                #    best_params, best_cost = pso(objective, lb, ub, swarmsize=2, maxiter=2)
+                #    best_params, best_cost = pso(objective, lb, ub, swarmsize=5, maxiter=2)
                 #    self.bound_push , self.bound_frac = best_params
-                #self.bound_push , self.bound_frac = (0.001, 0.001)
+                #self.bound_push , self.bound_frac = (0.0001, 0.001)
+                
+                
+
                 self.load_model()
                 self.ampl.eval(f"set inarc := {{{inarc_set}}};")
                 self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
                 #self.ampl.eval("minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];")
                 fix_arc_set = self.fix_leaf_arc_flow()
-                self.update_initial_points1(self.l, self.q, self.h, self.all_duals, self.inarc)
+                #self.update_initial_points1(self.l, self.q, self.h, self.all_duals, self.inarc)
+                self.update_initial_points(edge, self.l, self.q, self.h)
                 
+                #for (i,j) in self.arcs:
+                #    if self.q[i,j] >= 0:
+                #        if (i,j) != edge: 
+                #            self.ampl.eval(f"let q[{i},{j}] := {self.q[i,j]};")
+                #        else:
+                #            self.ampl.eval(f"let q[{i},{j}] := {-self.q[i,j]};")
+                #    else:
+                #        if self.q[i,j] != edge:
+                #            self.ampl.eval(f"let q[{i},{j}] := {self.q[i,j]};")
+                #        else:
+                #            self.ampl.eval(f"let q[{i},{j}] := {-self.q[i,j]};")
+
+
                 if self.q[u,v]>= 0:
-                    self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=0;")
+                    #self.ampl.eval(f"let q[{u},{v}] := {-self.q[u,v]} ;")
+                    #self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-0;")
+                    self.ampl.eval(f"s.t. head_bound1{u}_{v}: h[{u}] - h[{v}] <= 0;")
                     # self.ampl.eval(f"s.t. flow_bound_left_{u}_{v}: -Q_max <= q[{u}, {v}];")
                 else:
-                    self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
+                    #self.ampl.eval(f"let q[{u},{v}] := {-self.q[u,v]} ;")
+                    #self.ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
+                    self.ampl.eval(f"s.t. head_bound1{u}_{v}: h[{u}] - h[{v}] >= 0;")
                     # self.ampl.eval(f"s.t. flow_bound_right_{u}_{v}: q[{v}, {u}] <= Q_max;")
                 
                 #flow_str = ''
@@ -1132,13 +1158,13 @@ class WaterNetworkOptimizer:
                 # print("flow_str",flow_str)
                 #if flow_str:
                 #   self.ampl.eval(f"s.t. inc_arc_flow: {flow_str}>={self.D[node]};")
-                
+                #self.eval("")
                 self.solve1()
                 
                 l = self.ampl.getVariable('l').getValues().to_dict()
                 q = self.ampl.getVariable('q').getValues().to_dict()
                 h = self.ampl.getVariable('h').getValues().to_dict()
-                
+                 
                 # self.visited_node.append(node)
                 if self.solve_result == "solved" or self.solve_result == "solved?":
                     # trac_arc.append(edge)
@@ -1165,7 +1191,7 @@ class WaterNetworkOptimizer:
                         self.l = l 
                         self.q = q
                         self.h = h 
-                        # print("q",self.q)
+                        #print("q",self.q)
                         self.all_duals = {}
                         for con_name, val in self.ampl.get_constraints():
                             # Get dual values for each constraint
@@ -1256,6 +1282,7 @@ class WaterNetworkOptimizer:
             # plt.show()
             # super_source_out_arc = self.fix_arc()
             # super_source_out_arc.append(best_arc)
+            # self.ampl.eval("display q;")
             iteration += 1
             # print(f"Current best solution: {current_cost}")
             # print(" ")
@@ -1268,9 +1295,11 @@ class WaterNetworkOptimizer:
         self.eps = self.ampl.getParameter('eps').getValues().to_dict()
         #self.constraint_relative_gap(self.q, self.h, self.l, self.eps)
         #self.constraint_violations(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
-        self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
+        #self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         print(f"Final best objective: {current_cost}")
-
+        for (i,j) in self.arcs:
+            print(f"q[{i},{j}]:",self.q[i,j])
+        #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
         print("Total number of iteration:", iteration-1)
 
@@ -1286,7 +1315,7 @@ class WaterNetworkOptimizer:
         # best_acyclic_flow, improved, current_cost, l, q, h = self.multistart(self.inarc, current_cost, self.best_acyclic_flow, improved, self.super_source_out_arc, iteration-1)
         # print("final best cost:", current_cost)
         # print("length of the arcs: ", l, "\n")
-        # print("flow in the arcs: ", q, "\n")
+        # print("flow in the arcs: ", self.q, "\n")
         # print("head value at node: ", h, "\n")
         # self.network_graph = best_acyclic_flow
         # self.load_model()
@@ -1369,7 +1398,6 @@ class WaterNetworkOptimizer:
         total_cost = ampl.getObjective("total_cost").value()
 
         print(f"Total cost: {total_cost}")
-
  
         return total_cost  # Minimize total cost
 
@@ -1433,6 +1461,7 @@ class WaterNetworkOptimizer:
         self.ampl.solve()
         self.solve_result = self.ampl.solve_result
         self.total_cost = self.ampl.get_objective("total_cost").value()
+        #self.ampl.eval("display q;")
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
         solve_time = self.ampl.get_value('_solve_elapsed_time')
@@ -1442,6 +1471,7 @@ class WaterNetworkOptimizer:
     def solve1(self):
         with self.suppress_output():
             # """Solve the optimization problem."""
+            #self.ampl.option["solver"] = "ipopt"
             self.ampl.option["solver"] = "ipopt"
             # self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 0 --eval_within_bnds 1 --nlp_engine IPOPT"
             # self.ampl.option["loqo_options"]="maxit 10000"
@@ -1449,7 +1479,7 @@ class WaterNetworkOptimizer:
             # self.ampl.set_option("snopt_options", "meminc = 1 major_iterations_limit = 200")
             print("bound_push:", self.bound_push)
             print("bound_frac:", self.bound_frac)
-            #self.bound_push , self.bound_frac = (0.01, 0.01)
+            #self.bound_push , self.bound_frac = (0.001, 0.000001)
             self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = yes  bound_relax_factor=0 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes ")   #max_iter = 1000
             #self.ampl.set_option("ipopt_options", f"""outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-9  bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes max_iter = 600 mu_strategy = adaptive mu_oracle = loqo""")   #mu_init 1e-2 max_iter = 1000 mu_strategy = adaptive mu_oracle = loqo max_soc = 4
             self.ampl.option["presolve_eps"] = "6.82e-14"
@@ -1479,8 +1509,10 @@ class WaterNetworkOptimizer:
             #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
 
             self.ampl.solve()
+            #self.ampl.eval("display q;")
             self.solve_result = self.ampl.solve_result
             self.total_cost = self.ampl.get_objective("total_cost").value()
+        #self.ampl.eval("display q;")
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
         # print("eps:", epsilon)
@@ -1556,7 +1588,7 @@ class WaterNetworkOptimizer:
                 inarc_set.append(f"({j},{i})")
         inarc_set = ", ".join(inarc_set)
         
-        fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+        self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
         self.visited_nodes = []
         self.sorted_nodes = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)

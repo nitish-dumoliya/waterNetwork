@@ -29,7 +29,7 @@ csv_writer = csv.writer(csv_file)
 # Write header row
 csv_writer.writerow([
     "Network", "Min Length", "Max Length", "Total Length",
-    "Min Demand", "Max Demand", "Max Flow", "Min Dia", "Max Dia", "Epsilon"
+    "Min Demand", "Max Demand", "Max Flow", "Min Dia", "Max Dia","Min R", "Max K", "Epsilon"
 ])
 
 # Loop over network instances
@@ -69,17 +69,20 @@ for i in range(len(data_list)):
     max_flow = ampl.getParameter('Q_max').getValues().to_list()[0]
     d_max = ampl.getParameter('d_max').getValues().to_list()[0]
     d_min = ampl.getParameter('d_min').getValues().to_list()[0]
+    max_k = max(ampl.getParameter('MaxK').getValues().to_list())
+    r_min = min(ampl.getParameter('R').getValues().to_list())
+    epsilon = max(ampl.getParameter('eps').getValues().to_list())
     #L = ampl.getParameter('L').getValues().to_dict()
-    
-    L = [item[2] for item in ampl.getParameter('L').getValues().to_list()]
-    R = [item[1] for item in ampl.getParameter('R').getValues().to_list()]
-    R_min = min(R)
-    L_max = max(L)
-    print(R_max)
-    MaxK = 10.67*L_max/((R_min**1.852) * (d_min**4.87))
+
+    #L = [item[2] for item in ampl.getParameter('L').getValues().to_list()]
+    #R = [item[1] for item in ampl.getParameter('R').getValues().to_list()]
+    #R_min = min(R)
+    #L_max = max(L)
+    #print(R_min)
+    #MaxK = 10.67*L_max/((R_min**1.852) * (d_min**4.87))
  
-    epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
-        
+    #epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
+
     # Write one row to CSV (unrounded values)
     csv_writer.writerow([
         data_list[i],
@@ -91,7 +94,9 @@ for i in range(len(data_list)):
         max_flow,
         d_min,
         d_max,
-        epsilon
+        r_min,
+        max_k[2],
+        epsilon[2]
     ])
 
 # Close CSV file
