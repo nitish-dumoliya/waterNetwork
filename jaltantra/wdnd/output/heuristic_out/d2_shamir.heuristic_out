@@ -1,0 +1,78 @@
+Water Network: d2_shamir 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 3), (2, 4)] 
+
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+tol=1e-9
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  433714.9386669274
+Solve_result:  solved
+Solve_time: 2.533391 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [7, 3] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 7
+node-in-arcs: [(5, 7), (6, 7)]
+decreasing-in-flow-arcs: [(5, 7), (6, 7)]
+(5, 7)    True    4,33,715      4,03,390      2.37s       solved        Yes       5.05s
+
+
+(6, 7)    True    4,03,390      4,78,666      0.44s       solved        No        5.56s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [5] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 5
+node-in-arcs: [(3, 5), (4, 5), (5, 7)]
+decreasing-in-flow-arcs: [(3, 5), (4, 5), (5, 7)]
+(3, 5)    True    4,03,390      4,29,334      0.81s       solved        No        6.44s
+
+
+(4, 5)    True    4,03,390      4,55,622      1.02s       solved        No        7.52s
+
+
+(5, 7)    True    4,03,390      4,29,334      0.25s       solved        No        7.83s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d2_shamir
+Final best objective: 403389.7798984289
+Number of nlp problem solved: 6
+Total number of iteration: 2
+Solver_time: 7.43 seconds
+Heuristic elapsed time: 7.83 seconds
+
