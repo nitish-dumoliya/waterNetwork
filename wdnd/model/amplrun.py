@@ -212,15 +212,15 @@ class WaterNetworkSolver:
         self.ampl.option["ipopt_options"] = "outlev = 0  expect_infeasible_problem = yes tol = 1e-9 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = none" 
         self.ampl.option["presolve_eps"] = "8.53e-15"
 
-        min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
-        max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
-        max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
+        #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
+        #max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
+        #max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
 
-        print("min_demand:", min_demand)
-        print("max_demand:", max_demand)
-        print("max_flow:", max_flow)
-        d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
-        d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
+        #print("min_demand:", min_demand)
+        #print("max_demand:", max_demand)
+        #print("max_flow:", max_flow)
+        #d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
+        #d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
         #max_L = max(self.L[i,j] for (i,j) in self.arcs)
         #R_min = min(self.R[k] for k in self.pipes)
         #MaxK = 10.67 / ((R_min ** 1.852) * ((d_min) ** 4.87))
@@ -263,7 +263,7 @@ class WaterNetworkSolver:
         #ampl.eval("display q;")
         #ampl.eval("display h;")
 
-        self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
+        #self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
         #ampl.eval("display con1.body;")
         #ampl.eval("display con2.body;")
         #ampl.eval("display con3.body;")
@@ -455,7 +455,7 @@ class WaterNetworkSolver:
         #self.ampl.eval(f"subject to flow_2_4: q[2,4] >= 0;")
         #self.ampl.eval(f"subject to flow_3_5: q[3,5] >= 0;")
         #self.ampl.eval(f"subject to flow_4_5: q[4,5] >= 0;")
-        self.ampl.eval(f"subject to flow_4_6: q[4,6] >= 0;")
+        #self.ampl.eval(f"subject to flow_4_6: q[4,6] >= 0;")
         #self.ampl.eval(f"subject to flow_6_7: q[6,7] <= 0;")
         #self.ampl.eval(f"subject to flow_7_5: q[5,7] <= 0;")
         #self.ampl.eval(f"subject to flow_7_5: h[7] - h[5] <= 0;")
@@ -477,8 +477,8 @@ class WaterNetworkSolver:
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         #eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
-        #self.ampl.eval("display q;")
-        #self.ampl.eval("display q1;")
+        self.ampl.eval("display q;")
+        self.ampl.eval("display h;")
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display eps;")
 
@@ -491,15 +491,15 @@ class WaterNetworkSolver:
         print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
 
         # Extract solutions
-        q_sol = self.ampl.get_variable('q').get_values().to_dict()
-        h_sol = self.ampl.get_variable('h').get_values().to_dict()
-        l_sol = self.ampl.get_variable('l').get_values().to_dict()
+        #q_sol = self.ampl.get_variable('q').get_values().to_dict()
+        #h_sol = self.ampl.get_variable('h').get_values().to_dict()
+        #l_sol = self.ampl.get_variable('l').get_values().to_dict()
 
         #self.ampl.eval("display q;")
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display l;")
         #self.ampl.eval("display {(i,j) in arcs}: h[i] - h[j];")
-        self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
+        #self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j] - q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87));")
 
         #self.ampl.eval("display {(i,j) in arcs} h[i] - h[j]  - (q[i,j])^3 *((((q[i,j])^2 + 1e+6 * eps[i,j] )^0.426) /((q[i,j])^2 + 0.426 * 1e+6 *eps[i,j])) * (1000^3.018)  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")
@@ -513,15 +513,124 @@ class WaterNetworkSolver:
         
         print("*******************************************************************************\n")
 
+
+    def solve_content_model(self):
+        self.ampl.reset()
+        self.ampl.read("wdn_content_model.mod")
+        self.ampl.read_data(self.data_file)
+        
+        self.nodes = self.ampl.getSet('nodes')
+        self.source = self.ampl.getSet('Source')
+        self.arcs = self.ampl.getSet('arcs')
+        self.pipes = self.ampl.getSet('pipes')
+        
+        self.L = self.ampl.getParameter('L').to_dict()
+        self.D = self.ampl.getParameter('D').to_dict()
+        self.C = self.ampl.getParameter('C').to_dict()
+        self.P = self.ampl.getParameter('P').to_dict()
+        self.R = self.ampl.getParameter('R').to_dict()
+        self.E = self.ampl.getParameter('E').to_dict()
+        self.d = self.ampl.getParameter('d').to_dict()
+ 
+        for cor, val in self.l.items():
+            #ampl.eval(f"s.t. l_val{cor[0]}_{cor[1]}_{cor[2]}: l[{cor[0]},{cor[1]},{cor[2]}] = {val};")
+            self.ampl.param['l'][cor[0], cor[1], cor[2]] = val
+
+
+        # Set initial values
+        #q_var = self.ampl.get_variable('q')
+        #h_var = self.ampl.get_variable('h')
+        #l_var = self.ampl.get_variable('l')
+
+        #for idx in self.q_init:
+        #    q_var[idx].set_value(self.q_init[idx])
+        #for idx in self.h_init:
+        #    h_var[idx].set_value(self.h_init[idx])
+        #for idx in self.l_init:
+        #    l_var[idx].set_value(self.l_init[idx])
+
+        # Change solver and solve
+        self.ampl.option['solver'] = self.solver_name
+        self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9 NumericFocus = 1" 
+        self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 barstats version objbound" # lsolver = conopt
+        self.ampl.option["scip_options"] = "outlev  1 timelimit 3600 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=0 " #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        self.ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
+        #self.ampl.option["conopt_options"]= "outlev = 4"
+        self.ampl.option["presolve"] = "1"
+        self.ampl.option["presolve_eps"] = "8.53e-15"
+        self.ampl.solve()
+        #self.q = self.ampl.get_variable('q').get_values().to_dict()
+        #self.h = self.ampl.get_variable('h').get_values().to_dict()
+        #self.l = self.ampl.get_variable('l').get_values().to_dict()
+        #self.eps = self.ampl.getParameter('eps').get_values().to_dict()
+        #self.ampl.eval("display eps;")
+        #self.ampl.eval("display q;")
+        #self.ampl.eval("display q1;")
+        #self.ampl.eval("display q2;")
+        #self.ampl.eval("display eps;")
+
+        #self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+
+        solve_time = self.ampl.get_value('_solve_elapsed_time')
+        self.total_cost = self.ampl.getObjective("total_cost").value()
+
+        print(f"Total cost using {self.solver_name}:", self.total_cost)
+        print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
+
+        self.ampl.eval("display sum{(i,j) in arcs, k in pipes} l[i,j,k]*C[k];")
+        # Extract solutions
+        #q_sol = self.ampl.get_variable('q').get_values().to_dict()
+        #h_sol = self.ampl.get_variable('h').get_values().to_dict()
+        #l_sol = self.ampl.get_variable('l').get_values().to_dict()
+
+        self.ampl.eval("display q;")
+        self.ampl.eval("display con1.dual;")
+        self.ampl.eval("display E[1] - sum{k in pipes} (10.67*l[1,2,k]*(q[1,2]^1.852)/(R[k]^1.852 * d[k]^4.87)) ;")
+        #self.ampl.eval("display q2;")
+        #self.ampl.eval("display l;")
+        #self.ampl.eval("display {(i,j) in arcs}: h[i] - h[j];")
+        #self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
+
+        # Extract duals (node potentials)
+        con1 = self.ampl.getConstraint("con1")
+        duals = {}
+        
+        print("\nOriginal duals (up to constant):")
+        for n in self.nodes:
+            duals[n] = con1[n].dual()
+            print(f"  {n}: {duals[n]:.6g}")
+        
+        source = list(self.source)[0]
+        H_source = self.E[source]
+        
+        lambda_source = duals[source]
+        print(lambda_source)
+        
+        shift = H_source - lambda_source
+        
+        print("\nShifted duals (physical heads):")
+        for n in self.nodes:
+            head = duals[n] + shift
+            print(f"  {n}: {head:.6g}")
+        
+        print(f"\nAt source node '{source}': shifted dual = {duals[source] + shift} (should equal H_source = {H_source})")
+        
+
+
+
+
     def run(self):
-        self.read_model_and_data()
+        #self.read_model_and_data()
 
         # First solve: IPOPT
         #self.solve_ipopt()
 
         # Second solve: self.solver_name
         self.second_solve()
-        self.reduced_diameter()
+        #self.reduced_diameter()
+        self.solve_content_model()
 if __name__ == "__main__":
     model = sys.argv[1]
 
@@ -543,9 +652,9 @@ if __name__ == "__main__":
     ]
 
     # Select the data number here (0 to 18)
-    #data_number = int(sys.argv[3]) -1
-    #data = f"/home/nitishdumoliya/waterNetwork/data/{data_list[(data_number)]}.dat"
-    data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
+    data_number = int(sys.argv[3]) -1
+    data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{data_list[(data_number)]}.dat"
+    #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/data/minlplib_data/{data_list1[(data_number)]}.dat"
     #print("Water Network:", f"{data_list[(data_number)]}.dat")

@@ -53,8 +53,8 @@ var y{arcs};
 #var x{arcs, pipes}>=0,<=1;
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
-#minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
-minimize total_cost : 0;	
+minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
+#minimize total_cost : 0;	
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
