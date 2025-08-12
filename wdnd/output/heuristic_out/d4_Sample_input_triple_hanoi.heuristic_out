@@ -1,0 +1,29 @@
+Water Network: d4_double_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2), (10, 11), (41, 42), (12, 13), (21, 22), (50, 51), (11, 12), (51, 52), (40, 41), (42, 43), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (2, 33), (33, 34), (33, 49), (33, 50)] 
+
+min_demand: 0.01667
+max_demand: 0.375
+max_flow: 10.830579999999996
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+tol=1e-9
+bound_push = 0.001
+bound_frac = 0.001
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;

@@ -1,0 +1,118 @@
+Water Network: d3_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2), (10, 11), (12, 13), (21, 22), (2, 3), (11, 12), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20)] 
+
+min_demand: 0.01667
+max_demand: 0.375
+max_flow: 5.538899999999999
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+tol=1e-9
+bound_push = 0.001
+bound_frac = 0.001
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  6233587.449081834
+Solve_result:  solved
+Solve_time: 5.051614 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [14, 29, 25] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [14, 25, 29]
+node: 14
+node-in-arcs: [(10, 14), (14, 15)]
+decreasing-in-flow-arcs: [(10, 14), (14, 15)]
+(10, 14)  True    62,33,587     62,95,284     0.37s       solved        No        5.51s
+(14, 15)  True    62,33,587     62,57,732     0.14s       solved        No        5.71s
+node: 29
+node-in-arcs: [(28, 29), (29, 30)]
+decreasing-in-flow-arcs: [(28, 29), (29, 30)]
+(28, 29)  True    62,33,587     62,73,582     0.81s       solved        No        6.59s
+(29, 30)  True    62,33,587     62,20,034     0.39s       solved        Yes       7.03s
+
+visited_nodes: [14, 14, 29, 29]
+sorted_nodes [30, 25]
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [30, 25] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [14, 25, 30]
+node: 30
+node-in-arcs: [(29, 30), (30, 31)]
+decreasing-in-flow-arcs: [(30, 31), (29, 30)]
+(30, 31)  True    62,20,034     62,15,383     0.37s       solved        Yes       7.46s
+
+visited_nodes: [14, 14, 29, 29, 30]
+sorted_nodes [25, 31]
+
+**********************************************************************************************
+Iteration : 3 
+
+self.sorted_nodes: [25, 31] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [14, 25, 31]
+node: 25
+node-in-arcs: [(24, 25), (25, 26)]
+decreasing-in-flow-arcs: [(25, 26), (24, 25)]
+(25, 26)  True    62,15,383     61,93,531     0.31s       solved        Yes       7.84s
+
+visited_nodes: [14, 14, 29, 29, 30, 25]
+sorted_nodes [31]
+
+**********************************************************************************************
+Iteration : 4 
+
+self.sorted_nodes: [31] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [14, 25, 31]
+node: 31
+node-in-arcs: [(30, 31), (31, 32)]
+decreasing-in-flow-arcs: [(31, 32), (30, 31)]
+(31, 32)  True    61,93,531     62,04,478     0.17s       solved        No        8.08s
+(30, 31)  True    61,93,531     61,92,067     0.09s       solved        Yes       8.23s
+
+visited_nodes: [14, 14, 29, 29, 30, 25, 31, 31]
+sorted_nodes []
+
+**********************************************************************************************
+Iteration : 5 
+
+self.sorted_nodes: [] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [14, 25, 31]
+
+**********************************Final best results******************************************
+
+Water Network: d3_hanoi
+Final best objective: 6192067.335232675
+Number of nlp problem solved: 9
+Total number of iteration: 5
+Solver_time: 7.69 seconds
+Heuristic elapsed time: 8.24 seconds
+

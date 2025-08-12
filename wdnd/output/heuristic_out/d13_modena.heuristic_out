@@ -1,0 +1,476 @@
+Water Network: d13_modena 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(269, 52), (272, 136), (270, 209), (271, 1)}
+super_source_out_arc: [(269, 52), (52, 51), (52, 256), (52, 186)] 
+
+min_demand: 0
+max_demand: 0.00947
+max_flow: 0.4069399999999997
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  2528814.6422155537
+Solve_result:  solved
+Solve_time: 38.430149 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [169, 113, 41, 28, 117, 128, 3, 102, 80, 88, 203, 85, 58, 87, 37, 64, 60, 53, 24, 132, 59, 138, 92, 8, 91, 255, 183, 79, 219, 152, 47, 57, 63, 266, 129, 5, 6, 84, 93, 12, 31, 118, 124] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 169
+node-in-arcs: [(113, 169), (169, 126)]
+decreasing-in-flow-arcs: [(113, 169), (169, 126)]
+(113, 169)True    25,28,815     25,34,832     30.64s      solved        No        76.98s
+
+
+(169, 126)True    25,28,815     25,39,545     27.55s      solved        No        110.23s
+
+
+node: 113
+node-in-arcs: [(112, 113), (113, 115)]
+decreasing-in-flow-arcs: [(113, 115), (112, 113)]
+(113, 115)True    25,28,815     25,04,715     23.03s      solved        Yes       138.68s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [56, 28, 117, 115, 128, 3, 80, 203, 85, 58, 42, 201, 87, 37, 53, 132, 59, 138, 69, 92, 8, 238, 139, 79, 61, 44, 152, 266, 62, 106, 129, 5, 6, 83, 257, 25, 153, 105, 99, 12, 31, 118, 119, 124] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 56
+node-in-arcs: [(55, 56), (56, 57)]
+decreasing-in-flow-arcs: [(55, 56), (56, 57)]
+(55, 56)  True    25,04,715     25,37,706     17.35s      solved        No        158.67s
+
+
+(56, 57)  True    25,04,715     25,06,965     15.72s      solved        No        177.78s
+
+
+node: 28
+node-in-arcs: [(6, 28), (28, 249)]
+decreasing-in-flow-arcs: [(6, 28), (28, 249)]
+(6, 28)   True    25,04,715     25,92,370     14.38s      solved        No        196.16s
+
+
+(28, 249) True    25,04,715     25,16,152     15.31s      solved        No        215.57s
+
+
+node: 117
+node-in-arcs: [(118, 117), (119, 117), (117, 181)]
+decreasing-in-flow-arcs: [(117, 181), (119, 117), (118, 117)]
+(117, 181)True    25,04,715     25,20,605     13.48s      solved        No        233.22s
+
+
+(119, 117)True    25,04,715     25,32,995     17.06s      solved        No        255.99s
+
+
+(118, 117)True    25,04,715     25,14,661     15.07s      solved        No        275.24s
+
+
+node: 115
+node-in-arcs: [(113, 115), (115, 236)]
+decreasing-in-flow-arcs: [(115, 236), (113, 115)]
+(115, 236)True    25,04,715     25,21,969     16.51s      solved        No        296.21s
+
+
+(113, 115)True    25,04,715     25,28,333     16.99s      solved        No        313.92s
+
+
+node: 128
+node-in-arcs: [(128, 129), (243, 128)]
+decreasing-in-flow-arcs: [(128, 129), (243, 128)]
+(128, 129)True    25,04,715     25,33,468     14.64s      solved        No        332.7s
+
+
+(243, 128)True    25,04,715     25,17,951     11.36s      solved        No        348.21s
+
+
+node: 3
+node-in-arcs: [(2, 3), (3, 4), (3, 13)]
+decreasing-in-flow-arcs: [(2, 3), (3, 13), (3, 4)]
+(2, 3)    True    25,04,715     25,36,218     16.04s      solved        No        369.52s
+
+
+(3, 13)   True    25,04,715     25,16,560     14.78s      solved        No        387.96s
+
+
+(3, 4)    True    25,04,715     25,10,944     16.24s      solved        No        407.88s
+
+
+node: 80
+node-in-arcs: [(65, 80), (81, 80)]
+decreasing-in-flow-arcs: [(65, 80), (81, 80)]
+(65, 80)  True    25,04,715     25,48,205     11.59s      solved        No        423.52s
+
+
+(81, 80)  True    25,04,715     25,18,940     13.29s      solved        No        440.05s
+
+
+node: 203
+node-in-arcs: [(59, 203), (203, 202)]
+decreasing-in-flow-arcs: [(203, 202), (59, 203)]
+(203, 202)True    25,04,715     25,11,683     14.37s      solved        No        457.74s
+
+
+(59, 203) True    25,04,715     25,12,814     14.69s      solved        No        475.34s
+
+
+node: 85
+node-in-arcs: [(85, 94), (85, 173)]
+decreasing-in-flow-arcs: [(85, 94), (85, 173)]
+(85, 94)  True    25,04,715     25,11,038     13.98s      solved        No        492.9s
+
+
+(85, 173) True    25,04,715     25,33,935     14.21s      solved        No        510.29s
+
+
+node: 58
+node-in-arcs: [(57, 58), (58, 59), (58, 60)]
+decreasing-in-flow-arcs: [(58, 59), (57, 58), (58, 60)]
+(58, 59)  True    25,04,715     25,09,107     16.1s       solved        No        529.99s
+
+
+(57, 58)  True    25,04,715     25,10,379     11.86s      solved        No        547.77s
+
+
+(58, 60)  True    25,04,715     25,15,834     14.77s      solved        No        566.59s
+
+
+node: 42
+node-in-arcs: [(42, 41), (43, 42)]
+decreasing-in-flow-arcs: [(43, 42), (42, 41)]
+(43, 42)  True    25,04,715     25,08,100     12.0s       solved        No        582.35s
+
+
+(42, 41)  True    25,04,715     25,15,756     12.17s      solved        No        598.31s
+
+
+node: 201
+node-in-arcs: [(201, 100), (233, 201)]
+decreasing-in-flow-arcs: [(201, 100), (233, 201)]
+(201, 100)True    25,04,715     25,17,443     14.02s      solved        No        615.91s
+
+
+(233, 201)True    25,04,715     25,09,287     14.47s      solved        No        635.8s
+
+
+node: 87
+node-in-arcs: [(85, 87), (87, 171)]
+decreasing-in-flow-arcs: [(87, 171), (85, 87)]
+(87, 171) True    25,04,715     25,18,418     13.96s      solved        No        653.24s
+
+
+(85, 87)  True    25,04,715     25,07,456     14.68s      solved        No        670.9s
+
+
+node: 37
+node-in-arcs: [(38, 37), (37, 193)]
+decreasing-in-flow-arcs: [(38, 37), (37, 193)]
+(38, 37)  True    25,04,715     25,24,446     13.91s      solved        No        687.21s
+
+
+(37, 193) True    25,04,715     25,15,703     13.77s      solved        No        704.08s
+
+
+node: 53
+node-in-arcs: [(53, 230), (257, 53)]
+decreasing-in-flow-arcs: [(257, 53), (53, 230)]
+(257, 53) True    25,04,715     25,23,072     15.07s      solved        No        722.92s
+
+
+(53, 230) True    25,04,715     25,14,631     12.92s      solved        No        739.55s
+
+
+node: 132
+node-in-arcs: [(132, 133), (132, 165)]
+decreasing-in-flow-arcs: [(132, 165), (132, 133)]
+(132, 165)True    25,04,715     25,16,005     12.79s      solved        No        756.14s
+
+
+(132, 133)True    25,04,715     25,22,133     13.45s      solved        No        772.97s
+
+
+node: 59
+node-in-arcs: [(59, 204), (59, 205)]
+decreasing-in-flow-arcs: [(59, 205), (59, 204)]
+(59, 205) True    25,04,715     25,22,168     16.57s      solved        No        795.3s
+
+
+(59, 204) True    25,04,715     25,28,551     15.61s      solved        No        815.07s
+
+
+node: 138
+node-in-arcs: [(91, 138), (138, 235)]
+decreasing-in-flow-arcs: [(91, 138), (138, 235)]
+(91, 138) True    25,04,715     25,23,759     14.58s      solved        No        834.38s
+
+
+(138, 235)True    25,04,715     25,15,434     14.32s      solved        No        852.56s
+
+
+node: 69
+node-in-arcs: [(69, 68), (70, 69)]
+decreasing-in-flow-arcs: [(70, 69), (69, 68)]
+(70, 69)  True    25,04,715     25,27,020     18.02s      solved        No        874.33s
+
+
+(69, 68)  True    25,04,715     25,17,310     14.81s      solved        No        893.4s
+
+
+node: 92
+node-in-arcs: [(89, 92), (92, 93), (112, 92)]
+decreasing-in-flow-arcs: [(89, 92), (112, 92), (92, 93)]
+(89, 92)  True    25,04,715     25,19,955     15.07s      solved        No        911.37s
+
+
+(112, 92) True    25,04,715     25,20,486     13.35s      solved        No        927.71s
+
+
+(92, 93)  True    25,04,715     25,17,384     12.65s      solved        No        943.55s
+
+
+node: 8
+node-in-arcs: [(9, 8), (8, 23)]
+decreasing-in-flow-arcs: [(9, 8), (8, 23)]
+(9, 8)    True    25,04,715     25,11,241     10.06s      solved        No        956.99s
+
+
+(8, 23)   True    25,04,715     25,15,146     12.87s      solved        No        972.71s
+
+
+node: 238
+node-in-arcs: [(93, 238), (238, 133)]
+decreasing-in-flow-arcs: [(238, 133), (93, 238)]
+(238, 133)True    25,04,715     25,12,378     11.98s      solved        No        987.72s
+
+
+(93, 238) True    25,04,715     25,22,600     13.33s      solved        No        1001.61s
+
+
+node: 139
+node-in-arcs: [(139, 192), (139, 219)]
+decreasing-in-flow-arcs: [(139, 219), (139, 192)]
+(139, 219)True    25,04,715     25,89,908     12.37s      solved        No        1017.14s
+
+
+(139, 192)True    25,04,715     25,11,157     12.28s      solved        No        1033.56s
+
+
+node: 79
+node-in-arcs: [(154, 79), (79, 155)]
+decreasing-in-flow-arcs: [(79, 155), (154, 79)]
+(79, 155) True    25,04,715     25,36,697     13.84s      solved        No        1052.39s
+
+
+(154, 79) True    25,04,715     25,15,145     12.06s      solved        No        1067.33s
+
+
+node: 61
+node-in-arcs: [(60, 61), (61, 218)]
+decreasing-in-flow-arcs: [(61, 218), (60, 61)]
+(61, 218) True    25,04,715     25,26,102     12.74s      solved        No        1083.4s
+
+
+(60, 61)  True    25,04,715     25,20,201     11.41s      solved        No        1098.44s
+
+
+node: 44
+node-in-arcs: [(44, 45), (187, 44)]
+decreasing-in-flow-arcs: [(44, 45), (187, 44)]
+(44, 45)  True    25,04,715     25,93,376     12.2s       solved        No        1114.49s
+
+
+(187, 44) True    25,04,715     25,60,951     12.26s      solved        No        1129.81s
+
+
+node: 152
+node-in-arcs: [(152, 83), (151, 152)]
+decreasing-in-flow-arcs: [(152, 83), (151, 152)]
+(152, 83) True    25,04,715     25,19,208     13.66s      solved        No        1146.81s
+
+
+(151, 152)True    25,04,715     25,22,675     12.85s      solved        No        1163.94s
+
+
+node: 266
+node-in-arcs: [(80, 266), (266, 84)]
+decreasing-in-flow-arcs: [(80, 266), (266, 84)]
+(80, 266) True    25,04,715     25,13,114     14.34s      solved        No        1181.32s
+
+
+(266, 84) True    25,04,715     25,08,375     11.23s      solved        No        1195.75s
+
+
+node: 62
+node-in-arcs: [(62, 86), (62, 87)]
+decreasing-in-flow-arcs: [(62, 86), (62, 87)]
+(62, 86)  True    25,04,715     25,16,956     12.29s      solved        No        1211.16s
+
+
+(62, 87)  True    25,04,715     25,06,278     11.83s      solved        No        1225.32s
+
+
+node: 106
+node-in-arcs: [(106, 91), (106, 237)]
+decreasing-in-flow-arcs: [(106, 91), (106, 237)]
+(106, 91) True    25,04,715     25,34,620     10.83s      solved        No        1239.54s
+
+
+(106, 237)True    25,04,715     25,76,982     12.76s      solved        No        1254.79s
+
+
+node: 129
+node-in-arcs: [(129, 125), (166, 129)]
+decreasing-in-flow-arcs: [(129, 125), (166, 129)]
+(129, 125)True    25,04,715     25,24,884     13.36s      solved        No        1271.07s
+
+
+(166, 129)True    25,04,715     25,26,131     13.02s      solved        No        1285.65s
+
+
+node: 5
+node-in-arcs: [(4, 5), (9, 5)]
+decreasing-in-flow-arcs: [(4, 5), (9, 5)]
+(4, 5)    True    25,04,715     25,24,577     11.17s      solved        No        1300.11s
+
+
+(9, 5)    True    25,04,715     25,17,826     9.49s       solved        No        1312.74s
+
+
+node: 6
+node-in-arcs: [(7, 6), (206, 6)]
+decreasing-in-flow-arcs: [(206, 6), (7, 6)]
+(206, 6)  True    25,04,715     25,11,287     14.03s      solved        No        1329.87s
+
+
+(7, 6)    True    25,04,715     25,13,650     12.44s      solved        No        1345.0s
+
+
+node: 83
+node-in-arcs: [(83, 62), (80, 83)]
+decreasing-in-flow-arcs: [(83, 62), (80, 83)]
+(83, 62)  True    25,04,715     25,14,967     9.92s       solved        No        1357.63s
+
+
+(80, 83)  True    25,04,715     25,15,689     11.51s      solved        No        1372.22s
+
+
+node: 257
+node-in-arcs: [(144, 257), (257, 147)]
+decreasing-in-flow-arcs: [(144, 257), (257, 147)]
+(144, 257)True    25,04,715     25,79,827     11.83s      solved        No        1387.69s
+
+
+(257, 147)True    25,04,715     25,22,589     10.81s      solved        No        1401.64s
+
+
+node: 25
+node-in-arcs: [(196, 25), (25, 232)]
+decreasing-in-flow-arcs: [(196, 25), (25, 232)]
+(196, 25) True    25,04,715     25,19,715     11.13s      solved        No        1414.98s
+
+
+(25, 232) True    25,04,715     25,13,351     11.53s      solved        No        1428.96s
+
+
+node: 153
+node-in-arcs: [(83, 153), (153, 84)]
+decreasing-in-flow-arcs: [(153, 84), (83, 153)]
+(153, 84) True    25,04,715     25,14,901     11.83s      solved        No        1443.56s
+
+
+(83, 153) True    25,04,715     25,15,241     12.19s      solved        No        1459.28s
+
+
+node: 105
+node-in-arcs: [(105, 104), (105, 189)]
+decreasing-in-flow-arcs: [(105, 189), (105, 104)]
+(105, 189)True    25,04,715     25,09,272     12.16s      solved        No        1473.73s
+
+
+(105, 104)True    25,04,715     25,26,676     11.14s      solved        No        1488.22s
+
+
+node: 99
+node-in-arcs: [(254, 99), (99, 255)]
+decreasing-in-flow-arcs: [(99, 255), (254, 99)]
+(99, 255) True    25,04,715     25,13,698     11.01s      solved        No        1502.0s
+
+
+(254, 99) True    25,04,715     25,29,075     14.03s      solved        No        1516.52s
+
+
+node: 12
+node-in-arcs: [(12, 11), (14, 12)]
+decreasing-in-flow-arcs: [(12, 11), (14, 12)]
+(12, 11)  True    25,04,715     25,15,601     10.95s      solved        No        1531.41s
+
+
+(14, 12)  True    25,04,715     25,23,891     11.31s      solved        No        1545.57s
+
+
+node: 31
+node-in-arcs: [(31, 250), (265, 31)]
+decreasing-in-flow-arcs: [(31, 250), (265, 31)]
+(31, 250) True    25,04,715     25,11,053     13.21s      solved        No        1562.85s
+
+
+(265, 31) True    25,04,715     25,14,495     10.1s       solved        No        1575.76s
+
+
+node: 118
+node-in-arcs: [(119, 118), (120, 118)]
+decreasing-in-flow-arcs: [(119, 118), (120, 118)]
+(119, 118)True    25,04,715     25,33,114     11.06s      solved        No        1590.41s
+
+
+(120, 118)True    25,04,715     25,47,785     14.96s      solved        No        1608.28s
+
+
+node: 119
+node-in-arcs: [(119, 116), (120, 119)]
+decreasing-in-flow-arcs: [(119, 116), (120, 119)]
+(119, 116)True    25,04,715     25,13,153     10.59s      solved        No        1622.79s
+
+
+(120, 119)True    25,04,715     25,28,109     13.21s      solved        No        1638.95s
+
+
+node: 124
+node-in-arcs: [(224, 124), (124, 225)]
+decreasing-in-flow-arcs: [(124, 225), (224, 124)]
+(124, 225)True    25,04,715     25,45,253     12.12s      solved        No        1654.02s
+
+
+(224, 124)True    25,04,715     25,10,922     12.95s      solved        No        1669.29s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d13_modena
+Final best objective: 2504715.002186299
+Number of nlp problem solved: 96
+Total number of iteration: 2
+Solver_time: 1337.88 seconds
+Heuristic elapsed time: 1669.30 seconds
+

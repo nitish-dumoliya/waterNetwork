@@ -1,0 +1,170 @@
+Water Network: d5_triple_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(72, 73), (81, 82), (1, 2), (10, 11), (70, 71), (41, 42), (12, 13), (21, 22), (50, 51), (80, 81), (11, 12), (51, 52), (40, 41), (42, 43), (71, 72), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20), (2, 33), (33, 34), (33, 49), (33, 50), (2, 63), (63, 64), (63, 79), (63, 80)] 
+
+min_demand: 0
+max_demand: 0.375
+max_flow: 15.886149999999995
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  18902581.102716397
+Solve_result:  solved
+Solve_time: 6.589336 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [14, 44, 74, 29, 59, 89, 25, 55, 85] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 14
+node-in-arcs: [(10, 14), (14, 15)]
+decreasing-in-flow-arcs: [(10, 14), (14, 15)]
+(10, 14)  True    1,89,02,581   1,85,77,054   7.18s       solved        Yes       14.77s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [9, 57, 87, 30, 59, 89, 46, 76, 25] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 9
+node-in-arcs: [(8, 9), (9, 10)]
+decreasing-in-flow-arcs: [(9, 10), (8, 9)]
+(9, 10)   True    1,85,77,054   1,85,47,512   6.87s       solved        Yes       22.84s
+
+
+
+**********************************************************************************************
+Iteration : 3 
+
+self.sorted_nodes: [57, 87, 29, 59, 89, 46, 76, 25] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 57
+node-in-arcs: [(46, 57), (57, 56)]
+decreasing-in-flow-arcs: [(57, 56), (46, 57)]
+(57, 56)  True    1,85,47,512   1,87,09,101   4.63s       solved        No        28.38s
+
+
+(46, 57)  True    1,85,47,512   1,83,98,094   5.66s       solved        Yes       34.98s
+
+
+
+**********************************************************************************************
+Iteration : 4 
+
+self.sorted_nodes: [27, 87, 30, 59, 89, 46, 76, 15] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 27
+node-in-arcs: [(27, 16), (26, 27)]
+decreasing-in-flow-arcs: [(26, 27), (27, 16)]
+(26, 27)  True    1,83,98,094   1,88,30,607   6.17s       solved        No        42.97s
+
+
+(27, 16)  True    1,83,98,094   1,83,74,959   10.26s      solved        Yes       54.28s
+
+
+
+**********************************************************************************************
+Iteration : 5 
+
+self.sorted_nodes: [87, 30, 59, 89, 16, 46, 76] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 87
+node-in-arcs: [(76, 87), (87, 86)]
+decreasing-in-flow-arcs: [(87, 86), (76, 87)]
+(87, 86)  True    1,83,74,959   1,87,78,598   4.55s       solved        No        61.8s
+
+
+(76, 87)  True    1,83,74,959   1,85,79,270   6.81s       solved        No        70.85s
+
+
+node: 30
+node-in-arcs: [(29, 30), (30, 31)]
+decreasing-in-flow-arcs: [(30, 31), (29, 30)]
+(30, 31)  True    1,83,74,959   1,88,44,454   3.09s       solved        No        75.61s
+
+
+(29, 30)  True    1,83,74,959   1,87,96,389   4.56s       solved        No        81.82s
+
+
+node: 59
+node-in-arcs: [(58, 59), (59, 60)]
+decreasing-in-flow-arcs: [(58, 59), (59, 60)]
+(58, 59)  True    1,83,74,959   1,87,94,271   3.36s       solved        No        86.59s
+
+
+(59, 60)  True    1,83,74,959   1,87,73,432   3.52s       solved        No        91.5s
+
+
+node: 89
+node-in-arcs: [(88, 89), (89, 90)]
+decreasing-in-flow-arcs: [(88, 89), (89, 90)]
+(88, 89)  True    1,83,74,959   1,88,10,320   4.72s       solved        No        97.74s
+
+
+(89, 90)  True    1,83,74,959   1,87,73,432   4.01s       solved        No        102.98s
+
+
+node: 16
+node-in-arcs: [(15, 16), (16, 17), (27, 16)]
+decreasing-in-flow-arcs: [(16, 17), (15, 16), (27, 16)]
+(16, 17)  True    1,83,74,959   1,88,04,264   3.64s       solved        No        108.21s
+
+
+(15, 16)  True    1,83,74,959   1,86,04,374   4.87s       solved        No        113.6s
+
+
+(27, 16)  True    1,83,74,959   1,87,07,455   2.31s       solved        No        116.74s
+
+
+node: 46
+node-in-arcs: [(45, 46), (47, 46)]
+decreasing-in-flow-arcs: [(45, 46), (47, 46)]
+(45, 46)  True    1,83,74,959   1,88,50,392   2.76s       solved        No        120.29s
+
+
+(47, 46)  True    1,83,74,959   1,85,51,475   2.91s       solved        No        124.1s
+
+
+node: 76
+node-in-arcs: [(75, 76), (77, 76)]
+decreasing-in-flow-arcs: [(75, 76), (77, 76)]
+(75, 76)  True    1,83,74,959   1,87,81,366   3.49s       solved        No        128.45s
+
+
+(77, 76)  True    1,83,74,959   1,85,93,286   2.71s       solved        No        132.37s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d5_triple_hanoi
+Final best objective: 18374959.372871343
+Number of nlp problem solved: 22
+Total number of iteration: 5
+Solver_time: 104.68 seconds
+Heuristic elapsed time: 132.37 seconds
+

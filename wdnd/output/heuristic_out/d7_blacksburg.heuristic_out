@@ -1,0 +1,63 @@
+Water Network: d7_blacksburg 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(9, 10), (8, 30), (21, 20), (5, 21), (26, 27), (9, 25), (15, 16), (26, 28)}
+super_source_out_arc: [(0, 1), (0, 4)] 
+
+min_demand: 0.00065488
+max_demand: 0.01265463
+max_flow: 0.09770338999999997
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  134563.98195588187
+Solve_result:  solved
+Solve_time: 4.524993 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [24, 11, 1, 23, 17] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 24
+node-in-arcs: [(18, 24), (24, 19)]
+decreasing-in-flow-arcs: [(24, 19), (18, 24)]
+Error:
+	/home/nitishdumoliya/waterNetwork/wdnd/data/d7_blacksburg.dat
+	line 74 offset 2397
+	d_min was defined in the model.
+	context:  param  >>> d_min <<<  := 0.0254; # minimum diameter (should match the minimum discrete diameter)
+
+For support/feedback go to https://discuss.ampl.com or e-mail <support@ampl.com>
+
+Error:
+	/home/nitishdumoliya/waterNetwork/wdnd/data/d7_blacksburg.dat
+	line 75 offset 2484
+	d_max was defined in the model.
+	context:  param  >>> d_max <<<  := 0.6096; # maximum diameter (should match the maximum discrete diameter)
+
+For support/feedback go to https://discuss.ampl.com or e-mail <support@ampl.com>
+
+Error:
+	/home/nitishdumoliya/waterNetwork/wdnd/data/d7_blacksburg.dat
+	line 97 offset 3120
+	fixarcs is not a set
+	context:  param: fixarcs >>> : <<<        fixdiam           fix_r   fix_c:=
+
+For support/feedback go to https://discuss.ampl.com or e-mail <support@ampl.com>
+

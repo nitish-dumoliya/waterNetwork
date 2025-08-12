@@ -1,0 +1,68 @@
+Water Network: d2_shamir 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 3), (2, 4)] 
+
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  417178.72790483804
+Solve_result:  solved
+Solve_time: 0.33937500000000004 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [5, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 5
+node-in-arcs: [(3, 5), (4, 5)]
+decreasing-in-flow-arcs: [(3, 5), (4, 5)]
+(3, 5)    True    4,17,179      4,33,713      0.37s       solved        No        1.18s
+
+
+(4, 5)    True    4,17,179      4,58,206      0.33s       solved        No        1.94s
+
+
+node: 7
+node-in-arcs: [(5, 7), (6, 7)]
+decreasing-in-flow-arcs: [(5, 7), (6, 7)]
+(5, 7)    True    4,17,179      4,03,388      0.63s       solved        Yes       2.98s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+
+**********************************Final best results******************************************
+
+Water Network: d2_shamir
+Final best objective: 403387.93251798
+Number of nlp problem solved: 4
+Total number of iteration: 2
+Solver_time: 1.67 seconds
+Heuristic elapsed time: 2.98 seconds
+

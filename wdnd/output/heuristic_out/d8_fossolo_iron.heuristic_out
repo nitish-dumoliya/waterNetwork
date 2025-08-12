@@ -1,0 +1,275 @@
+Water Network: d8_fossolo_iron 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(37, 1)}
+super_source_out_arc: [(37, 1), (1, 17), (1, 36), (1, 31)] 
+
+min_demand: 0.00026
+max_demand: 0.00202
+max_flow: 0.033909999999999996
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  172723.90688608325
+Solve_result:  solved
+Solve_time: 1.645524 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [18, 19, 26, 16, 13, 35, 10, 15, 2, 3, 22, 21, 12, 25, 24, 5, 29, 14, 30, 28, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 18
+node-in-arcs: [(18, 10), (17, 18)]
+decreasing-in-flow-arcs: [(17, 18), (18, 10)]
+(17, 18)  True    1,72,724      1,73,323      2.19s       solved        No        5.64s
+
+
+(18, 10)  True    1,72,724      1,72,185      1.76s       solved        Yes       8.74s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [26, 16, 13, 35, 10, 15, 2, 32, 3, 22, 21, 20, 12, 6, 25, 24, 5, 29, 30, 28, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 26
+node-in-arcs: [(11, 26), (26, 27)]
+decreasing-in-flow-arcs: [(11, 26), (26, 27)]
+(11, 26)  True    1,72,185      1,72,588      2.31s       solved        No        12.17s
+
+
+(26, 27)  True    1,72,185      1,72,246      1.67s       solved        No        15.72s
+
+
+node: 16
+node-in-arcs: [(27, 16), (16, 29)]
+decreasing-in-flow-arcs: [(16, 29), (27, 16)]
+(16, 29)  True    1,72,185      1,74,288      3.32s       solved        No        20.28s
+
+
+(27, 16)  True    1,72,185      1,72,792      2.08s       solved        No        23.47s
+
+
+node: 13
+node-in-arcs: [(5, 13), (12, 13), (13, 14)]
+decreasing-in-flow-arcs: [(12, 13), (13, 14), (5, 13)]
+(12, 13)  True    1,72,185      1,73,391      2.63s       solved        No        27.8s
+
+
+(13, 14)  True    1,72,185      1,73,464      1.41s       solved        No        30.21s
+
+
+(5, 13)   True    1,72,185      1,71,974      2.57s       solved        Yes       33.91s
+
+
+
+**********************************************************************************************
+Iteration : 3 
+
+self.sorted_nodes: [35, 15, 2, 32, 3, 22, 21, 20, 12, 23, 6, 25, 29, 30, 28, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 35
+node-in-arcs: [(34, 35), (35, 36)]
+decreasing-in-flow-arcs: [(34, 35), (35, 36)]
+(34, 35)  True    1,71,974      1,72,809      2.18s       solved        No        37.0s
+
+
+(35, 36)  True    1,71,974      1,72,049      1.89s       solved        No        40.68s
+
+
+node: 15
+node-in-arcs: [(15, 16), (26, 15)]
+decreasing-in-flow-arcs: [(26, 15), (15, 16)]
+(26, 15)  True    1,71,974      1,74,065      2.38s       solved        No        44.21s
+
+
+(15, 16)  True    1,71,974      1,73,720      2.34s       solved        No        47.71s
+
+
+node: 2
+node-in-arcs: [(17, 2), (2, 18)]
+decreasing-in-flow-arcs: [(17, 2), (2, 18)]
+(17, 2)   True    1,71,974      1,86,885      3.83s       solved        No        53.1s
+
+
+(2, 18)   True    1,71,974      1,73,515      1.44s       solved        No        57.96s
+
+
+node: 32
+node-in-arcs: [(10, 32), (32, 33)]
+decreasing-in-flow-arcs: [(32, 33), (10, 32)]
+(32, 33)  True    1,71,974      1,72,530      1.87s       solved        No        60.87s
+
+
+(10, 32)  True    1,71,974      1,71,921      1.96s       solved        Yes       64.08s
+
+
+
+**********************************************************************************************
+Iteration : 4 
+
+self.sorted_nodes: [3, 22, 21, 20, 12, 6, 25, 24, 5, 29, 30, 28, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 3
+node-in-arcs: [(2, 3), (3, 11)]
+decreasing-in-flow-arcs: [(2, 3), (3, 11)]
+(2, 3)    True    1,71,921      1,78,658      1.58s       solved        No        66.88s
+
+
+(3, 11)   True    1,71,921      1,72,224      1.92s       solved        No        69.71s
+
+
+node: 22
+node-in-arcs: [(15, 22), (22, 23)]
+decreasing-in-flow-arcs: [(15, 22), (22, 23)]
+(15, 22)  True    1,71,921      1,73,195      2.59s       solved        No        73.09s
+
+
+(22, 23)  True    1,71,921      1,73,398      1.43s       solved        No        75.3s
+
+
+node: 21
+node-in-arcs: [(14, 21), (21, 22)]
+decreasing-in-flow-arcs: [(21, 22), (14, 21)]
+(21, 22)  True    1,71,921      1,74,255      2.31s       solved        No        78.37s
+
+
+(14, 21)  True    1,71,921      1,71,727      1.05s       solved        Yes       80.04s
+
+
+
+**********************************************************************************************
+Iteration : 5 
+
+self.sorted_nodes: [20, 12, 6, 25, 24, 5, 29, 14, 30, 28, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 20
+node-in-arcs: [(20, 15), (19, 20)]
+decreasing-in-flow-arcs: [(20, 15), (19, 20)]
+(20, 15)  True    1,71,727      1,74,097      1.28s       solved        No        81.85s
+
+
+(19, 20)  True    1,71,727      1,72,137      1.68s       solved        No        84.2s
+
+
+node: 12
+node-in-arcs: [(12, 4), (19, 12)]
+decreasing-in-flow-arcs: [(19, 12), (12, 4)]
+(19, 12)  True    1,71,727      1,73,494      1.83s       solved        No        86.95s
+
+
+(12, 4)   True    1,71,727      1,71,987      1.56s       solved        No        89.25s
+
+
+node: 6
+node-in-arcs: [(6, 7), (21, 6)]
+decreasing-in-flow-arcs: [(6, 7), (21, 6)]
+(6, 7)    True    1,71,727      1,77,455      1.73s       solved        No        91.68s
+
+
+(21, 6)   True    1,71,727      1,72,339      1.59s       solved        No        94.15s
+
+
+node: 25
+node-in-arcs: [(25, 8), (16, 25)]
+decreasing-in-flow-arcs: [(16, 25), (25, 8)]
+(16, 25)  True    1,71,727      1,74,677      1.45s       solved        No        96.47s
+
+
+(25, 8)   True    1,71,727      1,72,195      1.83s       solved        No        98.96s
+
+
+node: 24
+node-in-arcs: [(24, 8), (24, 23)]
+decreasing-in-flow-arcs: [(24, 8), (24, 23)]
+(24, 8)   True    1,71,727      1,90,596      2.2s        solved        No        101.65s
+
+
+(24, 23)  True    1,71,727      1,71,758      0.84s       solved        No        103.14s
+
+
+node: 5
+node-in-arcs: [(4, 5), (5, 6)]
+decreasing-in-flow-arcs: [(4, 5), (5, 6)]
+(4, 5)    True    1,71,727      1,76,070      2.07s       solved        No        105.75s
+
+
+(5, 6)    True    1,71,727      1,71,885      0.96s       solved        No        107.16s
+
+
+node: 29
+node-in-arcs: [(29, 30), (29, 33)]
+decreasing-in-flow-arcs: [(29, 33), (29, 30)]
+(29, 33)  True    1,71,727      1,74,292      1.14s       solved        No        108.81s
+
+
+(29, 30)  True    1,71,727      1,73,060      1.48s       solved        No        111.02s
+
+
+node: 14
+node-in-arcs: [(14, 20), (14, 21)]
+decreasing-in-flow-arcs: [(14, 20), (14, 21)]
+(14, 20)  True    1,71,727      1,79,063      2.33s       solved        No        114.19s
+
+
+(14, 21)  True    1,71,727      1,71,743      1.53s       solved        No        117.32s
+
+
+node: 30
+node-in-arcs: [(30, 9), (30, 35)]
+decreasing-in-flow-arcs: [(30, 35), (30, 9)]
+(30, 35)  True    1,71,727      1,74,779      1.57s       solved        No        119.72s
+
+
+(30, 9)   True    1,71,727      1,71,889      1.19s       solved        No        121.35s
+
+
+node: 28
+node-in-arcs: [(28, 9), (28, 29)]
+decreasing-in-flow-arcs: [(28, 9), (28, 29)]
+(28, 9)   True    1,71,727      1,88,671      3.0s        solved        No        125.06s
+
+
+(28, 29)  True    1,71,727      1,73,083      1.48s       solved        No        127.28s
+
+
+node: 7
+node-in-arcs: [(22, 7), (7, 24)]
+decreasing-in-flow-arcs: [(7, 24), (22, 7)]
+(7, 24)   True    1,71,727      1,76,939      1.88s       solved        No        130.01s
+
+
+(22, 7)   True    1,71,727      1,73,093      0.96s       solved        No        132.21s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d8_fossolo_iron
+Final best objective: 171727.03741532876
+Number of nlp problem solved: 46
+Total number of iteration: 5
+Solver_time: 85.96 seconds
+Heuristic elapsed time: 132.21 seconds
+

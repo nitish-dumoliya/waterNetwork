@@ -1,0 +1,61 @@
+Water Network: d2_shamir 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 3), (2, 4)] 
+
+min_demand: 0.02777
+max_demand: 0.09167
+max_flow: 0.31109
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+tol=1e-9
+bound_push = 0.001
+bound_frac = 0.001
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  419650.6424822786
+Solve_result:  solved
+Solve_time: 1.2233390000000002 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [5, 7] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [5, 7]
+node: 5
+node-in-arcs: [(3, 5), (4, 5)]
+decreasing-in-flow-arcs: [(3, 5), (4, 5)]
+(3, 5)    True    4,19,651      4,33,715      0.39s       solved        No        1.69s
+(4, 5)    True    4,19,651      4,57,470      0.13s       solved        No        1.87s
+node: 7
+node-in-arcs: [(5, 7), (6, 7)]
+decreasing-in-flow-arcs: [(5, 7), (6, 7)]
+(5, 7)    True    4,19,651      4,30,190      0.15s       infeasible    No        2.07s
+(6, 7)    True    4,19,651      4,68,197      0.2s        solved        No        2.31s
+
+**********************************Final best results******************************************
+
+Water Network: d2_shamir
+Final best objective: 419650.6424822786
+Number of nlp problem solved: 5
+Total number of iteration: 1
+Solver_time: 2.10 seconds
+Heuristic elapsed time: 2.31 seconds
+

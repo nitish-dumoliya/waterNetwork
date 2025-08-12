@@ -1,0 +1,86 @@
+Water Network: d3_hanoi 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2), (10, 11), (12, 13), (21, 22), (2, 3), (11, 12), (20, 21)}
+super_source_out_arc: [(1, 2), (2, 3), (3, 4), (3, 19), (3, 20)] 
+
+min_demand: 0.01667
+max_demand: 0.375
+max_flow: 5.538899999999999
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  6153435.954175262
+Solve_result:  solved
+Solve_time: 6.156670999999999 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [26, 30, 15] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 26
+node-in-arcs: [(25, 26), (26, 27)]
+decreasing-in-flow-arcs: [(26, 27), (25, 26)]
+(26, 27)  True    61,53,436     60,56,039     0.76s       solved        Yes       7.64s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [27, 29, 16] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 27
+node-in-arcs: [(27, 16), (26, 27)]
+decreasing-in-flow-arcs: [(26, 27), (27, 16)]
+(26, 27)  True    60,56,039     61,08,487     0.68s       solved        No        9.15s
+
+
+(27, 16)  True    60,56,039     60,60,997     1.1s        solved        No        11.19s
+
+
+node: 29
+node-in-arcs: [(28, 29), (29, 30)]
+decreasing-in-flow-arcs: [(28, 29), (29, 30)]
+(28, 29)  True    60,56,039     62,73,582     1.38s       solved        No        14.26s
+
+
+(29, 30)  True    60,56,039     60,61,582     0.45s       solved        No        15.38s
+
+
+node: 16
+node-in-arcs: [(15, 16), (16, 17)]
+decreasing-in-flow-arcs: [(15, 16), (16, 17)]
+(15, 16)  True    60,56,039     60,63,362     0.8s        solved        No        17.12s
+
+
+(16, 17)  True    60,56,039     60,73,248     1.32s       solved        No        19.25s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d3_hanoi
+Final best objective: 6056039.465794215
+Number of nlp problem solved: 8
+Total number of iteration: 2
+Solver_time: 12.65 seconds
+Heuristic elapsed time: 19.25 seconds
+

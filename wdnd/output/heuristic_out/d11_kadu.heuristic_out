@@ -1,0 +1,135 @@
+Water Network: d11_kadu 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(2, 14), (1, 3), (3, 4)}
+super_source_out_arc: [(1, 3), (3, 4), (4, 5), (4, 9)] 
+
+min_demand: 0.0333
+max_demand: 0.3067
+max_flow: 3.0869000000000004
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  124266420.7588344
+Solve_result:  solved
+Solve_time: 5.387334999999999 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [12, 20, 16, 24, 6, 26, 23] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 12
+node-in-arcs: [(11, 12), (12, 13)]
+decreasing-in-flow-arcs: [(11, 12), (12, 13)]
+(11, 12)  True    12,42,66,421  13,36,48,752  5.85s       solved        No        11.47s
+
+
+(12, 13)  True    12,42,66,421  12,37,58,971  1.82s       solved        Yes       13.85s
+
+
+
+**********************************************************************************************
+Iteration : 2 
+
+self.sorted_nodes: [13, 20, 16, 6, 25, 26, 23] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 13
+node-in-arcs: [(8, 13), (12, 13)]
+decreasing-in-flow-arcs: [(8, 13), (12, 13)]
+(8, 13)   True    12,37,58,971  13,26,06,855  2.75s       solved        No        17.76s
+
+
+(12, 13)  True    12,37,58,971  12,74,46,160  3.15s       solved        No        21.78s
+
+
+node: 20
+node-in-arcs: [(13, 20), (19, 20), (20, 21)]
+decreasing-in-flow-arcs: [(13, 20), (20, 21), (19, 20)]
+(13, 20)  True    12,37,58,971  12,32,21,104  2.94s       solved        Yes       25.49s
+
+
+
+**********************************************************************************************
+Iteration : 3 
+
+self.sorted_nodes: [16, 24, 6, 26, 23] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+node: 16
+node-in-arcs: [(13, 16), (16, 21)]
+decreasing-in-flow-arcs: [(16, 21), (13, 16)]
+(16, 21)  True    12,32,21,104  12,85,43,055  2.83s       solved        No        29.07s
+
+
+(13, 16)  True    12,32,21,104  12,72,83,183  4.36s       solved        No        34.37s
+
+
+node: 24
+node-in-arcs: [(19, 24), (24, 25)]
+decreasing-in-flow-arcs: [(19, 24), (24, 25)]
+(19, 24)  True    12,32,21,104  12,80,80,826  2.64s       solved        No        38.45s
+
+
+(24, 25)  True    12,32,21,104  13,28,58,301  2.46s       solved        No        41.42s
+
+
+node: 6
+node-in-arcs: [(5, 6), (6, 7), (6, 10)]
+decreasing-in-flow-arcs: [(5, 6), (6, 10), (6, 7)]
+(5, 6)    True    12,32,21,104  12,52,90,287  4.88s       solved        No        46.5s
+
+
+(6, 10)   True    12,32,21,104  12,40,95,490  1.97s       solved        No        49.25s
+
+
+(6, 7)    True    12,32,21,104  12,32,67,098  2.17s       solved        No        52.49s
+
+
+node: 26
+node-in-arcs: [(21, 26), (22, 26), (25, 26)]
+decreasing-in-flow-arcs: [(21, 26), (22, 26), (25, 26)]
+(21, 26)  True    12,32,21,104  12,88,66,304  2.4s        solved        No        56.81s
+
+
+(22, 26)  True    12,32,21,104  12,33,58,383  1.87s       solved        No        59.37s
+
+
+(25, 26)  True    12,32,21,104  12,32,54,865  3.58s       solved        No        63.59s
+
+
+node: 23
+node-in-arcs: [(18, 23), (23, 24)]
+decreasing-in-flow-arcs: [(18, 23), (23, 24)]
+(18, 23)  True    12,32,21,104  12,72,06,900  2.06s       solved        No        66.45s
+
+
+(23, 24)  True    12,32,21,104  12,32,37,354  2.35s       solved        No        69.56s
+
+
+
+**********************************Final best results******************************************
+
+Water Network: d11_kadu
+Final best objective: 123221103.72849992
+Number of nlp problem solved: 18
+Total number of iteration: 3
+Solver_time: 55.45 seconds
+Heuristic elapsed time: 69.56 seconds
+

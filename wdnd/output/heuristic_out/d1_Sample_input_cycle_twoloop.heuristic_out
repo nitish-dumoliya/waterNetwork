@@ -1,0 +1,56 @@
+Water Network: d1_bessa 
+
+Solve the original nonconvex optimization problem using IPOPT 
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 3), (2, 6)] 
+
+min_demand: 0
+max_demand: 0.2086
+max_flow: 0.42042999999999997
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = yes
+bound_relax_factor=0
+tol=1e-9
+bound_push = 0.001
+bound_frac = 0.001
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  123882.61435713484
+Solve_result:  solved
+Solve_time: 0.29072400000000004 
+
+
+**********************************************************************************************
+Iteration : 1 
+
+self.sorted_nodes: [5] 
+
+Arc       Acyclic C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+indegree_2_or_more [5]
+node: 5
+node-in-arcs: [(4, 5), (7, 5)]
+decreasing-in-flow-arcs: [(4, 5), (7, 5)]
+(4, 5)    True    1,23,883      1,39,229      0.65s       solved        No        1.05s
+(7, 5)    True    1,23,883      1,23,884      0.05s       solved        No        1.15s
+
+**********************************Final best results******************************************
+
+Water Network: d1_bessa
+Final best objective: 123882.61435713484
+Number of nlp problem solved: 3
+Total number of iteration: 1
+Solver_time: 0.99 seconds
+Heuristic elapsed time: 1.15 seconds
+
