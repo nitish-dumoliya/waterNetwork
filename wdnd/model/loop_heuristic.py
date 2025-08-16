@@ -1709,11 +1709,11 @@ class WaterNetworkOptimizer:
         #self.reduced_dia(self.l, self.q, self.h)
         print("\n---------------------------Reverse Arc Direction Approach------------------------------------")
         self.iteration = 1
-        #self.iterate_acyclic_flows() 
+        self.iterate_acyclic_flows() 
         print("\n----------------------------Diameter Reduction Approach--------------------------------------")
         self.dia_red_iteration = 1
         #self.diameter_reduction()
-        self.diameter_reduction_using_convex_model()
+        #self.diameter_reduction_using_convex_model()
         
         print("\n**********************************Final best results*****************************************\n")
         print("Water Network:", self.data_list[self.data_number])
@@ -1721,12 +1721,10 @@ class WaterNetworkOptimizer:
         #self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         
         self.eps = self.ampl.getParameter('eps').getValues().to_dict()
-        #self.constraint_relative_gap(self.q, self.h, self.l, self.eps)
-        #self.constraint_violations(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
-        #self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
+        self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         print(f"Final best objective: {self.current_cost}")
-        #for (i,j) in self.arcs:
-        #    print(f"q[{i},{j}]:",self.q[i,j])
+        # for (i,j) in self.arcs:
+            # print(f"q[{i},{j}]:",self.q[i,j])
         #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
         print("Total number of iteration:", self.iteration + self.dia_red_iteration-1)

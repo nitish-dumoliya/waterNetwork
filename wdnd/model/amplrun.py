@@ -4,6 +4,7 @@ from tabulate import tabulate
 from amplpy import AMPL
 import contextlib
 import os
+import numpy as np
 
 class WaterNetworkSolver:
     def __init__(self, model_file, solver_name, data_file):
@@ -100,7 +101,7 @@ class WaterNetworkSolver:
             con2_absolute_constraint_violation += abs(absolute_violation)
 
             # Compute relative violation between original_rhs and approx_rhs
-            relative_violation = (original_rhs - approx_rhs) / (original_rhs + 1e-14)
+            relative_violation = (original_rhs - approx_rhs) / (original_rhs)
             relative_violations[f"{i},{j}"] = relative_violation
             con2_relative_constraint_violation += abs(relative_violation)
            
@@ -396,13 +397,13 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
         
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
         
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 method = 2 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9 NumericFocus = 1" 
+        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1 barconvtol = 1e-9 feastol = 1e-6 chk:epsrel = 0 mipgap = 1e-9 NumericFocus = 1" 
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
@@ -477,12 +478,14 @@ class WaterNetworkSolver:
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         #eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
-        self.ampl.eval("display q;")
-        self.ampl.eval("display h;")
+        # self.ampl.eval("display q;")
+        # self.ampl.eval("display h;")
         #self.ampl.eval("display q2;")
         #self.ampl.eval("display eps;")
-
-        #self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+        for (i,j) in self.arcs:
+            if np.abs(self.q[i,j]) <=1e-3:
+                print(f"q[{i},{j}]:",self.q[i,j])
+        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.total_cost = self.ampl.getObjective("total_cost").value()
@@ -630,7 +633,7 @@ class WaterNetworkSolver:
         # Second solve: self.solver_name
         self.second_solve()
         #self.reduced_diameter()
-        self.solve_content_model()
+        #self.solve_content_model()
 if __name__ == "__main__":
     model = sys.argv[1]
 
