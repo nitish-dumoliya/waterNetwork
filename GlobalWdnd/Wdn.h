@@ -66,7 +66,31 @@ namespace Minotaur {
       double cost;
       double roughness;
     };
+    // ===== Iterator typedefs / aliases =====
+    using NodeIter = std::map<int, Node>::iterator;
+    using NodeConstIter = std::map<int, Node>::const_iterator;
 
+    using ArcIter = std::map<std::pair<int, int>, Arc>::iterator;
+    using ArcConstIter = std::map<std::pair<int, int>, Arc>::const_iterator;
+
+    using PipeIter = std::map<int, Pipe>::iterator;
+    using PipeConstIter = std::map<int, Pipe>::const_iterator;
+
+    using SourceIter = std::unordered_set<int>::iterator;
+    using SourceConstIter = std::unordered_set<int>::const_iterator;
+
+    using HVarIter = std::map<int, VariablePtr>::iterator;
+    using HVarConstIter = std::map<int, VariablePtr>::const_iterator;
+
+    using QVarIter = std::map<std::pair<int, int>, VariablePtr>::iterator;
+    using QVarConstIter =
+        std::map<std::pair<int, int>, VariablePtr>::const_iterator;
+
+    using LVarIter =
+        std::map<std::tuple<int, int, int>, VariablePtr>::iterator;
+    using LVarConstIter =
+        std::map<std::tuple<int, int, int>, VariablePtr>::const_iterator;
+    // ========================================
   private:
     const static std::string me_;
     EnvPtr env_;
