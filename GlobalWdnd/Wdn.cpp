@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "EngineFactory.h"
 #include "Environment.h"
+#include "FilterSQPEngine.h"
 #include "MinotaurConfig.h"
 #include "Function.h"
 #include "Problem.h"
@@ -14,6 +15,7 @@
 #include "Objective.h"
 #include "LinearFunction.h"
 #include "QuadraticFunction.h"
+#include "NonlinearFunction.h"
 #include "Objective.h"
 #include "Option.h"
 #include "LPEngine.h"
@@ -21,33 +23,33 @@
 #include "NLPEngine.h"
 #include "IpoptEngine.h"
 #include "OsiLPEngine.h"
+#include "CGraph.h"
+#include "CNode.h"
+#include "OpCode.h"
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cmath>
-#include <algorithm>
+#include <string>
 
 using namespace Minotaur;
-const std::string Wdn::me_ = "Wdnd-Global: ";
-
 using namespace std;
+
+const std::string Wdn::me_ = "Wdnd-Global: ";
 
 Wdn::Wdn(EnvPtr env)
   : env_(env)
 {
   p_ = (ProblemPtr) new Problem(env_);
-  // e_ = getNLPEngine_();  // IPOPT
-  // e_ = ((IpoptEnginePtr) new IpoptEngine(env_));  // IPOPT
-  // ((OsiLPEnginePtr) new OsiLPEngine(env_))
-  e_ = ((OsiLPEnginePtr) new OsiLPEngine(env_));
+  // e_ = ((OsiLPEnginePtr) new OsiLPEngine(env_));
+  e_ = ((IpoptEnginePtr) new IpoptEngine(env_));
+  // e_ = ((FilterSQPEnginePtr) new FilterSQPEngine(env_));
+  // e_ = getNLPEngine_();
 }
 
 Wdn::~Wdn()
 {
-  // if (sol_) {
-  //   delete sol_;
-  // }
 }
 
 void Wdn::doSetup()
@@ -57,17 +59,16 @@ void Wdn::doSetup()
 
 NLPEnginePtr Wdn::getNLPEngine_()
 {
-  EngineFactory *efac = new EngineFactory(env_);
-  NLPEnginePtr e = NLPEnginePtr();  // NULL
-  e = efac->getNLPEngine();
+  EngineFactory efac(env_);
+  NLPEnginePtr e = efac.getNLPEngine();
   if (!e) {
     env_->getLogger()->errStream()
         << me_ << "Cannot find an NLP engine. Cannot proceed!" << std::endl;
   }
-
-  delete efac;
+  std::cout << me_ << "Solver selected:" << &e << std::endl;
   return e;
 }
+
 void Wdn::loadData(const string &fileName)
 {
   ifstream in(fileName);
@@ -84,7 +85,7 @@ void Wdn::loadData(const string &fileName)
         Node n;
         iss >> n.id >> n.elev >> n.demand >> n.pressureMin >> n.pressureMax;
         if (iss)
-          nodes_.push_back(n);
+          nodes_[n.id] = n;  // insert into map
       }
     } else if (line.find("param: arcs:") != string::npos) {
       while (getline(in, line) && !line.empty() && line[0] != '#') {
@@ -92,7 +93,7 @@ void Wdn::loadData(const string &fileName)
         Arc a;
         iss >> a.startNode >> a.endNode >> a.length >> a.vmax;
         if (iss)
-          arcs_.push_back(a);
+          arcs_[{a.startNode, a.endNode}] = a;  // insert into map
       }
     } else if (line.find("param: pipes:") != string::npos) {
       while (getline(in, line) && !line.empty() && line[0] != '#') {
@@ -100,18 +101,16 @@ void Wdn::loadData(const string &fileName)
         Pipe p;
         iss >> p.id >> p.diameter >> p.cost >> p.roughness;
         if (iss)
-          pipes_.push_back(p);
+          pipes_[p.id] = p;  // insert into map
       }
     } else if (line.find("set Source:=") != string::npos) {
       // Example: set Source := 1 4 7 ;
       istringstream iss(line);
       string tmp;
-      iss >> tmp;  // "set"
-      iss >> tmp;  // "Source:="
+      iss >> tmp >> tmp;  // skip "set Source:="
       int s;
-      while (iss >> s) {
-        sources_.push_back(s);
-      }
+      while (iss >> s)
+        sources_.insert(s);  // insert into unordered_set
     }
   }
 }
@@ -119,27 +118,40 @@ void Wdn::loadData(const string &fileName)
 void Wdn::printData() const
 {
   std::cout << "Nodes:\n";
-  for (const auto &n : nodes_) {
+  for (const auto &[id, n] : nodes_) {
     std::cout << "  id=" << n.id << " elev=" << n.elev
               << " demand=" << n.demand << " pmin=" << n.pressureMin
               << " pmax=" << n.pressureMax << "\n";
   }
 
   std::cout << "\nArcs:\n";
-  for (const auto &a : arcs_) {
+  for (const auto &[key, a] : arcs_) {
     std::cout << "  " << a.startNode << " -> " << a.endNode
               << " length=" << a.length << " vmax=" << a.vmax << "\n";
+    // << " pipeId=" << a.pipeId << "\n";
   }
 
   std::cout << "\nPipes:\n";
-  for (const auto &p : pipes_) {
+  for (const auto &[id, p] : pipes_) {
     std::cout << "  id=" << p.id << " d=" << p.diameter << " C=" << p.cost
               << " R=" << p.roughness << "\n";
   }
+
   std::cout << "\nSource nodes:";
-  for (int s : sources_)
+  for (const auto &s : sources_)
     std::cout << " " << s;
   std::cout << "\n";
+}
+
+double Wdn::calculateQmax()
+{
+  double Qmax = 0.0;
+  for (const auto &[id, n] : nodes_) {
+    if (sources_.find(id) == sources_.end())
+      Qmax += n.demand;
+  }
+  cout << me_ << "Calculated Qmax = " << Qmax << endl;
+  return Qmax;
 }
 
 void Wdn::buildModel()
@@ -147,43 +159,56 @@ void Wdn::buildModel()
   OptionDBPtr options = env_->getOptions();
   double Qmax = calculateQmax();
 
-  // === Decision variables ===
-  for (auto &n : nodes_) {
-    Node node = n;
-    VariablePtr h = p_->newVariable(node.elev + node.pressureMin,
-                                    node.elev + node.pressureMax, Continuous,
-                                    "h" + std::to_string(node.id));
-    hvar_[node.id] = h;
+  // Decision variables h[i]
+  for (std::map<int, Node>::iterator it = nodes_.begin(); it != nodes_.end();
+       ++it) {
+   int id = it->first;
+    Node &n = it->second;
+    std::string vname = "h_" + std::to_string(id);
+    VariablePtr h = p_->newVariable(
+        n.elev + n.pressureMin, n.elev + n.pressureMax, Continuous, vname);
+    hvar_[id] = h;
   }
   std::cout << me_ << "Decision variable h[i] created for " << nodes_.size()
             << " nodes.\n";
 
-  for (auto &a : arcs_) {
+  // Decision variables q[i,j]
+  for (std::map<std::pair<int, int>, Arc>::iterator it = arcs_.begin();
+       it != arcs_.end(); ++it) {
+    std::pair<int, int> key = it->first;
+    Arc &a = it->second;
     VariablePtr q = p_->newVariable(
         -Qmax, Qmax, Continuous,
         "q_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode));
-    qvar_[{a.startNode, a.endNode}] = q;
+    qvar_[key] = q;
   }
   std::cout << me_ << "Decision variable q[i,j] created for " << arcs_.size()
             << " arcs.\n";
 
-  for (auto &a : arcs_) {
-    for (auto &p : pipes_) {
+  // Decision variables l[i,j,k]
+  for (std::map<std::pair<int, int>, Arc>::iterator it = arcs_.begin();
+       it != arcs_.end(); ++it) {
+    Arc &a = it->second;
+
+    for (std::map<int, Pipe>::iterator pit = pipes_.begin();
+         pit != pipes_.end(); ++pit) {
+      int pid = pit->first;
+      // Pipe &p = pit->second;
       std::string vname = "l_" + std::to_string(a.startNode) + "_" +
                           std::to_string(a.endNode) + "_" +
-                          std::to_string(p.id);
-      // Binary: either pipe k is selected on arc (i,j) or not
+                          std::to_string(pid);
       VariablePtr l = p_->newVariable(0.0, a.length, Continuous, vname);
-      lvar_[{a.startNode, a.endNode, p.id}] = l;
+      lvar_[{a.startNode, a.endNode, pid}] = l;
     }
   }
   std::cout << me_ << "Decision variable l[i,j,k] created for "
             << arcs_.size() << " arcs × " << pipes_.size() << " pipes.\n";
-  // === Objective Function ===
+  // Objective Function
   addObjective();
-  // === Constraints ===
+  // Constraints
   addConstraints();
-  if (options->findBool("display_problem")->getValue() == true) {
+
+  if (options->findBool("display_problem")->getValue()) {
     p_->write(env_->getLogger()->msgStream(LogNone), 9);
   }
 }
@@ -201,49 +226,22 @@ void Wdn::addObjective()
    *   - C[k] is the cost per unit length of pipe diameter k
    *   - length(i,j) is the length of arc (i,j)
    *
-   * This ensures that the chosen pipe design minimizes the total installation
-   * cost.
+   * This ensures that the chosen pipe design minimizes the total
+   * installation cost.
    */
   ObjectivePtr obj_;
-  VariablePtr l = 0;
-  FunctionPtr f = 0;
   LinearFunctionPtr lf = new LinearFunction();
-  LinearFunctionPtr lf2 = new LinearFunction();
 
-  for (auto &a : arcs_) {
-    for (auto &p : pipes_) {
-      // Get variable l[i,j,k]
-      l = lvar_[{a.startNode, a.endNode, p.id}];
-      // Add term: cost[k] * length(i,j) * l[i,j,k]
+  for (const auto &[key, a] : arcs_) {
+    for (const auto &[pid, p] : pipes_) {
+      VariablePtr l = lvar_[{a.startNode, a.endNode, pid}];
       lf->addTerm(l, p.cost * a.length);
-      lf2->add(lf);
     }
   }
 
-  f = (FunctionPtr) new Function(lf2);
+  FunctionPtr f = (FunctionPtr) new Function(lf);
   obj_ = p_->newObjective(f, 0.0, Minimize);
-  std::cout << me_ << "Objective function successfully added to the problem."
-            << std::endl;
-  // obj_->write(std::cout);
-}
-
-double Wdn::calculateQmax()
-{
-  double Qmax_ = 0.0;
-
-  for (auto &n : nodes_) {
-    Node node_ = n;
-
-    // Skip source nodes
-    if (std::find(sources_.begin(), sources_.end(), node_.id) ==
-        sources_.end()) {
-      Qmax_ += node_.demand;  // add demand if not a source node
-    }
-  }
-
-  std::cout << me_ << "Calculated Qmax = " << Qmax_ << std::endl;
-
-  return Qmax_;
+  cout << me_ << "Objective function successfully added to the problem.\n";
 }
 
 void Wdn::addConstraints()
@@ -252,7 +250,8 @@ void Wdn::addConstraints()
    * Constraints:
    *
    * 1. Flow balance at nodes:
-   *      ∑_{j: (i,j) ∈ arcs} q[i,j] - ∑_{j: (j,i) ∈ arcs} q[j,i] = demand[i]
+   *      ∑_{j: (i,j) ∈ arcs} q[i,j] - ∑_{j: (j,i) ∈ arcs} q[j,i] =
+   * demand[i]
    *
    *    Ensures conservation of flow: inflow - outflow = demand.
    *
@@ -263,74 +262,163 @@ void Wdn::addConstraints()
    *    Here we approximate nonlinearities with NLP terms.
    */
 
-  FunctionPtr f = 0;
-  LinearFunctionPtr lf = new LinearFunction();
-  // double Qmax = calculateQmax();
-  // === 1. Flow balance at each node ===
-  for (auto &n : nodes_) {
-    Node node = n;
-    if (std::find(sources_.begin(), sources_.end(), node.id) ==
-        sources_.end()) {
-      lf = new LinearFunction();
-      for (auto &a : arcs_) {
-        if (a.startNode == node.id) {
-          lf->addTerm(qvar_[{a.startNode, a.endNode}], -1.0);  // outflow
-        }
-        if (a.endNode == node.id) {
-          lf->addTerm(qvar_[{a.startNode, a.endNode}], 1.0);  // inflow
-        }
-      }
-      f = (FunctionPtr) new Function(lf);
-      p_->newConstraint(f, node.demand, node.demand,
-                        "flow_balance_" + std::to_string(node.id));
+  // 1. Flow balance
+  for (const auto &[id, n] : nodes_) {
+    if (sources_.find(id) != sources_.end())
+      continue;
+    LinearFunctionPtr lf = new LinearFunction();
+    for (const auto &[key, a] : arcs_) {
+      if (a.startNode == id)
+        lf->addTerm(qvar_[key], -1.0);
+      if (a.endNode == id)
+        lf->addTerm(qvar_[key], 1.0);
     }
+    FunctionPtr f = (FunctionPtr) new Function(lf);
+    p_->newConstraint(f, n.demand, n.demand, "flow_balance_" + to_string(id));
   }
-  // === 2. Head-loss constraints ===
-  // for (auto &a : arcs_) {
-  //     Node ni = nodes_[a.i];
-  //     Node nj = nodes_[a.j];
+
+  // 2. Pipe lengths = arc length
+  for (const auto &[key, a] : arcs_) {
+    LinearFunctionPtr lf = new LinearFunction();
+    for (const auto &[pid, p] : pipes_) {
+      lf->addTerm(lvar_[{a.startNode, a.endNode, pid}], 1.0);
+    }
+    FunctionPtr f = (FunctionPtr) new Function(lf);
+    p_->newConstraint(
+        f, a.length, a.length,
+        "con3_" + to_string(a.startNode) + "_" + to_string(a.endNode));
+  }
+
+  // 3. Fix head at source nodes
+  for (const auto &s : sources_) {
+    const Node &srcNode = nodes_.at(s);
+    LinearFunctionPtr lf = new LinearFunction();
+    lf->addTerm(hvar_[s], 1.0);
+    FunctionPtr f = (FunctionPtr) new Function(lf);
+    p_->newConstraint(f, srcNode.elev + srcNode.pressureMin,
+                      srcNode.elev + srcNode.pressureMin,
+                      "con4_headFix_" + to_string(s));
+  }
+
+  // 4. Head-loss constraints(Hazen-Williams formula)
+  // for (std::map<std::pair<int, int>, Arc>::iterator ait = arcs_.begin();
+  //      ait != arcs_.end(); ++ait) {
+  //   Arc &a = ait->second;
   //
-  //     // All candidate pipes for this arc (if multiple diameters are
-  //     possible) for (auto &p : pipes_) {
-  //         std::array<int,3> key = {a.i, a.j, p.id};
-  //         if (lvar_.find(key) == lvar_.end()) continue; // skip if pipe var
-  //         not defined
+  //   VariablePtr hi = hvar_[a.startNode];
+  //   VariablePtr hj = hvar_[a.endNode];
+  //   VariablePtr qij = qvar_[{a.startNode, a.endNode}];
+  //   LinearFunctionPtr lf = new LinearFunction();
   //
-  //         VariablePtr q  = qvar_[{a.i, a.j}];
-  //         VariablePtr hi = hvar_[ni.id];
-  //         VariablePtr hj = hvar_[nj.id];
+  //   // Create nonlinear function: h_i - h_j - K * q * |q|^0.852 = 0
+  //   NonlinearFunctionPtr nlf = new NonlinearFunction;
   //
-  //         double C = p.roughness;
-  //         double d = p.diameter;
+  //   // Add linear terms: h_i - h_j
+  //   lf->addTerm(hi, 1.0);
+  //   lf->addTerm(hj, -1.0);
+  //   FunctionPtr f = (FunctionPtr) new Function(lf);
+  //   nlf->addTerm(hi, 1.0);
   //
-  //         // Hazen-Williams coefficient
-  //         double K = 10.67 * a.length / (std::pow(C, 1.852) *
-  //         std::pow(d, 4.87));
+  //   for (std::map<int, Pipe>::iterator pit = pipes_.begin();
+  //        pit != pipes_.end(); ++pit) {
+  //     Pipe &p = pit->second;
   //
-  //         // Head loss expression: hi - hj = K * q|q|^0.852
-  //         // Minotaur allows nonlinear constraints using Function objects
-  //         NonlinearFunctionPtr nlf = new NonlinearFunction();
+  //     // Get length variable
+  //     VariablePtr lijk = lvar_[{a.startNode, a.endNode, p.id}];
   //
-  //         // left side: hi - hj
-  //         nlf->addTerm(hi, 1.0);
-  //         nlf->addTerm(hj, -1.0);
+  //     // Compute Hazen-Williams coefficient
+  //     double K = 10.67 * a.length /
+  //                (std::pow(p.roughness, 1.852) *
+  //                std::pow(p.diameter, 4.87));
   //
-  //         // right side: -K * |q|^1.852
-  //         // NOTE: this requires adding a nonlinear expression, not just
-  //         QuadraticFunction
-  //         // For demonstration, approximate q*|q|^0.852
-  //         nlf->addTerm(q, -K);  // simplified linearization
-  //         // TODO: replace with exact nonlinear operator if solver supports
-  //         pow(q, 1.852)
   //
-  //         p_->newConstraint(nlf, 0.0, 0.0,
-  //                           "headloss_" + std::to_string(a.i) + "_" +
-  //                           std::to_string(a.j));
-  //     }
+  //     // Add nonlinear term: -K * q * |q|^0.852
+  //     // Minotaur approximates |q|^0.852 as pow(q^2,0.426)
+  //     nlf->addTerm(qij, -K);  // linear placeholder
+  //     nlf->setNonlinearOperator(
+  //         qij, pow(qij->getSolutionValue() * qij->getSolutionValue(),
+  //                  0.426));  // approximate
+  //
+  //     // Add constraint
+  //     p_->newConstraint(nlf, 0.0, 0.0,
+  //                       "headloss_" + std::to_string(a.startNode) + "_" +
+  //                           std::to_string(a.endNode) + "_" +
+  //                           std::to_string(p.id));
+  //   }
   // }
 
-  std::cout << me_ << "All constraints successfully added to the problem."
-            << std::endl;
+  // === Head-loss constraints (Hazen-Williams) ===
+  
+  // for (std::map<std::pair<int, int>, Arc>::iterator ait = arcs_.begin();
+  //      ait != arcs_.end(); ++ait) {
+  //
+  //   int i = ait->second.startNode;
+  //   int j = ait->second.endNode;
+  //
+  //   CGraph *nlf = new CGraph();
+  //   CNode *c_h_i, *c_h_j, *c_q, *c_absq, *c_exp, *c_pipeSum, *c_tmp;
+  //
+  //   // Node heads
+  //   c_h_i = nlf->newNode(hvar_[i]);
+  //   c_h_j = nlf->newNode(hvar_[j]);
+  //
+  //   // Flow q[i,j]
+  //   c_q = nlf->newNode(qvar_[{i, j}]);
+  //
+  //   // Absolute value: |q|
+  //   // c_absq = nlf->newNode(OpAbs, c_q);
+  //   CNode *cq_sq = nlf->newNode(OpMult, c_q, c_q);  // q^2
+  //   CNode *cq_abs =
+  //       nlf->newNode(OpPowK, cq_sq, nlf->newNode(0.5));  // sqrt(q^2)
+  //
+  //   // |q|^0.852
+  //   c_exp = nlf->newNode(0.852);
+  //   c_absq = nlf->newNode(OpPowK, cq_abs, c_exp);
+  //
+  //   // q * |q|^0.852
+  //   c_q = nlf->newNode(OpMult, c_q, c_absq);
+  //
+  //   // Build sum over pipes
+  //   c_pipeSum = nlf->newNode(0.0);  // initialize
+  //
+  //   // for (std::vector<Pipe>::iterator pit = pipes_.begin();
+  //   // pit != pipes_.end(); ++pit)
+  //   for (std::map<int, Pipe>::iterator pit = pipes_.begin();
+  //        pit != pipes_.end(); ++pit) {
+  //
+  //     int k = pit->first;
+  //     const Pipe &pipe = pit->second;
+  //     // l[i,j,k] (decision variable)
+  //     CNode *c_l = nlf->newNode(lvar_[{i, j, k}]);
+  //
+  //     // coefficient = 10.67 / (R^1.852 * D^4.87)
+  //     double coeff = 10.67 / (std::pow(pipe.roughness, 1.852) *
+  //                             std::pow(pipe.diameter, 4.87));
+  //
+  //     CNode *c_coeff = nlf->newNode(coeff);
+  //
+  //     // term = l[i,j,k] * coeff
+  //     c_tmp = nlf->newNode(OpMult, c_l, c_coeff);
+  //
+  //     // add to sum
+  //     c_pipeSum = nlf->newNode(OpPlus, c_pipeSum, c_tmp);
+  //   }
+  //
+  //   // Multiply flow term by pipe sum
+  //   CNode *c_loss = nlf->newNode(OpMult, c_q, c_pipeSum);
+  //
+  //   // Constraint: (h_i - h_j) - loss = 0
+  //   CNode *c_diff = nlf->newNode(OpMinus, c_h_i, c_h_j);
+  //   CNode *c_final = nlf->newNode(OpMinus, c_diff, c_loss);
+  //
+  //   nlf->setOut(c_final);
+  //   nlf->finalize();
+  //
+  //   FunctionPtr f = (FunctionPtr) new Function(nlf);
+  //   p_->newConstraint(f, 0.0, 0.0,
+  //                     "HL_" + std::to_string(i) + "_" + std::to_string(j));
+  // }
+  cout << me_ << "All constraints successfully added to the problem.\n";
 }
 
 void Wdn::solve()
@@ -338,31 +426,23 @@ void Wdn::solve()
   e_->load(p_);
   e_->solve();
 
-  std::cout << "Status: " << e_->getStatusString() << std::endl;
-  std::cout << "Objective value = " << e_->getSolutionValue() << std::endl;
+  cout << "Status: " << e_->getStatusString() << endl;
+  cout << "Objective value = " << e_->getSolutionValue() << endl;
 
-  for (auto &n : hvar_) {
-    std::cout << "Head at node " << n.first << " = "
-              << e_->getSolution()->getPrimal()[n.second->getIndex()]
-              << std::endl;
-  }
-
-  for (auto &a : qvar_) {
-    std::cout << "Flow on arc (" << a.first.first << "," << a.first.second
-              << ") = "
-              << e_->getSolution()->getPrimal()[a.second->getIndex()]
-              << std::endl;
-  }
-
-  for (auto &lvar : lvar_) {
-    int i = std::get<0>(lvar.first);
-    int j = std::get<1>(lvar.first);
-    int k = std::get<2>(lvar.first);
-
-    std::cout << "l(" << i << "," << j << "," << k << ") = "
-              << e_->getSolution()->getPrimal()[lvar.second->getIndex()]
-              << std::endl;
-  }
+  // for (const auto &[id, var] : hvar_)
+  //   cout << "Head at node " << id << " = "
+  //        << e_->getSolution()->getPrimal()[var->getIndex()] << endl;
+  //
+  // for (const auto &[key, var] : qvar_)
+  //   cout << "Flow on arc (" << key.first << "," << key.second
+  //        << ") = " << e_->getSolution()->getPrimal()[var->getIndex()] <<
+  //        endl;
+  //
+  // for (const auto &[key, var] : lvar_) {
+  //   cout << "l(" << get<0>(key) << "," << get<1>(key) << "," << get<2>(key)
+  //        << ") = " << e_->getSolution()->getPrimal()[var->getIndex()] <<
+  //        endl;
+  // }
 }
 
 void Wdn::setInitialOptions_()
@@ -373,27 +453,19 @@ void Wdn::setInitialOptions_()
   options->findBool("nl_presolve")->setValue(true);
   options->findBool("lin_presolve")->setValue(true);
   options->findBool("msheur")->setValue(true);
-  // options->findString("brancher")->setValue("hybrid");
   options->findString("nlp_engine")->setValue("ipopt");
-  // options->findBool("cgtoqf")->setValue(true);
-  // options->findBool("simplex_cut")->setValue(true);
 }
-
 
 void Wdn::showHelp() const
 {
-  std::cout
-      << "Global optimization for water distribution network design problems"
-      << std::endl
-      << "Usage:" << std::endl
-      << "To show version: wdnd -v (or --display_version yes)" << std::endl
-      << "To show all options: wdnd -= (or --display_options yes)"
-      << std::endl
-      << "To solve an instance: wdnd --option1 [value] "
-      << "--option2 [value] ... "
-      << " .dat-file" << std::endl;
+  cout << "Global optimization for water distribution network design "
+          "problems\n"
+       << "Usage:\n"
+       << "To show version: wdnd -v (or --display_version yes)\n"
+       << "To show all options: wdnd -= (or --display_options yes)\n"
+       << "To solve an instance: wdnd --option1 [value] --option2 [value] "
+          "... .dat-file\n";
 }
-
 
 int Wdn::showInfo()
 {
@@ -401,36 +473,31 @@ int Wdn::showInfo()
 
   if (options->findBool("display_options")->getValue() ||
       options->findFlag("=")->getValue()) {
-    options->write(std::cout);
+    options->write(cout);
     return 1;
   }
-
   if (options->findBool("display_help")->getValue() ||
       options->findFlag("?")->getValue()) {
     showHelp();
     return 1;
   }
-
   if (options->findBool("display_version")->getValue() ||
       options->findFlag("v")->getValue()) {
     env_->getLogger()->msgStream(LogNone)
-        << me_ << "Minotaur version " << env_->getVersion() << std::endl
+        << me_ << "Minotaur version " << env_->getVersion() << endl
         << me_
         << "Global optimization for water distribution network design "
-           "problems"
-        << std::endl;
+           "problems\n";
     return 1;
   }
-
   if (options->findString("problem_file")->getValue() == "") {
     showHelp();
     return 1;
   }
-
   env_->getLogger()->msgStream(LogInfo)
-      << me_ << "Minotaur version " << env_->getVersion() << std::endl
+      << me_ << "Minotaur version " << env_->getVersion() << endl
       << me_
-      << "Global optimization for water distribution network design problems"
-      << std::endl;
+      << "Global optimization for water distribution network design "
+         "problems\n";
   return 0;
 }

@@ -7,22 +7,39 @@
 #include "Types.h"
 #include <string>
 #include <map>
-#include <vector>
+#include <unordered_set>
+#include <tuple>
 
 namespace Minotaur {
+
   class Wdn {
   public:
     Wdn(EnvPtr env);
     ~Wdn();
 
-    /// Starting setup for glob
+    /// Starting setup for wdnd
     void doSetup();
 
-    /// show help messages
+    /// Show help messages
     void showHelp() const;
 
     /// Display information
     int showInfo();
+
+    /// Load network data from file
+    void loadData(const std::string &fileName);
+
+    /// Print network data
+    void printData() const;
+
+    /// Build optimization model
+    void buildModel();
+
+    /// Solve optimization problem
+    void solve();
+
+    /// Calculate maximum total demand (excluding sources)
+    double calculateQmax();
 
     struct Node
     {
@@ -50,37 +67,32 @@ namespace Minotaur {
       double roughness;
     };
 
-    double Qmax_;  // maximum total demand (excluding source)
-
-    void loadData(const std::string &fileName);
-    void printData() const;
-    void buildModel();
-    void solve();
-
   private:
     const static std::string me_;
     EnvPtr env_;
     ProblemPtr p_;
     EnginePtr e_;
     NLPEnginePtr getNLPEngine_();
+    double Qmax_;  // maximum total demand (excluding source)
 
-    std::vector<Node> nodes_;
-    std::vector<Arc> arcs_;
-    std::vector<Pipe> pipes_;
-    std::vector<int> sources_;  // <-- multiple sources
-    
+    // Network data structures
+    std::map<int, Node> nodes_;                // node ID -> Node
+    std::map<std::pair<int, int>, Arc> arcs_;  // (start,end) -> Arc
+    std::map<int, Pipe> pipes_;                // pipe ID -> Pipe
+    std::unordered_set<int> sources_;          // node IDs that are sources
+
     // Decision variables
-    std::map<int, VariablePtr> hvar_;  // h[i]: head at node i
-    std::map<std::pair<int, int>, VariablePtr>
-        qvar_;  // q[i,j]: flow on arc (i,j)
+    std::map<int, VariablePtr> hvar_;                  // head at node i
+    std::map<std::pair<int, int>, VariablePtr> qvar_;  // flow on arc (i,j)
     std::map<std::tuple<int, int, int>, VariablePtr>
-        lvar_;  // l[i,j,k]: length of pipe diameter k in arc (i,j)
+        lvar_;  // pipe selection l[i,j,k]
 
+    // Internal methods for building the model
     void addObjective();
     void addConstraints();
     void setInitialOptions_();
-    // Calculate Q_max = sum of demands of all non-source nodes
-    double calculateQmax();
   };
-}  //namespace Minotaur
+
+}  // namespace Minotaur
+
 #endif
