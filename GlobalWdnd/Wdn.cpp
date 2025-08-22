@@ -1,3 +1,15 @@
+//
+//    Minotaur -- It's only 1/2 bull
+//
+//    (C)opyright 2009 - 2025 The Minotaur Team.
+//
+
+/**
+ * \file Wdn.cpp
+ * \brief The Wdn class for solving Water Distribution Network Design Problem instances using ampl (.dat) format.
+ * \author Ashutosh Mahajan, IIT Bombay
+ */
+
 #include "Wdn.h"
 
 #include "AMPLInterface.h"
@@ -26,24 +38,53 @@
 #include "CGraph.h"
 #include "CNode.h"
 #include "OpCode.h"
+#include "Constraint.h"
+#include "Solution.h"
+#include "Solver.h"
+#include "TreeManager.h"
+#include "SOS1Handler.h"
+#include "SOS2Handler.h"
 
+#include "LinFeasPump.h"
+#include "LinearHandler.h"
+#include "Logger.h"
+
+#include "Presolver.h"
+#include "LinearHandler.h"
+#include "NlPresHandler.h"
+
+#include "AMPLHessian.h"
+#include "AMPLInterface.h"
+#include "AMPLJacobian.h"
+
+
+#include <iomanip>
 #include <fstream>
+#include <limits>
 #include <ostream>
 #include <sstream>
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <time.h>
+#include <sys/time.h>
+
 
 using namespace Minotaur;
 
-const std::string Wdn::me_ = "Wdnd-Global: ";
+const std::string Wdn::me_ = "Wdn: ";
 
 Wdn::Wdn(EnvPtr env)
-  : env_(env)
+  : objSense_(1.0),
+    status_(NotStarted),
+    sol_(NULL)
 {
-  p_ = (ProblemPtr) new Problem(env_);
-  e_ = ((OsiLPEnginePtr) new OsiLPEngine(env_));
-  // e_ = ((IpoptEnginePtr) new IpoptEngine(env_));
+  env_ = env;
+  iface_ = 0;
+  // p_ = p;
+  // p_ = (ProblemPtr) new Problem(env_);
+  // e_ = ((OsiLPEnginePtr) new OsiLPEngine(env_));
+  e_ = ((IpoptEnginePtr) new IpoptEngine(env_));
   // e_ = ((FilterSQPEnginePtr) new FilterSQPEngine(env_));
   // e_ = getNLPEngine_();
 }
@@ -55,6 +96,45 @@ Wdn::~Wdn()
 void Wdn::doSetup()
 {
   setInitialOptions_();
+}
+
+int Wdn::getEngine_(Engine **e)
+{
+  EngineFactory efac(env_);
+  bool cont=false;
+  EnginePtr eptr = 0;
+  int err = 0;
+
+  p_->calculateSize();
+  if (p_->isLinear()) {
+    eptr = efac.getLPEngine();
+    if (!eptr) {
+      cont = true;
+    }
+  }
+
+  if (true==cont || p_->isQP()) {
+    eptr = efac.getQPEngine();
+    if (!eptr) {
+      cont = true;
+    }
+  }
+
+  if (!eptr) {
+    eptr = efac.getNLPEngine();
+  }
+
+  if (!eptr) {
+    env_->getLogger()->errStream() <<  "No engine available for this problem."
+                                  << std::endl << "exiting without solving"
+                                  << std::endl;
+    err = 1;
+  } else {
+    env_->getLogger()->msgStream(LogExtraInfo) << me_ <<
+      "engine used = " << eptr->getName() << std::endl;
+  }
+  *e = eptr;
+  return err;
 }
 
 NLPEnginePtr Wdn::getNLPEngine_()
@@ -74,9 +154,8 @@ void Wdn::loadData(const std::string &fileName)
   std::ifstream in(fileName);
   if (!in) {
     std::cerr << "Error: cannot open file " << fileName << std::endl;
-    return;
+    exit(EXIT_FAILURE);
   }
-
   std::string line;
   while (getline(in, line)) {
     if (line.find("param: nodes:") != std::string::npos) {
@@ -84,34 +163,53 @@ void Wdn::loadData(const std::string &fileName)
         std::istringstream iss(line);
         Node n;
         iss >> n.id >> n.elev >> n.demand >> n.pressureMin >> n.pressureMax;
-        if (iss)
-          nodes_[n.id] = n;  // insert into map
+        if (iss) {
+          nodes_[n.id] = n;
+        }
       }
     } else if (line.find("param: arcs:") != std::string::npos) {
       while (getline(in, line) && !line.empty() && line[0] != '#') {
         std::istringstream iss(line);
         Arc a;
         iss >> a.startNode >> a.endNode >> a.length >> a.vmax;
-        if (iss)
-          arcs_[{a.startNode, a.endNode}] = a;  // insert into map
+        if (iss) {
+          arcs_[{a.startNode, a.endNode}] = a;
+        }
       }
     } else if (line.find("param: pipes:") != std::string::npos) {
       while (getline(in, line) && !line.empty() && line[0] != '#') {
         std::istringstream iss(line);
         Pipe p;
         iss >> p.id >> p.diameter >> p.cost >> p.roughness;
-        if (iss)
-          pipes_[p.id] = p;  // insert into map
+        if (iss) {
+          pipes_[p.id] = p;
+        }
       }
     } else if (line.find("set Source:=") != std::string::npos) {
-      // Example: set Source := 1 4 7 ;
       std::istringstream iss(line);
       std::string tmp;
-      iss >> tmp >> tmp;  // skip "set Source:="
+      iss >> tmp >> tmp;
       int s;
-      while (iss >> s)
-        sources_.insert(s);  // insert into unordered_set
+      while (iss >> s) {
+        sources_.insert(s);
+      }
     }
+  }
+  if (nodes_.empty()) {
+    std::cerr << "Error: No nodes found in data file " << fileName << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (arcs_.empty()) {
+    std::cerr << "Error: No arcs found in data file " << fileName << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (pipes_.empty()) {
+    std::cerr << "Error: No pipes found in data file " << fileName << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  if (sources_.empty()) {
+    std::cerr << "Error: No sources found in data file " << fileName << std::endl;
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -143,6 +241,20 @@ void Wdn::printData() const
   }
 }
 
+
+double Wdn::maxElevation()
+{
+  double maxElevation_ = -std::numeric_limits<double>::infinity();
+  for (SourceIter sit=sources_.begin(); sit != sources_.end(); ++sit){
+    auto it = nodes_.find(*sit);
+    if (it!=nodes_.end()){
+      maxElevation_ = std::max(maxElevation_, it->second.elev);
+    }
+  }
+  // std::cout << me_ << "Calculated maximum elevation from the elevation of sources = " << maxElevation_ << std::endl;
+  return maxElevation_;
+}
+
 double Wdn::calculateQmax()
 {
   double Qmax = 0.0;
@@ -154,17 +266,24 @@ double Wdn::calculateQmax()
   return Qmax;
 }
 
-void Wdn::buildModel()
+Problem* Wdn::buildModel(ProblemPtr p)
 {
   OptionDBPtr options = env_->getOptions();
   double Qmax = calculateQmax();
-
+  double maxE = maxElevation();
   // Decision variables h[i]
-    for (NodeConstIter it = nodes_.cbegin(); it != nodes_.cend(); ++it) {
-    std::string vname = "h_" + std::to_string(it->second.id);
-    VariablePtr h = p_->newVariable(
-        it->second.elev + it->second.pressureMin, it->second.elev + it->second.pressureMax, Continuous, vname);
-    hvar_[it->second.id] = h;
+  p_ = p;
+
+  for (NodeIter it = nodes_.begin(); it != nodes_.end(); ++it) {
+    Node &node = it->second;
+    std::string vname = "h_" + std::to_string(node.id);
+    VariablePtr h;
+    if (sources_.find(node.id) != sources_.end()) {
+      h = p_->newVariable(node.elev, node.elev, Continuous, vname,VarOrig);
+    } else {
+      h = p_->newVariable(node.elev + node.pressureMin, maxE, Continuous, vname, VarOrig);
+    }
+    hvar_[node.id] = h;
   }
   std::cout << me_ << "Decision variable h[i] created for " << nodes_.size()
             << " nodes.\n";
@@ -175,7 +294,7 @@ void Wdn::buildModel()
     // Arc &a = it->second;
     VariablePtr q = p_->newVariable(
         -Qmax, Qmax, Continuous,
-        "q_" + std::to_string(it->second.startNode) + "_" + std::to_string(it->second.endNode));
+        "q_" + std::to_string(it->second.startNode) + "_" + std::to_string(it->second.endNode), VarOrig);
     qvar_[key] = q;
   }
   std::cout << me_ << "Decision variable q[i,j] created for " << arcs_.size()
@@ -190,7 +309,7 @@ void Wdn::buildModel()
       std::string vname = "l_" + std::to_string(a.startNode) + "_" +
                           std::to_string(a.endNode) + "_" +
                           std::to_string(pid);
-      VariablePtr l = p_->newVariable(0.0, a.length, Continuous, vname);
+      VariablePtr l = p_->newVariable(0.0, a.length, Continuous, vname, VarOrig);
       lvar_[{a.startNode, a.endNode, pid}] = l;
     }
   }
@@ -201,9 +320,10 @@ void Wdn::buildModel()
   // Constraints
   addConstraints();
 
-  if (options->findBool("display_problem")->getValue()) {
-    p_->write(env_->getLogger()->msgStream(LogNone), 9);
-  }
+  // if (options->findBool("display_problem")->getValue()) {
+  //   p_->write(env_->getLogger()->msgStream(LogNone), 9);
+  // }
+  return p_;
 }
 
 void Wdn::addObjective()
@@ -236,7 +356,7 @@ void Wdn::addObjective()
   }
 
   FunctionPtr f = (FunctionPtr) new Function(lf);
-  obj_ = p_->newObjective(f, 0.0, Minimize);
+  obj_ = p_->newObjective(f, 0.0, Minimize, "total_cost");
   std::cout << me_ << "Objective function successfully added to the problem.\n";
 }
 
@@ -246,8 +366,7 @@ void Wdn::addConstraints()
    * Constraints:
    *
    * 1. Flow balance constraint at nodes:
-   *      ∑_{j: (i,j) ∈ arcs} q[i,j] - ∑_{j: (j,i) ∈ arcs} q[j,i] =
-   * demand[i]
+   *      ∑_{j: (i,j) ∈ arcs} q[i,j] - ∑_{j: (j,i) ∈ arcs} q[j,i] = demand[i]
    *
    *    Ensures conservation of flow: inflow - outflow = demand.
    *
@@ -279,54 +398,80 @@ void Wdn::addConstraints()
         lf->addTerm(qvar_[arcIter->first], 1.0);
     }
     FunctionPtr f = (FunctionPtr) new Function(lf);
-    std::string cname = "flow_balance_" + std::to_string(n.id);
+    std::string cname = "con1_flow_balance_" + std::to_string(n.id);
     p_->newConstraint(f, n.demand, n.demand, cname);
   }
 
-  // 2. Head-loss constraints (Hazen-Williams)
+  // for (ArcIter arcIter = arcs_.begin(); arcIter != arcs_.end(); ++arcIter) {
+  //     Arc& a = arcIter->second;
+  //     CGraph* nlf = new CGraph();
+  //     CNode* c_q   = nlf->newNode(qvar_[{a.startNode, a.endNode}]);
+  //     CNode* c_absq = nlf->newNode(OpAbs, c_q, NULL);
+  //     CNode* c_exp  = nlf->newNode(0.852);
+  //     CNode* c_pow  = nlf->newNode(OpPowK, c_absq, c_exp);
+  //     CNode* c_flow = nlf->newNode(OpMult, c_q, c_pow);
+  //     CNode* c_pipeSum = nlf->newNode(0.0);
+  //     for (PipeIter pipeIter = pipes_.begin(); pipeIter != pipes_.end(); ++pipeIter) {
+  //         int pid = pipeIter->first;
+  //         CNode* c_l = nlf->newNode(lvar_[{a.startNode, a.endNode, pid}]);
+  //         c_pipeSum = nlf->newNode(OpPlus, c_pipeSum, c_l);
+  //     }
+  //     CNode* c_loss = nlf->newNode(OpMult, c_flow, c_pipeSum);
+  //     nlf->setOut(c_loss);
+  //     nlf->finalize();
+  //     NonlinearFunctionPtr nonlinearTerm = (NonlinearFunctionPtr) new NonlinearFunction(nlf);
+  //     LinearFunctionPtr headDiff = new LinearFunction();
+  //     headDiff->addTerm(hvar_[a.startNode], 1.0);
+  //     headDiff->addTerm(hvar_[a.endNode], -1.0);
+  //     FunctionPtr totalFunc = (FunctionPtr) new Function(headDiff, nonlinearTerm);
+  //     std::string cname = "hl_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode);
+  //     p_->newConstraint(totalFunc, 0.0, 0.0, cname);
+  // }
 
+  // 2. Head-loss constraints (Hazen-Williams)
   for (ArcIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
     int i = ait->second.startNode;
     int j = ait->second.endNode;
+    // Create a new computational graph for the constraint
     CGraph *nlf = new CGraph();
-    CNode *c_h_i, *c_h_j, *c_q, *c_absq, *c_exp, *c_pipeSum, *c_tmp; 
-    c_h_i = nlf->newNode(hvar_[i]); // Node heads
-    c_h_j = nlf->newNode(hvar_[j]); // Node heads 
-    c_q = nlf->newNode(qvar_[{i, j}]); // Node Flow q[i,j] 
-    // c_absq = nlf->newNode(OpAbs, c_q);  // Node Absolute value: |q|
-    CNode *cq_sq = nlf->newNode(OpMult, c_q, c_q);  // q^2
-    CNode *cq_abs = nlf->newNode(OpPowK, cq_sq, nlf->newNode(0.5));  // sqrt(q^2)
-    // |q|^0.852
-    c_exp = nlf->newNode(0.852);
-    c_absq = nlf->newNode(OpPowK, cq_abs, c_exp);
-    // q * |q|^0.852
-    c_q = nlf->newNode(OpMult, c_q, c_absq);
-
-    // Build sum over pipes
-    c_pipeSum = nlf->newNode(0.0);  // initialize
-
+    // --- Node variables ---
+    CNode *c_h_i = nlf->newNode(hvar_[i]);        // Head at node i
+    CNode *c_h_j = nlf->newNode(hvar_[j]);        // Head at node j
+    CNode *c_q   = nlf->newNode(qvar_[{i, j}]);   // Flow q[i,j]
+    // --- Flow-dependent term: q * |q|^0.852 ---
+    CNode *c_absq = nlf->newNode(OpAbs, c_q, NULL);   // |q|
+    CNode *c_exp  = nlf->newNode(0.852);              // exponent
+    CNode *c_pow  = nlf->newNode(OpPowK, c_absq, c_exp); // |q|^0.852
+    CNode *c_flow = nlf->newNode(OpMult, c_q, c_pow);    // q * |q|^0.852
+    // --- Pipe resistance sum: Σ l[i,j,k] * coeff(k) ---
+    CNode *c_pipeSum = nlf->newNode(0.0);  // initialize sum = 0
     for (PipeIter pit = pipes_.begin(); pit != pipes_.end(); ++pit) {
-      int k = pit->first;
-      const Pipe &pipe = pit->second;
-      CNode *c_l = nlf->newNode(lvar_[{i, j, k}]);  // Node for decision variable l[i,j,k] 
-      double coeff = 10.67 / (std::pow(pipe.roughness, 1.852) * std::pow(pipe.diameter, 4.87)); 
-      CNode *c_coeff = nlf->newNode(coeff); // Node for coefficient K = 10.67 / (R^1.852 * D^4.87) 
-      c_tmp = nlf->newNode(OpMult, c_l, c_coeff); // term = l[i,j,k] * coeff
-      // add to sum
-      c_pipeSum = nlf->newNode(OpPlus, c_pipeSum, c_tmp);
+        int k = pit->first;
+        const Pipe& pipe = pit->second;
+        // Decision variable l[i,j,k]
+        CNode *c_l = nlf->newNode(lvar_[{i, j, k}]);
+        // Hydraulic resistance coefficient:
+        //   K = 10.67 / (R^1.852 * D^4.87)
+        double coeff = 10.67 / (std::pow(pipe.roughness, 1.852) *
+                                std::pow(pipe.diameter,  4.87));
+        CNode *c_coeff = nlf->newNode(coeff);
+        // Term = l[i,j,k] * coeff
+        CNode *c_term = nlf->newNode(OpMult, c_l, c_coeff);
+        // Accumulate into pipe sum
+        c_pipeSum = nlf->newNode(OpPlus, c_pipeSum, c_term);
     }
-    // Multiply flow term by pipe sum
-    CNode *c_loss = nlf->newNode(OpMult, c_q, c_pipeSum);
-    // Constraint: (h_i - h_j) - loss = 0
-    CNode *c_diff = nlf->newNode(OpMinus, c_h_i, c_h_j);
-    CNode *c_final = nlf->newNode(OpMinus, c_diff, c_loss);
+    // --- Head-loss equation: (h_i - h_j) - (flow * pipeSum) = 0 ---
+    CNode *c_diff  = nlf->newNode(OpMinus, c_h_i, c_h_j);       // h_i - h_j
+    CNode *c_loss  = nlf->newNode(OpMult, c_flow, c_pipeSum);   // flow * pipeSum
+    CNode *c_final = nlf->newNode(OpMinus, c_diff, c_loss);     // (h_i - h_j) - loss
+    // Finalize and add constraint
     nlf->setOut(c_final);
     nlf->finalize();
     FunctionPtr f = (FunctionPtr) new Function(nlf);
-    std::string cname = "hl_" + std::to_string(i) + "_" + std::to_string(j);
+    std::string cname = "con2_hl_" + std::to_string(i) + "_" + std::to_string(j);
     // p_->newConstraint(f, 0.0, 0.0, cname);
-  }
-
+  } 
+  //
   // 3. Total length
   for (ArcIter arcIter = arcs_.begin(); arcIter!=arcs_.end(); ++arcIter) {
     LinearFunctionPtr lf = new LinearFunction();
@@ -336,7 +481,7 @@ void Wdn::addConstraints()
       lf->addTerm(lvar_[{a.startNode, a.endNode, pid}], 1.0);
     }
     FunctionPtr f = (FunctionPtr) new Function(lf);
-    std::string cname = "con3_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode);
+    std::string cname = "con3_totalLength_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode);
     p_->newConstraint(f, a.length, a.length, cname);
   }
 
@@ -385,31 +530,311 @@ void Wdn::addConstraints()
   //                  0.426));  // approximate
   //
   //     // Add constraint
-  //     p_->newConstraint(nlf, 0.0, 0.0, "headloss_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode) + "_" + std::to_string(p.id));
+  //     p_->newConstraint(nlf, 0.0, 0.0, "con2_hl_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode) + "_" + std::to_string(p.id));
   //   }
   // }
 
+  for (ArcIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
+      int i = ait->second.startNode;
+      int j = ait->second.endNode;
+      // Create a new computational graph for this arc
+      CGraph* nlf = new CGraph();
+      // --- Node variables (heads and flow) ---
+      CNode* c_h_i = nlf->newNode(hvar_[i]);        // Head at node i
+      CNode* c_h_j = nlf->newNode(hvar_[j]);        // Head at node j
+      CNode* c_q   = nlf->newNode(qvar_[{i, j}]);   // Flow q[i,j]
+      // --- Flow-dependent term: q * |q|^0.852 ---
+      CNode* c_absq = nlf->newNode(OpAbs, c_q, NULL);   // |q|
+      CNode* c_exp  = nlf->newNode(0.852);              // exponent
+      CNode* c_pow  = nlf->newNode(OpPowK, c_absq, c_exp); // |q|^0.852
+      CNode* c_flow = nlf->newNode(OpMult, c_q, c_pow);    // q * |q|^0.852
+      // --- Pipe resistance sum: Σ l[i,j,k] * coeff(k) ---
+      std::vector<CNode*> pipeTerms;
+      for (PipeIter pit = pipes_.begin(); pit != pipes_.end(); ++pit) {
+          int k = pit->first;
+          const Pipe& pipe = pit->second;
+          // Decision variable l[i,j,k]
+          CNode* c_l = nlf->newNode(lvar_[{i, j, k}]);
+          // Hydraulic resistance coefficient:
+          //   K = 10.67 / (R^1.852 * D^4.87)
+          double coeff = 10.67 / (std::pow(pipe.roughness, 1.852) *
+                                  std::pow(pipe.diameter,  4.87));
+          CNode* c_coeff = nlf->newNode(coeff);
+          // Term = l[i,j,k] * coeff
+          CNode* c_term = nlf->newNode(OpMult, c_l, c_coeff);
+          pipeTerms.push_back(c_term);
+      }
+      // Efficient sum using OpSumList
+      CNode* c_pipeSum = nullptr;
+      c_pipeSum = nlf->newNode(Minotaur::OpSumList, pipeTerms.data(), pipeTerms.size());
+      // --- Head-loss equation: (h_i - h_j) - (flow * pipeSum) = 0 ---
+      CNode* c_diff  = nlf->newNode(OpMinus, c_h_i, c_h_j);       // h_i - h_j
+      CNode* c_loss  = nlf->newNode(OpMult, c_flow, c_pipeSum);   // flow * pipeSum
+      CNode* c_final = nlf->newNode(OpMinus, c_diff, c_loss);     // (h_i - h_j) - loss
+      // Finalize and add constraint
+      nlf->setOut(c_final);
+      nlf->finalize();
+      FunctionPtr f = (FunctionPtr) new Function(nlf);
+      std::string cname = "con2_hl_" + std::to_string(i) + "_" + std::to_string(j);
+      // p_->newConstraint(f, 0.0, 0.0, cname);
+  }
+  for (ArcIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
+      int i = ait->second.startNode;
+      int j = ait->second.endNode;
+      float eps = 1e-6;
+      // Create a new computational graph for this arc
+      CGraph* nlf = new CGraph();
+      // --- Node variables (heads and flow) ---
+      CNode* c_h_i = nlf->newNode(hvar_[i]);        // Head at node i
+      CNode* c_h_j = nlf->newNode(hvar_[j]);        // Head at node j
+      CNode* c_q   = nlf->newNode(qvar_[{i, j}]);   // Flow q[i,j]
+      // --- Flow-dependent term: (q^3 * (q^2 + eps)^0.426)/(q^2 + 0.426*eps)  --- 
+      CNode* c_exp  = nlf->newNode(0.426);              // exponent
+      CNode* c_sqr  = nlf->newNode(2);              // exponent
+      CNode* c_three  = nlf->newNode(3);              // exponent
+      CNode* c_eps  = nlf->newNode(eps);              // exponent
+      CNode* c_eps_frac  = nlf->newNode(eps*0.426);              // exponent
+      CNode* c_qsqr = nlf->newNode(OpPowK, c_q, c_sqr);   // q^2 
+      CNode* c_qsqr_eps  = nlf->newNode(OpPlus, c_qsqr, c_eps); // (q^2 + eps)
+      CNode* c_pow_exp = nlf->newNode(OpPowK, c_qsqr_eps, c_exp);   // (q^2 + eps)^0.426 
+      CNode* c_qpow_three = nlf->newNode(OpPowK, c_q, c_three);   // q^3 
+      CNode* c_mult_qpow_three = nlf->newNode(OpMult, c_qpow_three, c_pow_exp);    // q^3 * (q^2 + eps)^0.426  
+      CNode* c_qsqr_eps_frac  = nlf->newNode(OpPlus, c_qsqr, c_eps_frac); // (q^2 + 0.426*eps)
+      CNode* c_q_nonlinear = nlf->newNode(OpDiv, c_mult_qpow_three, c_qsqr_eps_frac);   // (q^3 * (q^2 + eps)^0.426)/(q^2 + 0.426*eps)  
+      // --- Pipe resistance sum: Σ l[i,j,k] * coeff(k) ---
+      std::vector<CNode*> pipeTerms;
+      for (PipeIter pit = pipes_.begin(); pit != pipes_.end(); ++pit) {
+          int k = pit->first;
+          const Pipe& pipe = pit->second;
+          // Decision variable l[i,j,k]
+          CNode* c_l = nlf->newNode(lvar_[{i, j, k}]);
+          // Hydraulic resistance coefficient:
+          //   K = 10.67 / (R^1.852 * D^4.87)
+          double coeff = 10.67 / (std::pow(pipe.roughness, 1.852) *
+                                  std::pow(pipe.diameter,  4.87));
+          CNode* c_coeff = nlf->newNode(coeff);
+          // Term = l[i,j,k] * coeff
+          CNode* c_term = nlf->newNode(OpMult, c_l, c_coeff);
+          pipeTerms.push_back(c_term);
+      }
+      // Efficient sum using OpSumList
+      CNode* c_pipeSum = nullptr;
+      c_pipeSum = nlf->newNode(Minotaur::OpSumList, pipeTerms.data(), pipeTerms.size());
+      // --- Head-loss equation: (h_i - h_j) - (flow * pipeSum) = 0 ---
+      CNode* c_diff  = nlf->newNode(OpMinus, c_h_i, c_h_j);       // h_i - h_j
+      CNode* c_loss  = nlf->newNode(OpMult, c_q_nonlinear, c_pipeSum);   // flow * pipeSum
+      CNode* c_final = nlf->newNode(OpMinus, c_diff, c_loss);     // (h_i - h_j) - loss
+      // Finalize and add constraint
+      nlf->setOut(c_final);
+      nlf->finalize();
+      FunctionPtr f = (FunctionPtr) new Function(nlf);
+      std::string cname = "con2_hl_" + std::to_string(i) + "_" + std::to_string(j);
+      p_->newConstraint(f, 0.0, 0.0, cname);
+  }
   std::cout << me_ << "All constraints successfully added to the problem.\n";
 }
 
-void Wdn::solve()
-{
-  e_->load(p_);
-  e_->solve();
-
-  std::cout << "Status: " << e_->getStatusString() << std::endl;
-  std::cout << "Objective value = " << e_->getSolutionValue() << std::endl;
-
-  for (HVarConstIter hvar_iter = hvar_.cbegin(); hvar_iter != hvar_.cend(); ++hvar_iter)
-    std::cout << hvar_iter->second->getName() << " = " << e_->getSolution()->getPrimal()[hvar_iter->second->getIndex()] << std::endl;
-
-  for (QVarConstIter qvar_iter = qvar_.cbegin(); qvar_iter != qvar_.cend(); ++qvar_iter){
-    std::cout<< qvar_iter->second->getName() << " = " << e_->getSolution()->getPrimal()[qvar_iter->second->getIndex()] << std::endl; 
+double Wdn::getWallTime() {
+  struct timeval time;
+  if (gettimeofday(&time,NULL)){
+    //  Handle error
+    return 0;
   }
-  for (LVarConstIter lvar_iter = lvar_.cbegin(); lvar_iter != lvar_.cend(); ++lvar_iter) {
-    std::cout << lvar_iter->second->getName() << " = " << e_->getSolution()->getPrimal()[lvar_iter->second->getIndex()] << std::endl;
-  }
+  return (double)time.tv_sec + (double)time.tv_usec * .000001;
 }
+
+int Wdn::solve(ProblemPtr p)
+{
+  double walltime_start = getWallTime();
+
+  EnginePtr engine = 0;        // IPOPT engine
+  PresolverPtr pres;
+  VarVector *orig_v = 0;
+  HandlerVector handlers;
+  int err = 0;
+
+  OptionDBPtr options = env_->getOptions();
+  setInitialOptions_();
+  p_ = p;
+  p_->calculateSize();
+
+  if (options->findBool("display_problem")->getValue()) {
+    p_->write(env_->getLogger()->msgStream(LogNone), 12);
+  }
+  //
+  if (env_->getOptions()->findInt("log_level")->getValue() >= 3) {
+    options->findBool("display_size")->setValue(true);
+    options->findBool("display_presolved_size")->setValue(true);
+  }
+
+  if (options->findBool("display_size")->getValue()) {
+    p_->writeSize(env_->getLogger()->msgStream(LogNone));
+    env_->getLogger()->msgStream(LogInfo) << me_
+      << "Starting constraint classification\n";
+    p_->classifyCon();
+    env_->getLogger()->msgStream(LogInfo) << me_
+      << "Finished constraint classification\n";
+  }
+
+  if (false == options->findBool("use_native_cgraph")->getValue()) {
+    
+    JacobianPtr jac = new MINOTAUR_AMPL::AMPLJacobian(iface_);
+    p_->setJacobian(jac);
+    HessianOfLagPtr hess = new MINOTAUR_AMPL::AMPLHessian(iface_);
+    p_->setHessian(hess);
+    p_->setInitialPoint(iface_->getInitialPoint(),
+                        p_->getNumVars() - iface_->getNumDefs());
+  }
+
+  if (p_->getObjective() &&
+      p_->getObjective()->getObjectiveType() == Maximize) {
+    objSense_ = -1.0;
+    env_->getLogger()->msgStream(LogInfo) << me_
+      << "objective sense: maximize (converted to Minimize)\n";
+  } else {
+    objSense_ = 1.0;
+    env_->getLogger()->msgStream(LogInfo) << me_
+      << "objective sense: minimize\n";
+  }
+
+  orig_v = new VarVector(p_->varsBegin(), p_->varsEnd());
+  pres = presolve_(handlers);
+  for (HandlerVector::iterator it = handlers.begin(); it != handlers.end(); ++it) {
+    delete (*it);
+  }
+  handlers.clear();
+
+  if (Finished != pres->getStatus() && NotStarted != pres->getStatus()) {
+    env_->getLogger()->msgStream(LogInfo) << me_
+      << "status of presolve: "
+      << getSolveStatusString(pres->getStatus()) << std::endl;
+    if (pres->getSolution()) {
+      sol_ = pres->getPostSol(pres->getSolution());
+    }
+    writeSol(env_, orig_v,pres, sol_, pres->getStatus(), iface_);
+    goto CLEANUP;
+  }
+
+  err = getEngine_(&engine);
+  if (err) {
+    goto CLEANUP;
+  }
+
+  p_->setNativeDer();
+  e_->load(p_);  
+  e_->solve();
+  displaySolution(e_);
+
+CLEANUP:
+  if (engine) delete engine;
+  if (pres) delete pres;
+  if (orig_v) delete orig_v;
+
+  env_->getLogger()->msgStream(LogInfo) << me_
+    << "wall clock time used (s) = "
+    << getWallTime() - walltime_start << std::endl;
+
+  return 0;
+}
+
+void Wdn::displaySolution(EnginePtr e)
+{
+   std::cout << "Status: " << e->getStatusString() << std::endl;
+   std::cout << "Objective value = " << e->getSolutionValue() << std::endl;
+
+   // for (HVarConstIter hvar_iter = hvar_.cbegin(); hvar_iter != hvar_.cend(); ++hvar_iter)
+   //   std::cout << hvar_iter->second->getName() << " = " << e->getSolution()->getPrimal()[hvar_iter->second->getIndex()] << std::endl;
+   //
+   // for (QVarConstIter qvar_iter = qvar_.cbegin(); qvar_iter != qvar_.cend(); ++qvar_iter){
+   //   std::cout<< qvar_iter->second->getName() << " = " << e->getSolution()->getPrimal()[qvar_iter->second->getIndex()] << std::endl; 
+   // }
+   // for (LVarConstIter lvar_iter = lvar_.cbegin(); lvar_iter != lvar_.cend(); ++lvar_iter) {
+   //   std::cout << lvar_iter->second->getName() << " = " << e->getSolution()->getPrimal()[lvar_iter->second->getIndex()] << std::endl;
+   // }
+
+  // return 0.0;
+}
+
+
+SolveStatus Wdn::getStatus()
+{
+  return status_;
+}
+
+
+PresolverPtr Wdn::presolve_(HandlerVector &handlers)
+{
+  PresolverPtr pres = 0; // NULL
+
+  p_->calculateSize();
+  if (env_->getOptions()->findBool("presolve")->getValue() == true) {
+    LinHandlerPtr lhandler = (LinHandlerPtr) new LinearHandler(env_, p_);
+    handlers.push_back(lhandler);
+    if (p_->isQP() || p_->isQuadratic() || p_->isLinear() ||
+        true==env_->getOptions()->findBool("use_native_cgraph")->getValue()) {
+      lhandler->setPreOptPurgeVars(true);
+      lhandler->setPreOptPurgeCons(true);
+      lhandler->setPreOptCoeffImp(true);
+    } else {
+      lhandler->setPreOptPurgeVars(false);
+      lhandler->setPreOptPurgeCons(false);
+      lhandler->setPreOptCoeffImp(false);
+    }
+    if (iface_ && iface_->getNumDefs()>0) {
+      lhandler->setPreOptDualFix(false);
+    } else {
+      lhandler->setPreOptDualFix(true);
+    }
+
+    if (!p_->isLinear() && 
+        true==env_->getOptions()->findBool("use_native_cgraph")->getValue() && 
+        true==env_->getOptions()->findBool("nl_presolve")->getValue() 
+       ) {
+      NlPresHandlerPtr nlhand = (NlPresHandlerPtr) new NlPresHandler(env_, p_);
+      handlers.push_back(nlhand);
+    }
+
+    // write the names.
+    env_->getLogger()->msgStream(LogExtraInfo) << me_ 
+      << "handlers used in presolve:" << std::endl;
+    for (HandlerIterator h = handlers.begin(); h != handlers.end(); 
+         ++h) {
+       env_->getLogger()->msgStream(LogExtraInfo) << me_ 
+        << (*h)->getName() << std::endl;
+    }
+  }
+
+  pres = (PresolverPtr) new Presolver(p_, env_, handlers);
+  pres->standardize(); 
+  if (env_->getOptions()->findBool("presolve")->getValue() == true) {
+    pres->solve();
+    for (HandlerVector::iterator h=handlers.begin(); h!=handlers.end(); ++h) {
+      (*h)->writeStats(env_->getLogger()->msgStream(LogExtraInfo));
+    }
+  }
+  return pres;
+}
+
+
+// void Wdn::solve()
+// {
+//   e_->load(p_);
+//   e_->solve();
+//
+//   std::cout << "Status: " << e_->getStatusString() << std::endl;
+//   std::cout << "Objective value = " << e_->getSolutionValue() << std::endl;
+//
+//   // for (HVarConstIter hvar_iter = hvar_.cbegin(); hvar_iter != hvar_.cend(); ++hvar_iter)
+//   //   std::cout << hvar_iter->second->getName() << " = " << e_->getSolution()->getPrimal()[hvar_iter->second->getIndex()] << std::endl;
+//   //
+//   // for (QVarConstIter qvar_iter = qvar_.cbegin(); qvar_iter != qvar_.cend(); ++qvar_iter){
+//   //   std::cout<< qvar_iter->second->getName() << " = " << e_->getSolution()->getPrimal()[qvar_iter->second->getIndex()] << std::endl; 
+//   // }
+//   // for (LVarConstIter lvar_iter = lvar_.cbegin(); lvar_iter != lvar_.cend(); ++lvar_iter) {
+//   //   std::cout << lvar_iter->second->getName() << " = " << e_->getSolution()->getPrimal()[lvar_iter->second->getIndex()] << std::endl;
+//   // }
+//   // for (ConstraintConstIterator )
+// }
 
 void Wdn::setInitialOptions_()
 {
@@ -422,6 +847,26 @@ void Wdn::setInitialOptions_()
   options->findString("nlp_engine")->setValue("ipopt");
 }
 
+void Wdn::writeSol(EnvPtr env, VarVector *orig_v,
+              PresolverPtr pres, SolutionPtr sol, SolveStatus status,
+              MINOTAUR_AMPL::AMPLInterface* iface)
+{
+  if (sol) {
+    sol = pres->getPostSol(sol);
+  }
+
+  if (env->getOptions()->findFlag("ampl")->getValue() ||
+      true == env->getOptions()->findBool("write_sol_file")->getValue()) {
+    iface->writeSolution(sol, status);
+  } else if (sol && env->getLogger()->getMaxLevel()>=LogExtraInfo &&
+             env->getOptions()->findBool("display_solution")->getValue()) {
+    sol->writePrimal(env->getLogger()->msgStream(LogExtraInfo), orig_v);
+  }
+
+
+
+
+}
 void Wdn::showHelp() const
 {
   std::cout << "Global optimization for water distribution network design problems\n"
