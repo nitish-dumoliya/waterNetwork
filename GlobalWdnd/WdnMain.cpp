@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
   // read user-specified options
   env->readOptions(argc, argv);
-  // env->getOptions()->findBool("use_native_cgraph")->setValue(false);
+  env->getOptions()->findBool("use_native_cgraph")->setValue(true);
   
   if (argc > 1) {
     datfile = argv[1];
@@ -45,7 +45,11 @@ int main(int argc, char **argv)
   }
 
   wdn.loadData(datfile);
-  wdn.printData();
+
+  if (env->getLogLevel()>3){
+    wdn.printData();
+  }
+
   p = wdn.buildModel(p);
   err = wdn.solve(p);
   if (err) {
@@ -59,6 +63,5 @@ CLEANUP:
   if (env) {
     delete env;
   }
-
   return 0;
 }
