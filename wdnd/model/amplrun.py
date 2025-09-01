@@ -397,7 +397,7 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
         
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+        self.ampl.option["ipopt_options"] = "outlev = 1 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
         
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
@@ -475,17 +475,18 @@ class WaterNetworkSolver:
         self.q = self.ampl.get_variable('q').get_values().to_dict()
         self.h = self.ampl.get_variable('h').get_values().to_dict()
         self.l = self.ampl.get_variable('l').get_values().to_dict()
-        self.eps = self.ampl.getParameter('eps').get_values().to_dict()
+        # self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         #eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
-        # self.ampl.eval("display q;")
+        self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
-        #self.ampl.eval("display q2;")
+        self.ampl.eval("display q1;")
+        self.ampl.eval("display q2;")
         #self.ampl.eval("display eps;")
         for (i,j) in self.arcs:
             if np.abs(self.q[i,j]) <=1e-3:
                 print(f"q[{i},{j}]:",self.q[i,j])
-        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+        # self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.total_cost = self.ampl.getObjective("total_cost").value()
