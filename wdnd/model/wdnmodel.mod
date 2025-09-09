@@ -32,7 +32,7 @@ param R_min = min{k in pipes} R[k];
 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 
 #param eps{(i,j) in arcs} := (1e-6 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
-param eps{(i,j) in arcs} := (5.35*1e-5)^2;
+param eps{(i,j) in arcs} := (5.35*1e-6);
 #param eps{(i,j) in arcs} := (1e-3 / (0.04001571 * MaxK[i,j]))^(1 / 1.852);
 #param eps{(i,j) in arcs} := (1e-4 * R_min^1.852 * d_min^4.87 / (0.07508 * 10.67 * L[i,j]))^(1 / 0.926);
 
@@ -93,7 +93,7 @@ subject to con1{j in nodes diff Source}:
 
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs}: 
-     h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
+     h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
 
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = (q[i,j]^3) *(((x[i,j] + eps[i,j])^0.426) /(x[i,j] + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));

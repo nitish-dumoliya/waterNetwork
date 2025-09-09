@@ -31,7 +31,8 @@ param R_min = min{k in pipes} R[k];
 
 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 
-param eps{(i,j) in arcs} := (1e-12 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
+param eps{(i,j) in arcs} := (5.35*1e-6);
+#param eps{(i,j) in arcs} := (1e-12 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
 
 
 #****************************************VARIABLES****************************************#
@@ -58,10 +59,10 @@ subject to con1{j in nodes diff Source}:
 
 
 subject to con2{(i,j) in arcs diff fixarcs}: 
-    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j])) * sum{k in pipes}(omega * l[i,j,k]/(R[k]^1.852 * d[k]^4.87));
+    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k]/(R[k]^1.852 * d[k]^4.87));
 
 subject to con2_{(i,j) in fixarcs}:
-    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j])) * omega * L[i,j] / (fix_r[i,j]^1.852 * fixdiam[i,j]^4.87);
+    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) * omega * L[i,j] / (fix_r[i,j]^1.852 * fixdiam[i,j]^4.87);
 
 #subject to con2{(i,j) in arcs}: 
 #    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));

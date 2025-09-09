@@ -7,10 +7,11 @@ import os
 import numpy as np
 
 class WaterNetworkSolver:
-    def __init__(self, model_file, solver_name, data_file):
+    def __init__(self, model_file, solver_name, data_file, data_number):
         self.model_file = model_file
         self.solver_name = solver_name
         self.data_file = data_file
+        self.data_number = data_number
         self.ampl = AMPL()
         
         # To store solutions
@@ -52,7 +53,7 @@ class WaterNetworkSolver:
         
         return epsilon
 
-    def constraint_violations(self, q_values, h_values, l_values, epsilon, solver):
+    def constraint_violations1(self, q_values, h_values, l_values, epsilon, solver):
         total_absolute_constraint_violation = 0
         total_relative_constraint_violation = 0
          
@@ -83,7 +84,7 @@ class WaterNetworkSolver:
             original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
             
             # Approximated constraint value
-            approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j])) * alpha_rhs
+            approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
 
             #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
@@ -176,6 +177,278 @@ class WaterNetworkSolver:
         #headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
         #print(tabulate(table_data, headers=headers, tablefmt="grid"))
 
+        #print("\nSum of violation of original con2:", con2_original_violation) 
+        #print("Sum of violation of approx con2:", con2_approx_violation)
+
+
+        table_data = []
+        for constraint, vio in relative_violations.items():
+            i_str, j_str = constraint.split(',')
+            i, j = int(i_str), int(j_str)
+
+            table_data.append([constraint, q_values[i,j], f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}", f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
+
+        print("*******************************************************************************\n")
+        print("Absolute and relative violations between original and approximation constraint 2:\n")
+        headers = ["Constraint ID", "flow value", "Original Con Violation", "Approx Con Violation", "Absolute Violation", "Relative Violation"]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print("\nSum of violation of original headloss constraint:", con2_original_violation) 
+        print("Sum of violation of approx headloss constraint:", con2_approx_violation)
+        print("\nCon2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
+        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation)
+
+        # Print total violations
+        #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
+        #print("Total relative constraint violation:", total_relative_constraint_violation)
+
+        print("*******************************************************************************\n")
+
+    def constraint_violations(self, q_values, h_values, l_values, epsilon, solver):
+        total_absolute_constraint_violation = 0
+        total_relative_constraint_violation = 0
+         
+        con1_gap = {}
+        if self.data_number==5:
+            q1 = self.ampl.get_variable('q1').get_values().to_dict()
+            q2 = self.ampl.get_variable('q2').get_values().to_dict()
+            for i in self.nodes:
+                if i not in self.source:
+                    con1_rhs = self.D[i]
+                    incoming_flow = sum(q1[j, i] + q2[j,i] for j in self.nodes if (j, i) in self.arcs)
+                    outgoing_flow = sum(q1[i, j] + q2[i,j] for j in self.nodes if (i, j) in self.arcs)
+                    con1_lhs = incoming_flow - outgoing_flow
+                    con1_violation = con1_lhs - con1_rhs
+                    con1_gap[f"{i}"] = con1_violation
+                    total_absolute_constraint_violation += abs(con1_violation)
+        else:
+            for i in self.nodes:
+                if i not in self.source:
+                    con1_rhs = self.D[i]
+                    incoming_flow = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
+                    outgoing_flow = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
+                    con1_lhs = incoming_flow - outgoing_flow
+                    con1_violation = con1_lhs - con1_rhs
+                    con1_gap[f"{i}"] = con1_violation
+                    total_absolute_constraint_violation += abs(con1_violation)
+        #print("con1_gap:", con1_gap) 
+        con2_original_gap = {}
+        con2_approx_gap = {}
+        absolute_violations = {}
+        relative_violations = {}
+        con2_absolute_constraint_violation = 0
+        con2_relative_constraint_violation = 0
+        con2_original_violation = 0
+        con2_approx_violation = 0
+
+        if self.data_number==5:
+            #q1 = self.ampl.get_variable('q1').get_values().to_dict()
+            #q2 = self.ampl.get_variable('q2').get_values().to_dict()
+            self.exdiam = self.ampl.getParameter('exdiam').to_dict()
+            for (i, j) in q1.keys():
+                # Original constraint value
+                lhs = 2*(h_values[i] - h_values[j])
+                alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[i,j] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                original_rhs = q1[i, j] * (abs(q1[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + q2[i, j] * (abs(q2[i, j])) ** 0.852 * alpha_rhs  
+                #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
+                # Approximated constraint value
+                approx_rhs = (q1[i, j]**3 * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q1[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j]**3 * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q2[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+
+                #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
+                con2_original_gap[f"{i},{j}"] = lhs - original_rhs
+                con2_original_violation += abs(lhs - original_rhs) 
+                con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs 
+                total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+                con2_approx_violation += abs(lhs - approx_rhs) 
+
+                # Compute absolute violation
+                absolute_violation =  original_rhs - approx_rhs
+                absolute_violations[f"{i},{j}"] = absolute_violation
+                con2_absolute_constraint_violation += abs(absolute_violation)
+
+                # Compute relative violation between original_rhs and approx_rhs
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violations[f"{i},{j}"] = relative_violation
+                con2_relative_constraint_violation += abs(relative_violation)
+
+        elif self.data_number==6:
+            self.fixarcs = self.ampl.getSet('fixarcs')
+            self.fix_r = self.ampl.getParameter('fix_r').to_dict()
+            self.exdiam = self.ampl.getParameter('fixdiam').to_dict()
+            for (i, j) in self.arcs:
+                if (i,j) not in self.fixarcs:
+                    # Original constraint value
+                    lhs = h_values[i] - h_values[j]
+                    alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                    #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                    original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs  
+                    #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs 
+                    # Approximated constraint value
+                    approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+
+                    #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
+                    con2_original_gap[f"{i},{j}"] = lhs - original_rhs
+                    con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs
+
+                    total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+                    con2_original_violation += abs(lhs - original_rhs) 
+                    con2_approx_violation += abs(lhs - approx_rhs) 
+
+                    # Compute absolute violation
+                    absolute_violation =  original_rhs - approx_rhs
+                    absolute_violations[f"{i},{j}"] = absolute_violation
+                    con2_absolute_constraint_violation += abs(absolute_violation)
+
+                    # Compute relative violation between original_rhs and approx_rhs
+                    relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                    relative_violations[f"{i},{j}"] = relative_violation
+                    con2_relative_constraint_violation += abs(relative_violation)
+
+            #print("con2_gap:", con2_gap)
+            for (i, j) in self.fixarcs:
+                # Original constraint value
+                lhs = h_values[i] - h_values[j]
+                alpha_rhs = 10.67 * self.L[i, j] / ((self.fix_r[i,j] ** 1.852) * ((self.exdiam[i,j]) ** 4.87))
+                #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
+                #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
+
+                # Approximated constraint value
+                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
+
+                #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
+
+                #con2_original_violation =  lhs - original_rhs
+                con2_original_gap[f"{i},{j}"] = lhs - original_rhs
+                con2_original_violation += abs(lhs - original_rhs) 
+
+                #con2_approx_violation =  lhs - approx_rhs
+                con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs
+
+                total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+                con2_approx_violation += abs(lhs - approx_rhs) 
+
+                # Compute absolute violation
+                absolute_violation =  original_rhs - approx_rhs
+                absolute_violations[f"{i},{j}"] = absolute_violation
+                con2_absolute_constraint_violation += abs(absolute_violation)
+
+                # Compute relative violation between original_rhs and approx_rhs
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violations[f"{i},{j}"] = relative_violation
+                con2_relative_constraint_violation += abs(relative_violation)
+        else:
+            for (i, j) in q_values.keys():
+                # Original constraint value
+                lhs = h_values[i] - h_values[j]
+                alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
+                original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
+                
+                # Approximated constraint value
+                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+
+                #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
+
+                con2_original_gap[f"{i},{j}"] = lhs - original_rhs
+                con2_original_violation += abs(lhs - original_rhs) 
+                
+                con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs
+                
+                total_absolute_constraint_violation += abs(lhs - approx_rhs)    
+                con2_approx_violation += abs(lhs - approx_rhs) 
+
+                 # Compute absolute violation
+                absolute_violation =  original_rhs - approx_rhs
+                absolute_violations[f"{i},{j}"] = absolute_violation
+                con2_absolute_constraint_violation += abs(absolute_violation)
+
+                # Compute relative violation between original_rhs and approx_rhs
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs + 1e-14)
+                relative_violations[f"{i},{j}"] = relative_violation
+                con2_relative_constraint_violation += abs(relative_violation)
+           
+        #print("con2_gap:", con2_gap)
+        
+        con3_gap = {}
+        if self.data_number==6:
+            self.fixarcs = self.ampl.getSet('fixarcs')
+            for (i,j) in self.arcs:
+                if (i,j) not in self.fixarcs:
+                    con3_rhs = self.L[i,j]
+                    con3_lhs = sum(l_values[i,j,k] for k in self.pipes) 
+                    con3_violation = con3_lhs - con3_rhs
+                    con3_gap[f"{i},{j}"] = con3_violation 
+                    total_absolute_constraint_violation += abs(con3_violation)
+        else:
+            for (i,j) in self.arcs:
+                con3_rhs = self.L[i,j]
+                con3_lhs = sum(l_values[i,j,k] for k in self.pipes) 
+                con3_violation = con3_lhs - con3_rhs
+                con3_gap[f"{i},{j}"] = con3_violation 
+                total_absolute_constraint_violation += abs(con3_violation)
+        #print("con3_gap:", con3_gap)
+
+        con4_gap = {}
+        for (i,j) in self.arcs:
+            for k in self.pipes:
+                #con4_rhs = self.L[i,j]
+                #con4_lhs = l_values[i,j,k]
+                con4_violation = max(0,l_values[i,j,k]-self.L[i,j])
+                con4_gap[f"{i},{j},{k}"] = con4_violation 
+                total_absolute_constraint_violation += abs(con4_violation)
+        #print("con4_gap:", con4_gap)
+        
+        con5_gap = {}
+        for j in self.source:
+            con5_rhs = self.E[j]
+            con5_lhs = h_values[j]
+            con5_violation = con5_lhs - con5_rhs
+            con5_gap[f"{j}"] = con5_violation 
+            total_absolute_constraint_violation += abs(con5_violation)
+        #print("con5_gap:", con5_gap)
+
+        con6_gap = {}
+        for j in self.nodes:
+            if j not in self.source:
+                #con6_rhs = self.E[j] + self.P[j]
+                #con6_lhs = h_values[j]
+                con6_violation = max(0, -h_values[j] + self.E[j] + self.P[j])
+                con6_gap[f"{j}"] = con6_violation 
+                total_absolute_constraint_violation += abs(con6_violation)
+        #print("con6_gap:", con6_gap)
+
+        print("*******************************************************************************\n")
+        print("Constraints violation:\n")
+
+        table_data = []
+        for constraint, vio in con1_gap.items():
+               table_data.append([constraint, f"{con1_gap[constraint]:.8f}"])
+        for constraint, vio in con2_approx_gap.items():
+               table_data.append([constraint, f"{con2_approx_gap[constraint]:.8f}"])
+        for constraint, vio in con3_gap.items():
+               table_data.append([constraint, f"{con3_gap[constraint]:.8f}"])
+        for constraint, vio in con4_gap.items():
+               table_data.append([constraint, f"{con4_gap[constraint]:.8f}"])
+        for constraint, vio in con5_gap.items():
+               table_data.append([constraint, f"{con5_gap[constraint]:.8f}"])
+        for constraint, vio in con6_gap.items():
+               table_data.append([constraint, f"{con6_gap[constraint]:.8f}"])
+
+        #headers = ["Constraint ID", "Violation"]
+        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print("\nSum of constraints violation:", total_absolute_constraint_violation)
+
+        #print("*******************************************************************************\n")
+        #table_data = []
+        #for constraint, vio in con2_original_gap.items():
+        #       table_data.append([constraint, f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}"])
+
+        print("*******************************************************************************\n")
+        #print("Constraint 2 violations:\n")
+        #headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
+        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        
         #print("\nSum of violation of original con2:", con2_original_violation) 
         #print("Sum of violation of approx con2:", con2_approx_violation)
 
@@ -475,18 +748,18 @@ class WaterNetworkSolver:
         self.q = self.ampl.get_variable('q').get_values().to_dict()
         self.h = self.ampl.get_variable('h').get_values().to_dict()
         self.l = self.ampl.get_variable('l').get_values().to_dict()
-        # self.eps = self.ampl.getParameter('eps').get_values().to_dict()
+        self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         #eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
         self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
-        self.ampl.eval("display q1;")
-        self.ampl.eval("display q2;")
+        # self.ampl.eval("display q1;")
+        # self.ampl.eval("display q2;")
         #self.ampl.eval("display eps;")
         for (i,j) in self.arcs:
             if np.abs(self.q[i,j]) <=1e-3:
                 print(f"q[{i},{j}]:",self.q[i,j])
-        # self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
 
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.total_cost = self.ampl.getObjective("total_cost").value()
@@ -672,5 +945,5 @@ if __name__ == "__main__":
 
     solver = sys.argv[2] 
 
-    solver_instance = WaterNetworkSolver(model, solver, data)
+    solver_instance = WaterNetworkSolver(model, solver, data, data_number)
     solver_instance.run()
