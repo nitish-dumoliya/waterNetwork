@@ -1,0 +1,255 @@
+Warning:
+	presolve, variable q[37,1]:
+		impossible deduced bounds: lower = 33.91, upper = 33.91;
+		difference = 7.10543e-15
+	Setting $presolve_eps >= 8.53e-15 might help.
+	
+	Please report any bugs at: https://github.com/ampl/amplpy
+	
+	For support/feedback go to https://discuss.ampl.com or e-mail <support@ampl.com>
+	
+total_cost: 0.0 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 5
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Solving bounding LP
+ Starting multi-start local search
+
+/opt/ampl/conopt: bad bound triple 1280 in bounds file "boundsfile.2":
+	L = 102.5
+	x = 25184875453.55438
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+ Preprocessing found feasible solution with value 21934.5
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1          11.03    23MB     3195.72         21934.5        NA
+
+/opt/ampl/conopt: bad bound triple 1280 in bounds file "boundsfile.8":
+	L = 102.5
+	x = 12108165213.340557
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 1278 in bounds file "boundsfile.10":
+	L = 104.4
+	x = 30550218453.526703
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 1278 in bounds file "boundsfile.12":
+	L = 104.4
+	x = 19060942397.39644
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+
+/opt/ampl/conopt: bad bound triple 1278 in bounds file "boundsfile.14":
+	L = 104.4
+	x = 21253475335.136776
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+constraint _scon[24]: Initial function value too large = 7.5E+17
+constraint _scon[25]: Initial function value too large = 3.0E+18
+constraint _scon[26]: Initial function value too large = 4.0E+19
+constraint _scon[27]: Initial function value too large = 9.6E+18
+constraint _scon[28]: Initial function value too large = 2.2E+17
+constraint _scon[30]: Initial function value too large = 2.9E+18
+constraint _scon[31]: Initial function value too large = 4.0E+19
+constraint _scon[32]: Initial function value too large = 8.3E+18
+constraint _scon[33]: Initial function value too large = 9.6E+18
+constraint _scon[34]: Initial function value too large = 9.3E+18
+constraint _scon[24]: Initial function value too large = 2.1E+17
+constraint _scon[30]: Initial function value too large = 1.0E+17
+constraint _scon[32]: Initial function value too large = 2.6E+17
+constraint _scon[33]: Initial function value too large = 3.1E+16
+constraint _scon[35]: Initial function value too large = 1.3E+17
+constraint _scon[36]: Initial function value too large = 1.0E+17
+constraint _scon[37]: Initial function value too large = 2.7E+17
+constraint _scon[38]: Initial function value too large = 2.0E+17
+constraint _scon[40]: Initial function value too large = 5.8E+17
+constraint _scon[42]: Initial function value too large = 1.8E+16
+       1418          41.03    23MB     3195.72         21934.5        3.12%
+constraint _scon[24]: Initial function value too large = 2.3E+20
+constraint _scon[25]: Initial function value too large = 7.3E+12
+constraint _scon[26]: Initial function value too large = 1.5E+19
+constraint _scon[27]: Initial function value too large = 3.5E+12
+constraint _scon[28]: Initial function value too large = 2.1E+12
+constraint _scon[29]: Initial function value too large = 2.8E+12
+constraint _scon[32]: Initial function value too large = 6.9E+12
+constraint _scon[33]: Initial function value too large = 4.6E+20
+constraint _scon[34]: Initial function value too large = 2.9E+12
+constraint _scon[35]: Initial function value too large = 6.8E+12
+constraint _scon[24]: Initial function value too large = 1.8E+13
+constraint _scon[25]: Initial function value too large = 1.3E+13
+constraint _scon[26]: Initial function value too large = 2.1E+13
+constraint _scon[27]: Initial function value too large = 2.5E+13
+constraint _scon[28]: Initial function value too large = 7.6E+12
+constraint _scon[29]: Initial function value too large = 7.5E+12
+constraint _scon[30]: Initial function value too large = 6.0E+11
+constraint _scon[32]: Initial function value too large = 1.2E+13
+constraint _scon[33]: Initial function value too large = 1.7E+13
+constraint _scon[34]: Initial function value too large = 5.3E+12
+constraint _scon[24]: Initial function value too large = 2.4E+20
+constraint _scon[25]: Initial function value too large = 7.3E+12
+constraint _scon[26]: Initial function value too large = 1.5E+19
+constraint _scon[27]: Initial function value too large = 3.5E+12
+constraint _scon[28]: Initial function value too large = 2.1E+12
+constraint _scon[29]: Initial function value too large = 2.8E+12
+constraint _scon[32]: Initial function value too large = 6.9E+12
+constraint _scon[33]: Initial function value too large = 4.6E+20
+constraint _scon[34]: Initial function value too large = 2.9E+12
+constraint _scon[35]: Initial function value too large = 6.8E+12
+       3787          71.05    33MB     3195.72         21934.5        3.20%
+       6186         101.05    33MB     3195.72         21934.5        3.20%
+       8391         131.06    33MB     3195.72         21934.5        3.21%
+      10766         161.06    33MB     3195.72         21934.5        3.21%
+      12589         191.07    33MB     3195.72         21934.5        3.21%
+      14594+        221.09    33MB     3195.72         21934.5        3.21%
+      15331         251.12    33MB     3195.72         21934.5        3.21%
+constraint _scon[24]: Initial function value too large = 2.1E+13
+constraint _scon[25]: Initial function value too large = 1.5E+13
+constraint _scon[26]: Initial function value too large = 1.6E+13
+constraint _scon[27]: Initial function value too large = 1.5E+13
+constraint _scon[28]: Initial function value too large = 5.5E+12
+constraint _scon[29]: Initial function value too large = 4.9E+12
+constraint _scon[32]: Initial function value too large = 1.1E+13
+constraint _scon[33]: Initial function value too large = 1.5E+13
+constraint _scon[34]: Initial function value too large = 4.1E+12
+constraint _scon[35]: Initial function value too large = 1.0E+13
+constraint _scon[24]: Initial function value too large = 2.3E+20
+constraint _scon[25]: Initial function value too large = 7.0E+12
+constraint _scon[26]: Initial function value too large = 1.5E+19
+constraint _scon[27]: Initial function value too large = 3.6E+12
+constraint _scon[28]: Initial function value too large = 2.0E+12
+constraint _scon[29]: Initial function value too large = 2.8E+12
+constraint _scon[32]: Initial function value too large = 6.7E+12
+constraint _scon[33]: Initial function value too large = 4.6E+20
+constraint _scon[34]: Initial function value too large = 2.8E+12
+constraint _scon[35]: Initial function value too large = 6.6E+12
+      17343         281.14    33MB     3195.72         21934.5        3.21%
+      19567         311.14    33MB     3195.72         21934.5        3.21%
+      21961         341.25    33MB     3195.72         21934.5        3.21%
+constraint _scon[24]: Initial function value too large = 3.1E+13
+constraint _scon[25]: Initial function value too large = 2.3E+13
+constraint _scon[26]: Initial function value too large = 1.9E+13
+constraint _scon[27]: Initial function value too large = 2.1E+13
+constraint _scon[28]: Initial function value too large = 6.4E+12
+constraint _scon[29]: Initial function value too large = 6.2E+12
+constraint _scon[30]: Initial function value too large = 3.2E+12
+constraint _scon[32]: Initial function value too large = 1.4E+13
+constraint _scon[33]: Initial function value too large = 1.8E+13
+constraint _scon[34]: Initial function value too large = 4.7E+12
+      24221         371.27    33MB     3195.72         21934.5        3.21%
+      26463         401.29    33MB     3195.72         21934.5        3.21%
+      27903         702.67    33MB     3195.72         21934.5        3.21%
+      29967         732.67    33MB     3195.72         21934.5        3.21%
+      31873         762.69    33MB     3195.72         21934.5        3.21%
+      34020         792.71    33MB     3195.72         21934.5        3.21%
+      36100         822.72    33MB     3195.72         21934.5        3.21%
+      38140         852.73    33MB     3195.72         21934.5        3.21%
+      39863        1198.75    33MB     3195.72         21934.5        3.21%
+      41563        1228.77    33MB     3195.72         21934.5        3.21%
+      43017        1259.05    33MB     3195.72         21934.5        3.21%
+      45125        1289.06    33MB     3195.72         21934.5        3.21%
+      46206        3922.91    33MB     3195.72         21934.5        3.21%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3922.91
+ Total CPU time used:              3920.75
+
+ Total no. of BaR iterations:   46206
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:     289
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 46206 iterations, CPU time limit reached.
+Objective 21934.48205
+con2_1,17: 0.00000003
+con2_1,31: 0.00000000
+con2_2,3: 0.00000009
+con2_2,18: 0.00000002
+con2_3,4: 0.00005717
+con2_3,11: 0.00000147
+con2_4,5: 0.00003462
+con2_5,6: 0.00001136
+con2_5,13: 0.00000024
+con2_6,7: 0.00000742
+con2_7,24: 0.00043868
+con2_8,28: 0.00000004
+con2_9,36: 0.00000025
+con2_10,11: 0.00000000
+con2_10,32: 0.00000799
+con2_11,19: 0.00000000
+con2_11,26: 0.00000211
+con2_12,4: 0.00000009
+con2_12,13: 0.00004810
+con2_13,14: 0.00000002
+con2_14,20: 0.00000000
+con2_14,21: 0.00000002
+con2_15,16: 0.00000000
+con2_15,22: 0.00000003
+con2_16,25: 0.00000002
+con2_16,29: 0.00002243
+con2_17,2: 0.00001068
+con2_17,18: 0.00031537
+con2_18,10: 0.00000000
+con2_19,12: 0.00000002
+con2_19,20: 0.00000814
+con2_20,15: 0.00000000
+con2_21,6: 0.00000011
+con2_21,22: 0.00000911
+con2_22,7: 0.00000054
+con2_22,23: 0.00000824
+con2_23,25: 0.00000010
+con2_24,8: 0.00000014
+con2_24,23: 0.00100160
+con2_25,8: 0.00001954
+con2_26,15: 0.00000196
+con2_26,27: 0.00000004
+con2_27,16: 0.00000000
+con2_28,9: 0.00000377
+con2_28,29: 0.00000002
+con2_29,30: 0.00000043
+con2_29,33: 0.00000001
+con2_30,9: 0.00000812
+con2_30,35: 0.00001278
+con2_31,10: 0.00000000
+con2_31,34: 0.00000000
+con2_32,27: 0.00000000
+con2_32,33: 0.00000000
+con2_33,34: 0.00000000
+con2_34,35: 0.00000043
+con2_35,36: 0.00000009
+con2_36,1: 0.00000002
+con2_37,1: 0.00000000
+total_cost: 21934.48205423798
+solve_time: 3922.959531

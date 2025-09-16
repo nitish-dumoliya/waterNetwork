@@ -1,0 +1,203 @@
+Ipopt 3.14.13: outlev = 0
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 6912466.977505028 
+
+*******************************************************************************
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 5
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of  0.691247E+07      
+ Doing local search
+ Preprocessing found feasible solution with value 0.688946E+07
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+*         1           2.65    15MB     775980.        0.688789E+07    0.00%
+          1           3.05    15MB     775980.        0.688789E+07    0.00%
+constraint _scon[144]: Initial function value too large = 1.0E+10
+objective _sobj[1]: Initial function value too large = 2.2E+13
+objective _sobj[1]: Initial function value too large = 1.3E+13
+objective _sobj[1]: Initial function value too large = 1.3E+13
+        815          33.05    23MB     775980.        0.688789E+07    0.03%
+objective _sobj[1]: Initial function value too large = 5.3E+11
+       3533          63.06    23MB     775980.        0.688789E+07    0.05%
+
+/opt/ampl/conopt: bad bound triple 1242 in bounds file "boundsfile.19":
+	L = 23
+	x = 2614770343823.067
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+       5518         225.47    23MB     775980.        0.688789E+07    0.09%
+objective _sobj[1]: Initial function value too large = 1.1E+11
+       7233         255.49    23MB     775980.        0.688789E+07    0.12%
+       9337         285.49    23MB     775980.        0.688789E+07    0.16%
+      11547         315.49    23MB     775980.        0.688789E+07    0.20%
+      13629         345.50    23MB     775980.        0.688789E+07    0.25%
+      15651         375.51    23MB     775980.        0.688789E+07    0.28%
+      17527         405.52    23MB     775980.        0.688789E+07    0.33%
+      19682         435.53    23MB     775980.        0.688789E+07    0.36%
+      21884         465.53    23MB     775980.        0.688789E+07    0.39%
+
+/opt/ampl/conopt: bad bound triple 1242 in bounds file "boundsfile.23":
+	L = 23
+	x = 1119926574141.9985
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+      24114         495.56    32MB     775980.        0.688789E+07    0.51%
+      26047         525.56    32MB     775980.        0.688789E+07    0.71%
+      28325         555.57    32MB     775980.        0.688789E+07    0.85%
+      30600         585.59    32MB     775980.        0.688789E+07    1.01%
+      32618         615.61    32MB     775980.        0.688789E+07    1.19%
+      33349        4011.26    32MB     775980.        0.688789E+07    1.27%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  4011.26
+ Total CPU time used:              4009.60
+
+ Total no. of BaR iterations:   33349
+ Best solution found at node:       1
+ Max. no. of nodes in memory:     240
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 33349 iterations, CPU time limit reached.
+Objective 6887885.762
+con2_1,62: 0.00000000
+con2_2,63: 0.00000000
+con2_3,2: 0.00000000
+con2_4,65: 0.00000000
+con2_4,66: 0.00000000
+con2_5,20: 0.00001320
+con2_6,36: 0.00403693
+con2_7,48: 0.00000001
+con2_8,47: 0.00266384
+con2_9,82: 0.00083864
+con2_10,81: 0.00003997
+con2_11,37: 0.00003841
+con2_12,49: 0.00000000
+con2_13,76: 0.00000000
+con2_14,45: 0.00010059
+con2_15,57: 0.00027240
+con2_16,18: 0.00000000
+con2_17,45: 0.00000000
+con2_18,75: 0.00000000
+con2_19,64: 0.00000007
+con2_20,50: 0.00000838
+con2_21,7: 0.00000002
+con2_21,27: 0.00000001
+con2_21,48: 0.00000000
+con2_22,62: 0.00000337
+con2_23,34: 0.00000000
+con2_24,3: 0.00000001
+con2_24,69: 0.00000016
+con2_24,78: 0.00000001
+con2_25,43: 0.00109459
+con2_26,59: 0.00000000
+con2_26,63: 0.00000000
+con2_27,66: 0.00000001
+con2_28,31: 0.00126889
+con2_29,11: 0.00025212
+con2_30,52: 0.00000003
+con2_31,58: 0.00000000
+con2_32,77: 0.00000000
+con2_33,40: 0.00000000
+con2_34,32: 0.00000000
+con2_35,16: 0.00000000
+con2_36,43: 0.00076123
+con2_37,5: 0.00001974
+con2_38,60: 0.00000000
+con2_39,16: 0.00000000
+con2_39,35: 0.00000006
+con2_40,13: 0.00000000
+con2_41,35: 0.00000000
+con2_41,60: 0.00000005
+con2_42,32: 0.00000000
+con2_42,77: 0.00000000
+con2_43,14: 0.00014996
+con2_44,26: 0.00000003
+con2_45,55: 0.00000000
+con2_46,21: 0.00000000
+con2_47,55: 0.00038525
+con2_48,66: 0.00000000
+con2_49,31: 0.00000000
+con2_50,22: 0.00000408
+con2_51,41: 0.00000000
+con2_51,76: 0.00000000
+con2_52,39: 0.00000000
+con2_52,56: 0.00000000
+con2_53,25: 0.00679117
+con2_54,64: 0.00000003
+con2_55,62: 0.00000000
+con2_56,30: 0.00000003
+con2_56,41: 0.00000009
+con2_57,51: 0.00000028
+con2_57,72: 0.00000007
+con2_58,4: 0.00000000
+con2_59,19: 0.00000006
+con2_59,64: 0.00000000
+con2_60,16: 0.00000000
+con2_61,50: 0.00069842
+con2_62,17: 0.00000000
+con2_63,40: 0.00000000
+con2_64,42: 0.00000000
+con2_65,23: 0.00000000
+con2_66,58: 0.00000004
+con2_67,46: 0.00000000
+con2_68,80: 0.00000054
+con2_69,54: 0.00000003
+con2_70,12: 0.00000000
+con2_71,68: 0.00000217
+con2_72,51: 0.00000000
+con2_72,56: 0.00000000
+con2_73,57: 0.00000050
+con2_74,67: 0.00000515
+con2_75,17: 0.00000000
+con2_76,38: 0.00000000
+con2_77,33: 0.00000000
+con2_78,26: 0.00000003
+con2_78,44: 0.00000003
+con2_79,69: 0.00000014
+con2_80,67: 0.00000000
+con2_81,3: 0.00000000
+con2_82,81: 0.00000000
+con2_83,70: 0.00000000
+total_cost: 6887885.7620246895
+solve_time: 4011.306522

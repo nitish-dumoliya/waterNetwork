@@ -1,0 +1,95 @@
+Water Network: 13
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:start = 1
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+  sol:chk:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+  tech:optionfile = gurobiOpt.prm
+
+AMPL MP initial flat model has 4706 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  585 linear; 1268 quadratic;
+Algebraic expressions:  317 div; 634 powconstexp;
+
+AMPL MP final model has 6925 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  902 linear; 1268 quadratic;
+Algebraic expressions:  317 div; 634 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+MIPGap  1e-09
+MIPGapAbs  1e-06
+BarConvTol  1e-09
+InfUnbdInfo  1
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 902 rows, 6925 columns and 5698 nonzeros
+Model fingerprint: 0x4a7e3f71
+Model has 317 general nonlinear constraints (9827 nonlinear terms)
+Variable types: 6925 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [3e+01, 4e+02]
+  Bounds range     [1e-11, 4e+14]
+  RHS range        [1e-05, 1e+03]
+Warning: Model contains large bounds
+Presolve model has 317 nlconstr
+Added 11095 variables to disaggregate expressions.
+Presolve removed 0 rows and 1902 columns
+Presolve time: 0.05s
+Presolved: 31968 rows, 16119 columns, 80428 nonzeros
+Presolved model has 5072 bilinear constraint(s)
+Presolved model has 951 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 16119 continuous, 0 integer (0 binary)
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0      handle free variables                          5s
+    7431    1.9890296e+06   0.000000e+00   0.000000e+00      6s
+
+Root relaxation: objective 1.989030e+06, 7431 iterations, 0.52 seconds (0.18 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1989029.61    0 1558          - 1989029.61      -     -    5s
+     0     0 1989029.61    0 1353          - 1989029.61      -     -    6s
+     0     0 1989029.61    0 1336          - 1989029.61      -     -    6s
+     0     0 1989029.61    0 1335          - 1989029.61      -     -    6s
+     0     0 1989029.61    0 1341          - 1989029.61      -     -    6s
+     0     0 1989029.61    0 1340          - 1989029.61      -     -    7s
+     0     0 1989029.61    0 1335          - 1989029.61      -     -    7s
+     0     0 1989029.61    0 1336          - 1989029.61      -     -    7s
+     0     0 1989029.61    0 1338          - 1989029.61      -     -   14s
+     0     2 1989029.61    0 1338          - 1989029.61      -     -  310s
+     1     5 1989029.61    1 1342          - 1989029.61      -  1740  528s

@@ -1,0 +1,110 @@
+Water Network: 5
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:start = 1
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+  sol:chk:feastol = 1e-05
+  sol:chk:feastolrel = 0
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+  tech:optionfile = gurobiOpt.prm
+
+AMPL MP initial flat model has 776 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  191 linear; 340 quadratic;
+Algebraic expressions:  85 div; 170 powconstexp;
+
+AMPL MP final model has 1371 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  276 linear; 340 quadratic;
+Algebraic expressions:  85 div; 170 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+MIPGap  1e-09
+MIPGapAbs  1e-06
+BarConvTol  1e-09
+InfUnbdInfo  1
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 276 rows, 1371 columns and 1143 nonzeros
+Model fingerprint: 0xbb0a10e7
+Model has 85 general nonlinear constraints (1445 nonlinear terms)
+Variable types: 1371 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [3e-05, 1e+00]
+  Objective range  [5e+01, 3e+02]
+  Bounds range     [1e-11, 6e+18]
+  RHS range        [2e-02, 4e+03]
+Warning: Model contains large bounds
+Presolve model has 85 nlconstr
+Added 1785 variables to disaggregate expressions.
+Presolve removed 16 rows and 532 columns
+Presolve time: 0.01s
+Presolved: 5615 rows, 2625 columns, 13432 nonzeros
+Presolved model has 765 bilinear constraint(s)
+Presolved model has 255 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 2625 continuous, 0 integer (0 binary)
+
+Root relaxation: objective 5.440996e+06, 1377 iterations, 0.06 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 5440995.64    0  407          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  324          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  306          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  306          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  329          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  329          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  329          - 5440995.64      -     -    1s
+     0     0 5440995.64    0  329          - 5440995.64      -     -    3s
+     0     2 5440995.64    0  329          - 5440995.64      -     -    7s
+     1     5 5605786.40    1  343          - 5440995.64      -  97.0   10s
+   223   288 5661702.40    9  346          - 5639850.26      -   3.4   15s
+   721   757 infeasible   17               - 5639850.26      -   2.6   21s
+  1669  1110 6306516.53   26  337          - 5639850.26      -  16.5   25s
+  3327  2950 6306516.53   48  346          - 5639850.26      -  18.7   30s
+  6520  6073 6306516.53  106  382          - 5639850.26      -  19.7   35s
+  9853  8430 infeasible  161               - 5640700.94      -  18.6   40s
+ 13476 11274 6502847.76   31  333          - 5640793.47      -  17.5   45s
+ 15167 11954 6537336.73  121    0          - 5640793.47      -  17.7  209s
+  NLP heuristic elapsed time = 5.00s
+ 15168 11955 6436397.26   48    0          - 5640793.47      -  17.7  217s
+ 15169 11955 6501665.81  115    0          - 6501665.81      -  17.7  234s
+ 15172 11957 6501665.81   69    0          - 6501665.81      -  17.7  235s
+ 15175 11959 6562940.14  128    0          - 6501665.81      -  17.7  250s
+ 15177 11962 6564392.21   78    0          - 6501665.81      -  17.8  474s
+  NLP heuristic elapsed time = 5.00s
+ 15178 11963 6712129.39   97    0          - 6501665.81      -  17.8  481s
+ 15179 11963 6506822.98   27    0          - 6501665.81      -  17.8  499s
+ 15184 11967 6501665.81   43    0          - 6501665.81      -  17.8  511s
+  NLP heuristic elapsed time = 5.01s
+ 15185 11967 6501665.81   44    0          - 6501665.81      -  17.8  524s
+ 15186 11971 6501665.81   31  425          - 6501665.81      -  17.9  556s
+ 15200 11994 6501665.81   34  401          - 6501665.81      -  18.0  562s

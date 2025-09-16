@@ -465,8 +465,8 @@ Baron_Objective = []
 Baron_Lower_bound = []
 Baron_Time_taken = []
 Baron_Con_vio = []
-Baron_Abs_vio = []
-Baron_Rel_vio = []
+Baron_Abs_error = []
+Baron_Rel_error = []
 Knitro_Objective = []
 Knitro_Time_taken = []
 Ipopt_Objective = []
@@ -477,19 +477,19 @@ Gurobi_Objective = []
 Gurobi_Best_Bound = []
 Gurobi_Time_taken = []
 Gurobi_Con_vio = []
-Gurobi_Abs_vio = []
-Gurobi_Rel_vio = []
+Gurobi_Abs_error = []
+Gurobi_Rel_error = []
 Scip_Objective = []
 Scip_Dual_Bound = []
 Scip_Time_taken = []
 Scip_Con_vio = []
-Scip_Abs_vio = []
-Scip_Rel_vio = []
+Scip_Abs_error = []
+Scip_Rel_error = []
 InitialIpopt_Objective = []
 InitialIpopt_Time_taken = []
 InitialIpopt_Con_vio = []
-InitialIpopt_Abs_vio = []
-InitialIpopt_Rel_vio = []
+InitialIpopt_Abs_error = []
+InitialIpopt_Rel_error = []
 
 Knitro_Objective = []
 Knitro_Time_taken = []
@@ -500,14 +500,14 @@ Mmultistart_Time_taken = []
 Heuristic_Objective = []
 Heuristic_Time_taken = []
 Heuristic_Con_vio = []
-Heuristic_Abs_vio = []
-Heuristic_Rel_vio = []
+Heuristic_Abs_error = []
+Heuristic_Rel_error = []
 
 dir = "smooth-approx"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
 for ins in data_list:
-    with open(f"../output/ipopt_out/{dir}/{ins}.ipopt_out") as output:
+    with open(f"../europt/ipopt_out/{dir}/{ins}.ipopt_out") as output:
         print("Model Name:",ins)
         out = output
         obj, time, violation_con,violation_abs, violation_rel = IpoptInstanceOutput(ins,out)
@@ -522,13 +522,13 @@ for ins in data_list:
         InitialIpopt_Objective.append(obj)
         InitialIpopt_Time_taken.append(time)
         InitialIpopt_Con_vio.append(violation_con)
-        InitialIpopt_Abs_vio.append(violation_abs)
-        InitialIpopt_Rel_vio.append(violation_rel)
+        InitialIpopt_Abs_error.append(violation_abs)
+        InitialIpopt_Rel_error.append(violation_rel)
 
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../output/baron_out/{dir}/{ins}.baron_out") as output:
+    with open(f"../europt/baron_out/{dir}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         out = output
         obj, lower_bound, time, violation_con,violation_abs, violation_rel= BaronInstanceOutput(ins,out)
@@ -544,13 +544,13 @@ for ins in data_list:
         Baron_Lower_bound.append(lower_bound)
         Baron_Time_taken.append(time)
         Baron_Con_vio.append(violation_con)
-        Baron_Abs_vio.append(violation_abs)
-        Baron_Rel_vio.append(violation_rel)
+        Baron_Abs_error.append(violation_abs)
+        Baron_Rel_error.append(violation_rel)
 
 print("**********************Results of GUROBI Solver *********************************")
 
 for ins in data_list:
-    with open(f"../output/gurobi_out/{dir}/{ins}.gurobi_out") as output:
+    with open(f"../europt/gurobi_out/{dir}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, best_bound, time, violation_con,violation_abs, violation_rel = GurobiInstanceOutput(ins,output)
@@ -565,13 +565,13 @@ for ins in data_list:
         Gurobi_Best_Bound.append(best_bound)
         Gurobi_Time_taken.append(time)
         Gurobi_Con_vio.append(violation_con)
-        Gurobi_Abs_vio.append(violation_abs)
-        Gurobi_Rel_vio.append(violation_rel)
+        Gurobi_Abs_error.append(violation_abs)
+        Gurobi_Rel_error.append(violation_rel)
 
 print("**********************Results of SCIP Solver *********************************")
 
 for ins in data_list:
-    with open(f"../output/scip_out/{dir}/{ins}.scip_out") as output:
+    with open(f"../europt/scip_out/{dir}/{ins}.scip_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, dual_bound, time, violation_con,violation_abs, violation_rel = SCIPInstanceOutput(ins,output)
@@ -587,8 +587,8 @@ for ins in data_list:
         Scip_Dual_Bound.append(dual_bound)
         Scip_Time_taken.append(time)
         Scip_Con_vio.append(violation_con)
-        Scip_Abs_vio.append(violation_abs)
-        Scip_Rel_vio.append(violation_rel)
+        Scip_Abs_error.append(violation_abs)
+        Scip_Rel_error.append(violation_rel)
 
 #print("**********************Results of IPOPT Solver *********************************")
 #
@@ -608,7 +608,7 @@ for ins in data_list:
 print("**********************Results of Knitro Solver *********************************")
  
 for ins in data_list:
-    with open(f"../output/knitro_out/{dir}/{ins}.knitro_out") as output:
+    with open(f"../europt/knitro_out/{dir}/{ins}.knitro_out") as output:
         print("Model Name:",ins)
         obj, time = KnitroInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -620,7 +620,7 @@ for ins in data_list:
 print("**********************Results of BONMIN Solver *********************************")
 
 for ins in data_list:
-    with open(f"../output/bonmin_out/{dir}/{ins}.bonmin_out") as output:
+    with open(f"../europt/bonmin_out/{dir}/{ins}.bonmin_out") as output:
         print("Model Name:",ins)
         obj, time = BonminInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -632,7 +632,7 @@ for ins in data_list:
 print("****************************Results of Mmultistart Solver *********************************")
 
 for ins in data_list:
-    with open(f"../output/mmultistart_out/{dir}/{ins}.mmultistart_out") as output:
+    with open(f"../europt/mmultistart_out/{dir}/{ins}.mmultistart_out") as output:
         print("Model Name:",ins)
         obj, time, ub = MmultistartInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -644,7 +644,7 @@ for ins in data_list:
 print("**********************Results of Heuristic *********************************")
 
 for ins in data_list:
-    with open(f"../output/heuristic_out/{ins}.heuristic_out") as output:
+    with open(f"../europt/heuristic_out/{ins}.heuristic_out") as output:
         print("Model Name:",ins)
         obj, time, violation_con,violation_abs, violation_rel = HeuristicInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -655,22 +655,22 @@ for ins in data_list:
 
         print(" ")
         Heuristic_Con_vio.append(violation_con)
-        Heuristic_Abs_vio.append(violation_abs)
-        Heuristic_Rel_vio.append(violation_rel)
+        Heuristic_Abs_error.append(violation_abs)
+        Heuristic_Rel_error.append(violation_rel)
 
         #print("Relative violation :",violation)
         print(" ")
         Heuristic_Objective.append(obj)
         Heuristic_Time_taken.append(time)
 
-fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Vio","Ini Ipopt Rel Vio","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Vio","Baron Rel Vio","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Vio","Gurobi Rel Vio","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Vio", "Scip Rel Vio","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Con Vio", "Heuristic Abs Vio", "Heuristic Rel Vio"  ]
+fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Error","Ini Ipopt Rel Error","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Error","Baron Rel Error","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Error","Gurobi Rel Error","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Error", "Scip Rel Error","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Con Vio", "Heuristic Abs Error", "Heuristic Rel Error"  ]
 
 filename = "mmultistart_results.csv"
 
-#with open(filename, 'w') as csvfile:
-#    csvwriter = csv.writer(csvfile)
-#    # csvwriter.writerow(Solver_name)
-#    csvwriter.writerow(fields)
+with open(filename, 'w') as csvfile:
+   csvwriter = csv.writer(csvfile)
+   # csvwriter.writerow(Solver_name)
+   csvwriter.writerow(fields)
 
 import pandas as pd
 csv_input = pd.read_csv(filename)
@@ -680,26 +680,26 @@ csv_input['Mmultistart time taken'] = Mmultistart_Time_taken
 csv_input['Ini Ipopt Objective'] = InitialIpopt_Objective
 csv_input['Ini Ipopt time taken'] = InitialIpopt_Time_taken
 csv_input['Ini Ipopt Con Vio'] = InitialIpopt_Con_vio
-csv_input['Ini Ipopt Abs Vio'] = InitialIpopt_Abs_vio
-csv_input['Ini Ipopt Rel Vio'] = InitialIpopt_Rel_vio
+csv_input['Ini Ipopt Abs Error'] = InitialIpopt_Abs_error
+csv_input['Ini Ipopt Rel Error'] = InitialIpopt_Rel_error
 csv_input['Baron Lower Bound'] = Baron_Lower_bound
 csv_input['Baron Objective'] = Baron_Objective
 csv_input['Baron time taken'] = Baron_Time_taken
 csv_input['Baron Con Vio'] = Baron_Con_vio
-csv_input['Baron Abs Vio'] = Baron_Abs_vio
-csv_input['Baron Rel Vio'] = Baron_Rel_vio
+csv_input['Baron Abs Error'] = Baron_Abs_error
+csv_input['Baron Rel Error'] = Baron_Rel_error
 csv_input['Gurobi Objective'] = Gurobi_Objective
 csv_input['Gurobi Best Bound'] = Gurobi_Best_Bound
 csv_input['Gurobi time taken'] = Gurobi_Time_taken
 csv_input['Gurobi Con Vio'] = Gurobi_Con_vio
-csv_input['Gurobi Abs Vio'] = Gurobi_Abs_vio
-csv_input['Gurobi Rel Vio'] = Gurobi_Rel_vio
+csv_input['Gurobi Abs Error'] = Gurobi_Abs_error
+csv_input['Gurobi Rel Error'] = Gurobi_Rel_error
 csv_input['Scip Objective'] = Scip_Objective
 csv_input['Scip Dual Bound'] = Scip_Dual_Bound
 csv_input['Scip time taken'] = Scip_Time_taken
 csv_input['Scip Con Vio'] = Scip_Con_vio
-csv_input['Scip Abs Vio'] = Scip_Abs_vio
-csv_input['Scip Rel Vio'] = Scip_Rel_vio
+csv_input['Scip Abs Error'] = Scip_Abs_error
+csv_input['Scip Rel Error'] = Scip_Rel_error
 csv_input['Knitro Objective'] = Knitro_Objective
 csv_input['Knitro time taken'] = Knitro_Time_taken
 #csv_input['Ipopt Objective'] = Ipopt_Objective
@@ -709,8 +709,8 @@ csv_input['Bonmin time taken'] = Bonmin_Time_taken
 csv_input['Heuristic Objective'] = Heuristic_Objective
 csv_input['Heuristic time taken'] = Heuristic_Time_taken
 csv_input['Heuristic Con Vio'] = Heuristic_Con_vio
-csv_input['Heuristic Abs Vio'] = Heuristic_Abs_vio
-csv_input['Heuristic Rel Vio'] = Heuristic_Rel_vio
+csv_input['Heuristic Abs Error'] = Heuristic_Abs_error
+csv_input['Heuristic Rel Error'] = Heuristic_Rel_error
 
 csv_input.to_csv('output.csv', index=False)
 

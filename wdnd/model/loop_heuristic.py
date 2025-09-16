@@ -54,7 +54,7 @@ class WaterNetworkOptimizer:
         self.R = self.ampl.getParameter('R').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
-        self.eps = self.ampl.getParameter('eps').to_dict()
+        #self.eps = self.ampl.getParameter('eps').to_dict()
         
         
         self.delta = 0.1
@@ -770,7 +770,7 @@ class WaterNetworkOptimizer:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
 
@@ -803,7 +803,7 @@ class WaterNetworkOptimizer:
                     con2_absolute_constraint_violation += abs(absolute_violation)
 
                     # Compute relative violation between original_rhs and approx_rhs
-                    relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                    relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
                     relative_violations[f"{i},{j}"] = relative_violation
                     con2_relative_constraint_violation += abs(relative_violation)
 
@@ -837,7 +837,7 @@ class WaterNetworkOptimizer:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
         else:
@@ -867,7 +867,7 @@ class WaterNetworkOptimizer:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = (original_rhs - approx_rhs) / (original_rhs + 1e-14)
+                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs + 1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
            
@@ -965,12 +965,12 @@ class WaterNetworkOptimizer:
 
         print("*******************************************************************************\n")
         print("Absolute and relative violations between original and approximation constraint 2:\n")
-        headers = ["Constraint ID", "flow value", "Original Con Violation", "Approx Con Violation", "Absolute Violation", "Relative Violation"]
+        headers = ["Constraint ID", "flow value", "Original Con Violation", "Approx Con Violation", "Absolute Violation", "Relative Violation(in %)"]
         print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print("\nSum of violation of original headloss constraint:", con2_original_violation) 
         print("Sum of violation of approx headloss constraint:", con2_approx_violation)
         print("\nCon2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
-        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation)
+        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation, "%")
 
         # Print total violations
         #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
@@ -1720,6 +1720,7 @@ class WaterNetworkOptimizer:
         # self.constraint_violation()
         #self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         
+        #self.eps = self.ampl.get_variable('eps').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').getValues().to_dict()
         self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         print(f"Final best objective: {self.current_cost}")

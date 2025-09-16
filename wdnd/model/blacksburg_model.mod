@@ -31,7 +31,7 @@ param R_min = min{k in pipes} R[k];
 
 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 
-param eps{(i,j) in arcs} := (5.35*1e-6);
+param eps{(i,j) in arcs} := 5.35 * 1e-6;
 #param eps{(i,j) in arcs} := (1e-12 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
 
 

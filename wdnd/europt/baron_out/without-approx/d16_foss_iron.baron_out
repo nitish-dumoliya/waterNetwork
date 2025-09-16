@@ -1,0 +1,96 @@
+Water Network: ../data/d16_foss_iron.dat
+*******************************************************************************
+
+-------------------------------- Solving with baron --------------------------
+min_demand: 0.00026000000000000003
+max_demand: 0.00202
+max_flow: 0.03390999999999999
+eps: 4.437724618281675e-12 
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 2
+version 
+objbound 
+wantsol = 2
+iisfind = 4
+threads = 8
+epsr = 1e-9
+Time-limited version (expiring midnight 20250531 GMT)
+License 67b523f8-1 for A7052: IE 647 Applied Integer Programming, Prof. Ashutosh Mahajan, Indian Institute of Technology Bombay
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20241227), liccheck(20211124), ASL(20241202)
+
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 171901.
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 171724.
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           5.20    17MB     166436.         171724.       64.98%
+         83          35.45    17MB     166436.         171724.       64.98%
+        946          65.46    17MB     166436.         171724.       64.98%
+       1414        3604.36    17MB     166436.         171724.       64.98%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3604.36
+ Total CPU time used:              3604.36
+
+ Total no. of BaR iterations:    1414
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:      76
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 1414 iterations, CPU time limit reached.
+Objective 171724.3325
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.666308239263222e-08
+*******************************************************************************
+
+*******************************************************************************
+
+Constraint 2 violations:
+
+
+Sum of violation of original con2: 0.0
+Sum of violation of approx con2: 0.0
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
+
+Con2 sum of absolute violation: 3.015881696081472e-08
+Con2 sum of relative violation: 0.0001997513089102078
+*******************************************************************************
+
+Total cost using baron: 171724.33253764798
+baron solve time: 3604.40 seconds
+*******************************************************************************
+
