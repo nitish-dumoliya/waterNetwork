@@ -33,7 +33,7 @@ param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 
 #param eps{(i,j) in arcs} := (1e-6 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
 #param eps{(i,j) in arcs} := 4.047*(1e-4)^(1/1.852)*1e-4;
-#param eps{(i,j) in arcs} := (0.0535/(MaxK[i,j])^(0.54)) * (1e-1)^(0.54);
+param eps{(i,j) in arcs} := (0.0535/(MaxK[i,j])^(0.54)) * (1e-1)^(0.54);
 #param eps{(i,j) in arcs} := (1e-3 / (0.04001571 * MaxK[i,j]))^(1 / 1.852);
 #param eps{(i,j) in arcs} := (1e-4 * R_min^1.852 * d_min^4.87 / (0.07508 * 10.67 * L[i,j]))^(1 / 0.926);
 #param eps{(i,j) in arcs} := (1/0.58023)*(1.54e-8 / (MaxK[i,j]*0.0000100002395709))^(1 / 1.852);
@@ -43,7 +43,7 @@ param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs}>=-Q_max, <=Q_max;	            # Flow variable
 var h{nodes};	            # Head
-var eps{arcs}>=1e-11, <=1;
+#var eps{arcs}>=1e-11, <=1;
 
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
@@ -58,12 +58,12 @@ subject to con1{j in nodes diff Source}:
 #subject to con2{(i,j) in arcs}: 
 #     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
 
-subject to epsilon_upper1{(i,j) in arcs}:
+#subject to epsilon_upper1{(i,j) in arcs}:
     #eps[i,j] * (1e-2 + sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)))^(0.54)  <= 0.0535 * (abs(h[i]-h[j]) + 1e-4)^(0.54);
     #eps[i,j]  <= 0.0535 / (1e-6 + sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)))^(0.54) * (abs(h[i]-h[j]) + 1e-6)^(0.54);
     #eps[i,j] * (sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)))^(0.54)  <= 0.0535 * (abs(h[i]-h[j]) + 1e-2)^(0.54);
     #eps[i,j] = 0.0535*(abs(q[i,j])+1e-4);
-    eps[i,j] <= (0.0535 / (MaxK[i,j]^0.54) ) * (1e-4)^(0.54);
+#    eps[i,j] <= (0.0535 / (MaxK[i,j]^0.54) ) * (1e-3)^(0.54);
 
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs}: 

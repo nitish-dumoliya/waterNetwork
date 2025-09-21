@@ -486,8 +486,24 @@ class WaterNetworkSolver:
         """
         print(f"\n-------------------------------- Solving with IPOPT --------------------------")
         self.ampl.option['solver'] = 'ipopt' 
-        #self.ampl.option["ipopt_options"] = "outlev = 0  bound_push = 0.01 bound_frac = 0.01" 
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes"
+        # self.ampl.option["ipopt_options"] = "outlev = 0  bound_push = 0.01 bound_frac = 0.01" 
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-10 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-10 constr_viol_tol = 1e-10 acceptable_constr_viol_tol = 1e-10 honor_original_bounds = yes acceptable_tol = 1e-10 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        
+        # self.ampl.option["ipopt_options"] = (
+        #     "outlev=0 "
+        #     "expect_infeasible_problem=yes "
+        #     "bound_relax_factor=1e-8 "  # small relaxation to avoid eps slightly below lower bound
+        #     "tol=1e-8 "
+        #     "constr_viol_tol=1e-8 "
+        #     "acceptable_constr_viol_tol=1e-8 "
+        #     "honor_original_bounds=yes "
+        #     "acceptable_tol=1e-8 "
+        #     "bound_push=1e-8 "
+        #     "bound_frac=1e-8 "
+        #     "warm_start_init_point=no "
+        #     "halt_on_ampl_error=yes"
+        # )
         self.ampl.option["presolve_eps"] = "8.53e-15"
 
         #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
@@ -540,7 +556,7 @@ class WaterNetworkSolver:
         #print("Print the decision variables value:\n")
         #ampl.eval("display l;")
         #ampl.eval("display q;")
-        #ampl.eval("display h;")
+        self.ampl.eval("display eps;")
 
         #self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
         #ampl.eval("display con1.body;")
@@ -562,7 +578,7 @@ class WaterNetworkSolver:
         self.q_init = self.ampl.get_variable('q').get_values().to_dict()
         self.h_init = self.ampl.get_variable('h').get_values().to_dict()
         self.l_init = self.ampl.get_variable('l').get_values().to_dict()
-        self.eps_init = self.ampl.get_variable('eps').get_values().to_dict()
+        # self.eps_init = self.ampl.get_variable('eps').get_values().to_dict()
         if self.data_number ==5:
              self.q1_init = self.ampl.get_variable('q1').get_values().to_dict()
              self.q2_init = self.ampl.get_variable('q2').get_values().to_dict()
@@ -684,10 +700,13 @@ class WaterNetworkSolver:
         for (i, j), val in self.q_init.items():
             self.ampl.eval(f'let q[{i},{j}] := {val};')
             if self.data_number ==5:
-                self.ampl.eval(f'let q1[{i},{j}] := {self.q1[i,j]};')
-                self.ampl.eval(f'let q2[{i},{j}] := {self.q2[i,j]};')
+                self.ampl.eval(f'let q1[{i},{j}] := {self.q1_init[i,j]};')
+                self.ampl.eval(f'let q2[{i},{j}] := {self.q2_init[i,j]};')
         for i, val in self.h_init.items():
             self.ampl.eval(f'let h[{i}] := {val};')
+        # for (i, j), val in self.eps_init.items():
+        #     self.ampl.eval(f'let eps[{i},{j}] := {val};')
+
         #for (i, j, k), val in self.l_init.items():
         #    self.ampl.var["l"][i,j,k].fix(val)
         #for (i, j), val in self.q_init.items():
@@ -704,7 +723,7 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
         
-        self.ampl.option["ipopt_options"] = "outlev = 4 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-10 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
         
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10"
@@ -717,7 +736,17 @@ class WaterNetworkSolver:
         # self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
         self.ampl.option["baron_options"]= "optfile = optfile version objbound wantsol = 2 outlev = 2 barstats" # lsolver = conopt
         #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
-        self.ampl.option["scip_options"] = "outlev  1 timelimit 3600 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=0 param:read = scip.set " #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        # self.ampl.option["scip_options"] = (
+        #                                     "outlev=1 "
+        #                                     "timelimit=10 "
+        #                                     "lim:gap=1e-9 "
+        #                                     "chk:feastol=1e-8 "
+        #                                     "chk:feastolrel=1e-8 "
+        #                                     "param:read=scip.set"
+        #                                      )
+        # self.ampl.option["scip_options"] = "outlev 1 timelimit 20 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        self.ampl.option["scip_options"] = "outlev 1 timelimit 3600 lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=0 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        # self.ampl.option["scip_options"] = "outlev  1 "
         self.ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "1"
@@ -784,8 +813,8 @@ class WaterNetworkSolver:
         self.q = self.ampl.get_variable('q').get_values().to_dict()
         self.h = self.ampl.get_variable('h').get_values().to_dict()
         self.l = self.ampl.get_variable('l').get_values().to_dict()
-        #self.eps = self.ampl.getParameter('eps').get_values().to_dict()
-        self.eps = self.ampl.get_variable('eps').get_values().to_dict()
+        self.eps = self.ampl.getParameter('eps').get_values().to_dict()
+        # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
         self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
