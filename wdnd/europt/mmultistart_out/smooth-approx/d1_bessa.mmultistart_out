@@ -3,7 +3,7 @@ Water Network: 1
 
 -------------------------------- Solving with mmultistart --------------------------
 Environment: User provided options:
-  problem_file = /tmp/at1776769
+  problem_file = /tmp/at2088074
   ampl = 1
 Environment: End of user provided options.
 
@@ -97,7 +97,7 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
 BranchAndBound: stopping branch-and-bound
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 1.06
+BranchAndBound: time taken      = 1.40
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
 MsProcessor: nodes processed     = 1
@@ -109,8 +109,8 @@ MsProcessor: nodes with problems = 0
 MaxVio brancher: times called = 0
 MaxVio brancher: time in brancher = 0.00
 SolutionPool: Number of solutions found = 1
-SolutionPool: Time first solution found = 1.05
-SolutionPool: Time best solution found  = 1.05
+SolutionPool: Time first solution found = 1.40
+SolutionPool: Time best solution found  = 1.40
 Ipopt: total calls            = 0
 Ipopt: calls to Optimize      = 0
 Ipopt: calls to ReOptimize    = 0
@@ -151,9 +151,9 @@ MultiStart: best solution value = 123882.6144
 MultiStart: best bound estimate from remaining nodes = inf
 MultiStart: gap = 0.0000
 MultiStart: gap percentage = 0.0000
-MultiStart: time used (s) = 1.06
+MultiStart: time used (s) = 1.40
 MultiStart: status of branch-and-bound: Optimal solution found
-MultiStart: wall clock time used (s) = 0.13
+MultiStart: wall clock time used (s) = 0.36
 q :=
 1 2   0.42043
 2 3   0.292211
@@ -164,13 +164,13 @@ q :=
 7 5   0.000119277
 ;
 
-q[7,5]: 0.00011927692862422392
+q[7,5]: 0.00011927692862418097
 *******************************************************************************
 
 Constraints violation:
 
 
-Sum of constraints violation: 1.921044301108135e-06
+Sum of constraints violation: 1.9205416793158583e-06
 *******************************************************************************
 
 *******************************************************************************
@@ -180,29 +180,29 @@ Absolute and relative violations between original and approximation constraint 2
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 | Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
 +=================+==============+==========================+========================+======================+======================+
-| 1,2             |  0.42043     |                  1.9e-07 |                1.9e-07 |                    0 |            0         |
+| 1,2             |  0.42043     |                  1.9e-07 |                1.9e-07 |                    0 |              0       |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.292211    |                  1e-07   |                1e-07   |                   -0 |           -0         |
+| 2,3             |  0.292211    |                  1e-07   |                1e-07   |                    0 |              0       |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,6             |  0.128219    |                  2e-08   |                2e-08   |                   -0 |           -0         |
+| 2,6             |  0.128219    |                  2e-08   |                2e-08   |                    0 |              0       |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,4             |  0.248771    |                  7e-08   |                7e-08   |                    0 |            0         |
+| 3,4             |  0.248771    |                  7e-08   |                7e-08   |                   -0 |             -0       |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.208481    |                  3.5e-07 |                3.5e-07 |                   -0 |           -0         |
+| 4,5             |  0.208481    |                  3.5e-07 |                3.5e-07 |                    0 |              0       |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0804393   |                  1e-08   |                1e-08   |                   -0 |           -0         |
+| 6,7             |  0.0804393   |                  1e-08   |                1e-08   |                    0 |              0       |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,5             |  0.000119277 |                  2.9e-07 |                2.9e-07 |                    0 |            4.939e-05 |
+| 7,5             |  0.000119277 |                  2.9e-07 |                2.9e-07 |                    0 |              4.9e-07 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 
-Sum of violation of original headloss constraint: 1.0219170076620002e-06
-Sum of violation of approx headloss constraint: 1.0255123461967025e-06
+Sum of violation of original headloss constraint: 1.0218936846361978e-06
+Sum of violation of approx headloss constraint: 1.0254890280567489e-06
 
-Con2 sum of absolute violation between original function and approximate function: 3.5953496369325877e-09
-Con2 sum of relative violation between original function and approximate function: 4.939132942727547e-05
+Con2 sum of absolute violation between original function and approximate function: 3.595345196907851e-09
+Con2 sum of relative violation between original function and approximate function: 4.939132938958147e-07
 *******************************************************************************
 
-Total cost using mmultistart: 123882.61435230012
-mmultistart solve time: 0.13 seconds
+Total cost using mmultistart: 123882.61435231437
+mmultistart solve time: 0.41 seconds
 *******************************************************************************
 

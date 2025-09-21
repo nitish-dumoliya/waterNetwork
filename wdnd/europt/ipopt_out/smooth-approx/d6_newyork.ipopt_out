@@ -2,7 +2,7 @@ Water Network: 6
 *******************************************************************************
 
 -------------------------------- Solving with ipopt --------------------------
-Ipopt 3.12.13: outlev = 0
+Ipopt 3.12.13: outlev = 4
 expect_infeasible_problem = yes
 bound_relax_factor=0
 tol = 1e-6
@@ -18,6 +18,38 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit http://projects.coin-or.org/Ipopt
 ******************************************************************************
 
+Total number of variables............................:      397
+                     variables with only lower bounds:       19
+                variables with lower and upper bounds:      378
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      103
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+
+Number of Iterations....: 258
+
+                                   (scaled)                 (unscaled)
+Objective...............:   2.2111367377220574e+06    5.8325364867632426e+07
+Dual infeasibility......:   1.4881212977417246e-10    3.9253663591831215e-09
+Constraint violation....:   3.6379788070917130e-12    3.6379788070917130e-12
+Complementarity.........:   9.4142915433603399e-08    2.4833018233075906e-06
+Overall NLP error.......:   6.9428475781054307e-09    2.4833018233075906e-06
+
+
+Number of objective function evaluations             = 279
+Number of objective gradient evaluations             = 199
+Number of equality constraint evaluations            = 279
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 260
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 258
+Total CPU secs in IPOPT (w/o function evaluations)   =      0.569
+Total CPU secs in NLP function evaluations           =      0.015
+
+EXIT: Optimal Solution Found.
  
 Ipopt 3.12.13: Optimal Solution Found
 
@@ -113,10 +145,10 @@ Sum of violation of original headloss constraint: 2.2718632530782656e-13
 Sum of violation of approx headloss constraint: 2.2824797607512437e-13
 
 Con2 sum of absolute violation between original function and approximate function: 2.1718737919229625e-15
-Con2 sum of relative violation between original function and approximate function: 1.3264458604536043e-13
+Con2 sum of relative violation between original function and approximate function: 1.3264458604536041e-15
 *******************************************************************************
 
 Total cost using ipopt: 58325364.86763243
-ipopt solve time: 0.56 seconds
+ipopt solve time: 0.59 seconds
 *******************************************************************************
 

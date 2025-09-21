@@ -25,12 +25,12 @@ param d_min = min{i in pipes} d[i];
 param R_min = min{k in pipes} R[k];
 
 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
-param eps{(i,j) in arcs} := (5.35*1e-5)^2;
+param eps{(i,j) in arcs} := 0.0535*1e-4;
 #****************************************VARIABLES****************************************#
-var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
+var l{arcs,pipes} >= 0;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
-
+#var y{arcs}>=1e-4;
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
 minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
@@ -41,8 +41,17 @@ subject to con1{j in nodes diff Source}:
 ;
 
 # hazen-Williams Constraint 
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
+
 subject to con2{(i,j) in arcs}: 
-     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
+    h[i] - h[j]  =  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
+
+#subject to epsilon_upper2{(i,j) in arcs}:
+#    y[i,j] =  (q[i,j]^2 + eps[i,j]^2) ;
+
+#subject to epsilon_upper3{(i,j) in arcs}:
+#    y[i,j] >= (eps[i,j]^2);
 
 subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]

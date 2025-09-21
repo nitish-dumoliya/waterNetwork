@@ -16,15 +16,15 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit http://projects.coin-or.org/Ipopt
 ******************************************************************************
 
-NLP0010I Ipopt return (for initialSolve): status -3, iter count 3000, time 78.584992
+NLP0010I Ipopt return (for initialSolve): status -3, iter count 3000, time 113.56794
 NLP0012I 
               Num      Status      Obj             It       time                 Location
-NLP0014I             1      FAILED 3910377.7     3000 78.584992
+NLP0014I             1      FAILED 3879901.3     3000 113.56794
 NLP3003W Trying to resolve NLP with different starting point (1 attempts).
-NLP0010I Ipopt return (for resolve robustness): status -3, iter count 3000, time 76.923671
-NLP0014I             1      FAILED 3910377.7     3000 76.923671   resolve robustness
-NLP0010I Ipopt return (for initialSolve): status -3, iter count 3000, time 76.805094
-NLP0014I             3      FAILED 3910377.7     3000 76.805094
+NLP0010I Ipopt return (for resolve robustness): status -3, iter count 3000, time 91.020392
+NLP0014I             1      FAILED 3879901.3     3000 91.020392   resolve robustness
+NLP0010I Ipopt return (for initialSolve): status -3, iter count 3000, time 90.592622
+NLP0014I             3      FAILED 3879901.3     3000 90.592622
 Cbc3007W No integer variables - nothing to do
 Cbc0006I The LP relaxation is infeasible or too expensive
 
@@ -1670,6 +1670,6 @@ Con2 sum of relative violation between original function and approximate functio
 *******************************************************************************
 
 Total cost using bonmin: 0.0
-bonmin solve time: 232.75 seconds
+bonmin solve time: 296.64 seconds
 *******************************************************************************
 

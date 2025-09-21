@@ -30,21 +30,21 @@ suffix ipopt_zL_out OUT;
 Constraints violation:
 
 
-Sum of constraints violation: 1.2024704149071752e-11
+Sum of constraints violation: 1.6693067619519275e-07
 *******************************************************************************
 
 Absolute and relative violations between original and approximation constraint 2:
 
 
-Sum of violation of original headloss constraint: 1.1156478796348068e-09
-Sum of violation of approx headloss constraint: 1.8390150513525327e-13
+Sum of violation of original headloss constraint: 2.1486284973448733e-13
+Sum of violation of approx headloss constraint: 1.6691746992231193e-07
 
-Con2 sum of absolute violation between original function and approximate function: 1.1156589471705836e-09
-Con2 sum of relative violation between original function and approximate function: 4.818389683329473e-08
+Con2 sum of absolute violation between original function and approximate function: 1.6691744961216948e-07
+Con2 sum of relative violation between original function and approximate function: 6.293413177673979e-06
 *******************************************************************************
 
-Total cost using ipopt: 58517550.89536412
-ipopt solve time: 3.38 seconds
+Total cost using ipopt: 58325364.86690484
+ipopt solve time: 0.60 seconds
 q1 [*,*] (tr)
 :       1         2         3         4         5        6         7       :=
 2    24.1884     .         .         .         .         .       .
@@ -64,13 +64,13 @@ q1 [*,*] (tr)
 13    .        .         .          .          .          .       27.0738
 16    .       2.26424    .          .          .          .         .
 17    .        .        0.401611    .          .          .         .
-18    .        .         .          .         1.74129     .         .
+18    .        .         .          .         2.09452     .         .
 20    .        .         .         1.62302     .          .         .
 
-:      15        18         20       :=
-14   29.6632    .         .
-16     .        .        0.587529
-19     .       1.26796    .
+:      15         18         20       :=
+14   29.6632    .          .
+16     .        .         0.587529
+19     .       0.968865    .
 ;
 
 q2 [*,*] (tr)
@@ -92,13 +92,13 @@ q2 [*,*] (tr)
 13    .          .           .         .           .         .         0.282825
 16    .         1.80876      .         .           .         .          .
 17    .          .          1.22661    .           .         .          .
-18    .          .           .         .          4.89051    .          .
+18    .          .           .         .          4.53728    .          .
 20    .          .           .        3.93171      .         .          .
 
 :       15        18         20       :=
 14   0.309876    .         .
 16    .          .        0.153341
-19    .         2.04795    .
+19    .         2.34704    .
 ;
 
 *******************************************************************************

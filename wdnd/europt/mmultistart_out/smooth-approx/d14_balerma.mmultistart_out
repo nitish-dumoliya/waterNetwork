@@ -3,7 +3,7 @@ Water Network: 14
 
 -------------------------------- Solving with mmultistart --------------------------
 Environment: User provided options:
-  problem_file = /tmp/at1776770
+  problem_file = /tmp/at2088047
   ampl = 1
 Environment: End of user provided options.
 
@@ -87,19 +87,20 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit https://github.com/coin-or/Ipopt
 ******************************************************************************
 
+MsProcessor: engine hit iteration limit, continuing in node 0
  
 ----------------------------------------------------------------------------------------------
  Cpu(s)   Wall(s)              LB           UB        Gap%     Nodes-Proc     Nodes-Rem   #Sol
 ----------------------------------------------------------------------------------------------
      0         0             -inf          inf         inf              0             0      0
-    46        45              inf   3.9572e+06    0.00e+00              1             0      1
-    46        45              inf   3.9572e+06    0.00e+00              1             0      1
+    45        44              inf   3.9023e+06    0.00e+00              1             0      1
+    45        44              inf   3.9023e+06    0.00e+00              1             0      1
 ----------------------------------------------------------------------------------------------
  
 BranchAndBound: stopping branch-and-bound
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
-BranchAndBound: time taken      = 45.97
+BranchAndBound: time taken      = 44.67
 BranchAndBound: nodes processed = 1
 BranchAndBound: nodes created   = 1
 MsProcessor: nodes processed     = 1
@@ -107,12 +108,12 @@ MsProcessor: nodes branched      = 0
 MsProcessor: nodes infeasible    = 0
 MsProcessor: nodes optimal       = 1
 MsProcessor: nodes hit ub        = 0
-MsProcessor: nodes with problems = 0
+MsProcessor: nodes with problems = 1
 MaxVio brancher: times called = 0
 MaxVio brancher: time in brancher = 0.00
 SolutionPool: Number of solutions found = 1
-SolutionPool: Time first solution found = 45.99
-SolutionPool: Time best solution found  = 45.99
+SolutionPool: Time first solution found = 44.63
+SolutionPool: Time best solution found  = 44.63
 Ipopt: total calls            = 0
 Ipopt: calls to Optimize      = 0
 Ipopt: calls to ReOptimize    = 0
@@ -149,13 +150,13 @@ NlPresHandler: Times coefficients improved    = 0
 NlPresHandler: Times quad. changed to conic   = 0
 NlPresHandler: Changes in nodes               = 0
  
-MultiStart: best solution value = 3957216.2746
+MultiStart: best solution value = 3902255.8338
 MultiStart: best bound estimate from remaining nodes = inf
 MultiStart: gap = 0.0000
 MultiStart: gap percentage = 0.0000
-MultiStart: time used (s) = 46.00
+MultiStart: time used (s) = 44.70
 MultiStart: status of branch-and-bound: Optimal solution found
-MultiStart: wall clock time used (s) = 44.86
+MultiStart: wall clock time used (s) = 43.61
 Error executing "solve" command:
 Solution obtained using an unauthorized or unknown solver. Please contact support@ampl.com.
 <BREAK>
@@ -1798,6 +1799,6 @@ Con2 sum of relative violation between original function and approximate functio
 *******************************************************************************
 
 Total cost using mmultistart: 0.0
-mmultistart solve time: 44.92 seconds
+mmultistart solve time: 43.67 seconds
 *******************************************************************************
 

@@ -6,10 +6,12 @@ super_source_out_arc: [(1, 2), (2, 3), (2, 6)]
 
 Ipopt 3.12.13: outlev = 0
 bound_relax_factor=0
-bound_push = 0.1
+bound_push = 0.01
 bound_frac = 0.1
 halt_on_ampl_error = yes
 halt_on_ampl_error = yes
+warm_start_init_point = yes
+expect_infeasible_problem = yes
 
 
 ******************************************************************************
@@ -23,9 +25,9 @@ Ipopt 3.12.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Objective:  123882.61435634251
+Objective:  123882.6143570333
 Solve_result:  solved
-Solve_time: 0.090967 
+Solve_time: 1.425283 
 
 
 ---------------------------Reverse Arc Direction Approach------------------------------------
@@ -41,8 +43,8 @@ node-in-arcs: [(4, 5), (7, 5)]
 decreasing-in-flow-arcs: [(4, 5), (7, 5)] 
 
 Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(4, 5)    1,23,883      1,39,229      0.13s       solved        No        0.71s
-(7, 5)    1,23,883      1,23,884      0.05s       solved        No        0.79s
+(4, 5)    1,23,883      1,39,229      0.1s        solved        No        1.61s
+(7, 5)    1,23,883      1,23,884      0.06s       solved        No        1.71s
 ----------------------------------------------------------------------------------------
 
 ----------------------------Diameter Reduction Approach--------------------------------------
@@ -55,7 +57,7 @@ Water Network: d1_bessa
 Constraints violation:
 
 
-Sum of constraints violation: 1.5046044878758158e-10
+Sum of constraints violation: 3.8586495110237706e-13
 *******************************************************************************
 
 *******************************************************************************
@@ -65,31 +67,31 @@ Absolute and relative violations between original and approximation constraint 2
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 | Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation(in %) |
 +=================+==============+==========================+========================+======================+============================+
-| 1,2             |  0.42043     |                       -0 |                     -0 |                    0 |                  0         |
+| 1,2             |  0.42043     |                        0 |                      0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 2,3             |  0.292211    |                       -0 |                     -0 |                    0 |                  0         |
+| 2,3             |  0.292211    |                        0 |                      0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 2,6             |  0.128219    |                        0 |                      0 |                   -0 |                 -0         |
+| 2,6             |  0.128219    |                        0 |                      0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 3,4             |  0.248771    |                       -0 |                     -0 |                    0 |                  0         |
+| 3,4             |  0.248771    |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 4,5             |  0.208481    |                       -0 |                     -0 |                   -0 |                 -0         |
+| 4,5             |  0.208481    |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 6,7             |  0.0804393   |                        0 |                      0 |                    0 |                  0         |
+| 6,7             |  0.0804393   |                       -0 |                     -0 |                   -0 |                         -0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 7,5             |  0.000119277 |                       -0 |                     -0 |                    0 |                  4.939e-05 |
+| 7,5             |  0.000119277 |                       -0 |                      0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 
-Sum of violation of original headloss constraint: 3.7103156259182812e-09
-Sum of violation of approx headloss constraint: 1.1497303022828254e-10
+Sum of violation of original headloss constraint: 4.8944355512947624e-14
+Sum of violation of approx headloss constraint: 4.476280457410553e-14
 
-Con2 sum of absolute violation between original function and approximate function: 3.5953461484036775e-09
-Con2 sum of relative violation between original function and approximate function: 4.939133101992695e-05 %
+Con2 sum of absolute violation between original function and approximate function: 5.107459594144714e-14
+Con2 sum of relative violation between original function and approximate function: 6.498543806528807e-12
 *******************************************************************************
 
-Final best objective: 123882.61435634251
+Final best objective: 123882.6143570333
 Number of nlp problem solved: 3
 Total number of iteration: 2
-Solver_time: 0.27 seconds
-Heuristic elapsed time: 0.80 seconds
+Solver_time: 1.59 seconds
+Heuristic elapsed time: 1.71 seconds
 

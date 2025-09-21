@@ -712,8 +712,8 @@ class WaterNetworkOptimizer:
          
         con1_gap = {}
         if self.data_number==5:
-            q1 = self.ampl.get_variable('q1').get_values().to_dict()
-            q2 = self.ampl.get_variable('q2').get_values().to_dict()
+            q1 = self.q1
+            q2 = self.q2
             for i in self.nodes:
                 if i not in self.source:
                     con1_rhs = self.D[i]
@@ -770,7 +770,7 @@ class WaterNetworkOptimizer:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
 
@@ -803,7 +803,7 @@ class WaterNetworkOptimizer:
                     con2_absolute_constraint_violation += abs(absolute_violation)
 
                     # Compute relative violation between original_rhs and approx_rhs
-                    relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
+                    relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                     relative_violations[f"{i},{j}"] = relative_violation
                     con2_relative_constraint_violation += abs(relative_violation)
 
@@ -837,7 +837,7 @@ class WaterNetworkOptimizer:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
         else:
@@ -867,7 +867,7 @@ class WaterNetworkOptimizer:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs + 1e-14)
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs + 1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
            
@@ -970,7 +970,7 @@ class WaterNetworkOptimizer:
         print("\nSum of violation of original headloss constraint:", con2_original_violation) 
         print("Sum of violation of approx headloss constraint:", con2_approx_violation)
         print("\nCon2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
-        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation, "%")
+        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation)
 
         # Print total violations
         #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
@@ -1496,7 +1496,8 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         self.ampl.option["solver"] = "ipopt"
-        self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = yes expect_infeasible_problem = yes ")   #max_iter = 1000
+        # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
         #self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0 warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
         #self.ampl.set_option("ipopt_options", f"outlev = 0 warm_start_init_point = no ")   #max_iter = 1000
         self.ampl.option["presolve_eps"] = "6.82e-14"
@@ -1529,6 +1530,7 @@ class WaterNetworkOptimizer:
             #self.bound_push , self.bound_frac = (0.001, 0.000001)
             self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
             self.ampl.option["presolve_eps"] = "6.82e-14"
             self.ampl.option['presolve'] = 1
             
@@ -1631,7 +1633,7 @@ class WaterNetworkOptimizer:
     def run(self):
         """Main method to run the optimization process."""
         self.start_time = time.time()
-        self.bound_push , self.bound_frac = (0.1, 0.1)
+        self.bound_push , self.bound_frac = (0.01, 0.1)
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()
         fix_arc_set = self.fix_leaf_arc_flow()
@@ -1712,7 +1714,7 @@ class WaterNetworkOptimizer:
         self.iterate_acyclic_flows() 
         print("\n----------------------------Diameter Reduction Approach--------------------------------------")
         self.dia_red_iteration = 1
-        #self.diameter_reduction()
+        # self.diameter_reduction()
         #self.diameter_reduction_using_convex_model()
         
         print("\n**********************************Final best results*****************************************\n")
@@ -1720,8 +1722,8 @@ class WaterNetworkOptimizer:
         # self.constraint_violation()
         #self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         
-        #self.eps = self.ampl.get_variable('eps').get_values().to_dict()
-        self.eps = self.ampl.getParameter('eps').getValues().to_dict()
+        self.eps = self.ampl.get_variable('eps').get_values().to_dict()
+        # self.eps = self.ampl.getParameter('eps').getValues().to_dict()
         self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         print(f"Final best objective: {self.current_cost}")
         # for (i,j) in self.arcs:

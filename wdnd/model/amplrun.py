@@ -18,6 +18,7 @@ class WaterNetworkSolver:
         self.q_init = {}
         self.h_init = {}
         self.l_init = {}
+        self.eps_init = {}
         self.eps = {}
         
     def read_model_and_data(self):
@@ -267,7 +268,7 @@ class WaterNetworkSolver:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
 
@@ -300,7 +301,7 @@ class WaterNetworkSolver:
                     con2_absolute_constraint_violation += abs(absolute_violation)
 
                     # Compute relative violation between original_rhs and approx_rhs
-                    relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
+                    relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                     relative_violations[f"{i},{j}"] = relative_violation
                     con2_relative_constraint_violation += abs(relative_violation)
 
@@ -334,7 +335,7 @@ class WaterNetworkSolver:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs+1e-14)
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs+1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
         else:
@@ -364,7 +365,7 @@ class WaterNetworkSolver:
                 con2_absolute_constraint_violation += abs(absolute_violation)
 
                 # Compute relative violation between original_rhs and approx_rhs
-                relative_violation = 100*(original_rhs - approx_rhs) / (original_rhs + 1e-14)
+                relative_violation = (original_rhs - approx_rhs) / (original_rhs + 1e-14)
                 relative_violations[f"{i},{j}"] = relative_violation
                 con2_relative_constraint_violation += abs(relative_violation)
            
@@ -483,7 +484,8 @@ class WaterNetworkSolver:
         """
         print(f"\n-------------------------------- Solving with IPOPT --------------------------")
         self.ampl.option['solver'] = 'ipopt' 
-        self.ampl.option["ipopt_options"] = "outlev = 0  expect_infeasible_problem = yes tol = 1e-9 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 nlp_scaling_method = none" 
+        #self.ampl.option["ipopt_options"] = "outlev = 0  bound_push = 0.01 bound_frac = 0.01" 
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes"
         self.ampl.option["presolve_eps"] = "8.53e-15"
 
         #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
@@ -522,8 +524,8 @@ class WaterNetworkSolver:
         l_init = self.ampl.getVariable('l').getValues().to_dict()
         q_init = self.ampl.getVariable('q').getValues().to_dict()
         h_init = self.ampl.getVariable('h').getValues().to_dict()
-        eps = self.ampl.getParameter('eps').getValues().to_dict()
-        #eps = self.ampl.getParameter('eps').getValues().to_dict()
+        # eps = self.ampl.getParameter('eps').getValues().to_dict()
+        eps = self.ampl.getVariable('eps').getValues().to_dict()
 
         #print(l_init)
         #print(q_init)
@@ -557,6 +559,7 @@ class WaterNetworkSolver:
         q_sol = self.ampl.get_variable('q').get_values().to_dict()
         h_sol = self.ampl.get_variable('h').get_values().to_dict()
         l_sol = self.ampl.get_variable('l').get_values().to_dict()
+        eps_sol = self.ampl.get_variable('eps').get_values().to_dict()
 
         # Save initial points
         for idx in q_sol.keys():
@@ -565,6 +568,9 @@ class WaterNetworkSolver:
             self.h_init[idx] = h_sol[idx]
         for idx in l_sol.keys():
             self.l_init[idx] = l_sol[idx]
+        for idx in eps_sol.keys():
+            self.eps_init[idx] = eps_sol[idx]
+
         print("*******************************************************************************\n")
 
     @contextlib.contextmanager
@@ -654,34 +660,38 @@ class WaterNetworkSolver:
         self.read_model_and_data()
 
         # Set initial values
-        #q_var = self.ampl.get_variable('q')
-        #h_var = self.ampl.get_variable('h')
-        #l_var = self.ampl.get_variable('l')
+        q_var = self.ampl.get_variable('q')
+        h_var = self.ampl.get_variable('h')
+        l_var = self.ampl.get_variable('l')
+        eps_var = self.ampl.get_variable('eps')
 
-        #for idx in self.q_init:
-        #    q_var[idx].set_value(self.q_init[idx])
-        #for idx in self.h_init:
-        #    h_var[idx].set_value(self.h_init[idx])
-        #for idx in self.l_init:
-        #    l_var[idx].set_value(self.l_init[idx])
+        for idx in self.q_init:
+           q_var[idx].set_value(self.q_init[idx])
+        for idx in self.h_init:
+           h_var[idx].set_value(self.h_init[idx])
+        for idx in self.l_init:
+           l_var[idx].set_value(self.l_init[idx])
+        for idx in self.eps_init:
+           eps_var[idx].set_value(self.eps_init[idx])
+
 
         # Change solver and solve
         self.ampl.option['solver'] = self.solver_name
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
         
-        self.ampl.option["ipopt_options"] = "outlev = 4 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes print_options_documentation = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 4 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
         
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 "
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1 mipgapabs = 1e-6  mipgap = 1e-9 barconvtol = 1e-9 chk:feastol = 1e-5 chk:epsrel = 0 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 300 warmstart = 1 barconvtol = 1e-9 feastol = 1e-6 chk:epsrel = 0 mipgap = 1e-9 NumericFocus = 1" 
+        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1  mipgapabs = 1e-6  mipgap = 1e-9 barconvtol = 1e-9 chk:feastol = 1e-5 chk:epsrel = 0 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 300" 
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
         # self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
-        self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
+        self.ampl.option["baron_options"]= "optfile = optfile version objbound wantsol = 2 outlev = 2 barstats" # lsolver = conopt
         #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
         self.ampl.option["scip_options"] = "outlev  1 timelimit 3600 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=0 " #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         self.ampl.option["knitro_options"]= "maxtime_real = 3600 outlev = 4 threads=8 feastol = 1.0e-7 feastol_abs = 1.0e-7 ms_enable = 1 ms_maxsolves = 10"
@@ -748,14 +758,15 @@ class WaterNetworkSolver:
         self.q = self.ampl.get_variable('q').get_values().to_dict()
         self.h = self.ampl.get_variable('h').get_values().to_dict()
         self.l = self.ampl.get_variable('l').get_values().to_dict()
-        self.eps = self.ampl.getParameter('eps').get_values().to_dict()
-        #self.eps = self.ampl.get_variable('eps').get_values().to_dict()
+        #self.eps = self.ampl.getParameter('eps').get_values().to_dict()
+        self.eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
         self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
         # self.ampl.eval("display q1;")
         # self.ampl.eval("display q2;")
-        #self.ampl.eval("display eps;")
+        self.ampl.eval("display eps;")
+        print("eps: ", self.eps[next(iter(self.eps))])
         for (i,j) in self.arcs:
             if np.abs(self.q[i,j]) <=1e-3:
                 print(f"q[{i},{j}]:",self.q[i,j])
@@ -899,10 +910,10 @@ class WaterNetworkSolver:
 
 
     def run(self):
-        #self.read_model_and_data()
+        self.read_model_and_data()
 
         # First solve: IPOPT
-        #self.solve_ipopt()
+        self.solve_ipopt()
 
         # Second solve: self.solver_name
         self.second_solve()
