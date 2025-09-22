@@ -33,7 +33,7 @@ param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 
 #param eps{(i,j) in arcs} := (1e-6 / (0.07508 * MaxK[i,j]))^(1 / 0.926);
 #param eps{(i,j) in arcs} := 4.047*(1e-4)^(1/1.852)*1e-4;
-param eps{(i,j) in arcs} := (0.0535/(MaxK[i,j])^(0.54)) * (1e-1)^(0.54);
+param eps{(i,j) in arcs} := (0.0535/(MaxK[i,j])^(0.54)) * (1e-3)^(0.54);
 #param eps{(i,j) in arcs} := (1e-3 / (0.04001571 * MaxK[i,j]))^(1 / 1.852);
 #param eps{(i,j) in arcs} := (1e-4 * R_min^1.852 * d_min^4.87 / (0.07508 * 10.67 * L[i,j]))^(1 / 0.926);
 #param eps{(i,j) in arcs} := (1/0.58023)*(1.54e-8 / (MaxK[i,j]*0.0000100002395709))^(1 / 1.852);
