@@ -55,22 +55,22 @@ minimize total_cost : sum{(i,j) in arcs diff fixarcs} sum{k in pipes}l[i,j,k]*C[
 subject to con1{j in nodes diff Source}:
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j];
 
-#subject to con2{(i,j) in arcs diff fixarcs}: 
-#     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
+subject to con2{(i,j) in arcs diff fixarcs}: 
+     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
 
-#subject to con2_{(i,j) in fixarcs}: 
-#    h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 *omega * L[i,j] / (fix_r[i,j]^1.852 * fixdiam[i,j]^4.87);
+subject to con2_{(i,j) in fixarcs}: 
+    h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 *omega * L[i,j] / (fix_r[i,j]^1.852 * fixdiam[i,j]^4.87);
 
 #subject to epsilon_upper1{(i,j) in arcs}:
     #eps[i,j] * (1e-6 + sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)))^(0.54)  <= 0.0535 * (abs(h[i]-h[j]) + 1e-6)^(0.54);
 #    eps[i,j] <= (0.0535 / (MaxK[i,j]^0.54) )* (1e-4)^(0.54);
     #eps[i,j] = 0.0535/(MaxK[i,j])^(0.54) * (abs(h[i]-h[j]) + 1e-10)^(0.54);
 
-subject to con2{(i,j) in arcs diff fixarcs}: 
-    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k]/(R[k]^1.852 * d[k]^4.87));
-
-subject to con2_{(i,j) in fixarcs}:
-    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) * omega * L[i,j] / (fix_r[i,j]^1.852 * fixdiam[i,j]^4.87);
+#subject to con2{(i,j) in arcs diff fixarcs}: 
+#    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k]/(R[k]^1.852 * d[k]^4.87));
+#
+#subject to con2_{(i,j) in fixarcs}:
+#    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) * omega * L[i,j] / (fix_r[i,j]^1.852 * fixdiam[i,j]^4.87);
 
 #subject to con2{(i,j) in arcs}: 
 #    h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
