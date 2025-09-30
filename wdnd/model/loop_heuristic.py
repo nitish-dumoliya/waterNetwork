@@ -1049,11 +1049,13 @@ class WaterNetworkOptimizer:
             #    else:
             #        ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=0;")
 
-            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
             #ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes"
             #with self.suppress_output():
             #ampl.option["presolve_eps"]= "7.19e-13"
-            ampl.solve()
+            
+            with self.suppress_output():
+                 ampl.solve()
             solve_time = ampl.get_value('_solve_elapsed_time')
             self.solver_time += solve_time
             self.number_of_nlp += 1
@@ -1118,7 +1120,7 @@ class WaterNetworkOptimizer:
                 self.dia_red_iteration = self.dia_red_iteration + 1
                 self.diameter_reduction()
                 break
-    
+
     def diameter_reduction_using_convex_model(self):
         improved = False
         arc_max_dia = {}
@@ -1440,7 +1442,7 @@ class WaterNetworkOptimizer:
                 break
             print("----------------------------------------------------------------------------------------")
         return self.best_acyclic_flow, improved, self.current_cost, self.l, self.q, self.h, best_arc
-    
+
     def iterate_acyclic_flows(self):
         """Iterate to find improved acyclic flows by attempting arc reversals while maintaining acyclicity."""
         improved = True 
@@ -1484,7 +1486,7 @@ class WaterNetworkOptimizer:
         ampl.read_data(self.data_file)
         ampl.option['solver'] = "highs" 
         ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 warm_start_init_point = no halt_on_ampl_error = yes "
-        
+
         #with self.suppress_output():
         ampl.solve()
         q_lp = ampl.getVariable('q').getValues().to_dict()
@@ -1496,7 +1498,7 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         self.ampl.option["solver"] = "ipopt"
-        self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = yes expect_infeasible_problem = yes ")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
         # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
         #self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0 warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
         #self.ampl.set_option("ipopt_options", f"outlev = 0 warm_start_init_point = no ")   #max_iter = 1000
@@ -1528,7 +1530,7 @@ class WaterNetworkOptimizer:
             #print("bound_push:", self.bound_push)
             #print("bound_frac:", self.bound_frac)
             #self.bound_push , self.bound_frac = (0.001, 0.000001)
-            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
             self.ampl.option["presolve_eps"] = "6.82e-14"
@@ -1633,7 +1635,7 @@ class WaterNetworkOptimizer:
     def run(self):
         """Main method to run the optimization process."""
         self.start_time = time.time()
-        self.bound_push , self.bound_frac = (0.01, 0.1)
+        self.bound_push , self.bound_frac = (1e-1, 1e-1)
         print("Solve the original nonconvex optimization problem using IPOPT ")
         self.load_model()
         fix_arc_set = self.fix_leaf_arc_flow()
@@ -1714,7 +1716,7 @@ class WaterNetworkOptimizer:
         self.iterate_acyclic_flows() 
         print("\n----------------------------Diameter Reduction Approach--------------------------------------")
         self.dia_red_iteration = 1
-        # self.diameter_reduction()
+        self.diameter_reduction()
         #self.diameter_reduction_using_convex_model()
         
         print("\n**********************************Final best results*****************************************\n")
@@ -1722,8 +1724,8 @@ class WaterNetworkOptimizer:
         # self.constraint_violation()
         #self.constraint_relative_gap(self.q, self.h, self.l, self.R, self.d, self.pipes, self.eps)
         
-        self.eps = self.ampl.get_variable('eps').get_values().to_dict()
-        # self.eps = self.ampl.getParameter('eps').getValues().to_dict()
+        # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
+        self.eps = self.ampl.getParameter('eps').getValues().to_dict()
         self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         print(f"Final best objective: {self.current_cost}")
         # for (i,j) in self.arcs:

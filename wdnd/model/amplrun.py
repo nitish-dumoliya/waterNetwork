@@ -568,7 +568,9 @@ class WaterNetworkSolver:
         # self.ampl.eval("display h;")
         # self.ampl.eval("display q1;")
         # self.ampl.eval("display q2;")
+        self.ampl.eval("display l;")
         self.ampl.eval("display eps;")
+        # self.ampl.eval("display dvar;")
         # print("eps: ", self.eps[next(iter(self.eps))])
         for (i,j) in self.arcs:
             if np.abs(self.q[i,j]) <=1e-3:
@@ -688,14 +690,30 @@ class WaterNetworkSolver:
  
         print("best optimal solution:", self.total_cost)
 
-    def second_solve(self):
+    def second_solve(self,model_file, solver_name):
         """
         Second solve with user-specified solver, using IPOPT solution as a starting point.
         """
         print(f"\n-------------------------------- Solving with {self.solver_name} --------------------------")
 
+        # self.ampl.reset()
+        #self.read_model_and_data()
         self.ampl.reset()
-        self.read_model_and_data()
+        self.ampl.read(model_file)
+        self.ampl.read_data(self.data_file)
+        
+        self.nodes = self.ampl.getSet('nodes')
+        self.source = self.ampl.getSet('Source')
+        self.arcs = self.ampl.getSet('arcs')
+        self.pipes = self.ampl.getSet('pipes')
+        
+        self.L = self.ampl.getParameter('L').to_dict()
+        self.D = self.ampl.getParameter('D').to_dict()
+        self.C = self.ampl.getParameter('C').to_dict()
+        self.P = self.ampl.getParameter('P').to_dict()
+        self.R = self.ampl.getParameter('R').to_dict()
+        self.E = self.ampl.getParameter('E').to_dict()
+        self.d = self.ampl.getParameter('d').to_dict()
 
         # Set initial values
         #q_var = self.ampl.get_variable('q')
@@ -712,15 +730,15 @@ class WaterNetworkSolver:
         #for idx in self.eps_init:
         #   eps_var[idx].set_value(self.eps_init[idx])
 
-        #for (i, j, k), val in self.l_init.items():
-        #    self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
-        #for (i, j), val in self.q_init.items():
-        #    self.ampl.eval(f'let q[{i},{j}] := {val};')
-        #    if self.data_number ==5:
-        #        self.ampl.eval(f'let q1[{i},{j}] := {self.q1_init[i,j]};')
-        #        self.ampl.eval(f'let q2[{i},{j}] := {self.q2_init[i,j]};')
-        #for i, val in self.h_init.items():
-        #    self.ampl.eval(f'let h[{i}] := {val};')
+        for (i, j, k), val in self.l_init.items():
+           self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
+        for (i, j), val in self.q_init.items():
+           self.ampl.eval(f'let q[{i},{j}] := {val};')
+           if self.data_number ==5:
+               self.ampl.eval(f'let q1[{i},{j}] := {self.q1_init[i,j]};')
+               self.ampl.eval(f'let q2[{i},{j}] := {self.q2_init[i,j]};')
+        for i, val in self.h_init.items():
+           self.ampl.eval(f'let h[{i}] := {val};')
         
         # for (i, j), val in self.eps_init.items():
         #     self.ampl.eval(f'let eps[{i},{j}] := {val};')
@@ -737,11 +755,11 @@ class WaterNetworkSolver:
 
 
         # Change solver and solve
-        self.ampl.option['solver'] = self.solver_name
+        self.ampl.option['solver'] = solver_name
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
         
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes"
         
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01"
@@ -979,17 +997,19 @@ class WaterNetworkSolver:
         print(f"\nAt source node '{source}': shifted dual = {duals[source] + shift} (should equal H_source = {H_source})")
         
 
-
-
-
     def run(self):
-        # self.read_model_and_data()
-
+        self.read_model_and_data()
         # First solve: IPOPT
-        # self.solve_ipopt()
-
+        self.solve_ipopt()
+        if self.data_number==5:
+            model_file = "newyork_model_original.mod"
+        elif self.data_number==6:
+            model_file = "blacksburg_model_original.mod"
+        else:
+            model_file = "wdnmodel.mod"
         # Second solve: self.solver_name
-        self.second_solve()
+        # self.second_solve(model_file, "ipopt")
+        self.second_solve(model_file, self.solver_name)
         #self.reduced_diameter()
         #self.solve_content_model()
 if __name__ == "__main__":
