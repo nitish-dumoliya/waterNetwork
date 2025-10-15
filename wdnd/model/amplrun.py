@@ -479,6 +479,58 @@ class WaterNetworkSolver:
         print("*******************************************************************************\n")
 
 
+    def kkt_condition_violation(self, l, q, h, eps, lam, x, y, u, v, w, tol=1e-6):
+        #  Stationary Condition Violation
+        violations = {}
+        # dL/dl = 0
+        for (i,j) in self.arcs:
+            for k in self.pipes:
+                lhs = self.C[k] - 10.67*q[i,j]*abs(q[i,j])**0.852 * x[i,j] / (self.R[k]**1.852 * self.d[k]**4.87) + y[i,j] - w[i,j,k]
+                # lhs = self.C[k] - (10.67 * q[i,j]**3 * (q[i,j]**2 + eps[i,j]**2)**0.426 / (q[i,j]**2 + 0.426 * eps[i,j]**2)) * x[i,j] / (self.R[k]**1.852 * self.d[k]**4.87) + y[i,j] - w[i,j,k]
+                if abs(lhs) > tol:
+                    violations.setdefault("con1", []).append(((i,j,k), lhs))
+        # dL/dq = 0
+        for (i,j) in self.arcs:
+            lhs = lam[j] - lam[i] - 1.852 * x[i,j] * abs(q[i,j])**0.852 * sum(10.67*l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes)
+            if abs(lhs) > tol:
+                violations.setdefault("con2", []).append(((i,j), lhs))
+        # dL/dh_s = 0
+        for s in self.source:
+            lhs = -sum(x[s,j] for j in self.nodes if (s,j) in self.arcs) + u[s]
+            if abs(lhs) > tol:
+                violations.setdefault("con4", []).append((s, lhs))
+
+        # dL/dh_j = 0
+        for j in self.nodes:
+            if j not in self.source:
+                lhs = -sum(x[i,j] for i in self.nodes if (i,j) in self.arcs) + sum(x[j,i] for i in self.nodes if (j,i) in self.arcs) - v[j]
+                if abs(lhs) > tol:
+                    violations.setdefault("con3", []).append((j, lhs))
+        
+        # Dual Feasibility violation
+        # con5
+        for j in self.nodes: 
+            if j not in self.source:
+                if v[j] <= -tol:  # should be >= 0
+                    violations.setdefault("con5", []).append((j, v[j]))
+        
+        # Complementary Slackness Violations
+        # con6
+        for j in self.nodes:
+            if j not in self.source:
+                lhs = (-h[j] + self.E[j] + self.P[j]) * v[j]
+                if abs(lhs) > tol:
+                    violations.setdefault("con6", []).append((j, lhs))
+
+        # Primal Feasibility constraints violation
+        for (i,j) in self.arcs:
+            lhs = h[i] - h[j] - q[i,j] * abs(q[i,j])**0.852 * sum(10.67*l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes)
+            if abs(lhs) > tol:
+                violations.setdefault("con2", []).append(((i,j), lhs))
+
+        return violations
+
+
 
     def solve_ipopt(self):
         """
@@ -487,7 +539,7 @@ class WaterNetworkSolver:
         print(f"\n-------------------------------- Solving with IPOPT --------------------------")
         self.ampl.option['solver'] = 'ipopt' 
         # self.ampl.option["ipopt_options"] = "outlev = 0  bound_push = 0.01 bound_frac = 0.01" 
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 1 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 constr_viol_tol = 1e-9 acceptable_constr_viol_tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
         # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-10 constr_viol_tol = 1e-10 acceptable_constr_viol_tol = 1e-10 honor_original_bounds = yes acceptable_tol = 1e-10 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
         
         # self.ampl.option["ipopt_options"] = (
@@ -730,15 +782,15 @@ class WaterNetworkSolver:
         #for idx in self.eps_init:
         #   eps_var[idx].set_value(self.eps_init[idx])
 
-        for (i, j, k), val in self.l_init.items():
-           self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
-        for (i, j), val in self.q_init.items():
-           self.ampl.eval(f'let q[{i},{j}] := {val};')
-           if self.data_number ==5:
-               self.ampl.eval(f'let q1[{i},{j}] := {self.q1_init[i,j]};')
-               self.ampl.eval(f'let q2[{i},{j}] := {self.q2_init[i,j]};')
-        for i, val in self.h_init.items():
-           self.ampl.eval(f'let h[{i}] := {val};')
+        # for (i, j, k), val in self.l_init.items():
+        #    self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
+        # for (i, j), val in self.q_init.items():
+        #    self.ampl.eval(f'let q[{i},{j}] := {val};')
+        #    if self.data_number ==5:
+        #        self.ampl.eval(f'let q1[{i},{j}] := {self.q1_init[i,j]};')
+        #        self.ampl.eval(f'let q2[{i},{j}] := {self.q2_init[i,j]};')
+        # for i, val in self.h_init.items():
+        #    self.ampl.eval(f'let h[{i}] := {val};')
         
         # for (i, j), val in self.eps_init.items():
         #     self.ampl.eval(f'let eps[{i},{j}] := {val};')
@@ -759,12 +811,12 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
         
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
         
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01"
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1  mipgapabs = 1e-6  mipgap = 1e-9 barconvtol = 1e-9 chk:feastol = 1e-5 chk:epsrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 0 method = 1  mipgapabs = 1e-6  mipgap = 1e-9 barconvtol = 1e-9 chk:feastol = 1e-5 chk:epsrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 300" 
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
@@ -852,17 +904,85 @@ class WaterNetworkSolver:
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
         #self.ampl.eval("display eps;")
-        self.ampl.eval("display q;")
+        # self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
         # self.ampl.eval("display q1;")
         # self.ampl.eval("display q2;")
-        self.ampl.eval("display eps;")
-        print("eps: ", self.eps[next(iter(self.eps))])
+        # self.ampl.eval("display eps;")
+        # print("eps: ", self.eps[next(iter(self.eps))])
         for (i,j) in self.arcs:
             if np.abs(self.q[i,j]) <=1e-3:
                 print(f"q[{i},{j}]:",self.q[i,j])
-        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
 
+        # current_duals = {}
+        # v = {}
+        # for con_name, val in self.ampl.get_constraints():
+        #     dual_values = val.get_values()
+        #     current_duals[con_name] = dual_values
+        #     if con_name == "con1":
+        #         lam = dual_values.to_dict()
+        #         # print(lam)
+        #     if con_name == "con2":
+        #         x = dual_values.to_dict()
+        #         print(x)
+        #     if con_name == "con3":
+        #         y = dual_values.to_dict()
+        #         print(y)
+        #     if con_name == "con5":
+        #         w = dual_values.to_dict()
+        #     if con_name == "con6":
+        #         u = dual_values.to_dict() 
+        #     if con_name == "con7":
+        #         v = dual_values.to_dict()
+        #         # for j in val.keys():
+        #         #     v[j] = val[j]
+        #         # print(v)
+
+        # tol = 1e-6
+        # self.ampl.eval("display con3;")
+        # self.ampl.eval("display con3.dual;")
+        
+        def dualmodelsolve(file):
+            ampl = AMPL()
+            ampl.reset()
+            # ampl.read("lagDualWdnModel.mod")
+            ampl.read(file)
+            ampl.read_data(self.data_file)
+
+            for (i, j, k), value in self.l.items():
+                ampl.param['l'][i, j, k] = value
+            for (i, j), value in self.q.items():
+                ampl.param['q'][i, j] = value
+            for i, value in self.h.items():
+                ampl.param['h'][i] = value
+            for (i,j), value in self.eps.items():
+                ampl.param['eps'][i,j] = value
+            
+            ampl.option['solver'] = "cplex"
+            ampl.option["presolve_eps"] = "7.583e-13"
+            ampl.solve()
+            lam = ampl.get_variable('lam').get_values().to_dict()
+            x = ampl.get_variable('x').get_values().to_dict()
+            y = ampl.get_variable('y').get_values().to_dict()
+            u = ampl.get_variable('u').get_values().to_dict()
+            v = ampl.get_variable('v').get_values().to_dict()
+            w = ampl.get_variable('w').get_values().to_dict()
+            # s = ampl.get_variable('s').get_values().to_dict()
+
+            # print("lam: ", lam)
+            # print("x: ", x)
+            # print("y: ", y)
+            # print("u: ", u)
+            # print("v: ", v)
+            # print("w: ", w)
+            # print("s: ", s)
+            return lam, x, y, u, v, w
+        # lam, x, y, u, v, w = dualmodelsolve("approximatekkt.mod")
+        # dualmodelsolve("originalkkt.mod")
+    
+        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+        # violations = self.kkt_condition_violation(self.l, self.q, self.h, self.eps, lam, x, y, u, v, w)
+        # print("violations: ", violations)
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.total_cost = self.ampl.getObjective("total_cost").value()
 
@@ -889,7 +1009,6 @@ class WaterNetworkSolver:
         
         #self.ampl.eval("display sum {(i,j) in arcs} (q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)) - (q[i,j])^3 *((((q[i,j])^2 + 1e+6 * eps[i,j] )^0.426) /((q[i,j])^2 + 0.426 * 1e+6 *eps[i,j])) * (1000^3.018)  * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)))/(q[i,j]*abs(q[i,j])^0.852 * (0.001^1.852) * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k]/1000)^4.87)));")
 
-        
         print("*******************************************************************************\n")
 
 
@@ -998,15 +1117,16 @@ class WaterNetworkSolver:
         
 
     def run(self):
-        self.read_model_and_data()
+        # self.read_model_and_data()
         # First solve: IPOPT
-        self.solve_ipopt()
+        # self.solve_ipopt()
         if self.data_number==5:
             model_file = "newyork_model_original.mod"
         elif self.data_number==6:
             model_file = "blacksburg_model_original.mod"
         else:
-            model_file = "wdnmodel.mod"
+            model_file = sys.argv[1]
+            print(model_file)
         # Second solve: self.solver_name
         # self.second_solve(model_file, "ipopt")
         self.second_solve(model_file, self.solver_name)

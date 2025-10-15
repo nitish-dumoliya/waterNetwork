@@ -432,9 +432,12 @@ def HeuristicInstanceOutput(instance, output):
     Objective = 0
     find, Objective = find_float(file_data, "Final best objective:", Objective)
     find, time = find_float(file_data, "Heuristic elapsed time:", time)
-
+    number_of_nlp = 0
+    find, number_of_nlp = find_float(file_data, "Number of nlp problem solved:", number_of_nlp)
+    number_of_iteration = 0
+    find, number_of_iteration = find_float(file_data, "Total number of iteration:", number_of_iteration)
   
-    return Objective, time, violation_con,violation_abs, violation_rel
+    return Objective, time, violation_con,violation_abs, violation_rel, number_of_nlp, number_of_iteration
 
 data_list = [
     "d1_bessa",
@@ -502,7 +505,10 @@ Heuristic_Time_taken = []
 Heuristic_Con_vio = []
 Heuristic_Abs_error = []
 Heuristic_Rel_error = []
+Heuristic_Number_of_NLP = []
+Heuristic_Number_of_Iteration = []
 
+dir1 = "original"
 dir = "smooth-approx"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
@@ -528,7 +534,7 @@ for ins in data_list:
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../europt/baron_out/{dir}/{ins}.baron_out") as output:
+    with open(f"../europt/baron_out/{dir1}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         out = output
         obj, lower_bound, time, violation_con,violation_abs, violation_rel= BaronInstanceOutput(ins,out)
@@ -550,7 +556,7 @@ for ins in data_list:
 print("**********************Results of GUROBI Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/gurobi_out/{dir}/{ins}.gurobi_out") as output:
+    with open(f"../europt/gurobi_out/{dir1}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, best_bound, time, violation_con,violation_abs, violation_rel = GurobiInstanceOutput(ins,output)
@@ -608,7 +614,7 @@ for ins in data_list:
 print("**********************Results of Knitro Solver *********************************")
  
 for ins in data_list:
-    with open(f"../europt/knitro_out/{dir}/{ins}.knitro_out") as output:
+    with open(f"../europt/knitro_out/{dir1}/{ins}.knitro_out") as output:
         print("Model Name:",ins)
         obj, time = KnitroInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -632,7 +638,7 @@ for ins in data_list:
 print("****************************Results of Mmultistart Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/mmultistart_out/{dir}/{ins}.mmultistart_out") as output:
+    with open(f"../europt/mmultistart_out/{dir1}/{ins}.mmultistart_out") as output:
         print("Model Name:",ins)
         obj, time, ub = MmultistartInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -646,7 +652,7 @@ print("**********************Results of Heuristic ******************************
 for ins in data_list:
     with open(f"../europt/heuristic_out/{ins}.heuristic_out") as output:
         print("Model Name:",ins)
-        obj, time, violation_con,violation_abs, violation_rel = HeuristicInstanceOutput(ins,output)
+        obj, time, violation_con,violation_abs, violation_rel, nlp, iter = HeuristicInstanceOutput(ins,output)
         print("Objective :",obj)
         print("Time :",time)
         print("Constraint violation :",violation_con)
@@ -662,8 +668,9 @@ for ins in data_list:
         print(" ")
         Heuristic_Objective.append(obj)
         Heuristic_Time_taken.append(time)
-
-fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Error","Ini Ipopt Rel Error","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Error","Baron Rel Error","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Error","Gurobi Rel Error","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Error", "Scip Rel Error","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Con Vio", "Heuristic Abs Error", "Heuristic Rel Error"  ]
+        Heuristic_Number_of_NLP.append(nlp)
+        Heuristic_Number_of_Iteration.append(iter)
+fields = ["Instances","Ini Ipopt Objective","Ini Ipopt time taken","Ini Ipopt Con Vio","Ini Ipopt Abs Error","Ini Ipopt Rel Error","Baron Lower Bound", "Baron Objective","Baron Con Vio","Baron Abs Error","Baron Rel Error","Baron time taken", "Gurobi Best Bound","Gurobi Objective", "Gurobi Con Vio","Gurobi Abs Error","Gurobi Rel Error","Gurobi time taken","Scip Dual Bound","Scip Objective",  "Scip Con Vio", "Scip Abs Error", "Scip Rel Error","Scip time taken","Knitro Objective","Knitro time taken", "Bonmin Objective","Bonmin time taken", "Mmultistart Objective","Mmultistart time taken","Heuristic Objective","Heuristic time taken", "Heuristic Con Vio", "Heuristic Abs Error", "Heuristic Rel Error", "Heuristic NLP", "Heuristic Iteration"  ]
 
 filename = "mmultistart_results.csv"
 
@@ -711,6 +718,8 @@ csv_input['Heuristic time taken'] = Heuristic_Time_taken
 csv_input['Heuristic Con Vio'] = Heuristic_Con_vio
 csv_input['Heuristic Abs Error'] = Heuristic_Abs_error
 csv_input['Heuristic Rel Error'] = Heuristic_Rel_error
+csv_input['Heuristic NLP'] = Heuristic_Number_of_NLP
+csv_input['Heuristic Iteration'] = Heuristic_Number_of_Iteration
 
 csv_input.to_csv('output.csv', index=False)
 
