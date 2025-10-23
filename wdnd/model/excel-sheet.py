@@ -510,10 +510,11 @@ Heuristic_Number_of_Iteration = []
 
 dir1 = "original"
 dir = "smooth-approx"
+dir2 = "approx1"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
 for ins in data_list:
-    with open(f"../europt/ipopt_out/{dir}/{ins}.ipopt_out") as output:
+    with open(f"../europt/ipopt_out/{dir2}/{ins}.ipopt_out") as output:
         print("Model Name:",ins)
         out = output
         obj, time, violation_con,violation_abs, violation_rel = IpoptInstanceOutput(ins,out)
@@ -534,7 +535,7 @@ for ins in data_list:
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../europt/baron_out/{dir1}/{ins}.baron_out") as output:
+    with open(f"../europt/baron_out/{dir2}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         out = output
         obj, lower_bound, time, violation_con,violation_abs, violation_rel= BaronInstanceOutput(ins,out)
@@ -556,7 +557,7 @@ for ins in data_list:
 print("**********************Results of GUROBI Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/gurobi_out/{dir1}/{ins}.gurobi_out") as output:
+    with open(f"../europt/gurobi_out/{dir2}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, best_bound, time, violation_con,violation_abs, violation_rel = GurobiInstanceOutput(ins,output)
@@ -577,7 +578,7 @@ for ins in data_list:
 print("**********************Results of SCIP Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/scip_out/{dir}/{ins}.scip_out") as output:
+    with open(f"../europt/scip_out/{dir2}/{ins}.scip_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, dual_bound, time, violation_con,violation_abs, violation_rel = SCIPInstanceOutput(ins,output)
@@ -617,9 +618,9 @@ for ins in data_list:
     with open(f"../europt/knitro_out/{dir1}/{ins}.knitro_out") as output:
         print("Model Name:",ins)
         obj, time = KnitroInstanceOutput(ins,output)
-        print("Objective :",obj)
-        print("Time :",time)
-        print(" ")
+        # print("Objective :",obj)
+        # print("Time :",time)
+        # print(" ")
         Knitro_Objective.append(obj)
         Knitro_Time_taken.append(time)
 
@@ -629,9 +630,9 @@ for ins in data_list:
     with open(f"../europt/bonmin_out/{dir}/{ins}.bonmin_out") as output:
         print("Model Name:",ins)
         obj, time = BonminInstanceOutput(ins,output)
-        print("Objective :",obj)
-        print("Time :",time)
-        print(" ")
+        # print("Objective :",obj)
+        # print("Time :",time)
+        # print(" ")
         Bonmin_Objective.append(obj)
         Bonmin_Time_taken.append(time)
 
@@ -641,9 +642,9 @@ for ins in data_list:
     with open(f"../europt/mmultistart_out/{dir1}/{ins}.mmultistart_out") as output:
         print("Model Name:",ins)
         obj, time, ub = MmultistartInstanceOutput(ins,output)
-        print("Objective :",obj)
-        print("Time :",time)
-        print(" ")
+        # print("Objective :",obj)
+        # print("Time :",time)
+        # print(" ")
         Mmultistart_Objective.append(obj)
         Mmultistart_Time_taken.append(time)
 

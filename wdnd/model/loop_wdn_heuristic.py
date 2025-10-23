@@ -1159,7 +1159,7 @@ class WaterNetworkOptimizer:
                     else:
                         arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
         print("\n*********************************************************************************************")
-        print("Iteration :",self.dia_red_iteration + self.iteration -1, "\n")
+        print("Iteration :",self.dia_red_iteration + self.iteration, "\n")
 
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -1550,7 +1550,7 @@ class WaterNetworkOptimizer:
         print(f"Final best objective: {self.current_cost}")
         #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
-        print("Total number of iteration:", self.iteration + self.dia_red_iteration-1)
+        print("Total number of iteration:", self.iteration + self.dia_red_iteration)
         elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
         print(f"Solver_time: {solver_time:.2f} seconds")

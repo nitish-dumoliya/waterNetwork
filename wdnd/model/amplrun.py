@@ -5,6 +5,7 @@ from amplpy import AMPL
 import contextlib
 import os
 import numpy as np
+import math
 
 class WaterNetworkSolver:
     def __init__(self, model_file, solver_name, data_file, data_number):
@@ -56,156 +57,6 @@ class WaterNetworkSolver:
         
         return epsilon
 
-    def constraint_violations1(self, q_values, h_values, l_values, epsilon, solver):
-        total_absolute_constraint_violation = 0
-        total_relative_constraint_violation = 0
-         
-        con1_gap = {}
-        for i in self.nodes:
-            if i not in self.source:
-                con1_rhs = self.D[i]
-                incoming_flow = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
-                outgoing_flow = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
-                con1_lhs = incoming_flow - outgoing_flow
-                con1_violation = con1_lhs - con1_rhs
-                con1_gap[f"{i}"] = con1_violation
-                total_absolute_constraint_violation += abs(con1_violation)
-        #print("con1_gap:", con1_gap) 
-        con2_original_gap = {}
-        con2_approx_gap = {}
-        absolute_violations = {}
-        relative_violations = {}
-        con2_absolute_constraint_violation = 0
-        con2_relative_constraint_violation = 0
-        con2_original_violation = 0
-        con2_approx_violation = 0
-        for (i, j) in q_values.keys():
-            # Original constraint value
-            lhs = h_values[i] - h_values[j]
-            alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
-            #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
-            original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
-            
-            # Approximated constraint value
-            approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
-
-            #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
-
-            con2_original_gap[f"{i},{j}"] = lhs - original_rhs
-            con2_original_violation += abs(lhs - original_rhs) 
-            
-            con2_approx_gap[f"{i},{j}"] = lhs - approx_rhs
-            
-            total_absolute_constraint_violation += abs(lhs - approx_rhs)    
-            con2_approx_violation += abs(lhs - approx_rhs) 
-
-             # Compute absolute violation
-            absolute_violation =  original_rhs - approx_rhs
-            absolute_violations[f"{i},{j}"] = absolute_violation
-            con2_absolute_constraint_violation += abs(absolute_violation)
-
-            # Compute relative violation between original_rhs and approx_rhs
-            relative_violation = (original_rhs - approx_rhs) / (original_rhs)
-            relative_violations[f"{i},{j}"] = relative_violation
-            con2_relative_constraint_violation += abs(relative_violation)
-           
-        #print("con2_gap:", con2_gap)
-        
-        con3_gap = {}
-        for (i,j) in self.arcs:
-            con3_rhs = self.L[i,j]
-            con3_lhs = sum(l_values[i,j,k] for k in self.pipes) 
-            con3_violation = con3_lhs - con3_rhs
-            con3_gap[f"{i}"] = con3_violation 
-            total_absolute_constraint_violation += abs(con3_violation)
-        #print("con3_gap:", con3_gap)
-
-        con4_gap = {}
-        for (i,j) in self.arcs:
-            for k in self.pipes:
-                #con4_rhs = self.L[i,j]
-                #con4_lhs = l_values[i,j,k]
-                con4_violation = max(0,l_values[i,j,k]-self.L[i,j])
-                con4_gap[f"{i},{j},{k}"] = con4_violation 
-                total_absolute_constraint_violation += abs(con4_violation)
-        #print("con4_gap:", con4_gap)
-        
-        con5_gap = {}
-        for j in self.source:
-            con5_rhs = self.E[j]
-            con5_lhs = h_values[j]
-            con5_violation = con5_lhs - con5_rhs
-            con5_gap[f"{j}"] = con5_violation 
-            total_absolute_constraint_violation += abs(con5_violation)
-        #print("con5_gap:", con5_gap)
-
-        con6_gap = {}
-        for j in self.nodes:
-            if j not in self.source:
-                #con6_rhs = self.E[j] + self.P[j]
-                #con6_lhs = h_values[j]
-                con6_violation = max(0, -h_values[j] + self.E[j] + self.P[j])
-                con6_gap[f"{j}"] = con6_violation 
-                total_absolute_constraint_violation += abs(con6_violation)
-        #print("con6_gap:", con6_gap)
-
-        print("*******************************************************************************\n")
-        print("Constraints violation:\n")
-
-        table_data = []
-        for constraint, vio in con1_gap.items():
-               table_data.append([constraint, f"{con1_gap[constraint]:.8f}"])
-        for constraint, vio in con2_approx_gap.items():
-               table_data.append([constraint, f"{con2_approx_gap[constraint]:.8f}"])
-        for constraint, vio in con3_gap.items():
-               table_data.append([constraint, f"{con3_gap[constraint]:.8f}"])
-        for constraint, vio in con4_gap.items():
-               table_data.append([constraint, f"{con4_gap[constraint]:.8f}"])
-        for constraint, vio in con5_gap.items():
-               table_data.append([constraint, f"{con5_gap[constraint]:.8f}"])
-        for constraint, vio in con6_gap.items():
-               table_data.append([constraint, f"{con6_gap[constraint]:.8f}"])
-
-        #headers = ["Constraint ID", "Violation"]
-        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        print("\nSum of constraints violation:", total_absolute_constraint_violation)
-
-        #print("*******************************************************************************\n")
-        #table_data = []
-        #for constraint, vio in con2_original_gap.items():
-        #       table_data.append([constraint, f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}"])
-
-        print("*******************************************************************************\n")
-        #print("Constraint 2 violations:\n")
-        #headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
-        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
-
-        #print("\nSum of violation of original con2:", con2_original_violation) 
-        #print("Sum of violation of approx con2:", con2_approx_violation)
-
-
-        table_data = []
-        for constraint, vio in relative_violations.items():
-            i_str, j_str = constraint.split(',')
-            i, j = int(i_str), int(j_str)
-
-            table_data.append([constraint, q_values[i,j], f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}", f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
-
-        print("*******************************************************************************\n")
-        print("Absolute and relative violations between original and approximation constraint 2:\n")
-        headers = ["Constraint ID", "flow value", "Original Con Violation", "Approx Con Violation", "Absolute Violation", "Relative Violation"]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        print("\nSum of violation of original headloss constraint:", con2_original_violation) 
-        print("Sum of violation of approx headloss constraint:", con2_approx_violation)
-        print("\nCon2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
-        print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation)
-
-        # Print total violations
-        #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
-        #print("Total relative constraint violation:", total_relative_constraint_violation)
-
-        print("*******************************************************************************\n")
-
     def constraint_violations(self, q_values, h_values, l_values, epsilon, solver):
         total_absolute_constraint_violation = 0
         total_relative_constraint_violation = 0
@@ -253,9 +104,10 @@ class WaterNetworkSolver:
                 alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[i,j] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
                 #alpha_rhs = sum(10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * ((self.d[k]) ** 4.87)) for k in self.pipes)
                 original_rhs = q1[i, j] * (abs(q1[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + q2[i, j] * (abs(q2[i, j])) ** 0.852 * alpha_rhs  
-                #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
+                # original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
                 # Approximated constraint value
-                approx_rhs = (q1[i, j]**3 * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q1[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j]**3 * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q2[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                # approx_rhs = (q1[i, j]**3 * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q1[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j]**3 * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q2[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                approx_rhs = (q1[i, j] * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j] * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
                 con2_original_gap[f"{i},{j}"] = lhs - original_rhs
@@ -287,7 +139,8 @@ class WaterNetworkSolver:
                     original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs  
                     #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs 
                     # Approximated constraint value
-                    approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                    # approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                    approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
 
                     #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
                     con2_original_gap[f"{i},{j}"] = lhs - original_rhs
@@ -317,7 +170,8 @@ class WaterNetworkSolver:
                 #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
 
                 # Approximated constraint value
-                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
+                # approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
+                approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
@@ -349,7 +203,8 @@ class WaterNetworkSolver:
                 original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
                 
                 # Approximated constraint value
-                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                # approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
@@ -766,7 +621,25 @@ class WaterNetworkSolver:
         self.R = self.ampl.getParameter('R').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
+        d_min = self.ampl.getParameter('d_min').getValues().to_list()
+        r_min = min(self.ampl.getParameter('R').getValues().to_list())
+        #epsilon = max(ampl.getParameter('eps').getValues().to_list())
+        MaxK = {}
+        for (i,j) in self.arcs:
+            MaxK[i,j] = 10.67*self.L[i,j]/((r_min[0]**1.852) * (d_min[0]**4.87)) 
+            # print(MaxK[i,j])
+        eps = {}
+        # MaxK = self.ampl.getParameter('MaxK').getValues().to_dict()
+        for (i,j) in self.arcs:
+            val = ((10**(-1))/(0.36061*MaxK[i,j]))**(1/1.852)
+            # val = ((10**(-1))/(0.07508 *MaxK[i,j]))**(1/1.852)
+            order = math.floor(math.log10(abs(val)))   # find exponent
+            coeff = round(val / (10 ** order), 1)
+            eps[i, j] = coeff * (10 ** order)
+            #eps[i,j] = 0.0048 * (10**(-2))
 
+        # print("epsilon:", eps)
+        # self.ampl.param["eps"] = eps
         # Set initial values
         #q_var = self.ampl.get_variable('q')
         #h_var = self.ampl.get_variable('h')
@@ -805,20 +678,19 @@ class WaterNetworkSolver:
         #for i, val in self.h_init.items():
         #    self.ampl.var["h"][i].fix(val)
 
-
         # Change solver and solve
         self.ampl.option['solver'] = solver_name
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
-        
+
         self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
-        
+
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01"
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 0 method = 1  mipgapabs = 1e-6  mipgap = 1e-9 barconvtol = 1e-9 chk:feastol = 1e-5 chk:epsrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 300" 
-        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 600 warmstart = 0 method = 1  mipgapabs = 1e-6 mipgap = 1e-9 barconvtol = 1e-9 sol:chk:feastol = 1e-5 sol:chk:feastolrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 1 pre:scale = 1 method = 2 nodemethod = 1 varbranch = 3  nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-5 mipgap = 1e-6 alg:feastol = 1e-5 pre:feastol = 1e-5 pre:feastolrel = 1e-6 chk:feastol = 1e-5 chk:feastolrel = 1e-6" 
+        # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
         # self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
@@ -833,9 +705,9 @@ class WaterNetworkSolver:
         #                                     "param:read=scip.set"
         #                                      )
         # self.ampl.option["scip_options"] = "outlev 1 timelimit 20 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
-        self.ampl.option["scip_options"] = "outlev 1 timelimit 3600 lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=1e-9 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        self.ampl.option["scip_options"] = "outlev 1 timelimit 100 heu:settings = 0 method = p lim:absgap=1e-5 lim:gap = 1e-6 chk:feastol = 1e-5 chk:feastolrel=1e-6 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         # self.ampl.option["scip_options"] = "outlev  1 "
-        self.ampl.option["knitro_options"] = "maxtime_real = 3600 outlev = 4 threads=8 opttol_abs=1e-6 opttol = 1e-9 feastol = 1.0e-9 feastol_abs = 1.0e-5 ms_enable = 1 ms_maxsolves = 10"
+        self.ampl.option["knitro_options"] = "maxtime_real = 3600 outlev = 4 opttol_abs=1e-5 opttol = 1e-6 feastol_abs = 1.0e-5 feastol = 1.0e-5  ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "1"
         self.ampl.option["presolve_eps"] = "8.53e-15"
@@ -903,16 +775,16 @@ class WaterNetworkSolver:
         self.l = self.ampl.get_variable('l').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
-        #self.ampl.eval("display eps;")
+        # self.ampl.eval("display eps;")
         # self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
         # self.ampl.eval("display q1;")
         # self.ampl.eval("display q2;")
         # self.ampl.eval("display eps;")
         # print("eps: ", self.eps[next(iter(self.eps))])
-        for (i,j) in self.arcs:
-            if np.abs(self.q[i,j]) <=1e-3:
-                print(f"q[{i},{j}]:",self.q[i,j])
+        # for (i,j) in self.arcs:
+        #     if np.abs(self.q[i,j]) <=1e-3:
+        #         print(f"q[{i},{j}]:",self.q[i,j])
 
         # current_duals = {}
         # v = {}
@@ -1121,15 +993,15 @@ class WaterNetworkSolver:
         # First solve: IPOPT
         # self.solve_ipopt()
         if self.data_number==5:
-            model_file = "newyork_model_original.mod"
+            model_file = "newyork_model.mod"
         elif self.data_number==6:
-            model_file = "blacksburg_model_original.mod"
+            model_file = "blacksburg_model.mod"
         else:
             model_file = sys.argv[1]
             print(model_file)
         # Second solve: self.solver_name
         # self.second_solve(model_file, "ipopt")
-        self.second_solve(model_file, self.solver_name)
+        self.second_solve(self.model_file, self.solver_name)
         #self.reduced_diameter()
         #self.solve_content_model()
 if __name__ == "__main__":
@@ -1161,9 +1033,8 @@ if __name__ == "__main__":
     #print("Water Network:", f"{data_list[(data_number)]}.dat")
     print("Water Network:", f"{sys.argv[3]}")
 
-    #print("Results of first order approximation 1 of head loss constraint\n")
-    #print("Results of first order approximation 2 of head loss constraint\n")
-    #print("Results of smooth approximation of head loss constraint\n")
+    print("Results smooth approximation 1 of Hazen--Williams headloss constraint\n")
+    # print("Results smooth approximation 2 of Hazen--Williams headloss constraint\n")
 
     print("*******************************************************************************")
 
