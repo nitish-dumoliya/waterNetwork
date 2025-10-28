@@ -1,0 +1,656 @@
+Water Network: 9
+Results smooth approximation 2 of Hazen--Williams headloss constraint using absolute error
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with scip --------------------------
+SCIP 9.2.2:   tech:outlev = 1
+  lim:time = 600
+  heu:settings = 0
+  alg:method = pusr/bin:/bin:/usr/local/games:/usr/games:/opt/ibm/ILOG/CPLEX_Studio201/cpoptimizer/bin/x86-64_linux:/opt/ibm/ILOG/CPLEX_Studio201/cplex/bin/x86-64_linux:/opt/ampl:/opt/scip/SCIPOptSuite-8.0.3-Linux/bin:/opt/gurobi/bin://home/nitishdumoliya/dist/bin:/home/nitishdumoliya/bat-v0.18.2-x86_64-unknown-linux-musl:/home/nitishdumoliya/package/go/bin:/home/nitishdumoliya/htop/htop-3.3.0:/home/nitishdumoliya/apps/parallel/bin:/home/nitishdumoliya/Bonmin-1.8.8/build/bin:/opt/gurobi1203/linux64/bin:/home/nitishdumoliya/miniconda3/lib/python3.13/site-packages/ampl_module_base/bin/
+  lim:absgap = 1e-05
+  lim:gap = 1e-06
+  sol:chk:feastol = 1e-05
+  sol:chk:feastolrel = 1e-06
+  tech:optionnativeread = scip.set
+
+AMPL MP initial flat model has 500 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  94 linear; 232 quadratic;
+Algebraic expressions:  58 div; 116 powconstexp;
+
+AMPL MP final model has 906 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  94 linear; 290 quadratic; 58 nonlinear;
+Algebraic expressions:  116 powconstexp;
+
+
+presolving:
+(round 1, fast)       348 del vars, 0 del conss, 0 add conss, 0 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) no symmetry present (symcode time: 0.00)
+presolving (2 rounds: 2 fast, 1 medium, 1 exhaustive):
+ 348 deleted vars, 0 deleted constraints, 0 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 558 variables (0 bin, 0 int, 0 impl, 558 cont) and 210 constraints
+     94 constraints of type <linear>
+    116 constraints of type <nonlinear>
+Presolving Time: 0.03
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.1s|     1 |     0 |   130 |     - |    13M |   0 |1428 | 210 | 674 |   0 |  0 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  0.5s|     1 |     0 |   138 |     - |    14M |   0 |1428 | 210 | 678 |   4 |  1 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  0.8s|     1 |     0 |  1314 |     - |    14M |   0 |1428 | 210 | 678 |   4 |  2 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  0.8s|     1 |     0 |  1316 |     - |    14M |   0 |1428 | 210 | 680 |   6 |  3 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  2.1s|     1 |     0 |  1316 |     - |    17M |   0 |1428 | 210 | 680 |   6 |  4 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  2.1s|     1 |     0 |  1316 |     - |    17M |   0 |1428 | 210 | 680 |   6 |  5 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  2.1s|     1 |     0 |  1370 |     - |    17M |   0 |1428 | 210 | 680 |   6 |  6 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+  2.1s|     1 |     2 |  1370 |     - |    17M |   0 |1428 | 210 | 680 |   6 |  7 |   0 |   0 | 5.791638e+07 |      --      |    Inf | unknown
+Starting spatial branch-and-bound on unbounded variable <t__var511_> ([0,1e+20]) - cannot guarantee finite termination.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  3.5s|   100 |    59 | 22849 | 228.8 |    21M |  39 |1428 | 213 |1431 |  17k| 19 |   3 |   0 | 5.791638e+07 |      --      |    Inf |  24.37%
+  6.7s|   200 |   123 | 98689 | 494.9 |    23M |  78 |1428 | 213 | 209 |  40k|  1 |   3 |   0 | 5.791638e+07 |      --      |    Inf |  25.93%
+  6.7s|   300 |   123 | 98703 | 329.5 |    23M |  78 |1428 | 213 |   0 |  40k|  0 |   3 |   0 | 5.791638e+07 |      --      |    Inf |  25.93%
+  9.3s|   400 |   181 |171799 | 430.1 |    25M | 134 |1428 | 214 |2198 |  59k|  0 |   4 |   0 | 5.791638e+07 |      --      |    Inf |  27.50%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 12.3s|   500 |   281 |320095 | 641.1 |    26M | 134 |1428 | 214 |1803 | 100k|  0 |   4 |   0 | 5.791638e+07 |      --      |    Inf |  27.50%
+ 15.0s|   600 |   363 |447242 | 746.3 |    30M | 134 |1428 | 217 |2193 | 141k|  0 |   7 |   0 | 5.791638e+07 |      --      |    Inf |  35.52%
+ 17.6s|   700 |   443 |575519 | 823.1 |    33M | 134 |1428 | 219 |4978 | 174k|  0 |   9 |   0 | 5.791638e+07 |      --      |    Inf |  39.53%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 18.5s|   800 |   501 |621591 | 777.7 |    34M | 134 |1428 | 220 |   0 | 181k|  0 |  10 |   0 | 5.791638e+07 |      --      |    Inf |  43.43%
+ 19.2s|   900 |   551 |661351 | 735.4 |    36M | 134 |1428 | 222 |   0 | 194k|  0 |  12 |   0 | 5.791638e+07 |      --      |    Inf |  43.43%
+ 20.6s|  1000 |   611 |724501 | 725.0 |    37M | 134 |1428 | 222 | 212 | 218k|  1 |  12 |   0 | 5.791638e+07 |      --      |    Inf |  45.53%
+ 22.1s|  1100 |   689 |785074 | 714.2 |    39M | 134 |1428 | 222 |1794 | 247k| 37 |  12 |   0 | 5.791638e+07 |      --      |    Inf |  46.31%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 23.9s|  1200 |   771 |845272 | 704.8 |    40M | 134 |1428 | 222 | 298 | 279k| 32 |  12 |   0 | 5.791638e+07 |      --      |    Inf |  46.33%
+ 24.2s|  1300 |   783 |858138 | 660.5 |    42M | 134 |1428 | 222 |   0 | 289k|  0 |  12 |   0 | 5.791638e+07 |      --      |    Inf |  47.12%
+ 26.9s|  1400 |   855 |971474 | 694.3 |    45M | 134 |1428 | 222 |2286 | 335k|  0 |  12 |   0 | 5.791638e+07 |      --      |    Inf |  47.92%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 28.9s|  1500 |   931 |  1040k| 693.9 |    46M | 134 |1428 | 223 |1615 | 352k| 14 |  13 |   0 | 5.791638e+07 |      --      |    Inf |  48.33%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 30.5s|  1600 |  1013 |  1127k| 705.1 |    49M | 134 |1428 | 223 |1277 | 374k|  0 |  13 |   0 | 5.791638e+07 |      --      |    Inf |  48.43%
+ 33.3s|  1700 |  1101 |  1254k| 738.0 |    51M | 134 |1428 | 223 |1915 | 436k|  0 |  13 |   0 | 5.791638e+07 |      --      |    Inf |  48.64%
+ 34.3s|  1800 |  1175 |  1292k| 718.4 |    54M | 134 |1428 | 227 |2338 | 454k| 12 |  17 |   0 | 5.791638e+07 |      --      |    Inf |  48.85%
+ 37.5s|  1900 |  1259 |  1415k| 745.0 |    58M | 134 |1428 | 227 |2524 | 511k| 20 |  17 |   0 | 5.791638e+07 |      --      |    Inf |  48.85%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 39.0s|  2000 |  1329 |  1467k| 733.9 |    59M | 134 |1428 | 227 |1357 | 536k| 20 |  17 |   0 | 5.791638e+07 |      --      |    Inf |  48.86%
+ 40.6s|  2100 |  1409 |  1524k| 726.1 |    62M | 134 |1428 | 227 | 203 | 575k|  1 |  17 |   0 | 5.791638e+07 |      --      |    Inf |  48.92%
+ 43.7s|  2200 |  1479 |  1624k| 738.7 |    66M | 134 |1428 | 229 |2223 | 642k| 17 |  19 |   0 | 5.791638e+07 |      --      |    Inf |  48.97%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 49.6s|  2300 |  1553 |  1843k| 801.7 |    71M | 134 |1428 | 229 | 239 | 676k|  2 |  19 |   0 | 5.791638e+07 |      --      |    Inf |  49.15%
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+ 50.7s|  2400 |  1633 |  1903k| 793.3 |    74M | 134 |1428 | 229 | 832 | 691k|  0 |  20 |   0 | 5.791638e+07 |      --      |    Inf |  49.20%
+ 52.0s|  2500 |  1685 |  1950k| 780.2 |    75M | 134 |1428 | 229 |1118 | 720k|  2 |  20 |   0 | 5.791638e+07 |      --      |    Inf |  49.26%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 56.8s|  2600 |  1769 |  2114k| 813.4 |    79M | 134 |1428 | 227 |1658 | 801k| 19 |  20 |   0 | 5.791638e+07 |      --      |    Inf |  49.31%
+ 58.8s|  2700 |  1853 |  2184k| 809.4 |    82M | 134 |1428 | 227 |1638 | 845k| 16 |  21 |   0 | 5.791638e+07 |      --      |    Inf |  49.36%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 61.1s|  2800 |  1933 |  2269k| 810.9 |    87M | 134 |1428 | 228 |2360 | 908k| 14 |  23 |   0 | 5.791638e+07 |      --      |    Inf |  49.36%
+ 63.4s|  2900 |  2011 |  2359k| 813.7 |    89M | 134 |1428 | 227 |1945 | 933k|  1 |  23 |   0 | 5.791638e+07 |      --      |    Inf |  49.38%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 64.8s|  3000 |  2075 |  2416k| 805.7 |    92M | 134 |1428 | 226 |   0 | 962k|  0 |  24 |   0 | 5.791638e+07 |      --      |    Inf |  49.39%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 67.2s|  3100 |  2155 |  2504k| 808.0 |    95M | 134 |1428 | 224 |1591 |1024k|  0 |  24 |   0 | 5.791638e+07 |      --      |    Inf |  49.39%
+ 69.9s|  3200 |  2221 |  2592k| 810.4 |    99M | 134 |1428 | 225 |1342 |1069k|  0 |  25 |   0 | 5.791638e+07 |      --      |    Inf |  49.57%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 72.2s|  3300 |  2311 |  2690k| 815.6 |   100M | 134 |1428 | 224 | 205 |1113k|  1 |  25 |   0 | 5.791638e+07 |      --      |    Inf |  49.58%
+ 72.2s|  3400 |  2311 |  2690k| 791.6 |   100M | 134 |1428 | 224 |   0 |1113k|  0 |  25 |   0 | 5.791638e+07 |      --      |    Inf |  49.58%
+ 73.7s|  3500 |  2337 |  2759k| 788.5 |   101M | 134 |1428 | 224 |1153 |1145k|  0 |  25 |   0 | 5.791638e+07 |      --      |    Inf |  49.58%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 75.2s|  3600 |  2421 |  2815k| 782.2 |   103M | 134 |1428 | 225 | 245 |1184k|  2 |  27 |   0 | 5.791638e+07 |      --      |    Inf |  49.58%
+ 76.8s|  3700 |  2505 |  2872k| 776.5 |   104M | 134 |1428 | 225 |1667 |1214k| 21 |  27 |   0 | 5.791638e+07 |      --      |    Inf |  49.58%
+(node 3716) numerical troubles in LP 39411 -- unresolved
+(node 3717) numerical troubles in LP 39420 -- unresolved
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 79.8s|  3800 |  2589 |  2987k| 786.4 |   106M | 134 |1428 | 225 |1561 |1261k|  0 |  27 |   0 | 5.791638e+07 |      --      |    Inf |  49.59%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ 82.3s|  3900 |  2671 |  3084k| 790.9 |   109M | 134 |1428 | 226 |3717 |1296k| 18 |  28 |   0 | 5.791638e+07 |      --      |    Inf |  49.62%
+ 86.1s|  4000 |  2757 |  3217k| 804.6 |   113M | 134 |1428 | 226 |1535 |1360k|  1 |  28 |   0 | 5.791638e+07 |      --      |    Inf |  49.63%
+ 87.4s|  4100 |  2843 |  3267k| 797.1 |   115M | 134 |1428 | 226 | 246 |1385k|  2 |  28 |   0 | 5.791638e+07 |      --      |    Inf |  49.63%
+ 90.8s|  4200 |  2925 |  3381k| 805.3 |   119M | 134 |1428 | 225 |4587 |1448k|  0 |  28 |   0 | 5.791638e+07 |      --      |    Inf |  49.63%
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+ 94.2s|  4300 |  3011 |  3516k| 817.9 |   121M | 134 |1428 | 225 |1751 |1478k|  1 |  28 |   0 | 5.791638e+07 |      --      |    Inf |  49.64%
+ 96.5s|  4400 |  3063 |  3591k| 816.5 |   124M | 134 |1428 | 224 |1549 |1532k| 16 |  28 |   0 | 5.791638e+07 |      --      |    Inf |  49.65%
+ 98.6s|  4500 |  3141 |  3663k| 814.3 |   126M | 134 |1428 | 226 | 263 |1582k|  4 |  30 |   0 | 5.791638e+07 |      --      |    Inf |  49.68%
+  101s|  4600 |  3199 |  3724k| 809.8 |   131M | 134 |1428 | 227 |1285 |1635k|  2 |  32 |   0 | 5.791638e+07 |      --      |    Inf |  49.68%
+  104s|  4700 |  3281 |  3855k| 820.4 |   135M | 134 |1428 | 226 |1196 |1696k| 17 |  33 |   0 | 5.791638e+07 |      --      |    Inf |  49.72%
+  107s|  4800 |  3355 |  3936k| 820.2 |   138M | 134 |1428 | 225 |3391 |1740k| 18 |  34 |   0 | 5.791638e+07 |      --      |    Inf |  49.73%
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+  108s|  4900 |  3439 |  4001k| 816.8 |   138M | 134 |1428 | 225 |1476 |1764k| 18 |  34 |   0 | 5.791638e+07 |      --      |    Inf |  49.74%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  111s|  5000 |  3523 |  4099k| 819.9 |   142M | 134 |1428 | 226 |1476 |1818k|  0 |  35 |   0 | 5.791638e+07 |      --      |    Inf |  49.75%
+  113s|  5100 |  3585 |  4168k| 817.4 |   143M | 134 |1428 | 228 | 252 |1853k|  2 |  38 |   0 | 5.791638e+07 |      --      |    Inf |  49.77%
+  114s|  5200 |  3663 |  4210k| 809.8 |   146M | 134 |1428 | 230 | 218 |1880k|  2 |  40 |   0 | 5.791638e+07 |      --      |    Inf |  49.77%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  117s|  5300 |  3749 |  4306k| 812.7 |   149M | 134 |1428 | 232 | 244 |1940k|  2 |  42 |   0 | 5.791638e+07 |      --      |    Inf |  49.77%
+  119s|  5400 |  3817 |  4357k| 807.0 |   150M | 134 |1428 | 234 | 241 |1966k|  2 |  44 |   0 | 5.791638e+07 |      --      |    Inf |  49.78%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  122s|  5500 |  3895 |  4446k| 808.6 |   153M | 134 |1428 | 233 |1625 |2004k|  0 |  44 |   0 | 5.791638e+07 |      --      |    Inf |  49.79%
+  124s|  5600 |  3973 |  4518k| 807.0 |   156M | 134 |1428 | 230 |1520 |2052k| 20 |  44 |   0 | 5.791638e+07 |      --      |    Inf |  49.80%
+  129s|  5700 |  4059 |  4675k| 820.4 |   161M | 134 |1428 | 230 | 255 |2088k|  2 |  44 |   0 | 5.791638e+07 |      --      |    Inf |  49.80%
+Cannot set feasibility tolerance to small value 2e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 2e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 2e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 2e-12 without GMP - using 1e-10.
+  131s|  5800 |  4129 |  4775k| 823.4 |   162M | 134 |1428 | 229 |1760 |2124k| 13 |  44 |   0 | 5.791638e+07 |      --      |    Inf |  49.81%
+  134s|  5900 |  4215 |  4878k| 826.9 |   165M | 134 |1428 | 229 | 275 |2179k|  3 |  44 |   0 | 5.791638e+07 |      --      |    Inf |  49.81%
+  136s|  6000 |  4287 |  4934k| 822.5 |   167M | 134 |1428 | 230 | 275 |2210k|  4 |  47 |   0 | 5.791638e+07 |      --      |    Inf |  49.81%
+  137s|  6100 |  4345 |  4987k| 817.7 |   170M | 134 |1428 | 230 |1720 |2239k|  4 |  47 |   0 | 5.791638e+07 |      --      |    Inf |  49.82%
+  140s|  6200 |  4421 |  5101k| 822.9 |   172M | 134 |1428 | 231 |1571 |2290k| 15 |  48 |   0 | 5.791638e+07 |      --      |    Inf |  49.83%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  142s|  6300 |  4503 |  5183k| 822.8 |   174M | 134 |1428 | 232 |3711 |2339k| 19 |  49 |   0 | 5.791638e+07 |      --      |    Inf |  49.84%
+  145s|  6400 |  4587 |  5288k| 826.5 |   176M | 134 |1428 | 232 |1482 |2388k|  0 |  50 |   0 | 5.791638e+07 |      --      |    Inf |  49.84%
+  147s|  6500 |  4673 |  5350k| 823.2 |   179M | 134 |1428 | 234 |1541 |2426k| 15 |  52 |   0 | 5.791638e+07 |      --      |    Inf |  49.85%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  149s|  6600 |  4751 |  5408k| 819.5 |   182M | 134 |1428 | 233 |1650 |2456k| 19 |  53 |   0 | 5.791638e+07 |      --      |    Inf |  49.85%
+  152s|  6700 |  4831 |  5514k| 823.2 |   185M | 134 |1428 | 232 | 225 |2514k|  5 |  54 |   0 | 5.791638e+07 |      --      |    Inf |  49.86%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  154s|  6800 |  4903 |  5605k| 824.5 |   188M | 134 |1428 | 231 |1667 |2571k|  1 |  54 |   0 | 5.791638e+07 |      --      |    Inf |  49.89%
+  155s|  6900 |  4967 |  5646k| 818.4 |   189M | 134 |1428 | 230 |1628 |2593k|  0 |  55 |   0 | 5.791638e+07 |      --      |    Inf |  49.90%
+  159s|  7000 |  5051 |  5765k| 823.8 |   192M | 134 |1428 | 230 |1292 |2645k| 16 |  55 |   0 | 5.791638e+07 |      --      |    Inf |  49.90%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+  160s|  7100 |  5109 |  5820k| 819.9 |   193M | 134 |1428 | 230 |1792 |2683k|  2 |  57 |   0 | 5.791638e+07 |      --      |    Inf |  49.91%
+  163s|  7200 |  5185 |  5905k| 820.4 |   196M | 134 |1428 | 231 |1051 |2730k|  0 |  58 |   0 | 5.791638e+07 |      --      |    Inf |  49.91%
+  165s|  7300 |  5265 |  5989k| 820.6 |   197M | 134 |1428 | 229 |2596 |2778k| 19 |  58 |   0 | 5.791638e+07 |      --      |    Inf |  49.92%
+  168s|  7400 |  5333 |  6093k| 823.5 |   201M | 134 |1428 | 229 | 239 |2828k|  6 |  58 |   0 | 5.791638e+07 |      --      |    Inf |  49.92%
+  176s|  7500 |  5419 |  6403k| 853.9 |   209M | 134 |1428 | 228 |2529 |2898k|  0 |  58 |   0 | 5.791638e+07 |      --      |    Inf |  49.93%
+  178s|  7600 |  5501 |  6452k| 849.1 |   210M | 134 |1428 | 227 | 290 |2912k|  7 |  58 |   0 | 5.791638e+07 |      --      |    Inf |  49.93%
+  181s|  7700 |  5575 |  6574k| 854.0 |   212M | 134 |1428 | 227 |1678 |2961k|  0 |  59 |   0 | 5.791638e+07 |      --      |    Inf |  49.94%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  184s|  7800 |  5655 |  6688k| 857.5 |   217M | 134 |1428 | 226 |1532 |3026k|  0 |  60 |   0 | 5.791638e+07 |      --      |    Inf |  49.94%
+  187s|  7900 |  5731 |  6775k| 857.7 |   219M | 134 |1428 | 227 |3115 |3074k| 21 |  61 |   0 | 5.791638e+07 |      --      |    Inf |  49.95%
+  191s|  8000 |  5811 |  6916k| 864.6 |   223M | 134 |1428 | 228 | 844 |3124k|  2 |  62 |   0 | 5.791638e+07 |      --      |    Inf |  49.95%
+  193s|  8100 |  5879 |  7018k| 866.5 |   226M | 134 |1428 | 228 |2070 |3167k| 21 |  62 |   0 | 5.791638e+07 |      --      |    Inf |  49.95%
+  197s|  8200 |  5961 |  7157k| 873.0 |   229M | 134 |1428 | 227 |3477 |3226k|  0 |  62 |   0 | 5.791638e+07 |      --      |    Inf |  49.96%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  200s|  8300 |  6033 |  7236k| 871.9 |   232M | 134 |1428 | 227 |1500 |3266k| 17 |  62 |   0 | 5.791638e+07 |      --      |    Inf |  49.96%
+  200s|  8400 |  6119 |  7258k| 864.2 |   233M | 134 |1428 | 227 |1504 |3276k|  4 |  62 |   0 | 5.791638e+07 |      --      |    Inf |  49.96%
+  203s|  8500 |  6193 |  7349k| 864.7 |   234M | 134 |1428 | 227 | 253 |3295k| 12 |  62 |   0 | 5.791638e+07 |      --      |    Inf |  49.96%
+  204s|  8600 |  6245 |  7404k| 861.0 |   236M | 134 |1428 | 230 | 272 |3333k|  2 |  67 |   0 | 5.791638e+07 |      --      |    Inf |  49.97%
+  207s|  8700 |  6323 |  7511k| 863.4 |   240M | 134 |1428 | 231 |   0 |3387k|  0 |  68 |   0 | 5.791638e+07 |      --      |    Inf |  49.97%
+(node 8716) numerical troubles in LP 107608 -- unresolved
+(node 8717) numerical troubles in LP 107617 -- unresolved
+(node 8718) numerical troubles in LP 107626 -- unresolved
+(node 8719) numerical troubles in LP 107635 -- unresolved
+(node 8720) numerical troubles in LP 107644 -- unresolved
+(node 8721) numerical troubles in LP 107654 -- unresolved
+(node 8722) numerical troubles in LP 107664 -- unresolved
+(node 8723) numerical troubles in LP 107674 -- unresolved
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  210s|  8800 |  6399 |  7631k| 867.2 |   244M | 134 |1428 | 231 |1434 |3437k| 14 |  68 |   0 | 5.791638e+07 |      --      |    Inf |  49.99%
+  218s|  8900 |  6475 |  7885k| 886.1 |   246M | 134 |1428 | 231 |1434 |3487k| 15 |  68 |   0 | 5.791638e+07 |      --      |    Inf |  49.99%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  219s|  9000 |  6539 |  7936k| 881.9 |   249M | 134 |1428 | 232 |2728 |3505k|  0 |  69 |   0 | 5.791638e+07 |      --      |    Inf |  49.99%
+  221s|  9100 |  6621 |  8036k| 883.2 |   251M | 134 |1428 | 232 |   0 |3542k|  0 |  70 |   0 | 5.791638e+07 |      --      |    Inf |  49.99%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  226s|  9200 |  6697 |  8235k| 895.2 |   255M | 134 |1428 | 232 | 268 |3608k| 35 |  71 |   0 | 5.791638e+07 |      --      |    Inf |  49.99%
+  228s|  9300 |  6769 |  8335k| 896.4 |   257M | 134 |1428 | 232 | 264 |3664k|  2 |  71 |   0 | 5.791638e+07 |      --      |    Inf |  50.00%
+  230s|  9400 |  6841 |  8391k| 892.8 |   260M | 134 |1428 | 234 |3007 |3694k| 17 |  73 |   0 | 5.791638e+07 |      --      |    Inf |  50.00%
+(node 9440) numerical troubles in LP 117798 -- unresolved -- further messages will be suppressed (use display/verblevel=5 to see all)
+  232s|  9500 |  6899 |  8464k| 891.1 |   262M | 134 |1428 | 233 |   0 |3712k|  0 |  73 |   0 | 5.791638e+07 |      --      |    Inf |  50.00%
+  232s|  9600 |  6939 |  8486k| 884.1 |   262M | 134 |1428 | 232 | 254 |3728k|  2 |  73 |   0 | 5.791638e+07 |      --      |    Inf |  50.00%
+  234s|  9700 |  7015 |  8536k| 880.1 |   263M | 134 |1428 | 231 |1140 |3757k|  0 |  73 |   0 | 5.791638e+07 |      --      |    Inf |  50.01%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  236s|  9800 |  7091 |  8601k| 877.8 |   265M | 134 |1428 | 231 |2126 |3793k| 18 |  73 |   0 | 5.791638e+07 |      --      |    Inf |  50.03%
+  237s|  9900 |  7151 |  8665k| 875.3 |   268M | 134 |1428 | 228 |1996 |3833k| 15 |  74 |   0 | 5.791638e+07 |      --      |    Inf |  50.04%
+  238s| 10000 |  7233 |  8696k| 869.7 |   269M | 134 |1428 | 227 | 214 |3840k|  1 |  74 |   0 | 5.791638e+07 |      --      |    Inf |  50.04%
+  241s| 10100 |  7309 |  8816k| 873.0 |   271M | 134 |1428 | 226 |2096 |3914k| 17 |  74 |   0 | 5.791638e+07 |      --      |    Inf |  50.04%
+  243s| 10200 |  7379 |  8896k| 872.3 |   273M | 134 |1428 | 226 | 298 |3945k|  7 |  75 |   0 | 5.791638e+07 |      --      |    Inf |  50.05%
+  248s| 10300 |  7441 |  9075k| 881.1 |   278M | 134 |1428 | 225 |2289 |3990k|  1 |  75 |   0 | 5.791638e+07 |      --      |    Inf |  50.05%
+  252s| 10400 |  7511 |  9182k| 883.0 |   280M | 134 |1428 | 225 |1673 |4034k|  0 |  75 |   0 | 5.791638e+07 |      --      |    Inf |  50.05%
+  255s| 10500 |  7595 |  9322k| 887.9 |   283M | 134 |1428 | 225 |2325 |4089k| 21 |  75 |   0 | 5.791638e+07 |      --      |    Inf |  50.06%
+  257s| 10600 |  7667 |  9402k| 887.1 |   284M | 134 |1428 | 225 |1896 |4115k|  0 |  75 |   0 | 5.791638e+07 |      --      |    Inf |  50.06%
+  261s| 10700 |  7759 |  9566k| 894.1 |   288M | 134 |1428 | 228 |2744 |4172k|  0 |  78 |   0 | 5.791638e+07 |      --      |    Inf |  50.06%
+  264s| 10800 |  7839 |  9653k| 893.9 |   290M | 134 |1428 | 227 | 294 |4203k|  1 |  78 |   0 | 5.791638e+07 |      --      |    Inf |  50.06%
+  265s| 10900 |  7897 |  9725k| 892.3 |   292M | 134 |1428 | 227 |1645 |4235k|  0 |  79 |   0 | 5.791638e+07 |      --      |    Inf |  50.07%
+  268s| 11000 |  7979 |  9822k| 893.1 |   295M | 134 |1428 | 229 |1540 |4272k| 19 |  81 |   0 | 5.791638e+07 |      --      |    Inf |  50.07%
+  271s| 11100 |  8061 |  9975k| 898.7 |   295M | 134 |1428 | 229 | 279 |4295k|  2 |  81 |   0 | 5.791638e+07 |      --      |    Inf |  50.07%
+  273s| 11200 |  8125 | 10049k| 897.4 |   301M | 134 |1428 | 229 |1761 |4326k|  2 |  81 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  275s| 11300 |  8205 | 10089k| 892.9 |   302M | 134 |1428 | 228 |2684 |4345k|  0 |  81 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+  277s| 11400 |  8285 | 10168k| 892.0 |   305M | 134 |1428 | 229 |2170 |4403k| 14 |  82 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  279s| 11500 |  8361 | 10252k| 891.6 |   307M | 134 |1428 | 229 |   0 |4448k|  0 |  84 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+  282s| 11600 |  8449 | 10361k| 893.3 |   309M | 134 |1428 | 229 | 296 |4497k|  8 |  84 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+  285s| 11700 |  8533 | 10480k| 895.8 |   314M | 134 |1428 | 228 |5708 |4544k|  0 |  85 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+  286s| 11800 |  8591 | 10507k| 890.5 |   315M | 134 |1428 | 227 | 222 |4552k|  1 |  86 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+  287s| 11900 |  8615 | 10543k| 886.1 |   316M | 134 |1428 | 227 |1328 |4577k| 14 |  86 |   0 | 5.791638e+07 |      --      |    Inf |  50.08%
+  289s| 12000 |  8699 | 10635k| 886.4 |   318M | 134 |1428 | 225 | 273 |4620k|  7 |  86 |   0 | 5.791638e+07 |      --      |    Inf |  50.09%
+  292s| 12100 |  8761 | 10725k| 886.4 |   320M | 134 |1428 | 225 |1890 |4681k|  1 |  87 |   0 | 5.791638e+07 |      --      |    Inf |  50.09%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  293s| 12200 |  8823 | 10751k| 881.3 |   320M | 134 |1428 | 227 | 844 |4696k|  2 |  89 |   0 | 5.791638e+07 |      --      |    Inf |  50.09%
+  296s| 12300 |  8907 | 10868k| 883.7 |   324M | 134 |1428 | 227 |2384 |4736k| 18 |  89 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+  297s| 12400 |  8937 | 10913k| 880.2 |   325M | 134 |1428 | 226 |2053 |4754k|  1 |  89 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+  301s| 12500 |  8979 | 11066k| 885.4 |   327M | 134 |1428 | 226 |1886 |4795k|  0 |  89 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  303s| 12600 |  9053 | 11144k| 884.5 |   327M | 134 |1428 | 225 | 284 |4821k|  2 |  89 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+  307s| 12700 |  9125 | 11300k| 889.8 |   333M | 134 |1428 | 226 |2587 |4877k|  0 |  90 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  311s| 12800 |  9213 | 11453k| 894.9 |   336M | 134 |1428 | 225 |1345 |4935k| 17 |  90 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+  315s| 12900 |  9289 | 11597k| 899.1 |   340M | 134 |1428 | 226 |3004 |4979k|  0 |  91 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  316s| 13000 |  9351 | 11634k| 895.0 |   341M | 134 |1428 | 227 |1952 |4991k|  0 |  92 |   0 | 5.791638e+07 |      --      |    Inf |  50.10%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  320s| 13100 |  9427 | 11766k| 898.3 |   344M | 134 |1428 | 227 | 269 |5051k|  2 |  92 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+  323s| 13200 |  9499 | 11858k| 898.4 |   348M | 134 |1428 | 227 | 276 |5098k|  2 |  92 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+  326s| 13300 |  9579 | 11975k| 900.5 |   351M | 134 |1428 | 227 |1259 |5149k| 12 |  92 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  332s| 13400 |  9641 | 12087k| 902.1 |   354M | 134 |1428 | 230 | 242 |5218k|  4 |  95 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+  334s| 13500 |  9719 | 12182k| 902.4 |   356M | 134 |1428 | 231 |3120 |5238k|  0 |  97 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+  337s| 13600 |  9781 | 12259k| 901.5 |   358M | 134 |1428 | 231 | 282 |5263k|  2 |  98 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+  340s| 13700 |  9851 | 12345k| 901.2 |   361M | 134 |1428 | 230 |3152 |5318k| 16 |  99 |   0 | 5.791638e+07 |      --      |    Inf |  50.11%
+  342s| 13800 |  9897 | 12478k| 904.3 |   364M | 134 |1428 | 230 | 219 |5361k|  1 |  99 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  348s| 13900 |  9957 | 12727k| 915.7 |   365M | 134 |1428 | 231 | 279 |5429k|  4 | 100 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+  351s| 14000 | 10037 | 12840k| 917.2 |   367M | 134 |1428 | 232 |1552 |5466k|  0 | 101 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  354s| 14100 | 10123 | 12967k| 919.8 |   372M | 134 |1428 | 233 |2072 |5536k| 16 | 102 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  354s| 14200 | 10131 | 12975k| 913.8 |   372M | 134 |1428 | 232 | 721 |5541k| 19 | 102 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  355s| 14300 | 10209 | 12996k| 908.9 |   372M | 134 |1428 | 232 | 283 |5552k|  2 | 102 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  359s| 14400 | 10271 | 13169k| 914.6 |   374M | 134 |1428 | 234 | 220 |5598k|  1 | 105 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  359s| 14500 | 10297 | 13169k| 908.3 |   374M | 134 |1428 | 234 | 231 |5598k|  1 | 105 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  359s| 14600 | 10309 | 13169k| 902.1 |   374M | 145 |1428 | 234 | 234 |5598k|  1 | 105 |   0 | 5.791638e+07 |      --      |    Inf |  50.12%
+  361s| 14700 | 10385 | 13237k| 900.6 |   376M | 168 |1428 | 234 |1701 |5637k| 19 | 105 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  363s| 14800 | 10465 | 13340k| 901.4 |   378M | 168 |1428 | 234 |1298 |5679k|  0 | 106 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  367s| 14900 | 10549 | 13442k| 902.2 |   383M | 168 |1428 | 230 |2787 |5743k| 18 | 107 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  368s| 15000 | 10615 | 13489k| 899.4 |   383M | 168 |1428 | 230 | 286 |5759k|  2 | 107 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  370s| 15100 | 10689 | 13555k| 897.8 |   384M | 168 |1428 | 230 | 285 |5788k| 15 | 108 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  373s| 15200 | 10773 | 13668k| 899.3 |   385M | 168 |1428 | 230 |1453 |5798k|  7 | 108 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  374s| 15300 | 10849 | 13723k| 897.0 |   388M | 168 |1428 | 230 |   0 |5831k|  0 | 108 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  378s| 15400 | 10919 | 13862k| 900.2 |   392M | 168 |1428 | 230 | 284 |5880k|  3 | 109 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  380s| 15500 | 10995 | 13944k| 899.7 |   393M | 168 |1428 | 232 |3270 |5910k| 21 | 111 |   0 | 5.791638e+07 |      --      |    Inf |  50.13%
+  383s| 15600 | 11057 | 14039k| 900.0 |   394M | 168 |1428 | 229 |1784 |5923k|  0 | 112 |   0 | 5.791638e+07 |      --      |    Inf |  50.14%
+  386s| 15700 | 11137 | 14155k| 901.7 |   399M | 168 |1428 | 229 |   0 |5972k|  0 | 112 |   0 | 5.791638e+07 |      --      |    Inf |  50.14%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  389s| 15800 | 11219 | 14256k| 902.3 |   401M | 168 |1428 | 229 | 302 |6009k|  3 | 113 |   0 | 5.791638e+07 |      --      |    Inf |  50.14%
+  391s| 15900 | 11289 | 14317k| 900.5 |   404M | 168 |1428 | 229 |2408 |6041k|  2 | 113 |   0 | 5.791638e+07 |      --      |    Inf |  50.15%
+  394s| 16000 | 11373 | 14449k| 903.1 |   406M | 168 |1428 | 230 |1936 |6090k| 16 | 114 |   0 | 5.791638e+07 |      --      |    Inf |  50.15%
+  396s| 16100 | 11457 | 14520k| 901.9 |   408M | 168 |1428 | 229 |2370 |6129k| 18 | 114 |   0 | 5.791638e+07 |      --      |    Inf |  50.15%
+  399s| 16200 | 11541 | 14638k| 903.6 |   411M | 168 |1428 | 228 |1622 |6179k| 23 | 114 |   0 | 5.791638e+07 |      --      |    Inf |  50.15%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  401s| 16300 | 11615 | 14701k| 901.9 |   411M | 168 |1428 | 226 |2687 |6206k| 17 | 114 |   0 | 5.791638e+07 |      --      |    Inf |  50.15%
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+  402s| 16400 | 11647 | 14749k| 899.4 |   411M | 168 |1428 | 227 | 221 |6207k|  1 | 115 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  402s| 16500 | 11647 | 14749k| 894.0 |   411M | 168 |1428 | 227 |   0 |6207k|  0 | 115 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  405s| 16600 | 11695 | 14876k| 896.2 |   416M | 168 |1428 | 226 |   0 |6258k|  0 | 115 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  409s| 16700 | 11765 | 15007k| 898.7 |   419M | 168 |1428 | 226 | 250 |6305k| 10 | 115 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  410s| 16800 | 11847 | 15063k| 896.7 |   421M | 168 |1428 | 227 | 282 |6344k|  2 | 116 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  413s| 16900 | 11911 | 15128k| 895.2 |   423M | 168 |1428 | 229 |1638 |6383k| 14 | 118 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  416s| 17000 | 11979 | 15236k| 896.3 |   425M | 168 |1428 | 229 |2208 |6425k| 17 | 118 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  418s| 17100 | 12039 | 15336k| 896.9 |   429M | 168 |1428 | 228 |1758 |6473k| 17 | 119 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+  425s| 17200 | 12109 | 15533k| 903.2 |   432M | 168 |1428 | 231 |   0 |6525k|  0 | 122 |   0 | 5.791638e+07 |      --      |    Inf |  50.16%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  427s| 17300 | 12179 | 15631k| 903.6 |   434M | 168 |1428 | 230 |2121 |6588k| 18 | 124 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  430s| 17400 | 12269 | 15753k| 905.4 |   437M | 168 |1428 | 229 |2148 |6629k| 14 | 124 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  433s| 17500 | 12353 | 15845k| 905.5 |   438M | 168 |1428 | 231 | 273 |6667k|  2 | 126 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  435s| 17600 | 12425 | 15932k| 905.3 |   441M | 168 |1428 | 232 | 241 |6697k|  8 | 127 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  437s| 17700 | 12503 | 16019k| 905.1 |   443M | 168 |1428 | 233 |2372 |6734k|  0 | 128 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  440s| 17800 | 12583 | 16105k| 904.8 |   445M | 168 |1428 | 234 |2821 |6770k| 15 | 129 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  442s| 17900 | 12661 | 16201k| 905.1 |   448M | 168 |1428 | 230 |2035 |6798k| 16 | 130 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  446s| 18000 | 12739 | 16343k| 908.0 |   452M | 168 |1428 | 229 | 392 |6861k|  1 | 130 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  449s| 18100 | 12789 | 16423k| 907.4 |   454M | 168 |1428 | 230 |2014 |6912k| 21 | 131 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  452s| 18200 | 12875 | 16568k| 910.4 |   458M | 168 |1428 | 231 |1945 |6978k|  0 | 132 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  454s| 18300 | 12939 | 16623k| 908.4 |   458M | 168 |1428 | 232 |1383 |7000k| 16 | 133 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  459s| 18400 | 13033 | 16822k| 914.3 |   462M | 168 |1428 | 231 |2457 |7038k|  0 | 134 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  464s| 18500 | 13107 | 17096k| 924.2 |   466M | 168 |1428 | 232 |   0 |7082k|  0 | 135 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  468s| 18600 | 13179 | 17240k| 926.9 |   469M | 168 |1428 | 232 |2854 |7156k| 20 | 135 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  472s| 18700 | 13271 | 17406k| 930.9 |   472M | 168 |1428 | 232 |3062 |7171k|  0 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  473s| 18800 | 13359 | 17446k| 928.1 |   472M | 168 |1428 | 231 |1185 |7180k|  0 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.17%
+  476s| 18900 | 13423 | 17588k| 930.6 |   474M | 168 |1428 | 231 |1996 |7220k| 18 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  479s| 19000 | 13509 | 17684k| 930.8 |   477M | 168 |1428 | 229 |1243 |7273k|  2 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  485s| 19100 | 13603 | 17901k| 937.3 |   484M | 168 |1428 | 227 |5567 |7335k|  0 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  489s| 19200 | 13687 | 18057k| 940.5 |   487M | 168 |1428 | 225 | 258 |7406k|  3 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-12 without GMP - using 1e-10.
+  490s| 19300 | 13755 | 18090k| 937.4 |   488M | 168 |1428 | 225 |1822 |7423k|  2 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  493s| 19400 | 13821 | 18207k| 938.6 |   490M | 168 |1428 | 224 | 282 |7453k| 27 | 136 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  496s| 19500 | 13893 | 18341k| 940.6 |   493M | 168 |1428 | 225 |1054 |7497k|  0 | 137 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  498s| 19600 | 13975 | 18430k| 940.4 |   495M | 168 |1428 | 226 | 243 |7518k|  6 | 138 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  501s| 19700 | 14045 | 18545k| 941.4 |   496M | 168 |1428 | 226 |1336 |7569k| 17 | 138 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  504s| 19800 | 14129 | 18643k| 941.6 |   499M | 168 |1428 | 228 |1722 |7604k| 20 | 140 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  505s| 19900 | 14193 | 18700k| 939.7 |   501M | 168 |1428 | 229 | 256 |7627k|  7 | 141 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  507s| 20000 | 14273 | 18768k| 938.5 |   504M | 168 |1428 | 230 |2597 |7662k|  0 | 142 |   0 | 5.791638e+07 |      --      |    Inf |  50.18%
+  510s| 20100 | 14333 | 18870k| 938.9 |   506M | 168 |1428 | 231 |   0 |7698k|  0 | 143 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  510s| 20200 | 14337 | 18870k| 934.2 |   506M | 168 |1428 | 231 |   0 |7698k|  0 | 143 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  510s| 20300 | 14337 | 18870k| 929.6 |   506M | 168 |1428 | 231 |   0 |7698k|  0 | 143 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  511s| 20400 | 14381 | 18907k| 926.9 |   507M | 168 |1428 | 231 |2340 |7723k| 17 | 145 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  513s| 20500 | 14445 | 18959k| 924.9 |   509M | 168 |1428 | 230 |1602 |7757k| 14 | 146 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  516s| 20600 | 14529 | 19097k| 927.1 |   511M | 168 |1428 | 229 |   0 |7826k|  0 | 146 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  519s| 20700 | 14619 | 19233k| 929.2 |   517M | 168 |1428 | 228 |4194 |7871k| 16 | 146 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  524s| 20800 | 14689 | 19373k| 931.4 |   520M | 168 |1428 | 228 |2125 |7939k| 14 | 148 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  525s| 20900 | 14767 | 19429k| 929.7 |   521M | 168 |1428 | 228 | 280 |7966k|  1 | 150 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  527s| 21000 | 14829 | 19482k| 927.8 |   522M | 168 |1428 | 230 | 283 |8002k|  2 | 152 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+  530s| 21100 | 14901 | 19608k| 929.4 |   526M | 168 |1428 | 232 |1975 |8041k|  0 | 154 |   0 | 5.791638e+07 |      --      |    Inf |  50.19%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  533s| 21200 | 14971 | 19701k| 929.3 |   527M | 168 |1428 | 233 |1991 |8071k| 21 | 155 |   0 | 5.791638e+07 |      --      |    Inf |  50.20%
+  535s| 21300 | 15041 | 19783k| 928.8 |   528M | 168 |1428 | 233 |2104 |8112k| 14 | 155 |   0 | 5.791638e+07 |      --      |    Inf |  50.20%
+  537s| 21400 | 15103 | 19867k| 928.4 |   531M | 168 |1428 | 231 |1945 |8153k| 20 | 155 |   0 | 5.791638e+07 |      --      |    Inf |  50.20%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  540s| 21500 | 15167 | 19964k| 928.6 |   534M | 168 |1428 | 231 | 253 |8193k|  2 | 155 |   0 | 5.791638e+07 |      --      |    Inf |  50.21%
+  542s| 21600 | 15237 | 20056k| 928.6 |   535M | 168 |1428 | 232 |1858 |8226k|  0 | 156 |   0 | 5.791638e+07 |      --      |    Inf |  50.21%
+  548s| 21700 | 15305 | 20293k| 935.2 |   539M | 168 |1428 | 233 |3872 |8268k|  2 | 157 |   0 | 5.791638e+07 |      --      |    Inf |  50.21%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  550s| 21800 | 15365 | 20383k| 935.0 |   540M | 168 |1428 | 233 | 275 |8283k|  2 | 159 |   0 | 5.791638e+07 |      --      |    Inf |  50.21%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  552s| 21900 | 15437 | 20451k| 933.9 |   542M | 168 |1428 | 231 | 263 |8312k|  5 | 161 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  554s| 22000 | 15473 | 20525k| 933.0 |   543M | 168 |1428 | 231 |   0 |8336k|  0 | 161 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+  556s| 22100 | 15527 | 20605k| 932.4 |   544M | 168 |1428 | 230 |1997 |8368k|  6 | 161 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+  560s| 22200 | 15621 | 20728k| 933.8 |   548M | 168 |1428 | 229 |1943 |8404k|  0 | 161 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  560s| 22300 | 15693 | 20770k| 931.5 |   548M | 168 |1428 | 225 | 281 |8410k|  2 | 162 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+  562s| 22400 | 15759 | 20840k| 930.4 |   550M | 168 |1428 | 229 |1847 |8430k|  1 | 167 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+  566s| 22500 | 15843 | 20993k| 933.1 |   554M | 168 |1428 | 229 |   0 |8478k|  0 | 167 |   0 | 5.791638e+07 |      --      |    Inf |  50.22%
+  568s| 22600 | 15903 | 21050k| 931.5 |   556M | 168 |1428 | 231 |2855 |8521k| 17 | 169 |   0 | 5.791638e+07 |      --      |    Inf |  50.23%
+  570s| 22700 | 15971 | 21149k| 931.7 |   560M | 168 |1428 | 231 |2648 |8562k|  0 | 169 |   0 | 5.791638e+07 |      --      |    Inf |  50.23%
+  573s| 22800 | 16043 | 21276k| 933.2 |   560M | 168 |1428 | 232 |2771 |8579k|  0 | 170 |   0 | 5.791638e+07 |      --      |    Inf |  50.23%
+  574s| 22900 | 16103 | 21289k| 929.7 |   562M | 168 |1428 | 235 | 310 |8581k|  3 | 173 |   0 | 5.791638e+07 |      --      |    Inf |  50.23%
+  576s| 23000 | 16183 | 21382k| 929.7 |   562M | 168 |1428 | 234 | 288 |8609k|  0 | 175 |   0 | 5.791638e+07 |      --      |    Inf |  50.23%
+Cannot set feasibility tolerance to small value 1e-11 without GMP - using 1e-10.
+  583s| 23100 | 16259 | 21612k| 935.6 |   572M | 168 |1428 | 234 | 271 |8686k|  2 | 176 |   0 | 5.791638e+07 |      --      |    Inf |  50.23%
+  584s| 23200 | 16333 | 21667k| 934.0 |   573M | 168 |1428 | 235 |2803 |8705k| 21 | 177 |   0 | 5.791638e+07 |      --      |    Inf |  50.24%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  587s| 23300 | 16419 | 21795k| 935.5 |   576M | 168 |1428 | 234 |1766 |8750k| 17 | 177 |   0 | 5.791638e+07 |      --      |    Inf |  50.24%
+  591s| 23400 | 16505 | 21912k| 936.5 |   579M | 168 |1428 | 234 |3964 |8815k| 14 | 177 |   0 | 5.791638e+07 |      --      |    Inf |  50.24%
+  594s| 23500 | 16579 | 22029k| 937.4 |   579M | 168 |1428 | 233 |2171 |8850k|  0 | 177 |   0 | 5.791638e+07 |      --      |    Inf |  50.24%
+  596s| 23600 | 16639 | 22105k| 936.7 |   581M | 168 |1428 | 231 |2044 |8880k|  2 | 177 |   0 | 5.791638e+07 |      --      |    Inf |  50.25%
+  600s| 23700 | 16701 | 22235k| 938.2 |   586M | 168 |1428 | 230 |2645 |8958k| 17 | 178 |   0 | 5.791638e+07 |      --      |    Inf |  50.25%
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 600.00
+Solving Nodes      : 23701
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +5.79163754000000e+07
+Gap                : infinite
+No dual solution available.
+SCIP 9.2.2: time limit, no solution
+2.2235e+07 simplex iterations
+eps [*,*]
+:         1             2             3             4             5         :=
+2     .             .            3.00015e-06    .             .
+3     .             .             .            1.78659e-06    .
+4     .             .             .             .            1.86402e-06
+12    .             .             .            4.65968e-06    .
+17    .            1.62045e-06    .             .             .
+36   2.21095e-06    .             .             .             .
+37   3.97468e-05    .             .             .             .
+
+:         6             7             8             9            10         :=
+5    1.71774e-06    .             .             .             .
+6     .            2.80292e-06    .             .             .
+18    .             .             .             .            3.63401e-06
+21   2.21464e-06    .             .             .             .
+22    .            1.70508e-06    .             .             .
+24    .             .            2.84017e-06    .             .
+25    .             .            2.6808e-06     .             .
+28    .             .             .            2.43891e-06    .
+30    .             .             .            2.94302e-06    .
+31    .             .             .             .            2.39723e-06
+
+:        11            12           13            14            15         :=
+3    2.29092e-06    .            .             .             .
+5     .             .           3.79747e-06    .             .
+10   2.68601e-06    .            .             .             .
+12    .             .           2.25111e-06    .             .
+13    .             .            .            3.10484e-06    .
+19    .            3.3131e-06    .             .             .
+20    .             .            .             .            3.15866e-06
+26    .             .            .             .            3.08372e-06
+
+:        16            17            18            19            20         :=
+1     .            2.83751e-06    .             .             .
+2     .             .            2.54015e-06    .             .
+11    .             .             .            2.54251e-06    .
+14    .             .             .             .            5.62854e-06
+15   2.3873e-06     .             .             .             .
+17    .             .            2.08654e-06    .             .
+19    .             .             .             .            2.02467e-06
+27   3.31976e-06    .             .             .             .
+
+:        21            22            23            24            25         :=
+7     .             .             .            2.26659e-06    .
+14   4.16604e-06    .             .             .             .
+15    .            3.70958e-06    .             .             .
+16    .             .             .             .            3.67365e-06
+21    .            2.68001e-06    .             .             .
+22    .             .            3.24073e-06    .             .
+23    .             .             .             .            3.86011e-06
+24    .             .            2.20976e-06    .             .
+
+:        26            27            28            29            30         :=
+8     .             .            2.70899e-06    .             .
+11   3.64953e-06    .             .             .             .
+16    .             .             .            2.80059e-06    .
+26    .            2.40533e-06    .             .             .
+28    .             .             .            2.66561e-06    .
+29    .             .             .             .            4.49204e-06
+32    .            3.76838e-06    .             .             .
+
+:        31            32            33            34            35         :=
+1    3.85098e-06    .             .             .             .
+10    .            4.81701e-06    .             .             .
+29    .             .            2.18691e-06    .             .
+30    .             .             .             .            2.99704e-06
+31    .             .             .            4.35965e-06    .
+32    .             .            2.71122e-06    .             .
+33    .             .             .            5.85222e-06    .
+34    .             .             .             .            2.51771e-06
+
+:        36         :=
+9    3.10783e-06
+35   3.65261e-06
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 12281.053909999997
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,17            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 1,31            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,18            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,11            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,6             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,13            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,24            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 8,28            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 9,36            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 10,11           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 10,32           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 11,19           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 11,26           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 12,4            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 12,13           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 13,14           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 14,20           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 14,21           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 15,16           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 15,22           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 16,25           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 16,29           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 17,2            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 17,18           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 18,10           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 19,12           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 19,20           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 20,15           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 21,6            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 21,22           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 22,7            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 22,23           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 23,25           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 24,8            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 24,23           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 25,8            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,15           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,27           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 27,16           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 28,9            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 28,29           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 29,30           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 29,33           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 30,9            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 30,35           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 31,10           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 31,34           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 32,27           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 32,33           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 33,34           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 34,35           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 35,36           |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 36,1            |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 37,1            |            0 |                      121 |                    121 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 121.0
+Sum of violation of approx headloss constraint: 121.0
+
+Con2 sum of absolute violation between original function and approximate function: 0.0
+Con2 sum of relative violation between original function and approximate function: 0.0
+*******************************************************************************
+
+Total cost using scip: 0.0
+scip solve time: 600.55 seconds
+*******************************************************************************
+

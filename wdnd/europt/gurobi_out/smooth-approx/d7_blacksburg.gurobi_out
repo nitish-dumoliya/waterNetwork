@@ -1,46 +1,18 @@
 Water Network: 7
-*******************************************************************************
-
--------------------------------- Solving with IPOPT --------------------------
-Ipopt solver outputs: 
-
-Ipopt 3.12.13: outlev = 0
-expect_infeasible_problem = yes
-bound_relax_factor=0
-bound_push = 0.01
-bound_frac = 0.01
-warm_start_init_point = yes
-halt_on_ampl_error = yes
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit http://projects.coin-or.org/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.12.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-total_cost: 117914.94188668557 
+Results smooth approximation 1 of Hazen--Williams headloss constraint
 
 *******************************************************************************
-
-Total cost using ipopt: 117914.94188668557
-IPOPT solve time: 0.82 seconds
-*******************************************************************************
-
 
 -------------------------------- Solving with gurobi --------------------------
 Gurobi 12.0.1: Set parameter LogToConsole to value 1
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
-Set parameter TimeLimit to value 3600
-  lim:time = 3600
-  alg:start = 1
+Set parameter TimeLimit to value 600
+  lim:time = 600
+  alg:start = 0
+Set parameter Method to value 1
+  alg:method = 1
 Set parameter MIPGapAbs to value 1e-06
   mip:gapabs = 1e-06
 Set parameter MIPGap to value 1e-09
@@ -48,1004 +20,365 @@ Set parameter MIPGap to value 1e-09
 Set parameter BarConvTol to value 1e-09
   bar:convtol = 1e-09
   sol:chk:feastol = 1e-05
-  sol:chk:feastolrel = 0
+  sol:chk:feastolrel = 1e-09
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
-Set parameter MIPGap to value 1e-09
-  mip:gap = 1e-09
   tech:optionfile = gurobiOpt.prm
 
-AMPL MP initial flat model has 414 variables (0 integer, 0 binary);
+AMPL MP initial flat model has 379 variables (0 integer, 0 binary);
 Objectives: 1 linear; 
-Constraints:  51 linear; 120 quadratic;
-Algebraic expressions:  35 div; 62 powconstexp;
+Constraints:  53 linear; 75 quadratic;
+Algebraic expressions:  27 powconstexp;
 
-AMPL MP final model has 638 variables (0 integer, 0 binary);
+AMPL MP final model has 482 variables (0 integer, 0 binary);
 Objectives: 1 linear; 
-Constraints:  86 linear; 120 quadratic;
-Algebraic expressions:  35 div; 62 powconstexp;
+Constraints:  80 linear; 75 quadratic;
+Algebraic expressions:  27 powconstexp;
 
 
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
+Warning: small constant in general constraint NL will be treated as zero (node 5)
 Set parameter InfUnbdInfo to value 1
 Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
 
-CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
 Non-default parameters:
-TimeLimit  3600
+TimeLimit  600
 MIPGap  1e-09
 MIPGapAbs  1e-06
+Method  1
 BarConvTol  1e-09
 InfUnbdInfo  1
 NumericFocus  1
 Presolve  1
 
-Optimize a model with 80 rows, 638 columns and 477 nonzeros
-Model fingerprint: 0xab294a73
-Model has 35 general nonlinear constraints (947 nonlinear terms)
-Variable types: 638 continuous, 0 integer (0 binary)
+Optimize a model with 80 rows, 482 columns and 497 nonzeros
+Model fingerprint: 0xaa9e3f4b
+Model has 27 general nonlinear constraints (1194 nonlinear terms)
+Variable types: 482 continuous, 0 integer (0 binary)
 Coefficient statistics:
-  Matrix range     [1e+00, 1e+00]
+  Matrix range     [2e-08, 2e+00]
   Objective range  [5e-01, 3e+02]
-  Bounds range     [4e-23, 6e+04]
+  Bounds range     [5e-15, 7e+05]
   RHS range        [7e-04, 7e+02]
-
-User MIP start produced solution with objective 117915 (0.00s)
-Loaded user MIP start with objective 117915
-
-Presolve model has 35 nlconstr
-Added 1018 variables to disaggregate expressions.
-Presolve removed 8 rows and 199 columns
-Presolve time: 0.00s
-Presolved: 2814 rows, 1458 columns, 6963 nonzeros
-Presolved model has 446 bilinear constraint(s)
-Presolved model has 89 nonlinear constraint(s)
+Presolve model has 27 nlconstr
+Added 650 variables to disaggregate expressions.
+Presolve removed 8 rows and 86 columns
+Presolve time: 0.02s
+Presolved: 1895 rows, 1068 columns, 4446 nonzeros
+Presolved model has 348 bilinear constraint(s)
+Presolved model has 27 nonlinear constraint(s)
 
 Solving non-convex MINLP
 
-Variable types: 1458 continuous, 0 integer (0 binary)
+Variable types: 1068 continuous, 0 integer (0 binary)
 
-Root relaxation: objective 5.784626e+04, 627 iterations, 0.03 seconds (0.00 work units)
+Root relaxation: objective 5.784626e+04, 526 iterations, 0.07 seconds (0.00 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0 57846.2631    0  120 117914.942 57846.2631  50.9%     -    0s
-     0     0 57846.2631    0  123 117914.942 57846.2631  50.9%     -    0s
-     0     0 57846.2631    0  123 117914.942 57846.2631  50.9%     -    0s
-     0     0 57846.2631    0  123 117914.942 57846.2631  50.9%     -    0s
-     0     0 57894.6814    0  141 117914.942 57894.6814  50.9%     -    1s
-     0     2 57894.6814    0  141 117914.942 57894.6814  50.9%     -    2s
-  1623   420 61871.7434   33  129 117914.942 60843.7743  48.4%  17.0    5s
-  5948  1769 61017.5823   12  132 117914.942 61017.5823  48.3%  32.3   11s
- 11429  6534 61017.5823  119  118 117914.942 61017.5823  48.3%  26.7   15s
- 22211 15821 61017.5823  339  118 117914.942 61017.5823  48.3%  15.0   20s
- 50956 43497 61017.5823  831  118 117914.942 61017.5823  48.3%   6.8   25s
- 83847 75731 61017.5823 1374  118 117914.942 61017.5823  48.3%   4.1   30s
- 114253 103926 61017.5823 1877  118 117914.942 61017.5823  48.3%   3.1   35s
- 138726 126639 61017.5823 2291  118 117914.942 61017.5823  48.3%   2.6   40s
- 162537 148471 61017.5823 2683  118 117914.942 61017.5823  48.3%   2.2   45s
- 182268 166107 61017.5823 3001  118 117914.942 61017.5823  48.3%   2.0   50s
- 204866 187107 61017.5823 3366  118 117914.942 61017.5823  48.3%   1.8   55s
- 223374 204356 61017.5823 3681  118 117914.942 61017.5823  48.3%   1.6   60s
- 241598 221381 61017.5823 3976  118 117914.942 61017.5823  48.3%   1.5   65s
- 259682 238332 61017.5823 4277  118 117914.942 61017.5823  48.3%   1.4   70s
- 277650 255195 61017.5823 4584  118 117914.942 61017.5823  48.3%   1.3   75s
- 298945 275245 61017.5823 4931  118 117914.942 61017.5823  48.3%   1.3   80s
- 316893 292217 61017.5823 5225  118 117914.942 61017.5823  48.3%   1.2   85s
- 331162 302438 61017.5823 5459  118 117914.942 61017.5823  48.3%   1.1   92s
- 338689 312978 61017.5823 5593  118 117914.942 61017.5823  48.3%   1.1   95s
- 357048 330696 61017.5823 5896  118 117914.942 61017.5823  48.3%   1.0  100s
- 375002 348628 61017.5823 6197  118 117914.942 61017.5823  48.3%   1.0  105s
- 396466 370062 61017.5823 6557  118 117914.942 61017.5823  48.3%   0.9  110s
- 414225 387819 61017.5823 6864  118 117914.942 61017.5823  48.3%   0.9  115s
- 435475 409042 61017.5823 7211  118 117914.942 61017.5823  48.3%   0.9  120s
- 456609 430173 61017.5823 7565  118 117914.942 61017.5823  48.3%   0.8  125s
- 477698 451235 61017.5823 7919  118 117914.942 61017.5823  48.3%   0.8  130s
- 498652 472186 61017.5823 8270  118 117914.942 61017.5823  48.3%   0.8  135s
- 519575 493101 61017.5823 8296  118 117914.942 61017.5823  48.3%   0.7  140s
- 540404 513909 61017.5823 8294  118 117914.942 61017.5823  48.3%   0.7  145s
- 557711 531224 61017.5823 8295  118 117914.942 61017.5823  48.3%   0.7  150s
- 578455 551951 61017.5823 8270  118 117914.942 61017.5823  48.3%   0.6  155s
- 599168 572640 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.6  160s
- 619736 591773 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.6  168s
- 621729 595232 61017.5823 8342  118 117914.942 61017.5823  48.3%   0.6  170s
- 639021 612523 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.6  175s
- 656290 629786 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.6  181s
- 670098 643570 61017.5823 8343  118 117914.942 61017.5823  48.3%   0.6  185s
- 690675 664150 61017.5823 8343  118 117914.942 61017.5823  48.3%   0.5  190s
- 711255 684727 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.5  195s
- 716740 690236 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.5  200s
- 737403 710875 61017.5823 8343  118 117914.942 61017.5823  48.3%   0.5  205s
- 754549 728021 61017.5823 8344  118 117914.942 61017.5823  48.3%   0.5  210s
- 771696 745166 61017.5823 8959  118 117914.942 61017.5823  48.3%   0.5  215s
- 788829 762299 61017.5823 9256  118 117914.942 61017.5823  48.3%   0.5  220s
- 795681 767765 61017.5823 9371  118 117914.942 61017.5823  48.3%   0.5  226s
- 808007 781478 61017.5823 9551  118 117914.942 61017.5823  48.3%   0.5  230s
- 825144 798615 61017.5823 9829  118 117914.942 61017.5823  48.3%   0.5  235s
- 842281 815752 61017.5823 10126  118 117914.942 61017.5823  48.3%   0.4  240s
- 855986 829456 61017.5823 10356  118 117914.942 61017.5823  48.3%   0.4  245s
- 869686 842392 61017.5823 10586  118 117914.942 61017.5823  48.3%   0.4  252s
- 879202 852673 61017.5823 10750  118 117914.942 61017.5823  48.3%   0.4  255s
- 896336 869806 61017.5823 11028  118 117914.942 61017.5823  48.3%   0.4  260s
- 910040 883510 61017.5823 11258  118 117914.942 61017.5823  48.3%   0.4  265s
- 927158 900624 61017.5823 11555  118 117914.942 61017.5823  48.3%   0.4  270s
- 934002 906095 61017.5823 11670  118 117914.942 61017.5823  48.3%   0.4  277s
- 942905 916376 61017.5823 11793  118 117914.942 61017.5823  48.3%   0.4  280s
- 956611 930081 61017.5823 12023  118 117914.942 61017.5823  48.3%   0.4  285s
- 970315 943785 61017.5823 12253  118 117914.942 61017.5823  48.3%   0.4  290s
- 984007 957473 61017.5823 12483  118 117914.942 61017.5823  48.3%   0.4  295s
- 1001117 973371 61017.5823 12761  118 117914.942 61017.5823  48.3%   0.4  304s
- 1003327 976797 61017.5823 12779  118 117914.942 61017.5823  48.3%   0.4  305s
- 1020457 993926 61017.5823 13076  118 117914.942 61017.5823  48.3%   0.4  310s
- 1034148 1007614 61017.5823 13306  118 117914.942 61017.5823  48.3%   0.4  315s
- 1051258 1024724 61017.5823 13584  118 117914.942 61017.5823  48.3%   0.4  320s
- 1058102 1030948 61017.5823 13699  118 117914.942 61017.5823  48.3%   0.4  325s
- 1067748 1041214 61017.5823 13869  118 117914.942 61017.5823  48.3%   0.4  330s
- 1081436 1054902 61017.5823 14099  118 117914.942 61017.5823  48.3%   0.3  335s
- 1095124 1068590 61017.5823 14329  118 117914.942 61017.5823  48.3%   0.3  340s
- 1101967 1074684 61017.5823 14444  118 117914.942 61017.5823  48.3%   0.3  346s
- 1111484 1084984 61017.5823 14590  118 117914.942 61017.5823  48.3%   0.3  351s
- 1121910 1095439 61017.5823 14772  118 117914.942 61017.5823  48.3%   0.3  355s
- 1135850 1109379 61017.5823 15002  118 117914.942 61017.5823  48.3%   0.3  360s
- 1146274 1119778 61017.5823 15174  118 117914.942 61017.5823  48.3%   0.3  365s
- 1149734 1122375 61017.5823 15231  118 117914.942 61017.5823  48.3%   0.3  370s
- 1162786 1136315 61017.5823 15428  118 117914.942 61017.5823  48.3%   0.3  376s
- 1173241 1146745 61017.5823 15610  118 117914.942 61017.5823  48.3%   0.3  380s
- 1187081 1160585 61017.5823 15838  118 117914.942 61017.5823  48.3%   0.3  385s
- 1200921 1173044 61017.5823 16066  118 117914.942 61017.5823  48.3%   0.3  394s
- 1203000 1176529 61017.5823 16074  118 117914.942 61017.5823  48.3%   0.3  396s
- 1213430 1186934 61017.5823 16246  118 117914.942 61017.5823  48.3%   0.3  401s
- 1227405 1200971 61017.5823 16474  118 117914.942 61017.5823  48.3%   0.3  405s
- 1241493 1215059 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  410s
- 1255735 1228690 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  419s
- 1258646 1232275 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  420s
- 1273044 1246739 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  425s
- 1291296 1264990 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  430s
- 1298596 1270841 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  436s
- 1311743 1285434 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  440s
- 1329973 1303660 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  445s
- 1348189 1321877 61017.5823 16623  118 117914.942 61017.5823  48.3%   0.3  450s
- 1351833 1324181 61017.5823 16623  118 117914.942 61017.5823  48.3%   0.3  456s
- 1368719 1342406 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  460s
- 1386867 1360527 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  465s
- 1404946 1377189 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  474s
- 1407145 1380808 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  475s
- 1425232 1398899 61017.5823 16621  118 117914.942 61017.5823  48.3%   0.3  480s
- 1443332 1416995 61017.5823 16622  118 117914.942 61017.5823  48.3%   0.3  485s
- 1457800 1430027 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  492s
- 1470832 1444495 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.3  495s
- 1492531 1466194 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.3  500s
- 1510607 1482840 61017.5823 16479  118 117914.942 61017.5823  48.3%   0.2  508s
- 1516413 1490074 61017.5823 16544  118 117914.942 61017.5823  48.3%   0.2  510s
- 1534482 1508135 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.2  515s
- 1559762 1533416 61017.5823 16623  118 117914.942 61017.5823  48.3%   0.2  520s
- 1563372 1536157 61017.5823 16624  118 117914.942 61017.5823  48.3%   0.2  525s
- 1580537 1554164 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.2  530s
- 1594891 1568245 61017.5823 16623  118 117914.942 61017.5823  48.3%   0.2  535s
- 1607612 1581241 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.2  540s
- 1629129 1602500 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.2  546s
- 1638258 1611886 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.2  550s
- 1656185 1629818 61017.5823 16625  118 117914.942 61017.5823  48.3%   0.2  555s
- 1669158 1642788 61017.5823 17727  118 117914.942 61017.5823  48.3%   0.2  560s
- 1690669 1662922 61017.5823 18063  118 117914.942 61017.5823  48.3%   0.2  566s
- 1703634 1677259 61017.5823 18239  118 117914.942 61017.5823  48.3%   0.2  570s
- 1717968 1690221 61017.5823 18463  118 117914.942 61017.5823  48.3%   0.2  575s
- 1738098 1711726 61017.5823 18742  118 117914.942 61017.5823  48.3%   0.2  580s
- 1750848 1724476 61017.5823 18913  118 117914.942 61017.5823  48.3%   0.2  585s
- 1768748 1742371 61017.5823 19193  118 117914.942 61017.5823  48.3%   0.2  590s
- 1785627 1759250 61017.5823 19438  118 117914.942 61017.5823  48.3%   0.2  595s
- 1798571 1772194 61017.5823 19624  118 117914.942 61017.5823  48.3%   0.2  600s
- 1820045 1792299 61017.5823 19960  118 117914.942 61017.5823  48.3%   0.2  606s
- 1832992 1806615 61017.5823 20127  118 117914.942 61017.5823  48.3%   0.2  610s
- 1850558 1822812 61017.5823 20407  118 117914.942 61017.5823  48.3%   0.2  617s
- 1863436 1837032 61017.5823 20582  118 117914.942 61017.5823  48.3%   0.2  620s
- 1879854 1853450 61017.5823 20803  118 117914.942 61017.5823  48.3%   0.2  625s
- 1897614 1871210 61017.5823 21090  118 117914.942 61017.5823  48.3%   0.2  630s
- 1910475 1884071 61017.5823 21255  118 117914.942 61017.5823  48.3%   0.2  636s
- 1924683 1898279 61017.5823 21477  118 117914.942 61017.5823  48.3%   0.2  640s
- 1937542 1911138 61017.5823 21661  118 117914.942 61017.5823  48.3%   0.2  645s
- 1958854 1931085 61017.5823 21994  118 117914.942 61017.5823  48.3%   0.2  651s
- 1975249 1948845 61017.5823 22224  118 117914.942 61017.5823  48.3%   0.2  655s
- 1991423 1965019 61017.5823 22447  118 117914.942 61017.5823  48.3%   0.2  660s
- 2009183 1982779 61017.5823 22715  118 117914.942 61017.5823  48.3%   0.2  665s
- 2022775 1996371 61017.5823 22927  118 117914.942 61017.5823  48.3%   0.2  670s
- 2039172 2012768 61017.5823 23148  118 117914.942 61017.5823  48.3%   0.2  675s
- 2053380 2025609 61017.5823 23370  118 117914.942 61017.5823  48.3%   0.2  680s
- 2073325 2046921 61017.5823 23665  118 117914.942 61017.5823  48.3%   0.2  685s
- 2093329 2066923 61017.5823 23954  118 117914.942 61017.5823  48.3%   0.2  690s
- 2109708 2083299 61017.5823 24174  118 117914.942 61017.5823  48.3%   0.2  695s
- 2130990 2103221 61017.5823 24507  118 117914.942 61017.5823  48.3%   0.2  700s
- 2150912 2124503 61017.5823 24792  118 117914.942 61017.5823  48.3%   0.2  705s
- 2167097 2140689 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  710s
- 2187878 2161471 61017.5823 24903  118 117914.942 61017.5823  48.3%   0.2  715s
- 2204666 2178257 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.2  720s
- 2220781 2194373 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  725s
- 2238488 2212056 61017.5823 24794  118 117914.942 61017.5823  48.3%   0.2  730s
- 2251253 2224823 61017.5823 24903  118 117914.942 61017.5823  48.3%   0.2  735s
- 2272391 2244623 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  740s
- 2288659 2262223 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  745s
- 2308448 2282024 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  750s
- 2322556 2295879 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.2  755s
- 2345631 2319195 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.2  761s
- 2361897 2335461 61017.5823 24900  118 117914.942 61017.5823  48.3%   0.2  765s
- 2383030 2355255 61017.5823 24904  118 117914.942 61017.5823  48.3%   0.2  770s
- 2406348 2379912 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  775s
- 2426122 2399687 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  780s
- 2440011 2412229 61017.5823 24904  118 117914.942 61017.5823  48.3%   0.2  785s
- 2463315 2436527 61017.5823 24901  118 117914.942 61017.5823  48.3%   0.2  790s
- 2480158 2452372 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.2  796s
- 2499929 2473494 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  800s
- 2519718 2493279 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.2  805s
- 2536845 2510407 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.1  810s
- 2553147 2526712 61017.5823 24902  118 117914.942 61017.5823  48.3%   0.1  815s
- 2570233 2543797 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  820s
- 2587058 2560623 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  825s
- 2603310 2576875 61017.5823 24895  118 117914.942 61017.5823  48.3%   0.1  830s
- 2619550 2593115 61017.5823 24902  118 117914.942 61017.5823  48.3%   0.1  835s
- 2637138 2610697 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  840s
- 2653104 2626665 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  845s
- 2670684 2644246 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  850s
- 2686919 2660478 61017.5823 24901  118 117914.942 61017.5823  48.3%   0.1  855s
- 2703144 2676706 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  860s
- 2720730 2694290 61017.5823 24900  118 117914.942 61017.5823  48.3%   0.1  865s
- 2736961 2710518 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.1  870s
- 2757691 2730941 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.1  876s
- 2770418 2743981 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  880s
- 2784486 2756700 61017.5823 24902  118 117914.942 61017.5823  48.3%   0.1  885s
- 2804234 2777793 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.1  890s
- 2823982 2797540 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  895s
- 2840134 2813688 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  900s
- 2857611 2831149 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.1  905s
- 2873739 2847271 61017.5823 24906  118 117914.942 61017.5823  48.3%   0.1  910s
- 2887695 2860972 61017.5823 24900  118 117914.942 61017.5823  48.3%   0.1  915s
- 2903563 2877096 61017.5823 24905  118 117914.942 61017.5823  48.3%   0.1  920s
- 2921016 2893224 61017.5823 25368  118 117914.942 61017.5823  48.3%   0.1  925s
- 2937137 2910669 61017.5823 25594  118 117914.942 61017.5823  48.3%   0.1  930s
- 2956749 2930281 61017.5823 25875  118 117914.942 61017.5823  48.3%   0.1  935s
- 2974193 2946401 61017.5823 26138  118 117914.942 61017.5823  48.3%   0.1  940s
- 2993797 2967329 61017.5823 26418  118 117914.942 61017.5823  48.3%   0.1  945s
- 3009917 2983449 61017.5823 26653  118 117914.942 61017.5823  48.3%   0.1  950s
- 3023869 2997218 61017.5823 26871  118 117914.942 61017.5823  48.3%   0.1  955s
- 3039800 3013332 61017.5823 27094  118 117914.942 61017.5823  48.3%   0.1  960s
- 3057240 3029447 61017.5823 27357  118 117914.942 61017.5823  48.3%   0.1  965s
- 3076843 3050375 61017.5823 27637  118 117914.942 61017.5823  48.3%   0.1  970s
- 3092545 3066077 61017.5823 27850  118 117914.942 61017.5823  48.3%   0.1  975s
- 3116961 3089160 61017.5823 28241  118 117914.942 61017.5823  48.3%   0.1  981s
- 3136556 3110088 61017.5823 28521  118 117914.942 61017.5823  48.3%   0.1  985s
- 3159641 3133173 61017.5823 28847  118 117914.942 61017.5823  48.3%   0.1  990s
- 3179030 3152562 61017.5823 29121  118 117914.942 61017.5823  48.3%   0.1  995s
- 3199708 3173240 61017.5823 29440  118 117914.942 61017.5823  48.3%   0.1 1000s
- 3219299 3192831 61017.5823 29730  118 117914.942 61017.5823  48.3%   0.1 1005s
- 3245862 3219394 61017.5823 30110  118 117914.942 61017.5823  48.3%   0.1 1010s
- 3265447 3238979 61017.5823 30400  118 117914.942 61017.5823  48.3%   0.1 1015s
- 3289452 3261644 61017.5823 30767  118 117914.942 61017.5823  48.3%   0.1 1021s
- 3309040 3282572 61017.5823 31048  118 117914.942 61017.5823  48.3%   0.1 1025s
- 3328624 3302156 61017.5823 31328  118 117914.942 61017.5823  48.3%   0.1 1030s
- 3348973 3322506 61017.5823 31638  118 117914.942 61017.5823  48.3%   0.1 1035s
- 3368564 3342096 61017.5823 31918  118 117914.942 61017.5823  48.3%   0.1 1040s
- 3384462 3357994 61017.5823 32127  118 117914.942 61017.5823  48.3%   0.1 1045s
- 3405390 3378636 61017.5823 32454  118 117914.942 61017.5823  48.3%   0.1 1050s
- 3428243 3401777 61017.5823 32784  118 117914.942 61017.5823  48.3%   0.1 1055s
- 3445115 3418647 61017.5823 33046  118 117914.942 61017.5823  48.3%   0.1 1060s
- 3464711 3438244 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1065s
- 3478295 3451528 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1070s
- 3494285 3467809 61017.5823 33182  118 117914.942 61017.5823  48.3%   0.1 1075s
- 3513845 3487376 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1080s
- 3534491 3508018 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1085s
- 3557543 3531069 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1090s
- 3577103 3550630 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1095s
- 3596677 3570208 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1100s
- 3614099 3587496 61017.5823 25767  118 117914.942 61017.5823  48.3%   0.1 1105s
- 3633984 3606695 61017.5823 26062  118 117914.942 61017.5823  48.3%   0.1 1110s
- 3652735 3626263 61017.5823 26304  118 117914.942 61017.5823  48.3%   0.1 1115s
- 3673632 3647159 61017.5823 26631  118 117914.942 61017.5823  48.3%   0.1 1120s
- 3689711 3663238 61017.5823 26857  118 117914.942 61017.5823  48.3%   0.1 1125s
- 3709273 3682800 61017.5823 27147  118 117914.942 61017.5823  48.3%   0.1 1130s
- 3726688 3700105 61017.5823 27410  118 117914.942 61017.5823  48.3%   0.1 1135s
- 3746391 3719918 61017.5823 27696  118 117914.942 61017.5823  48.3%   0.1 1140s
- 3763159 3735352 61017.5823 27946  118 117914.942 61017.5823  48.3%   0.1 1145s
- 3786206 3759733 61017.5823 28281  118 117914.942 61017.5823  48.3%   0.1 1150s
- 3805762 3779289 61017.5823 28561  118 117914.942 61017.5823  48.3%   0.1 1155s
- 3825326 3798853 61017.5823 28842  118 117914.942 61017.5823  48.3%   0.1 1160s
- 3844891 3818418 61017.5823 29132  118 117914.942 61017.5823  48.3%   0.1 1165s
- 3865756 3838914 61017.5823 29449  118 117914.942 61017.5823  48.3%   0.1 1171s
- 3878994 3851273 61017.5823 29653  118 117914.942 61017.5823  48.3%   0.1 1175s
- 3898547 3872047 61017.5823 29936  118 117914.942 61017.5823  48.3%   0.1 1180s
- 3918412 3891371 61017.5823 30219  118 117914.942 61017.5823  48.3%   0.1 1185s
- 3937297 3910797 61017.5823 30478  118 117914.942 61017.5823  48.3%   0.1 1190s
- 3954577 3927822 61017.5823 30748  118 117914.942 61017.5823  48.3%   0.1 1195s
- 3977209 3950709 61017.5823 31082  118 117914.942 61017.5823  48.3%   0.1 1200s
- 3996639 3970139 61017.5823 31351  118 117914.942 61017.5823  48.3%   0.1 1205s
- 4013919 3986112 61017.5823 31621  118 117914.942 61017.5823  48.3%   0.1 1210s
- 4036804 4010304 61017.5823 31962  118 117914.942 61017.5823  48.3%   0.1 1215s
- 4056228 4029728 61017.5823 32240  118 117914.942 61017.5823  48.3%   0.1 1220s
- 4071971 4045471 61017.5823 32450  118 117914.942 61017.5823  48.3%   0.1 1225s
- 4092709 4066107 61017.5823 32774  118 117914.942 61017.5823  48.3%   0.1 1230s
- 4112477 4085363 61017.5823 33066  118 117914.942 61017.5823  48.3%   0.1 1236s
- 4127836 4101341 61017.5823 33185  118 117914.942 61017.5823  48.3%   0.1 1240s
- 4148593 4122093 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1245s
- 4171475 4144975 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1250s
- 4190909 4164419 61017.5823 33098  118 117914.942 61017.5823  48.3%   0.1 1255s
- 4206904 4180405 61017.5823 33185  118 117914.942 61017.5823  48.3%   0.1 1260s
- 4227646 4200874 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1265s
- 4246948 4220451 61017.5823 33179  118 117914.942 61017.5823  48.3%   0.1 1270s
- 4266394 4239902 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1275s
- 4283682 4255873 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1280s
- 4306571 4280071 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1285s
- 4322549 4296051 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1290s
- 4338538 4312044 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1295s
- 4359286 4332597 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1301s
- 4371606 4345107 61017.5823 33185  118 117914.942 61017.5823  48.3%   0.1 1305s
- 4388891 4362143 61017.5823 33183  118 117914.942 61017.5823  48.3%   0.1 1310s
- 4404618 4378117 61017.5823 33183  118 117914.942 61017.5823  48.3%   0.1 1315s
- 4421908 4394097 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1321s
- 4441339 4414841 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1325s
- 4457307 4430809 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1330s
- 4474592 4446771 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1335s
- 4490559 4464058 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1340s
- 4509976 4483478 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1345s
- 4527154 4499690 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1351s
- 4546927 4519101 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1355s
- 4566346 4539845 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1360s
- 4582305 4555808 61017.5823 33184  118 117914.942 61017.5823  48.3%   0.1 1365s
- 4599250 4572753 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1370s
- 4614774 4588274 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1375s
- 4638977 4611150 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1381s
- 4651478 4624982 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1385s
- 4670896 4644397 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1390s
- 4688186 4661687 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1395s
- 4704144 4677643 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1400s
- 4723561 4697062 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1405s
- 4743867 4717366 61017.5823 33184  118 117914.942 61017.5823  48.3%   0.1 1410s
- 4763280 4736781 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1415s
- 4779243 4752744 61017.5823 33184  118 117914.942 61017.5823  48.3%   0.1 1420s
- 4803432 4775600 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1425s
- 4819380 4792881 61017.5823 33182  118 117914.942 61017.5823  48.3%   0.1 1430s
- 4832881 4805684 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1435s
- 4848771 4822275 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1440s
- 4865452 4838953 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1445s
- 4881411 4854913 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1450s
- 4898691 4870867 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1455s
- 4914649 4888152 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1460s
- 4930606 4904108 61017.5823 33186  118 117914.942 61017.5823  48.3%   0.1 1465s
- 4951224 4923695 61017.5823 33185  118 117914.942 61017.5823  48.3%   0.1 1471s
- 4964020 4937523 61017.5823 33185  118 117914.942 61017.5823  48.3%   0.1 1475s
- 4980046 4953546 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1480s
- 5000153 4973656 61017.5823 33187  118 117914.942 61017.5823  48.3%   0.1 1485s
- 5016113 4989613 61017.5823 33692  118 117914.942 61017.5823  48.3%   0.1 1490s
- 5033397 5005573 61017.5823 33962  118 117914.942 61017.5823  48.3%   0.1 1495s
- 5052812 5026312 61017.5823 34250  118 117914.942 61017.5823  48.3%   0.1 1500s
- 5072223 5045723 61017.5823 34528  118 117914.942 61017.5823  48.3%   0.1 1505s
- 5088172 5061672 61017.5823 34752  118 117914.942 61017.5823  48.3%   0.1 1510s
- 5108908 5082228 61017.5823 35076  118 117914.942 61017.5823  48.3%   0.1 1515s
- 5121022 5094520 61017.5823 35235  118 117914.942 61017.5823  48.3%   0.1 1521s
- 5138300 5111800 61017.5823 35505  118 117914.942 61017.5823  48.3%   0.1 1525s
- 5157817 5131317 61017.5823 35777  118 117914.942 61017.5823  48.3%   0.1 1530s
- 5171335 5143841 61017.5823 35994  118 117914.942 61017.5823  48.3%   0.1 1535s
- 5191076 5163250 61017.5823 36274  118 117914.942 61017.5823  48.3%   0.1 1541s
- 5207030 5180529 61017.5823 36498  118 117914.942 61017.5823  48.3%   0.1 1545s
- 5222968 5196467 61017.5823 36722  118 117914.942 61017.5823  48.3%   0.1 1550s
- 5243681 5215850 61017.5823 37046  118 117914.942 61017.5823  48.3%   0.1 1555s
- 5263064 5236559 61017.5823 37324  118 117914.942 61017.5823  48.3%   0.1 1560s
- 5275345 5248840 61017.5823 37497  118 117914.942 61017.5823  48.3%   0.1 1565s
- 5299318 5272701 61017.5823 37861  118 117914.942 61017.5823  48.3%   0.1 1570s
- 5315475 5288970 61017.5823 38094  118 117914.942 61017.5823  48.3%   0.1 1575s
- 5334852 5308347 61017.5823 38372  118 117914.942 61017.5823  48.3%   0.1 1581s
- 5348656 5320831 61017.5823 38588  118 117914.942 61017.5823  48.3%   0.1 1585s
- 5371493 5344988 61017.5823 38920  118 117914.942 61017.5823  48.3%   0.1 1590s
- 5390873 5364368 61017.5823 39198  118 117914.942 61017.5823  48.3%   0.1 1595s
- 5410257 5383752 61017.5823 39476  118 117914.942 61017.5823  48.3%   0.1 1600s
- 5427391 5399905 61017.5823 39743  118 117914.942 61017.5823  48.3%   0.1 1605s
- 5447116 5419288 61017.5823 40043  118 117914.942 61017.5823  48.3%   0.1 1610s
- 5466499 5439994 61017.5823 40311  118 117914.942 61017.5823  48.3%   0.1 1615s
- 5482428 5455923 61017.5823 40535  118 117914.942 61017.5823  48.3%   0.1 1620s
- 5499684 5471853 61017.5823 40805  118 117914.942 61017.5823  48.3%   0.1 1625s
- 5522515 5495593 61017.5823 41147  118 117914.942 61017.5823  48.3%   0.1 1630s
- 5538030 5511525 61017.5823 41357  118 117914.942 61017.5823  48.3%   0.1 1635s
- 5558750 5530923 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.1 1641s
- 5574681 5548176 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1645s
- 5594066 5567561 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1650s
- 5614518 5586692 61017.5823 41448  118 117914.942 61017.5823  48.3%   0.1 1655s
- 5637359 5610854 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1660s
- 5660188 5633684 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.1 1665s
- 5683025 5656521 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1670s
- 5702417 5675915 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1675s
- 5722682 5696177 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1680s
- 5745517 5719012 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1685s
- 5768360 5741856 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1690s
- 5791192 5764688 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1695s
- 5807126 5780623 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1700s
- 5830925 5804421 61017.5823 41329  118 117914.942 61017.5823  48.3%   0.1 1705s
- 5850485 5823982 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1710s
- 5876830 5850324 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1715s
- 5893135 5866631 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.1 1720s
- 5915970 5889466 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1725s
- 5931908 5905403 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1730s
- 5952617 5924789 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1735s
- 5975453 5948613 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1740s
- 5995230 5967402 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1745s
- 6014617 5988113 61017.5823 41460  118 117914.942 61017.5823  48.3%   0.1 1750s
- 6030772 6004267 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.1 1755s
- 6053606 6027102 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1760s
- 6076445 6049944 61017.5823 41464  118 117914.942 61017.5823  48.3%   0.1 1765s
- 6096926 6069088 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1771s
- 6112841 6086323 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1775s
- 6128711 6102199 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1780s
- 6145871 6119178 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1785s
- 6161553 6135021 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1790s
- 6178578 6151098 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1795s
- 6198188 6170361 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1801s
- 6217450 6190925 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.1 1805s
- 6236709 6210179 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.1 1810s
- 6255970 6229442 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1815s
- 6276532 6248702 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1820s
- 6299217 6272359 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1825s
- 6318775 6292144 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1830s
- 6338286 6311759 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1835s
- 6357544 6331017 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.1 1840s
- 6380236 6353705 61017.5823 42079  118 117914.942 61017.5823  48.3%   0.1 1845s
- 6399376 6372849 61017.5823 42359  118 117914.942 61017.5823  48.3%   0.1 1850s
- 6419933 6392108 61017.5823 42680  118 117914.942 61017.5823  48.3%   0.1 1855s
- 6446032 6418206 61017.5823 43053  118 117914.942 61017.5823  48.3%   0.1 1861s
- 6465282 6438750 61017.5823 43338  118 117914.942 61017.5823  48.3%   0.1 1865s
- 6484528 6457996 61017.5823 43604  118 117914.942 61017.5823  48.3%   0.1 1870s
- 6507194 6480662 61017.5823 43942  118 117914.942 61017.5823  48.3%   0.1 1875s
- 6530797 6502967 61017.5823 44294  118 117914.942 61017.5823  48.3%   0.1 1880s
- 6553467 6526843 61017.5823 44623  118 117914.942 61017.5823  48.3%   0.1 1885s
- 6572912 6546380 61017.5823 44913  118 117914.942 61017.5823  48.3%   0.1 1890s
- 6592348 6565816 61017.5823 45196  118 117914.942 61017.5823  48.3%   0.1 1895s
- 6615018 6588486 61017.5823 45515  118 117914.942 61017.5823  48.3%   0.1 1901s
- 6627613 6601081 61017.5823 45690  118 117914.942 61017.5823  48.3%   0.1 1905s
- 6644733 6617118 61017.5823 45967  118 117914.942 61017.5823  48.3%   0.1 1910s
- 6664194 6637560 61017.5823 46240  118 117914.942 61017.5823  48.3%   0.1 1915s
- 6680327 6653795 61017.5823 46482  118 117914.942 61017.5823  48.3%   0.1 1920s
- 6696813 6669605 61017.5823 46726  118 117914.942 61017.5823  48.3%   0.1 1926s
- 6709833 6682657 61017.5823 46908  118 117914.942 61017.5823  48.3%   0.1 1930s
- 6725263 6698731 61017.5823 47124  118 117914.942 61017.5823  48.3%   0.1 1935s
- 6745169 6718637 61017.5823 47414  118 117914.942 61017.5823  48.3%   0.1 1940s
- 6764598 6738066 61017.5823 47706  118 117914.942 61017.5823  48.3%   0.1 1945s
- 6783840 6757308 61017.5823 47982  118 117914.942 61017.5823  48.3%   0.1 1950s
- 6804384 6776554 61017.5823 48303  118 117914.942 61017.5823  48.3%   0.1 1955s
- 6823632 6797100 61017.5823 48569  118 117914.942 61017.5823  48.3%   0.1 1960s
- 6839719 6813187 61017.5823 48802  118 117914.942 61017.5823  48.3%   0.1 1965s
- 6855538 6829006 61017.5823 49033  118 117914.942 61017.5823  48.3%   0.1 1970s
- 6876082 6848252 61017.5823 49354  118 117914.942 61017.5823  48.3%   0.1 1975s
- 6895330 6868798 61017.5823 49630  118 117914.942 61017.5823  48.3%   0.1 1980s
- 6911122 6884597 61017.5823 49749  118 117914.942 61017.5823  48.3%   0.1 1986s
- 6927864 6901332 61017.5823 49749  118 117914.942 61017.5823  48.3%   0.1 1990s
- 6947111 6920579 61017.5823 49744  118 117914.942 61017.5823  48.3%   0.1 1995s
- 6962935 6936409 61017.5823 49749  118 117914.942 61017.5823  48.3%   0.1 2000s
- 6980090 6953564 61017.5823 50349  118 117914.942 61017.5823  48.3%   0.1 2005s
- 7002768 6976236 61017.5823 50678  118 117914.942 61017.5823  48.3%   0.1 2010s
- 7021775 6995243 61017.5823 50937  118 117914.942 61017.5823  48.3%   0.1 2016s
- 7038899 7012369 61017.5823 51214  118 117914.942 61017.5823  48.3%   0.1 2020s
- 7058146 7031614 61017.5823 51489  118 117914.942 61017.5823  48.3%   0.1 2025s
- 7080818 7054286 61017.5823 51818  118 117914.942 61017.5823  48.3%   0.1 2030s
- 7100064 7073532 61017.5823 52084  118 117914.942 61017.5823  48.3%   0.1 2035s
- 7122730 7096198 61017.5823 52413  118 117914.942 61017.5823  48.3%   0.1 2040s
- 7149863 7122071 61017.5823 52842  118 117914.942 61017.5823  48.3%   0.1 2045s
- 7172571 7145792 61017.5823 53171  118 117914.942 61017.5823  48.3%   0.1 2050s
- 7194987 7168455 61017.5823 53492  118 117914.942 61017.5823  48.3%   0.1 2055s
- 7214232 7187700 61017.5823 53758  118 117914.942 61017.5823  48.3%   0.1 2060s
- 7236904 7210372 61017.5823 54087  118 117914.942 61017.5823  48.3%   0.1 2065s
- 7257448 7229620 61017.5823 54408  118 117914.942 61017.5823  48.3%   0.1 2070s
- 7280120 7253588 61017.5823 54737  118 117914.942 61017.5823  48.3%   0.1 2075s
- 7302790 7276258 61017.5823 55075  118 117914.942 61017.5823  48.3%   0.1 2080s
- 7318750 7292218 61017.5823 55302  118 117914.942 61017.5823  48.3%   0.1 2085s
- 7338692 7312160 61017.5823 55592  118 117914.942 61017.5823  48.3%   0.1 2090s
- 7361361 7334829 61017.5823 55921  118 117914.942 61017.5823  48.3%   0.1 2095s
- 7380604 7354072 61017.5823 56206  118 117914.942 61017.5823  48.3%   0.1 2100s
- 7403273 7376741 61017.5823 56534  118 117914.942 61017.5823  48.3%   0.1 2105s
- 7420393 7392559 61017.5823 56792  118 117914.942 61017.5823  48.3%   0.1 2110s
- 7439636 7413104 61017.5823 57067  118 117914.942 61017.5823  48.3%   0.1 2115s
- 7455271 7428739 61017.5823 57292  118 117914.942 61017.5823  48.3%   0.1 2120s
- 7472391 7445690 61017.5823 57550  118 117914.942 61017.5823  48.3%   0.1 2125s
- 7488236 7461707 61017.5823 57775  118 117914.942 61017.5823  48.3%   0.1 2130s
- 7504142 7477610 61017.5823 58000  118 117914.942 61017.5823  48.3%   0.1 2135s
- 7521272 7493907 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2140s
- 7539978 7513446 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2145s
- 7557098 7529409 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2150s
- 7576491 7549965 61017.5823 57944  118 117914.942 61017.5823  48.3%   0.1 2155s
- 7592327 7565795 61017.5823 58029  118 117914.942 61017.5823  48.3%   0.1 2161s
- 7606026 7578197 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2165s
- 7632123 7604290 61017.5823 58026  118 117914.942 61017.5823  48.3%   0.1 2171s
- 7651382 7624856 61017.5823 58029  118 117914.942 61017.5823  48.3%   0.1 2175s
- 7666948 7640417 61017.5823 58023  118 117914.942 61017.5823  48.3%   0.1 2180s
- 7689618 7663086 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2185s
- 7713597 7685768 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2191s
- 7732851 7706323 61017.5823 58026  118 117914.942 61017.5823  48.3%   0.1 2195s
- 7752096 7725564 61017.5823 58027  118 117914.942 61017.5823  48.3%   0.1 2200s
- 7774769 7748243 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2205s
- 7791733 7765103 61017.5823 58030  118 117914.942 61017.5823  48.3%   0.1 2210s
- 7814622 7786783 61017.5823 58783  118 117914.942 61017.5823  48.3%   0.1 2215s
- 7833861 7807329 61017.5823 59058  118 117914.942 61017.5823  48.3%   0.1 2220s
- 7856531 7829999 61017.5823 59387  118 117914.942 61017.5823  48.3%   0.1 2225s
- 7875772 7849240 61017.5823 59662  118 117914.942 61017.5823  48.3%   0.1 2230s
- 7892892 7865057 61017.5823 59920  118 117914.942 61017.5823  48.3%   0.1 2235s
- 7918981 7891137 61017.5823 60312  118 117914.942 61017.5823  48.3%   0.1 2241s
- 7938213 7911681 61017.5823 60587  118 117914.942 61017.5823  48.3%   0.0 2245s
- 7954038 7927506 61017.5823 60802  118 117914.942 61017.5823  48.3%   0.0 2250s
- 7969925 7943393 61017.5823 61026  118 117914.942 61017.5823  48.3%   0.0 2255s
- 7990469 7963205 61017.5823 61347  118 117914.942 61017.5823  48.3%   0.0 2260s
- 8008971 7982439 61017.5823 61597  118 117914.942 61017.5823  48.3%   0.0 2265s
- 8029515 8002670 61017.5823 61918  118 117914.942 61017.5823  48.3%   0.0 2270s
- 8049001 8022469 61017.5823 62204  118 117914.942 61017.5823  48.3%   0.0 2275s
- 8068234 8041702 61017.5823 62488  118 117914.942 61017.5823  48.3%   0.0 2280s
- 8084339 8057807 61017.5823 62722  118 117914.942 61017.5823  48.3%   0.0 2285s
- 8103997 8077465 61017.5823 63012  118 117914.942 61017.5823  48.3%   0.0 2290s
- 8123227 8096695 61017.5823 63287  118 117914.942 61017.5823  48.3%   0.0 2295s
- 8139996 8113464 61017.5823 63542  118 117914.942 61017.5823  48.3%   0.0 2300s
- 8159142 8132610 61017.5823 63816  118 117914.942 61017.5823  48.3%   0.0 2305s
- 8181796 8155264 61017.5823 64145  118 117914.942 61017.5823  48.3%   0.0 2310s
- 8201994 8175201 61017.5823 64445  118 117914.942 61017.5823  48.3%   0.0 2316s
- 8214111 8187579 61017.5823 64616  118 117914.942 61017.5823  48.3%   0.0 2320s
- 8234655 8206806 61017.5823 64937  118 117914.942 61017.5823  48.3%   0.0 2325s
- 8257306 8230774 61017.5823 65256  118 117914.942 61017.5823  48.3%   0.0 2330s
- 8279957 8253426 61017.5823 65585  118 117914.942 61017.5823  48.3%   0.0 2335s
- 8299197 8272665 61017.5823 65870  118 117914.942 61017.5823  48.3%   0.0 2340s
- 8316129 8288284 61017.5823 66124  118 117914.942 61017.5823  48.3%   0.0 2345s
- 8331937 8305406 61017.5823 66311  118 117914.942 61017.5823  48.3%   0.0 2350s
- 8345446 8317598 61017.5823 66311  118 117914.942 61017.5823  48.3%   0.0 2355s
- 8364680 8338151 61017.5823 66310  118 117914.942 61017.5823  48.3%   0.0 2360s
- 8380287 8353756 61017.5823 66311  118 117914.942 61017.5823  48.3%   0.0 2365s
- 8397424 8370790 61017.5823 66311  118 117914.942 61017.5823  48.3%   0.0 2370s
- 8413368 8386836 61017.5823 66311  118 117914.942 61017.5823  48.3%   0.0 2375s
- 8429974 8402869 61017.5823 66310  118 117914.942 61017.5823  48.3%   0.0 2380s
- 8445211 8418681 61017.5823 66311  118 117914.942 61017.5823  48.3%   0.0 2385s
- 8462348 8435816 61017.5823 66307  118 117914.942 61017.5823  48.3%   0.0 2390s
- 8478154 8451621 61017.5823 67559  118 117914.942 61017.5823  48.3%   0.0 2395s
- 8491849 8465022 61017.5823 67773  118 117914.942 61017.5823  48.3%   0.0 2400s
- 8507630 8481098 61017.5823 67996  118 117914.942 61017.5823  48.3%   0.0 2405s
- 8523861 8497330 61017.5823 68224  118 117914.942 61017.5823  48.3%   0.0 2410s
- 8543917 8516461 61017.5823 68528  118 117914.942 61017.5823  48.3%   0.0 2416s
- 8563537 8535686 61017.5823 68828  118 117914.942 61017.5823  48.3%   0.0 2421s
- 8579338 8552806 61017.5823 69040  118 117914.942 61017.5823  48.3%   0.0 2425s
- 8595956 8568640 61017.5823 69301  118 117914.942 61017.5823  48.3%   0.0 2430s
- 8612292 8584441 61017.5823 69542  118 117914.942 61017.5823  48.3%   0.0 2435s
- 8631517 8604985 61017.5823 69808  118 117914.942 61017.5823  48.3%   0.0 2440s
- 8643708 8617176 61017.5823 69971  118 117914.942 61017.5823  48.3%   0.0 2445s
- 8664252 8637478 61017.5823 70292  118 117914.942 61017.5823  48.3%   0.0 2451s
- 8676388 8649856 61017.5823 70452  118 117914.942 61017.5823  48.3%   0.0 2455s
- 8696932 8669086 61017.5823 70773  118 117914.942 61017.5823  48.3%   0.0 2461s
- 8712738 8686206 61017.5823 71004  118 117914.942 61017.5823  48.3%   0.0 2465s
- 8731962 8705430 61017.5823 71279  118 117914.942 61017.5823  48.3%   0.0 2470s
- 8745658 8718876 61017.5823 71493  118 117914.942 61017.5823  48.3%   0.0 2475s
- 8764632 8738100 61017.5823 71760  118 117914.942 61017.5823  48.3%   0.0 2480s
- 8780437 8753905 61017.5823 71972  118 117914.942 61017.5823  48.3%   0.0 2485s
- 8800981 8774449 61017.5823 72293  118 117914.942 61017.5823  48.3%   0.0 2490s
- 8813358 8786826 61017.5823 72471  118 117914.942 61017.5823  48.3%   0.0 2495s
- 8830478 8802630 61017.5823 72729  118 117914.942 61017.5823  48.3%   0.0 2500s
- 8853130 8826243 61017.5823 73067  118 117914.942 61017.5823  48.3%   0.0 2506s
- 8866193 8838362 61017.5823 73261  118 117914.942 61017.5823  48.3%   0.0 2510s
- 8885438 8858906 61017.5823 73536  118 117914.942 61017.5823  48.3%   0.0 2515s
- 8901246 8874711 61017.5823 73758  118 117914.942 61017.5823  48.3%   0.0 2520s
- 8921468 8894196 61017.5823 74060  118 117914.942 61017.5823  48.3%   0.0 2526s
- 8934425 8907777 61017.5823 74258  118 117914.942 61017.5823  48.3%   0.0 2530s
- 8950471 8923939 61017.5823 74481  118 117914.942 61017.5823  48.3%   0.0 2535s
- 8962851 8936321 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2540s
- 8979982 8953452 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2545s
- 8995794 8969262 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2550s
- 9009386 8981787 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2555s
- 9025441 8998909 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2560s
- 9038505 9011975 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2565s
- 9054323 9027792 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2570s
- 9070128 9043596 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2575s
- 9090673 9064140 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2581s
- 9099635 9073106 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2585s
- 9116766 9090235 61017.5823 74586  118 117914.942 61017.5823  48.3%   0.0 2590s
- 9132572 9106040 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2595s
- 9151804 9125270 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2601s
- 9165502 9138970 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2605s
- 9177696 9151166 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2610s
- 9194821 9168289 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2615s
- 9210215 9183684 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2620s
- 9227335 9200803 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2625s
- 9239723 9213194 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2631s
- 9256853 9230197 61017.5823 74589  118 117914.942 61017.5823  48.3%   0.0 2636s
- 9269557 9243025 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2640s
- 9285830 9259296 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2645s
- 9298416 9271885 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2650s
- 9315543 9287699 61017.5823 74589  118 117914.942 61017.5823  48.3%   0.0 2655s
- 9331356 9304825 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2660s
- 9348034 9320188 61017.5823 74588  118 117914.942 61017.5823  48.3%   0.0 2665s
- 9363839 9337306 61017.5823 74588  118 117914.942 61017.5823  48.3%   0.0 2670s
- 9379653 9353122 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2675s
- 9396780 9370247 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2680s
- 9412581 9386050 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2685s
- 9428381 9401847 61017.5823 74588  118 117914.942 61017.5823  48.3%   0.0 2690s
- 9445508 9418977 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2695s
- 9458062 9431531 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2700s
- 9471764 9444046 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2705s
- 9491120 9464586 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2710s
- 9503505 9476969 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2715s
- 9520629 9492781 61017.5823 74590  118 117914.942 61017.5823  48.3%   0.0 2720s
- 9536437 9509906 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2725s
- 9552242 9525710 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2730s
- 9572791 9544948 61017.5823 74592  118 117914.942 61017.5823  48.3%   0.0 2736s
- 9588602 9562070 61017.5823 74584  118 117914.942 61017.5823  48.3%   0.0 2740s
- 9602068 9574224 61017.5823 74591  118 117914.942 61017.5823  48.3%   0.0 2745s
- 9621303 9594766 61017.5823 75442  118 117914.942 61017.5823  48.3%   0.0 2751s
- 9633686 9607154 61017.5823 75620  118 117914.942 61017.5823  48.3%   0.0 2755s
- 9654228 9626380 61017.5823 75941  118 117914.942 61017.5823  48.3%   0.0 2760s
- 9676881 9650047 61017.5823 76270  118 117914.942 61017.5823  48.3%   0.0 2766s
- 9689253 9662721 61017.5823 76441  118 117914.942 61017.5823  48.3%   0.0 2770s
- 9711998 9685466 61017.5823 76765  118 117914.942 61017.5823  48.3%   0.0 2775s
- 9731524 9704992 61017.5823 77052  118 117914.942 61017.5823  48.3%   0.0 2780s
- 9750785 9724253 61017.5823 77338  118 117914.942 61017.5823  48.3%   0.0 2785s
- 9771115 9744583 61017.5823 77644  118 117914.942 61017.5823  48.3%   0.0 2790s
- 9790345 9763813 61017.5823 77929  118 117914.942 61017.5823  48.3%   0.0 2795s
- 9806148 9779616 61017.5823 78141  118 117914.942 61017.5823  48.3%   0.0 2800s
- 9823268 9796337 61017.5823 78418  118 117914.942 61017.5823  48.3%   0.0 2805s
- 9845522 9818990 61017.5823 78732  118 117914.942 61017.5823  48.3%   0.0 2810s
- 9861327 9834795 61017.5823 78954  118 117914.942 61017.5823  48.3%   0.0 2815s
- 9885040 9858508 61017.5823 79310  118 117914.942 61017.5823  48.3%   0.0 2820s
- 9904268 9877736 61017.5823 79585  118 117914.942 61017.5823  48.3%   0.0 2825s
- 9923499 9896967 61017.5823 79870  118 117914.942 61017.5823  48.3%   0.0 2830s
- 9942724 9916192 61017.5823 80145  118 117914.942 61017.5823  48.3%   0.0 2835s
- 9966692 9938843 61017.5823 80510  118 117914.942 61017.5823  48.3%   0.0 2841s
- 9982495 9955963 61017.5823 80732  118 117914.942 61017.5823  48.3%   0.0 2845s
- 9998294 9971762 61017.5823 80953  118 117914.942 61017.5823  48.3%   0.0 2850s
- 10015414 9988555 61017.5823 81230  118 117914.942 61017.5823  48.3%   0.0 2855s
- 10034961 10007409 61017.5823 81507  118 117914.942 61017.5823  48.3%   0.0 2860s
- 10054485 10026721 61017.5823 81792  118 117914.942 61017.5823  48.3%   0.0 2866s
- 10070373 10043841 61017.5823 82017  118 117914.942 61017.5823  48.3%   0.0 2870s
- 10086586 10060054 61017.5823 82264  118 117914.942 61017.5823  48.3%   0.0 2875s
- 10102655 10076123 61017.5823 82487  118 117914.942 61017.5823  48.3%   0.0 2880s
- 10121612 10095084 61017.5823 82756  118 117914.942 61017.5823  48.3%   0.0 2885s
- 10142166 10115634 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 2890s
- 10161390 10134858 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2895s
- 10177192 10150660 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2900s
- 10194315 10167596 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2906s
- 10206506 10179973 61017.5823 82799  118 117914.942 61017.5823  48.3%   0.0 2910s
- 10223633 10196838 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2915s
- 10239177 10212646 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2920s
- 10261829 10235299 61017.5823 82869  118 117914.942 61017.5823  48.3%   0.0 2926s
- 10275527 10248997 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 2930s
- 10291337 10264808 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 2935s
- 10308463 10280620 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2941s
- 10327697 10301165 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 2945s
- 10343298 10316767 61017.5823 82871  118 117914.942 61017.5823  48.3%   0.0 2950s
- 10360422 10333517 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2955s
- 10372427 10345897 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2960s
- 10392972 10366140 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2965s
- 10412185 10385649 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2970s
- 10424651 10398121 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2975s
- 10441765 10414251 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 2980s
- 10457893 10431356 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2985s
- 10473683 10447147 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2990s
- 10489471 10462937 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 2995s
- 10509997 10483274 61017.5823 82871  118 117914.942 61017.5823  48.3%   0.0 3001s
- 10518763 10492230 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 3005s
- 10539286 10512391 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 3010s
- 10552410 10524566 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 3015s
- 10568205 10541670 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 3021s
- 10581620 10553774 61017.5823 82865  118 117914.942 61017.5823  48.3%   0.0 3025s
- 10600830 10574295 61017.5823 82870  118 117914.942 61017.5823  48.3%   0.0 3031s
- 10616614 10590077 61017.5823 82871  118 117914.942 61017.5823  48.3%   0.0 3035s
- 10633716 10605870 61017.5823 82872  118 117914.942 61017.5823  48.3%   0.0 3040s
- 10649506 10622970 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 3045s
- 10665294 10638759 61017.5823 82868  118 117914.942 61017.5823  48.3%   0.0 3050s
- 10685689 10658222 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 3056s
- 10705281 10677431 61017.5823 82871  118 117914.942 61017.5823  48.3%   0.0 3061s
- 10721067 10694532 61017.5823 82873  118 117914.942 61017.5823  48.3%   0.0 3065s
- 10737460 10710923 61017.5823 34660  118 117914.942 61017.5823  48.3%   0.0 3070s
- 10753041 10726504 61017.5823 34886  118 117914.942 61017.5823  48.3%   0.0 3075s
- 10773437 10745897 61017.5823 35204  118 117914.942 61017.5823  48.3%   0.0 3080s
- 10792948 10765098 61017.5823 35482  118 117914.942 61017.5823  48.3%   0.0 3085s
- 10815568 10789031 61017.5823 35811  118 117914.942 61017.5823  48.3%   0.0 3090s
- 10834769 10808232 61017.5823 36096  118 117914.942 61017.5823  48.3%   0.0 3095s
- 10853974 10827437 61017.5823 36362  118 117914.942 61017.5823  48.3%   0.0 3100s
- 10873177 10846640 61017.5823 36647  118 117914.942 61017.5823  48.3%   0.0 3105s
- 10897110 10869264 61017.5823 37012  118 117914.942 61017.5823  48.3%   0.0 3110s
- 10919734 10892981 61017.5823 37341  118 117914.942 61017.5823  48.3%   0.0 3116s
- 10938716 10912179 61017.5823 37610  118 117914.942 61017.5823  48.3%   0.0 3120s
- 10957919 10931382 61017.5823 37885  118 117914.942 61017.5823  48.3%   0.0 3125s
- 10978311 10950822 61017.5823 38212  118 117914.942 61017.5823  48.3%   0.0 3131s
- 10997872 10970023 61017.5823 38500  118 117914.942 61017.5823  48.3%   0.0 3135s
- 11017074 10990537 61017.5823 38775  118 117914.942 61017.5823  48.3%   0.0 3140s
- 11032857 11006320 61017.5823 38997  118 117914.942 61017.5823  48.3%   0.0 3145s
- 11053088 11025328 61017.5823 39309  118 117914.942 61017.5823  48.3%   0.0 3150s
- 11075798 11048324 61017.5823 39642  118 117914.942 61017.5823  48.3%   0.0 3156s
- 11091956 11065419 61017.5823 39869  118 117914.942 61017.5823  48.3%   0.0 3160s
- 11114582 11088045 61017.5823 40198  118 117914.942 61017.5823  48.3%   0.0 3165s
- 11130781 11104244 61017.5823 40445  118 117914.942 61017.5823  48.3%   0.0 3170s
- 11149979 11123442 61017.5823 40720  118 117914.942 61017.5823  48.3%   0.0 3175s
- 11166788 11139059 61017.5823 40979  118 117914.942 61017.5823  48.3%   0.0 3181s
- 11186110 11159573 61017.5823 41249  118 117914.942 61017.5823  48.3%   0.0 3185s
- 11205311 11178775 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3190s
- 11224520 11197983 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.0 3195s
- 11241618 11213768 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3201s
- 11257403 11230867 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3205s
- 11269769 11243234 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3210s
- 11290288 11263751 61017.5823 41204  118 117914.942 61017.5823  48.3%   0.0 3215s
- 11306072 11279536 61017.5823 41435  118 117914.942 61017.5823  48.3%   0.0 3220s
- 11322978 11295129 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.0 3225s
- 11345600 11318860 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.0 3230s
- 11364599 11338064 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3235s
- 11380397 11353861 61017.5823 41409  118 117914.942 61017.5823  48.3%   0.0 3240s
- 11400911 11374089 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3245s
- 11419978 11393441 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.0 3250s
- 11439187 11412651 61017.5823 41465  118 117914.942 61017.5823  48.3%   0.0 3255s
- 11458408 11431871 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3260s
- 11482343 11454495 61017.5823 41467  118 117914.942 61017.5823  48.3%   0.0 3265s
- 11501546 11475009 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3270s
- 11517137 11490602 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.0 3275s
- 11537659 11509812 61017.5823 41408  118 117914.942 61017.5823  48.3%   0.0 3280s
- 11560285 11533386 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3285s
- 11572603 11546066 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3290s
- 11592343 11565807 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3295s
- 11608133 11581598 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.0 3300s
- 11628652 11600805 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3305s
- 11647858 11621323 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3310s
- 11660272 11633735 61017.5823 41468  118 117914.942 61017.5823  48.3%   0.0 3315s
- 11677369 11649519 61017.5823 41466  118 117914.942 61017.5823  48.3%   0.0 3321s
- 11693155 11666618 61017.5823 42260  118 117914.942 61017.5823  48.3%   0.0 3325s
- 11712359 11685822 61017.5823 42535  118 117914.942 61017.5823  48.3%   0.0 3330s
- 11729324 11701965 61017.5823 42789  118 117914.942 61017.5823  48.3%   0.0 3336s
- 11742178 11715641 61017.5823 42984  118 117914.942 61017.5823  48.3%   0.0 3340s
- 11761381 11734844 61017.5823 43259  118 117914.942 61017.5823  48.3%   0.0 3346s
- 11777166 11750629 61017.5823 43471  118 117914.942 61017.5823  48.3%   0.0 3350s
- 11797680 11769830 61017.5823 43792  118 117914.942 61017.5823  48.3%   0.0 3355s
- 11816881 11790344 61017.5823 44067  118 117914.942 61017.5823  48.3%   0.0 3360s
- 11832665 11806128 61017.5823 44289  118 117914.942 61017.5823  48.3%   0.0 3365s
- 11849429 11822892 61017.5823 44556  118 117914.942 61017.5823  48.3%   0.0 3370s
- 11865943 11838102 61017.5823 44805  118 117914.942 61017.5823  48.3%   0.0 3375s
- 11888572 11862035 61017.5823 45134  118 117914.942 61017.5823  48.3%   0.0 3380s
- 11907773 11881236 61017.5823 45400  118 117914.942 61017.5823  48.3%   0.0 3385s
- 11921084 11894427 61017.5823 45611  118 117914.942 61017.5823  48.3%   0.0 3390s
- 11937080 11910543 61017.5823 45842  118 117914.942 61017.5823  48.3%   0.0 3395s
- 11959706 11933169 61017.5823 46171  118 117914.942 61017.5823  48.3%   0.0 3400s
- 11978911 11952374 61017.5823 46437  118 117914.942 61017.5823  48.3%   0.0 3405s
- 11996006 11968159 61017.5823 46714  118 117914.942 61017.5823  48.3%   0.0 3410s
- 12015210 11988673 61017.5823 46980  118 117914.942 61017.5823  48.3%   0.0 3415s
- 12031060 12004523 61017.5823 47215  118 117914.942 61017.5823  48.3%   0.0 3420s
- 12050264 12023727 61017.5823 47481  118 117914.942 61017.5823  48.3%   0.0 3425s
- 12073934 12046087 61017.5823 47846  118 117914.942 61017.5823  48.3%   0.0 3431s
- 12093138 12066601 61017.5823 48121  118 117914.942 61017.5823  48.3%   0.0 3435s
- 12108923 12082386 61017.5823 48343  118 117914.942 61017.5823  48.3%   0.0 3440s
- 12126018 12098167 61017.5823 48620  118 117914.942 61017.5823  48.3%   0.0 3445s
- 12148637 12121904 61017.5823 48949  118 117914.942 61017.5823  48.3%   0.0 3450s
- 12167652 12141115 61017.5823 49209  118 117914.942 61017.5823  48.3%   0.0 3455s
- 12187696 12159969 61017.5823 49523  118 117914.942 61017.5823  48.3%   0.0 3461s
- 12200182 12173646 61017.5823 49696  118 117914.942 61017.5823  48.3%   0.0 3465s
- 12215972 12189435 61017.5823 49749  118 117914.942 61017.5823  48.3%   0.0 3470s
- 12236487 12208634 61017.5823 49749  118 117914.942 61017.5823  48.3%   0.0 3475s
- 12259104 12232568 61017.5823 49749  118 117914.942 61017.5823  48.3%   0.0 3480s
- 12274895 12248362 61017.5823 42175  118 117914.942 61017.5823  48.3%   0.0 3485s
- 12294108 12267571 61017.5823 42460  118 117914.942 61017.5823  48.3%   0.0 3490s
- 12314175 12287638 61017.5823 42758  118 117914.942 61017.5823  48.3%   0.0 3495s
- 12333382 12306845 61017.5823 43043  118 117914.942 61017.5823  48.3%   0.0 3500s
- 12349161 12322624 61017.5823 43255  118 117914.942 61017.5823  48.3%   0.0 3505s
- 12369675 12343138 61017.5823 43576  118 117914.942 61017.5823  48.3%   0.0 3510s
- 12388875 12362338 61017.5823 43860  118 117914.942 61017.5823  48.3%   0.0 3515s
- 12408080 12381543 61017.5823 44126  118 117914.942 61017.5823  48.3%   0.0 3520s
- 12428342 12400494 61017.5823 44438  118 117914.942 61017.5823  48.3%   0.0 3525s
- 12447545 12421008 61017.5823 44723  118 117914.942 61017.5823  48.3%   0.0 3530s
- 12466748 12440211 61017.5823 44998  118 117914.942 61017.5823  48.3%   0.0 3535s
- 12480424 12452571 61017.5823 45212  118 117914.942 61017.5823  48.3%   0.0 3540s
- 12499622 12473085 61017.5823 45487  118 117914.942 61017.5823  48.3%   0.0 3545s
- 12515638 12489101 61017.5823 45720  118 117914.942 61017.5823  48.3%   0.0 3550s
- 12528000 12501463 61017.5823 45888  118 117914.942 61017.5823  48.3%   0.0 3555s
- 12545095 12518558 61017.5823 46146  118 117914.942 61017.5823  48.3%   0.0 3560s
- 12557457 12530920 61017.5823 46314  118 117914.942 61017.5823  48.3%   0.0 3565s
- 12574552 12547888 61017.5823 46591  118 117914.942 61017.5823  48.3%   0.0 3570s
- 12590614 12564077 61017.5823 46824  118 117914.942 61017.5823  48.3%   0.0 3575s
- 12600591 12572752 61017.5823 46965  118 117914.942 61017.5823  48.3%   0.0 3581s
- 12616384 12589847 61017.5823 47188  118 117914.942 61017.5823  48.3%   0.0 3585s
- 12628751 12602214 61017.5823 47356  118 117914.942 61017.5823  48.3%   0.0 3590s
- 12649265 12622728 61017.5823 47677  118 117914.942 61017.5823  48.3%   0.0 3595s
-
-Cutting planes:
-  RLT: 7
-
-Explored 12665047 nodes (408214 simplex iterations) in 3600.32 seconds (283.52 work units)
-Thread count was 32 (of 64 available processors)
-
-Solution count 1: 117915 
-
-Time limit reached
-Best objective 1.179149418867e+05, best bound 6.101758234754e+04, gap 48.2529%
-Gurobi 12.0.1: time limit, feasible solution; objective 117914.9419
-408214 simplex iterations
-1.2665e+07 branching nodes
-absmipgap=56897.4, relmipgap=0.482529
-q [*,*] (tr)
-:        0           1            2            3            4           5    :=
-1    0.0538129    .            .           .             .           .
-2     .          0.0470492     .           .             .           .
-3     .           .           0.0184521    .             .           .
-4    0.0438905    .            .           .             .           .
-5     .           .            .           .            0.0430173    .
-6     .           .            .           .             .          0.0357014
-8     .          0.00347609    .           .             .           .
-11    .           .           0.0134308    .             .           .
-13    .           .           0.0119752    .             .           .
-17    .           .            .          0.000532599    .           .
-18    .           .            .          0.0162937      .           .
-21    .           .            .           .             .          0.00393115
-
-:        6            7            8            9            11        :=
-7    0.0324377    .             .            .            .
-8     .          0.000479658    .            .            .
-10    .           .             .           0.00328763    .
-12    .           .             .           0.00129875    .
-15    .           .             .            .           0.00666158
-25    .           .             .           0.00325167    .
-29    .          0.0193034      .            .            .
-30    .           .            0.00323968    .            .
-
-:         12            13           14            15            18         :=
-11   -0.000411627    .            .             .             .
-14     .            0.00168206    .             .             .
-16     .             .            .            0.00328763     .
-17     .             .            .            0.000122281    .
-19     .             .            .             .            0.00958065
-23     .             .           5.62298e-05    .             .
-24     .             .            .             .            0.000173735
-
-:        21           22            23            24            26        :=
-9     .             .             .             .           0.00851753
-13    .           -0.00393549     .             .            .
-19    .             .             .           -0.00629302    .
-20   0.00069147     .             .             .            .
-22    .             .           -0.00319544     .            .
-27    .             .             .             .           0.00321508
-28    .             .             .             .           0.00161385
-
-:       29        :=
-26   0.0166587
-;
-
-eps [*,*] (tr)
-:         0             1             2             3            4         :=
-1    1.52279e-08    .             .             .             .
-2     .            1.29811e-08    .             .             .
-3     .             .            1.91909e-08    .             .
-4    4.36277e-08    .             .             .             .
-5     .             .             .             .            1.7113e-08
-8     .            4.99484e-08    .             .             .
-11    .             .            4.92482e-08    .             .
-13    .             .            3.39322e-08    .             .
-17    .             .             .            2.18377e-08    .
-18    .             .             .            1.6683e-08     .
-
-:         5             6             7             8             9         :=
-6    2.41977e-08    .             .             .             .
-7     .            6.41488e-08    .             .             .
-8     .             .            2.87876e-08    .             .
-10    .             .             .             .            2.76667e-08
-12    .             .             .             .            8.29645e-08
-21   2.34831e-08    .             .             .             .
-25    .             .             .             .            2.88995e-08
-29    .             .            4.20168e-08    .             .
-30    .             .             .            5.92667e-08    .
-
-:        11            12            13            14           15         :=
-11    .            1.99941e-08    .             .            .
-14    .             .            2.07795e-08    .            .
-15   3.42934e-08    .             .             .            .
-16    .             .             .             .           2.09012e-08
-17    .             .             .             .           1.79123e-08
-23    .             .             .            3.0261e-08    .
-
-:        18            21            22            23            24         :=
-13    .             .            2.17985e-08    .             .
-19   1.77498e-08    .             .             .            1.83256e-08
-20    .            5.84119e-08    .             .             .
-22    .             .             .            3.16761e-08    .
-24   1.64517e-08    .             .             .             .
-
-:        26            29         :=
-9    3.64259e-08    .
-26    .            2.13321e-08
-27   3.34672e-08    .
-28   2.86046e-08    .
-;
-
-eps:  1.522790916962617e-08
-q[3,17]: 0.0005325991847121317
-q[7,8]: 0.0004796579818416804
-q[12,11]: -0.0004116270175659419
-q[14,23]: 5.622978923094671e-05
-q[15,17]: 0.0001222808152878683
-q[18,24]: 0.0001737348873168853
-q[21,20]: 0.00069147
-*******************************************************************************
-
-Constraints violation:
-
-
-Sum of constraints violation: 2.7874978800884742e-12
-*******************************************************************************
-
-*******************************************************************************
-
-Absolute and relative violations between original and approximation constraint 2:
-
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
-+=================+==============+==========================+========================+======================+======================+
-| 0,1             |  0.0538129   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 0,4             |  0.0438905   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 1,2             |  0.0470492   |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 1,8             |  0.00347609  |                        0 |                      0 |                   -0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.0184521   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,11            |  0.0134308   |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,13            |  0.0119752   |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,17            |  0.000532599 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,18            |  0.0162937   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.0430173   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 5,6             |  0.0357014   |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0324377   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,8             |  0.000479658 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,29            |  0.0193034   |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 8,30            |  0.00323968  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 9,12            |  0.00129875  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 12,11           | -0.000411627 |                        0 |                      0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 14,23           |  5.62298e-05 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 15,17           |  0.000122281 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 18,19           |  0.00958065  |                       -0 |                     -0 |                   -0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 18,24           |  0.000173735 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 21,20           |  0.00069147  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 26,9            |  0.00851753  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 5,21            |  0.00393115  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 9,10            |  0.00328763  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 9,25            |  0.00325167  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 11,15           |  0.00666158  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 13,14           |  0.00168206  |                        0 |                      0 |                   -0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 15,16           |  0.00328763  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 22,13           | -0.00393549  |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 23,22           | -0.00319544  |                        0 |                      0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 24,19           | -0.00629302  |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 26,27           |  0.00321508  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 26,28           |  0.00161385  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 29,26           |  0.0166587   |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-
-Sum of violation of original headloss constraint: 2.1671726913030653e-12
-Sum of violation of approx headloss constraint: 2.162196637012226e-12
-
-Con2 sum of absolute violation between original function and approximate function: 1.6078284537091037e-14
-Con2 sum of relative violation between original function and approximate function: 1.2984349845002747e-14
-*******************************************************************************
-
-Total cost using gurobi: 117914.94188668557
-gurobi solve time: 3704.27 seconds
-*******************************************************************************
-
+     0     0 57846.2631    0   47          - 57846.2631      -     -    1s
+     0     0 57846.2631    0   47          - 57846.2631      -     -    1s
+     0     0 57846.2631    0   46          - 57846.2631      -     -    1s
+     0     0 57846.2631    0   49          - 57846.2631      -     -    2s
+     0     2 57846.2631    0   49          - 57846.2631      -     -    4s
+     3     8 57975.8445    2   49          - 57846.2631      -   9.0    5s
+   351   416 59235.6484   11   50          - 58709.6280      -   4.8   10s
+  1441  1093 60364.6798   27   47          - 58709.6280      -   2.3   15s
+  5462  3106 71330.1218   26    0          - 60525.6865      -  10.7   20s
+  5479  3135 60866.3218   14   62          - 60596.3592      -  10.9   25s
+  7541  3799 infeasible   28               - 62350.4192      -  16.4   30s
+ 16743  7204 106794.654   38   34          - 78027.5600      -  17.5   35s
+ 27930 14051 113580.208   58   28          - 80029.0958      -  16.9   40s
+ 39071 20079 97522.5386   29   52          - 88439.1512      -  17.3   45s
+ 47974 25327 infeasible   35               - 91047.2818      -  17.8   50s
+ 57590 30881 137730.504   55   45          - 92037.6684      -  18.2   55s
+ 64511 35233 infeasible   27               - 92358.2329      -  18.2   60s
+ 73842 40462 133254.578   51   52          - 92955.2928      -  18.4   66s
+ 82803 46671 141824.381  105   20          - 93372.2487      -  18.6   70s
+ 93888 54091 110515.616   46   46          - 93630.2654      -  18.2   76s
+ 99127 57186 107005.691   45   60          - 93745.7294      -  18.1   80s
+ 109844 63165 124053.718  113   14          - 93816.2560      -  18.1   85s
+ 119611 69120 96354.6892   29   71          - 94096.2352      -  18.2   91s
+ 126897 74479 103837.224   52   71          - 94169.3347      -  18.1   95s
+ 138375 79678 125473.585  138   14          - 94294.4077      -  17.8  101s
+ 143584 84872 infeasible  180               - 94320.0732      -  17.7  105s
+ 154829 92429 122806.206   52   23          - 94416.5607      -  17.5  110s
+ 165901 100147 infeasible   53               - 94493.4257      -  17.3  115s
+ 173713 105660 123739.757   40   68          - 94591.6815      -  17.2  120s
+ 184525 112301 109455.336   29   51          - 94643.6274      -  17.0  125s
+ 195260 117497 103218.795   30   56          - 94720.9229      -  16.9  130s
+ 204442 124597 127220.407   66   31          - 94764.8314      -  16.7  135s

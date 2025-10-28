@@ -5,13 +5,14 @@ fix_arc_set: {(1, 2)}
 super_source_out_arc: [(1, 2), (2, 3), (2, 6)] 
 
 Ipopt 3.12.13: outlev = 0
+tol = 1e-9
 bound_relax_factor=0
-bound_push = 0.01
+bound_push = 0.1
 bound_frac = 0.1
 halt_on_ampl_error = yes
 halt_on_ampl_error = yes
-warm_start_init_point = yes
-expect_infeasible_problem = yes
+warm_start_init_point = no
+expect_infeasible_problem = no
 
 
 ******************************************************************************
@@ -25,9 +26,9 @@ Ipopt 3.12.13: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-Objective:  123882.6143570333
+Objective:  123882.61435697904
 Solve_result:  solved
-Solve_time: 1.425283 
+Solve_time: 0.2109359999999998 
 
 
 ---------------------------Reverse Arc Direction Approach------------------------------------
@@ -35,19 +36,25 @@ Solve_time: 1.425283
 *********************************************************************************************
 Iteration : 1 
 
-self.sorted_nodes: [5]
+sorted_arcs:  [(4, 5), (7, 5)]
 ----------------------------------------------------------------------------------------
-
-Node: 5
-node-in-arcs: [(4, 5), (7, 5)]
-decreasing-in-flow-arcs: [(4, 5), (7, 5)] 
-
 Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
-(4, 5)    1,23,883      1,39,229      0.1s        solved        No        1.61s
-(7, 5)    1,23,883      1,23,884      0.06s       solved        No        1.71s
-----------------------------------------------------------------------------------------
+(4, 5)    1,23,883      1,39,229      0.32s       solved        No        3.39s
+(7, 5)    1,23,883      1,23,884      0.13s       solved        No        3.81s
 
 ----------------------------Diameter Reduction Approach--------------------------------------
+
+*********************************************************************************************
+Iteration : 2 
+
+sorted_arcs: [(3, 4), (4, 5), (6, 7)]
+----------------------------------------------------------------------------------------
+Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(3, 4)    1,23,883      1,25,050      0.11s       solved        No        4.04s
+(4, 5)    1,23,883      1,38,130      0.19s       solved        No        4.34s
+(6, 7)    1,23,883      1,24,809      0.14s       solved        No        4.59s
+
+----------------------------Headloss increase Approach--------------------------------------
 
 **********************************Final best results*****************************************
 
@@ -57,7 +64,7 @@ Water Network: d1_bessa
 Constraints violation:
 
 
-Sum of constraints violation: 3.8586495110237706e-13
+Sum of constraints violation: 3.843585172358388e-12
 *******************************************************************************
 
 *******************************************************************************
@@ -67,31 +74,31 @@ Absolute and relative violations between original and approximation constraint 2
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 | Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation(in %) |
 +=================+==============+==========================+========================+======================+============================+
-| 1,2             |  0.42043     |                        0 |                      0 |                    0 |                          0 |
+| 1,2             |  0.42043     |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 | 2,3             |  0.292211    |                        0 |                      0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 2,6             |  0.128219    |                        0 |                      0 |                    0 |                          0 |
+| 2,6             |  0.128219    |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 | 3,4             |  0.248771    |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 | 4,5             |  0.208481    |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 6,7             |  0.0804393   |                       -0 |                     -0 |                   -0 |                         -0 |
+| 6,7             |  0.0804393   |                       -0 |                     -0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
-| 7,5             |  0.000119277 |                       -0 |                      0 |                    0 |                          0 |
+| 7,5             |  0.000119277 |                        0 |                      0 |                    0 |                          0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
 
-Sum of violation of original headloss constraint: 4.8944355512947624e-14
-Sum of violation of approx headloss constraint: 4.476280457410553e-14
+Sum of violation of original headloss constraint: 1.583867585697174e-12
+Sum of violation of approx headloss constraint: 3.1528737953756547e-12
 
-Con2 sum of absolute violation between original function and approximate function: 5.107459594144714e-14
-Con2 sum of relative violation between original function and approximate function: 6.498543806528807e-12
+Con2 sum of absolute violation between original function and approximate function: 1.5743352801966815e-12
+Con2 sum of relative violation between original function and approximate function: 2.1584904919144387e-10
 *******************************************************************************
 
-Final best objective: 123882.6143570333
-Number of nlp problem solved: 3
+Final best objective: 123882.61435697904
+Number of nlp problem solved: 6
 Total number of iteration: 2
-Solver_time: 1.59 seconds
-Heuristic elapsed time: 1.71 seconds
+Solver_time: 1.10 seconds
+Heuristic elapsed time: 4.60 seconds
 

@@ -1,0 +1,92 @@
+Water Network: 1
+Results smooth approximation 1 of Hazen--Williams headloss constraint
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with gurobi --------------------------
+2009084189.7689204
+276842309.61382765
+901714951.31361
+1131098579.279353
+806797588.0174406
+1115279018.7299914
+1352572426.970415
+epsilon: {(1, 2): 1.4e-06, (2, 3): 4e-06, (3, 4): 2.1e-06, (4, 5): 1.8999999999999998e-06, (2, 6): 2.2e-06, (6, 7): 1.8999999999999998e-06, (7, 5): 1.6999999999999998e-06}
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-06
+  mip:gap = 1e-06
+  sol:chk:feastol = 1e-05
+
+AMPL MP initial flat model has 83 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  13 linear; 21 quadratic;
+Algebraic expressions:  7 powconstexp;
+
+AMPL MP final model has 111 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  20 linear; 21 quadratic;
+Algebraic expressions:  7 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  1e-06
+MIPGapAbs  1e-06
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 20 rows, 111 columns and 103 nonzeros
+Model fingerprint: 0x5059c509
+Model has 7 general nonlinear constraints (280 nonlinear terms)
+Variable types: 111 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 2e+01]
+  Bounds range     [2e-12, 5e+04]
+  RHS range        [4e-02, 3e+03]
+Presolve model has 7 nlconstr
+Added 161 variables to disaggregate expressions.
+Presolve removed 1 rows and 22 columns
+Presolve time: 0.00s
+Presolved: 467 rows, 258 columns, 1071 nonzeros
+Presolved model has 84 bilinear constraint(s)
+Presolved model has 7 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 258 continuous, 0 integer (0 binary)
+
+Root relaxation: objective 5.445958e+04, 177 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 54459.5762    0   16          - 54459.5762      -     -    0s
+     0     0 54518.7166    0   17          - 54518.7166      -     -    0s
+     0     0 54522.0482    0   17          - 54522.0482      -     -    0s
+     0     0 54522.0494    0   19          - 54522.0494      -     -    0s
+     0     0 54522.0505    0   19          - 54522.0505      -     -    0s
+     0     0 54522.0511    0   19          - 54522.0511      -     -    0s
+     0     0 54522.0514    0   19          - 54522.0514      -     -    0s
+     0     0 54522.0514    0   18          - 54522.0514      -     -    0s
+H    0     0                    143814.68763 54522.0514  62.1%     -    0s
+H    0     0                    137594.18405 54522.0514  60.4%     -    0s
+     0     2 54522.0514    0   18 137594.184 54522.0514  60.4%     -    0s
+H    5     8                    129674.47746 88276.2016  31.9%  43.4    1s
+H   27    22                    128669.95739 91444.5581  28.9%  20.9    1s
+H   29    22                    123884.39361 91444.5581  26.2%  22.3    1s
+ 11279  2807 123882.710   77    0 123884.394 123872.539  0.01%   0.9    5s

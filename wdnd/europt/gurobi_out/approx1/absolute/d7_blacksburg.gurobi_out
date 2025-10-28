@@ -1,0 +1,462 @@
+Water Network: 7
+Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error
+
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.3: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+  tech:outlev_mp = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter Aggregate to value 1
+  pre:aggregate = 1
+Set parameter TimeLimit to value 600
+  lim:time = 600
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter OBBT to value 0
+  mip:obbt = 0
+Set parameter ScaleFlag to value 1
+  pre:scale = 1
+Set parameter Method to value 2
+  alg:method = 2
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter MIPFocus to value 1
+  mip:focus = 1
+Set parameter NLPHeur to value 1
+  alg:nlpheur = 1
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter MIPGapAbs to value 1e-05
+  mip:gapabs = 1.0000000000000001e-05
+Set parameter MIPGap to value 1e-06
+  mip:gap = 9.9999999999999995e-07
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1.0000000000000001e-05
+  cvt:pre:feastol = 1.0000000000000001e-05
+  cvt:pre:feastolrel = 9.9999999999999995e-07
+  sol:chk:feastol = 1.0000000000000001e-05
+  sol:chk:feastolrel = 9.9999999999999995e-07
+
+AMPL MP initial flat model has 379 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  53 linear; 75 quadratic;
+Algebraic expressions:  27 powconstexp;
+
+AMPL MP final model has 482 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  80 linear; 75 quadratic;
+Algebraic expressions:  27 powconstexp;
+
+
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+FeasibilityTol  1e-05
+MIPGap  1e-06
+MIPGapAbs  1e-05
+Method  2
+ScaleFlag  1
+MIPFocus  1
+NodeMethod  1
+OBBT  0
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 80 rows, 482 columns and 497 nonzeros
+Model fingerprint: 0xcd0f160f
+Model has 27 general nonlinear constraints (1194 nonlinear terms)
+Variable types: 482 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [2e-08, 2e+00]
+  Objective range  [5e-01, 3e+02]
+  Bounds range     [6e-14, 7e+05]
+  RHS range        [7e-04, 7e+02]
+Presolve model has 27 nlconstr
+Added 671 variables to disaggregate expressions.
+Presolve removed 8 rows and 86 columns
+Presolve time: 0.01s
+Presolved: 1916 rows, 1089 columns, 4467 nonzeros
+Presolved model has 348 bilinear constraint(s)
+Presolved model has 27 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 1089 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.03s
+
+Barrier statistics:
+ AA' NZ     : 1.627e+04
+ Factor NZ  : 2.001e+04 (roughly 1 MB of memory)
+ Factor Ops : 3.875e+05 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   5.88137503e+06 -1.50788835e+07  2.37e+03 4.44e-16  9.91e+03     1s
+   1   1.33240915e+06 -2.16562227e+05  5.14e+02 5.68e-14  1.09e+03     1s
+   2   1.16619742e+05 -6.69432596e+03  2.47e+00 8.53e-14  4.48e+01     1s
+   3   6.39326620e+04  5.31564421e+04  5.02e-02 5.68e-14  3.75e+00     1s
+   4   5.86244693e+04  5.74522971e+04  5.32e-03 5.68e-14  4.06e-01     1s
+   5   5.78864695e+04  5.78400127e+04  2.55e-04 1.14e-13  1.61e-02     1s
+   6   5.78474133e+04  5.78461613e+04  7.00e-06 1.14e-13  4.33e-04     1s
+   7   5.78462632e+04  5.78462631e+04  6.20e-10 1.14e-13  3.97e-08     1s
+   8   5.78462631e+04  5.78462631e+04  3.64e-12 5.68e-14  5.65e-14     1s
+
+Barrier solved model in 8 iterations and 1.20 seconds (0.05 work units)
+Optimal objective 5.78462631e+04
+
+
+Root relaxation: objective 5.784626e+04, 119 iterations, 0.20 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 57846.2631    0   75          - 57846.2631      -     -    1s
+     0     0 60267.4509    0   71          - 60267.4509      -     -    1s
+     0     0 60267.4509    0   72          - 60267.4509      -     -    2s
+     0     2 60267.4509    0   72          - 60267.4509      -     -    8s
+   544   480 66709.7726   14   79          - 66352.2812      -  15.5   10s
+  NLP heuristic elapsed time = 5.01s
+  4068  2303 67642.4182   22    0          - 66743.0367      -  13.8   24s
+  4071  2306 66743.0367   13   62          - 66743.0367      -  13.9   26s
+  4462  2422 infeasible   23               - 66743.0367      -  14.6   31s
+ 11479  5113 infeasible   71               - 73999.6876      -  18.7   35s
+ 29572 19413 116749.273   79   57          - 87094.4656      -  12.7   40s
+ 45460 32497 118613.297  168   53          - 92432.4662      -  11.3   45s
+ 61959 45034 104685.486   28   63          - 93754.5446      -  10.4   50s
+ 74004 53181 137421.521   46   39          - 94141.7622      -  10.1   55s
+ 92086 70778 144785.376  155   13          - 94260.2456      -   9.2   60s
+ 113369 88371 144807.239  243    7          - 94947.7947      -   8.4   65s
+ 127721 100763 infeasible  300               - 95111.2651      -   8.1   70s
+ 144034 114965 infeasible  412               - 95158.6132      -   7.7   75s
+ 161105 129015 152354.965  479   16          - 95158.6132      -   7.4   80s
+ 180512 145999 96025.3809   73   53          - 95179.0080      -   7.1   85s
+ 196207 158853 102735.093  120   54          - 95213.0622      -   6.9   90s
+ 216168 176526 106221.726  189   57          - 95218.4368      -   6.6   96s
+ 231561 189520 104322.904  136   58          - 95218.7544      -   6.5  100s
+ 250335 205673 105905.088  146   63          - 95219.0096      -   6.3  105s
+ 266202 219165 104292.457  136   58          - 95219.2484      -   6.2  110s
+ 283119 233254 96083.5714   95   53          - 95219.8144      -   6.2  115s
+ 297145 246159 105260.329  145   59          - 95219.8144      -   6.1  120s
+ 314606 260708 102596.566  121   53          - 95219.8144      -   6.0  125s
+ 329324 272917 115141.682   99   51          - 95220.6605      -   6.0  130s
+ 341326 283505 120531.342  162   59          - 95220.7445      -   5.9  135s
+ 355739 295893 120715.206  229   52          - 95221.3645      -   5.8  140s
+ 370650 308535 105249.788  147   59          - 95221.4126      -   5.8  145s
+ 387367 323331 102740.316  133   55          - 95221.4339      -   5.7  150s
+ 402119 333754 102504.923  115   55          - 95221.5331      -   5.7  155s
+ 417712 348749 111145.895  108   45          - 95221.5331      -   5.6  160s
+ 435668 364518 105315.920  123   61          - 95221.7305      -   5.6  165s
+ 447217 374431 101488.772  100   55          - 95221.7305      -   5.5  170s
+ 465418 389953 102596.542  107   55          - 95221.8498      -   5.5  175s
+ 483268 405433 95293.8611   72   50          - 95221.9956      -   5.5  180s
+ 496422 416390 101455.272   99   55          - 95221.9956      -   5.4  185s
+ 509583 427802 101201.633   78   63          - 95222.1030      -   5.4  190s
+ 524574 441202 106360.288  176   61          - 95222.1529      -   5.4  195s
+ 542484 456070 101457.618  110   53          - 95222.2535      -   5.3  200s
+ 559803 469463 106110.002  164   60          - 95222.2535      -   5.3  205s
+ 575695 485219 105918.563  154   64          - 95222.2535      -   5.3  210s
+ 593562 500369 105161.516  137   59          - 95222.2535      -   5.2  215s
+ 608081 510640 103938.266  132   58          - 95222.3485      -   5.2  220s
+ 623430 526176 109727.978   93   45          - 95222.3485      -   5.2  225s
+ 637567 538369 120511.896  170   63          - 95222.4795      -   5.2  230s
+ 652321 550551 96008.3163   67   54          - 95222.5597      -   5.1  235s
+ 663393 560481 105806.638  150   60          - 95222.6581      -   5.1  241s
+ 677552 573189 104213.240  135   58          - 95222.6651      -   5.1  245s
+ 692201 585304 102635.944  121   54          - 95222.7581      -   5.1  251s
+ 705532 597019 101487.724  101   54          - 95222.7755      -   5.1  255s
+ 722630 611709 101452.765  116   55          - 95222.7956      -   5.0  261s
+ 734194 622204 106220.394  175   60          - 95222.8042      -   5.0  265s
+ 748755 634160 104243.223  145   59          - 95222.9230      -   5.0  270s
+ 766136 649251 infeasible   84               - 95222.9230      -   5.0  275s
+ 780803 661875 106212.450  177   63          - 95222.9361      -   5.0  281s
+ 793778 673202 105229.781  139   59          - 95222.9361      -   5.0  285s
+ 808293 685538 104014.678  133   57          - 95222.9665      -   5.0  290s
+ 823616 698848 104682.526  125   61          - 95222.9691      -   4.9  296s
+ 837591 710909 101435.178   72   61          - 95222.9691      -   4.9  300s
+ 855696 724326 109570.640   61   44          - 95222.9691      -   4.9  306s
+ 867160 736684 104260.263  151   59          - 95223.1596      -   4.9  311s
+ 881221 749089 infeasible   79               - 95223.1837      -   4.9  315s
+ 895434 761065 106220.906  171   60          - 95223.1837      -   4.9  320s
+ 908351 771877 105936.101  143   61          - 95223.1906      -   4.9  325s
+ 925938 787119 104665.899  134   60          - 95223.1906      -   4.8  330s
+ 939055 798655 infeasible   82               - 95223.3047      -   4.8  335s
+ 953454 808583 95850.9471   56   53          - 95223.3047      -   4.8  341s
+ 964546 820391 101821.928  108   49          - 95223.3608      -   4.8  345s
+ 980972 835065 105789.143  152   59          - 95223.3809      -   4.8  350s
+ 994885 846758 101463.609  109   54          - 95223.3809      -   4.8  355s
+ 1006576 856985 95223.9080   61   51          - 95223.4955      -   4.8  360s
+ 1024270 872492 96017.1632   67   53          - 95223.4964      -   4.8  365s
+ 1038013 884097 106096.181  158   58          - 95223.4964      -   4.8  370s
+ 1051621 893810 105809.139  157   61          - 95223.4964      -   4.8  375s
+ 1065993 908410 104133.713  141   59          - 95223.4964      -   4.8  380s
+ 1079388 920665 101460.800  117   54          - 95223.5256      -   4.8  385s
+ 1097129 935893 96015.5973   66   53          - 95223.5256      -   4.7  390s
+ 1109005 946043 105308.775  146   59          - 95223.6697      -   4.7  395s
+ 1122928 958334 104110.705  139   59          - 95223.6827      -   4.7  400s
+ 1140463 973390 118365.182  128   64          - 95223.7171      -   4.7  406s
+ 1151910 983338 120598.015  188   62          - 95223.7186      -   4.7  410s
+ 1169636 998693 101458.550   90   57          - 95223.7248      -   4.7  415s
+ 1187349 1013713 106243.909  185   58          - 95223.7248      -   4.7  421s
+ 1199657 1025041 105186.330  144   59          - 95223.8250      -   4.7  425s
+ 1217542 1039836 103527.270  129   54          - 95223.8250      -   4.7  430s
+ 1230498 1051820 109716.690   94   44          - 95223.8250      -   4.7  435s
+ 1245113 1064600 123787.763  144   42          - 95223.8535      -   4.7  440s
+ 1259520 1077155 123797.803  171   56          - 95223.8535      -   4.6  445s
+ 1273839 1088886 101455.177  107   54          - 95223.9040      -   4.6  450s
+ 1288271 1101637 102844.595   87   57          - 95223.9602      -   4.6  455s
+ 1302300 1113857 106237.222  178   59          - 95223.9626      -   4.6  460s
+ 1319712 1129109 105869.269  168   61          - 95224.0077      -   4.6  465s
+ 1333463 1139862 117278.051  122   61          - 95224.0369      -   4.6  470s
+ 1346171 1152162 120157.983  184   58          - 95224.0503      -   4.6  475s
+ 1360074 1161813 102655.030  121   53          - 95224.0503      -   4.6  480s
+ 1375212 1176901 101453.777  115   54          - 95224.0503      -   4.6  485s
+ 1396215 1195146 103969.366  140   59          - 95224.1216      -   4.6  490s
+ 1411438 1208400 infeasible  104               - 95224.1257      -   4.6  495s
+ 1432567 1226501 120641.581  214   61          - 95224.1744      -   4.6  501s
+ 1446070 1238851 101487.205  100   54          - 95224.1834      -   4.6  505s
+ 1460946 1251372 96012.2994   70   54          - 95224.1834      -   4.6  510s
+ 1477655 1265838 106408.139  171   61          - 95224.2032      -   4.6  515s
+ 1494637 1281321 106170.736  160   61          - 95224.2032      -   4.6  520s
+ 1505952 1290892 111148.510  109   43          - 95224.2382      -   4.6  525s
+ 1523341 1304971 102599.394  112   55          - 95224.2605      -   4.5  530s
+ 1543430 1322745 104083.192  137   59          - 95224.3166      -   4.5  535s
+ 1556864 1332320 101475.071   79   59          - 95224.3166      -   4.5  540s
+ 1571501 1347385 101100.546   80   61          - 95224.3166      -   4.5  545s
+ 1588634 1362177 96019.0706   72   53          - 95224.3617      -   4.5  550s
+ 1602091 1373584 106218.802  169   56          - 95224.3617      -   4.5  555s
+ 1613335 1383345 101843.363  121   51          - 95224.4252      -   4.5  560s
+ 1630738 1398258 101453.145  100   55          - 95224.4504      -   4.5  565s
+ 1644374 1409880 95994.9304   66   54          - 95224.4504      -   4.5  570s
+ 1652604 1417123 104180.434  135   57          - 95224.4504      -   4.5  575s
+ 1668846 1431507 104218.729  144   59          - 95224.4917      -   4.5  580s
+ 1682987 1441414 101877.633  120   50          - 95224.4935      -   4.5  586s
+ 1690703 1449956 106190.475  163   62          - 95224.5229      -   4.5  590s
+ 1707904 1465254 105884.283  153   59          - 95224.5519      -   4.5  595s
+ 1721889 1476407 104210.092  146   58          - 95224.5519      -   4.5  600s
+
+Explored 1724758 nodes (7800366 simplex iterations) in 600.10 seconds (57.64 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 9.522455189375e+04, gap -
+Gurobi 12.0.3: time limit, without a feasible solution
+7.80037e+06 simplex iterations
+24 barrier iterations
+1.72476e+06 branching nodes
+eps [*,*] (tr)
+:         0             1             2             3             4         :=
+1    2.85034e-07    .             .             .             .
+2     .            2.42969e-07    .             .             .
+3     .             .            3.59231e-07    .             .
+4    8.16724e-07    .             .             .             .
+5     .             .             .             .            3.20328e-07
+8     .            9.35053e-07    .             .             .
+11    .             .            9.21944e-07    .             .
+13    .             .            6.35213e-07    .             .
+17    .             .             .            4.08785e-07    .
+18    .             .             .            3.12278e-07    .
+
+:         5             6             7            8             9         :=
+6    4.52968e-07    .             .             .            .
+7     .            1.20089e-06    .             .            .
+8     .             .            5.38899e-07    .            .
+10    .             .             .             .           5.17913e-07
+12    .             .             .             .           1.55313e-06
+21   4.3959e-07     .             .             .            .
+25    .             .             .             .           5.40995e-07
+29    .             .            7.86566e-07    .            .
+30    .             .             .            1.1095e-06    .
+
+:        11            12            13            14            15         :=
+11    .            3.74269e-07    .             .             .
+14    .             .            3.88973e-07    .             .
+15   6.41975e-07    .             .             .             .
+16    .             .             .             .            3.91251e-07
+17    .             .             .             .            3.35293e-07
+23    .             .             .            5.66484e-07    .
+
+:        18            21            22            23            24        :=
+13    .             .            4.08051e-07    .             .
+19   3.3225e-07     .             .             .            3.4303e-07
+20    .            1.09349e-06    .             .             .
+22    .             .             .            5.92976e-07    .
+24   3.07948e-07    .             .             .             .
+
+:        26            29         :=
+9    6.81899e-07    .
+26    .            3.99319e-07
+27   6.26507e-07    .
+28   5.35473e-07    .
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 26124.8626630617
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 0,1             |   0          |             715.56       |           715.56       |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 0,4             |   0          |             715.56       |           715.56       |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 1,2             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 1,8             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,11            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,13            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,17            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,18            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,6             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,8             |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,29            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 8,30            |   0.00323968 |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 9,12            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 12,11           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 14,23           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 15,17           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 18,19           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 18,24           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 21,20           |   0.00069147 |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,9            |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,21            |   0.00393115 |              -0.0936466  |            -0.0936466  |                   -0 |               -1e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 9,10            |   0.00328763 |              -0.0496397  |            -0.0496397  |                   -0 |               -1e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 9,25            |   0.00325167 |              -0.0448656  |            -0.0448656  |                   -0 |               -1e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 11,15           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 13,14           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 15,16           |   0.00328763 |              -0.00693429 |            -0.00693429 |                   -0 |               -1e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 22,13           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 23,22           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 24,19           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,27           |   0.00321508 |              -0.0334794  |            -0.0334794  |                   -0 |               -2e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 26,28           |   0.00161385 |              -0.0124941  |            -0.0124942  |                   -0 |               -5e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 29,26           |   0          |               0          |             0          |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 1431.3610596689712
+Sum of violation of approx headloss constraint: 1431.361059671693
+
+Con2 sum of absolute violation between original function and approximate function: 2.7220397411792385e-09
+Con2 sum of relative violation between original function and approximate function: 9.679864209081782e-08
+*******************************************************************************
+
+Total cost using gurobi: 55583.42331599999
+gurobi solve time: 601.65 seconds
+*******************************************************************************
+

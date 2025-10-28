@@ -1,0 +1,167 @@
+Water Network: 1
+Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with knitro --------------------------
+Artelys Knitro 14.2.0: maxtime_real = 3600
+outlev = 4
+opttol_abs=1e-5
+opttol = 1e-6
+feastol_abs = 1.0e-5
+feastol = 1.0e-5
+ms_enable = 1
+ms_maxsolves = 10
+
+=======================================
+          Commercial License
+         Artelys Knitro 14.2.0
+=======================================
+
+Knitro using up to 16 threads.
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+concurrent_evals         0
+datacheck                0
+feastol                  1e-05
+feastol_abs              1e-05
+findiff_numthreads       1
+hessian_no_f             1
+hessopt                  1
+maxtime_real             3600
+ms_enable                1
+ms_maxsolves             10
+opttol_abs               1e-05
+outlev                   4
+
+Problem Characteristics                                 (   Presolved)
+-----------------------
+Objective goal:  Minimize
+Objective type:  linear
+Number of variables:                                 83 (          83)
+    bounded below only:                               6 (           9)
+    bounded above only:                               0 (           3)
+    bounded below and above:                         77 (          71)
+    fixed:                                            0 (           0)
+    free:                                             0 (           0)
+Number of constraints:                               20 (          20)
+    linear equalities:                               13 (          13)
+    quadratic equalities:                             0 (           0)
+    gen. nonlinear equalities:                        7 (           7)
+    linear one-sided inequalities:                    0 (           0)
+    quadratic one-sided inequalities:                 0 (           0)
+    gen. nonlinear one-sided inequalities:            0 (           0)
+    linear two-sided inequalities:                    0 (           0)
+    quadratic two-sided inequalities:                 0 (           0)
+    gen. nonlinear two-sided inequalities:            0 (           0)
+Number of nonzeros in Jacobian:                     173 (         173)
+Number of nonzeros in Hessian:                       77 (          77)
+
+Knitro parallel multistart will run with 16 threads.
+
+Return codes description
+------------------------
+  0:  The final solution satisfies the termination conditions for verifying optimality.
+  -100 to -199:  A feasible approximate solution was found.
+  -200 to -299:  Knitro terminated at an infeasible point.
+  -300 to -301:  The problem was determined to be unbounded.
+  -400 to -499:  Knitro terminated because it reached a pre-defined limit.
+    -400 to -409:  A feasible point was found.
+    -410 to -419:  No feasible point was found.
+  -500 to -599:  Knitro terminated with an input error or some non-standard error.
+A more detailed description of individual return codes and their corresponding
+termination messages is provided at
+https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
+
+ Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
+--------  --------  ------  --------------   ----------   ----------  ----------
+      3          2       0         123883.  2.04992e-12  2.25299e-07  7.43780e-02
+      5         12       0         139187.  6.37801e-08  9.53674e-06  9.08120e-02
+      2          0       0         123883.  9.08287e-11  9.83455e-06  9.51530e-02
+      0          7       0         139187.  6.04459e-11  1.90735e-06     0.111628
+      6         13       0         123883.  6.99885e-13  1.07167e-07     0.208722
+      7         11       0         123883.  7.84084e-12  1.42700e-06     0.287498
+      4          6       0         123883.  4.54747e-13  2.13595e-08     0.416997
+      9          1       0         136554.  1.13687e-13  3.72529e-09     0.505871
+      8         10       0         123883.  1.62226e-07  4.83403e-07     0.455563
+      1         15       0         123883.  1.34222e-11  2.99513e-06     0.561132
+
+MULTISTART: Best locally optimal solution is returned.
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   1.23882616148045e+05
+Final feasibility error (abs / rel) =   9.08e-11 / 8.94e-15
+Final optimality error  (abs / rel) =   9.83e-06 / 4.25e-07
+# of iterations                     =       1601 
+# of CG iterations                  =          0 
+# of function evaluations           =       2161
+# of gradient evaluations           =       1611
+# of Hessian evaluations            =       1615
+Total program time (secs)           =       0.66092 (     5.508 CPU time)
+
+===============================================================================
+
+Knitro 14.2.0: Locally optimal or satisfactory solution.
+objective 123882.6161; feasibility error 9.08e-11
+1601 iterations; 2161 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+eps :=
+1 2   4.26278e-06
+2 3   1.2431e-05
+2 6   6.97685e-06
+3 4   6.57014e-06
+4 5   5.81329e-06
+6 7   5.85767e-06
+7 5   5.27819e-06
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 9.976415873969025e-11
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.42043     |                 0        |                      0 |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.292211    |                 0        |                     -0 |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,6             |  0.128219    |                 1e-08    |                      0 |            -1e-08    |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |  0.248771    |                 0        |                      0 |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.208481    |                 0        |                     -0 |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.0804393   |                 2e-08    |                      0 |            -2e-08    |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,5             |  0.000119287 |                 6.07e-06 |                     -0 |            -6.07e-06 |          -0.00083359 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 6.101706888670538e-06
+Sum of violation of approx headloss constraint: 9.891125765659758e-11
+
+Con2 sum of absolute violation between original function and approximate function: 6.101790034761245e-06
+Con2 sum of relative violation between original function and approximate function: 0.0008335951356508434
+*******************************************************************************
+
+Total cost using knitro: 123882.61614804543
+knitro solve time: 0.76 seconds
+*******************************************************************************
+

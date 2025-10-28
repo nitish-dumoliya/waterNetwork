@@ -1,0 +1,136 @@
+Water Network: 1
+*******************************************************************************
+
+-------------------------------- Solving with baron --------------------------
+BARON 24.5.8 (2024.05.08): optfile=optfile
+EpsA=1e-6
+EpsR=1e-9
+AbsConFeasTol=1e-5
+RelConFeasTol=1e-9
+MaxTime=3600
+DoLocal=1
+PrLevel=1
+version 
+objbound 
+wantsol = 2
+outlev = 2
+barstats
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20250308), liccheck(20211124), ASL(20241202)
+Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
+Temporary license expires 20260905.
+Using license file "/home/nitishdumoliya/ampl.linux-intel64/ampl.lic".
+
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine passpoli
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 139187.
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 123883.
+ Preprocessing found feasible solution with value 123883.
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.59    12MB     55773.0         123883.        8.24%
+          7           4.47    12MB     123883.         123883.      100.00%
+
+                         *** Normal completion ***            
+
+ Wall clock time:                     4.47
+ Total CPU time used:                 4.47
+
+ Total no. of BaR iterations:       7
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:       3
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 7 iterations, optimal within tolerances.
+Objective 123882.6143
+Objective lower bound = 123882.61434923536, upper bound = 123882.61434923536
+barstatus = 1, modelstatus = 1
+max nodes in memory = 3
+optimum found at node -1
+Baron run time (excluding setup) = 4.46 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+q :=
+1 2   0.42043
+2 3   0.292211
+2 6   0.128219
+3 4   0.248771
+4 5   0.208481
+6 7   0.0804393
+7 5   0.000119277
+;
+
+eps :=
+1 2   1.90041e-05
+2 3   5.54193e-05
+2 6   3.11038e-05
+3 4   2.92906e-05
+4 5   2.59165e-05
+6 7   2.61143e-05
+7 5   2.3531e-05
+;
+
+eps:  1.9004097781957383e-05
+q[7,5]: 0.00011927701103973728
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 1.3055534893975998e-06
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.42043     |                       -0 |               -0       |              0       |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.292211    |                       -0 |               -0       |              0       |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,6             |  0.128219    |                       -0 |               -0       |              0       |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |  0.248771    |                       -0 |               -0       |              0       |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.208481    |                       -0 |               -0       |              0       |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.0804393   |                       -0 |               -0       |              0       |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,5             |  0.000119277 |                       -0 |                1.3e-06 |              1.3e-06 |           0.00017854 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 1.0132966008803701e-08
+Sum of violation of approx headloss constraint: 1.3039045754338965e-06
+
+Con2 sum of absolute violation between original function and approximate function: 1.2996668377045911e-06
+Con2 sum of relative violation between original function and approximate function: 0.00017854263734577106
+*******************************************************************************
+
+Total cost using baron: 123882.61434923537
+baron solve time: 4.49 seconds
+*******************************************************************************
+

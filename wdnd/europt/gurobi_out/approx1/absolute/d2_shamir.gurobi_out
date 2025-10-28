@@ -1,0 +1,515 @@
+Water Network: 2
+Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.3: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+  tech:outlev_mp = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter Aggregate to value 1
+  pre:aggregate = 1
+Set parameter TimeLimit to value 600
+  lim:time = 600
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter OBBT to value 0
+  mip:obbt = 0
+Set parameter ScaleFlag to value 1
+  pre:scale = 1
+Set parameter Method to value 2
+  alg:method = 2
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter MIPFocus to value 1
+  mip:focus = 1
+Set parameter NLPHeur to value 1
+  alg:nlpheur = 1
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter MIPGapAbs to value 1e-05
+  mip:gapabs = 1.0000000000000001e-05
+Set parameter MIPGap to value 1e-06
+  mip:gap = 9.9999999999999995e-07
+Set parameter FeasibilityTol to value 1e-05
+  alg:feastol = 1.0000000000000001e-05
+  cvt:pre:feastol = 1.0000000000000001e-05
+  cvt:pre:feastolrel = 9.9999999999999995e-07
+  sol:chk:feastol = 1.0000000000000001e-05
+  sol:chk:feastolrel = 9.9999999999999995e-07
+
+AMPL MP initial flat model has 126 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  14 linear; 24 quadratic;
+Algebraic expressions:  8 powconstexp;
+
+AMPL MP final model has 158 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  22 linear; 24 quadratic;
+Algebraic expressions:  8 powconstexp;
+
+
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+FeasibilityTol  1e-05
+MIPGap  1e-06
+MIPGapAbs  1e-05
+Method  2
+ScaleFlag  1
+MIPFocus  1
+NodeMethod  1
+OBBT  0
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 22 rows, 158 columns and 150 nonzeros
+Model fingerprint: 0x6553cf7c
+Model has 8 general nonlinear constraints (448 nonlinear terms)
+Variable types: 158 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 6e+02]
+  Bounds range     [4e-14, 9e+06]
+  RHS range        [3e-02, 1e+03]
+Presolve model has 8 nlconstr
+Added 240 variables to disaggregate expressions.
+Presolve removed 1 rows and 25 columns
+Presolve time: 0.01s
+Presolved: 685 rows, 382 columns, 1593 nonzeros
+Presolved model has 128 bilinear constraint(s)
+Presolved model has 8 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 382 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 5.906e+03
+ Factor NZ  : 7.291e+03
+ Factor Ops : 1.433e+05 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   9.75383546e+09 -1.18325746e+10  1.18e+07 0.00e+00  5.49e+07     0s
+   1   1.72568028e+09 -1.62781642e+09  2.77e+06 1.14e-13  1.13e+07     0s
+   2   2.64787682e+07 -7.36144809e+07  3.97e+04 1.14e-13  2.10e+05     0s
+   3   2.18327542e+06 -2.12487422e+06  2.99e+03 1.14e-13  1.22e+04     0s
+   4   3.09713588e+05 -5.08903952e+05  2.20e+02 1.14e-13  1.29e+03     0s
+   5   9.11345307e+04 -3.79247720e+04  2.26e+01 1.14e-13  1.67e+02     0s
+   6   2.17470735e+04  3.99447059e+03  1.48e+00 1.14e-13  1.96e+01     0s
+   7   1.94147949e+04  1.31237894e+04  8.74e-01 3.96e-07  7.08e+00     0s
+   8   1.87072370e+04  1.39112230e+04  6.87e-01 5.22e-06  5.69e+00     0s
+   9   1.85714642e+04  1.56070753e+04  6.50e-01 2.77e-06  4.05e+00     0s
+  10   1.79379075e+04  1.84656110e+04  4.82e-01 6.04e-06  2.58e+00     0s
+  11   1.81951481e+04  1.61950243e+04  3.35e-01 5.70e-06  2.58e+00     0s
+  12   1.82184428e+04  1.86505773e+04  3.25e-01 4.63e-06  1.68e+00     0s
+  13   1.88150384e+04  1.87708677e+04  1.16e-01 4.29e-06  8.01e-01     0s
+  14   1.90218766e+04  1.90527690e+04  3.35e-02 1.25e-06  1.66e-01     0s
+  15   1.90224530e+04  1.92354741e+04  3.13e-02 3.53e-07  1.41e-01     0s
+  16   1.90234588e+04  2.14551980e+04  3.10e-02 3.50e-07  1.35e-01     0s
+  17   1.94162911e+04  2.13026318e+04  2.96e-02 3.50e-07  4.01e-01     0s
+  18   1.94550072e+04  2.09619581e+04  2.92e-02 3.27e-07  4.34e-01     0s
+  19   1.94817534e+04  2.24390913e+04  2.88e-02 2.87e-07  4.10e-01     0s
+  20   2.09073256e+04  2.18340814e+04  1.51e-02 2.72e-07  5.20e-01     0s
+  21   2.18196867e+04  2.18458798e+04  6.39e-03 1.36e-07  5.72e-01     0s
+  22   2.20133468e+04  2.24771074e+04  4.53e-03 3.82e-08  6.93e-02     0s
+  23   2.20169783e+04  2.32231564e+04  4.48e-03 3.42e-08  6.10e-02     0s
+  24   2.25784914e+04  2.53961899e+04  3.93e-03 3.40e-08  1.88e-01     0s
+  25   2.33210317e+04  2.39511730e+04  3.12e-03 3.05e-08  7.24e-01     0s
+  26   2.42989502e+04  2.49560749e+04  2.01e-03 6.95e-08  6.25e-01     0s
+  27   2.48799838e+04  2.53666093e+04  1.31e-03 1.24e-08  4.69e-01     0s
+  28   2.49955895e+04  2.59025872e+04  1.17e-03 1.08e-08  1.07e-01     0s
+  29   2.49889595e+04  2.96181879e+04  1.17e-03 1.06e-08  1.60e-01     0s
+  30   2.53150371e+04  3.07143500e+04  1.11e-03 1.06e-08  1.01e-01     0s
+  31   2.94668023e+04  2.71528529e+04  2.67e-04 4.90e-09  2.73e+00     0s
+  32   2.99854437e+04  3.08136445e+04  1.82e-04 4.40e-09  2.50e-02     0s
+  33   2.99875700e+04  3.27536611e+04  2.17e-04 1.17e-08  5.93e-02     0s
+  34   2.99788885e+04  3.09563288e+04  1.31e-03 1.36e-08  3.41e-02     0s
+  35   2.99790611e+04  3.25423054e+04  1.29e-03 1.04e-08  7.49e-02     0s
+  36   2.99862346e+04  3.33369644e+04  1.06e-03 1.78e-08  6.27e-02     0s
+  37   2.98260285e+04  3.19191907e+04  3.16e-03 1.39e-08  4.81e-01     0s
+  38   2.99787759e+04  3.41409793e+04  2.42e-03 2.06e-08  1.03e-01     0s
+  39   2.99907721e+04  3.52394193e+04  2.37e-03 2.27e-08  4.76e-02     0s
+  40   2.99911202e+04  3.66521875e+04  2.36e-03 2.99e-08  5.97e-02     0s
+  41   2.99001133e+04  3.81917293e+04  6.10e-03 1.10e-08  1.20e+00     0s
+  42   2.99975845e+04  3.89615387e+04  5.22e-03 5.57e-08  4.79e-02     0s
+  43   3.06487010e+04  3.90286352e+04  7.06e-03 2.22e-08  3.85e-02     0s
+  44   3.38231500e+04  3.85710771e+04  4.05e-03 1.71e-08  2.32e-01     0s
+
+Barrier performed 44 iterations in 0.43 seconds (0.04 work units)
+Sub-optimal termination - objective 2.99875700e+04
+
+Warning: 1 variables dropped from basis
+
+Root relaxation: objective 7.125358e+04, 978 iterations, 0.34 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 71253.5833    0   19          - 71253.5833      -     -    0s
+     0     0 71253.5833    0   18          - 71253.5833      -     -    0s
+     0     0 71253.5833    0   18          - 71253.5833      -     -    0s
+     0     0 71253.5833    0   19          - 71253.5833      -     -    0s
+     0     0 71253.5833    0   19          - 71253.5833      -     -    0s
+     0     0 71253.5833    0   17          - 71253.5833      -     -    0s
+H    0     0                    2677512.8466 71253.5833  97.3%     -    2s
+     0     2 71253.5833    0   17 2677512.85 71253.5833  97.3%     -    3s
+H  490   189                    1140348.2282 165801.460  85.5%  16.2    3s
+*  626   261              21    595038.80459 165801.460  72.1%  17.7    3s
+H 1848  1075                    583299.98174 177364.625  69.6%  12.5    4s
+  2092  1245 infeasible   56      583299.982 178410.617  69.4%  12.1    5s
+H 2118  1245                    468009.47766 178410.617  61.9%  11.9    5s
+H 2127  1245                    462238.08422 178410.617  61.4%  11.9    5s
+H 2136  1245                    459777.68632 178410.617  61.2%  11.8    5s
+H 2508  1276                    439457.29441 178410.617  59.4%  11.6    5s
+H 7748  1761                    439457.29422 190560.955  56.6%  15.6    9s
+  7754  1765 259147.932   12    0 439457.294 190560.955  56.6%  15.6   10s
+H 9647  1565                    439457.29399 252276.346  42.6%  15.6   12s
+H13184  1823                    432784.43172 288215.943  33.4%  13.9   13s
+H13258  1823                    430726.00461 288215.943  33.1%  13.8   13s
+ 15884  1750 infeasible   29      430726.005 341183.490  20.8%  13.1   15s
+H15937  1750                    425535.80977 341183.490  19.8%  13.1   15s
+H19135  1849                    425423.84160 362023.046  14.9%  12.3   16s
+H26530  2832                    424553.68547 393191.058  7.39%  11.3   18s
+H29120  3706                    423274.80629 395088.384  6.66%  11.0   19s
+ 29375  4201 407937.267   47    6 423274.806 395088.384  6.66%  11.0   20s
+H30446  4339                    423195.98979 395088.384  6.64%  10.9   20s
+ 36265  7698 413436.701   73    7 423195.990 395249.224  6.60%   9.9   25s
+H36682  4017                    412294.17247 395249.224  4.13%   9.8   25s
+ 43106  7767 infeasible  102      412294.172 395681.800  4.03%   8.9   30s
+ 54592 12734 410144.579  116   10 412294.172 395913.069  3.97%   7.7   35s
+H59393 14909                    412270.21496 396003.890  3.95%   7.5   37s
+H60089 12620                    411020.93638 396003.890  3.65%   7.4   37s
+ 67379 15720 410458.908   62    5 411020.936 396014.830  3.65%   7.1   40s
+ 74293 18034 406165.965   42   12 411020.936 396165.040  3.61%   6.8   45s
+ 83313 22582 409487.653   51   11 411020.936 396534.651  3.52%   6.4   50s
+ 96894 27397 infeasible   38      411020.936 398340.704  3.09%   6.1   56s
+ 104839 31398 402035.709  130   13 411020.936 399351.225  2.84%   5.9   60s
+ 113789 35482 402601.034  172   11 411020.936 399535.915  2.79%   5.6   65s
+ 118226 38709 404584.590  134   12 411020.936 399639.954  2.77%   5.5   70s
+ 124751 41955 401793.669   50   13 411020.936 399740.444  2.74%   5.4   75s
+ 132193 46216 404859.440  134   13 411020.936 399783.203  2.73%   5.1   80s
+ 134757 48531 infeasible  145      411020.936 399825.695  2.72%   5.1   85s
+ 142163 53485 infeasible   49      411020.936 399842.722  2.72%   4.9   90s
+ 148155 58396 399937.334   97    9 411020.936 399857.718  2.72%   4.8   95s
+ 153555 62767 400708.046  121   10 411020.936 399865.186  2.71%   4.6  101s
+ 155754 64495 399931.625   93   14 411020.936 399870.584  2.71%   4.6  105s
+ 158196 65288 400589.250  148   17 411020.936 399870.584  2.71%   4.5  110s
+ 159798 66865 400886.109  187   19 411020.936 399872.029  2.71%   4.5  115s
+ 164643 72165 400074.030   84   13 411020.936 399877.842  2.71%   4.4  121s
+ 170190 74893 399913.432   84    8 411020.936 399883.528  2.71%   4.3  126s
+ 174243 78087 400628.563  163   21 411020.936 399885.776  2.71%   4.2  131s
+ 180814 82650 399889.184   90    8 411020.936 399885.996  2.71%   4.2  135s
+ 187917 86614 399888.334   93   12 411020.936 399886.186  2.71%   4.1  140s
+ 199858 90914 399890.494   89   10 411020.936 399886.349  2.71%   4.1  146s
+ 206919 93102 400027.457   94   11 411020.936 399886.463  2.71%   4.2  151s
+ 213989 94949 399895.613   90    8 411020.936 399886.544  2.71%   4.3  155s
+ 221122 97022 399958.317  103    9 411020.936 399886.570  2.71%   4.3  160s
+ 228806 99179     cutoff  105      411020.936 399886.621  2.71%   4.4  165s
+ 237165 101280 399886.715   92    9 411020.936 399886.653  2.71%   4.5  171s
+ 242417 103400 400085.398  103   15 411020.936 399886.667  2.71%   4.5  176s
+ 251853 105777 infeasible  138      411020.936 399886.689  2.71%   4.6  182s
+ 257227 107680 399896.373   99    9 411020.936 399886.710  2.71%   4.6  186s
+ 263295 108413 infeasible   93      411020.936 399886.725  2.71%   4.6  192s
+ 268296 109546 infeasible  117      411020.936 399886.729  2.71%   4.7  197s
+ 274179 110864 399887.151   93    9 411020.936 399886.734  2.71%   4.7  202s
+ 281017 112810 399891.218   92   10 411020.936 399886.766  2.71%   4.8  206s
+ 289101 115442 400671.192  161   18 411020.936 399886.783  2.71%   4.8  210s
+ 297234 117287 infeasible  116      411020.936 399886.799  2.71%   4.9  215s
+ 305763 119338     cutoff   97      411020.936 399886.812  2.71%   4.9  220s
+ 311803 121073 399890.732   93    8 411020.936 399886.825  2.71%   4.9  225s
+ 323993 123355 399893.876   93   10 411020.936 399886.848  2.71%   5.0  232s
+ 330878 124300 399889.157   97   13 411020.936 399886.854  2.71%   5.1  236s
+ 338159 126033 infeasible   97      411020.936 399886.868  2.71%   5.1  241s
+ 345906 127866 399890.658   96   10 411020.936 399886.888  2.71%   5.2  246s
+ 353548 129603 infeasible   98      411020.936 399886.896  2.71%   5.2  250s
+ 360351 131457 399887.043   94   10 411020.936 399886.903  2.71%   5.2  255s
+ 367716 133702 infeasible  101      411020.936 399886.913  2.71%   5.3  260s
+ 379442 136653 401987.971  128   10 411020.936 399886.932  2.71%   5.3  267s
+ 384699 137403 infeasible   97      411020.936 399886.935  2.71%   5.3  271s
+ 390267 138799 400058.313  108   13 411020.936 399886.937  2.71%   5.3  276s
+ 396744 140214 infeasible   97      411020.936 399886.948  2.71%   5.3  280s
+ 402203 141951 infeasible   99      411020.936 399886.959  2.71%   5.3  285s
+ 409381 143332 399888.134   99   12 411020.936 399886.967  2.71%   5.4  290s
+ 414997 144727 399887.113   94   10 411020.936 399886.971  2.71%   5.4  295s
+ 421749 146755 infeasible   89      411020.936 399886.976  2.71%   5.4  300s
+ 426093 147539 399887.551   96   10 411020.936 399886.983  2.71%   5.4  305s
+ 431782 148963 400094.767  103   11 411020.936 399886.988  2.71%   5.4  310s
+ 441480 150634 400176.967  108   12 411020.936 399886.997  2.71%   5.5  317s
+ 447406 152333 400179.247  124   13 411020.936 399887.005  2.71%   5.5  322s
+ 457152 154143 infeasible  116      411020.936 399887.018  2.71%   5.5  327s
+ 463556 155662 399887.190   92    8 411020.936 399887.023  2.71%   5.5  332s
+ 470574 156870 403145.214  170   11 411020.936 399887.032  2.71%   5.5  337s
+ 476205 158289 399894.113   93    8 411020.936 399887.037  2.71%   5.5  341s
+ 483816 159770 infeasible   87      411020.936 399887.043  2.71%   5.5  347s
+ 491412 161758 399967.018  101   12 411020.936 399887.047  2.71%   5.6  351s
+ 499967 163212 399887.203   92   10 411020.936 399887.058  2.71%   5.6  356s
+ 507062 164534 399887.313   84   10 411020.936 399887.067  2.71%   5.6  362s
+ 512962 166032 399896.026   89   10 411020.936 399887.070  2.71%   5.6  367s
+ 520110 167925 infeasible  102      411020.936 399887.080  2.71%   5.6  372s
+ 524972 168605 399887.584   96    9 411020.936 399887.082  2.71%   5.6  375s
+ 534316 169799 399887.273   90    9 411020.936 399887.090  2.71%   5.7  380s
+ 538256 170871 399899.487  107   16 411020.936 399887.094  2.71%   5.7  385s
+ 544121 172653 408503.539  173   33 411020.936 399887.098  2.71%   5.7  390s
+ 551514 174540 409953.420  302   28 411020.936 399887.104  2.71%   5.7  395s
+ 560570 176726 399891.208   92   10 411020.936 399887.108  2.71%   5.7  401s
+ 566093 178090 399896.161   96    8 411020.936 399887.112  2.71%   5.7  406s
+ 573396 179620 399887.278   94   10 411020.936 399887.118  2.71%   5.7  411s
+ 579946 181348 399891.052   94    8 411020.936 399887.122  2.71%   5.8  416s
+ 588351 182748 399896.192   95    9 411020.936 399887.131  2.71%   5.8  420s
+ 595449 184028 399891.105   92   12 411020.936 399887.132  2.71%   5.8  425s
+ 603583 185296 399894.310   96    8 411020.936 399887.142  2.71%   5.8  430s
+ 608539 187188 405488.406  102    7 411020.936 399887.145  2.71%   5.8  435s
+H618750 188329                    411020.93626 399887.152  2.71%   5.8  439s
+ 620352 188930     cutoff   93      411020.936 399887.155  2.71%   5.8  442s
+H620799 188930                    411020.93386 399887.155  2.71%   5.8  442s
+ 623297 189513 infeasible   98      411020.934 399887.157  2.71%   5.8  445s
+H626392 190345                    411020.93336 399887.158  2.71%   5.8  447s
+ 630352 191132 399887.231   95    8 411020.933 399887.160  2.71%   5.8  450s
+H630467 191132                    411020.93329 399887.160  2.71%   5.8  450s
+H631448 191132                    411020.92822 399887.160  2.71%   5.8  450s
+H635858 191817                    411020.92805 399887.165  2.71%   5.9  453s
+H638614 192539                    411020.92650 399887.167  2.71%   5.9  455s
+H638875 192539                    411020.92237 399887.168  2.71%   5.9  455s
+H642493 192539                    411020.92049 399887.170  2.71%   5.9  455s
+H645937 193316                    411020.92044 399887.170  2.71%   5.9  458s
+ 647339 194289     cutoff   92      411020.920 399887.174  2.71%   5.9  461s
+H648141 194289                    411020.92026 399887.174  2.71%   5.9  461s
+H650350 194289                    411020.91833 399887.174  2.71%   5.9  461s
+H653592 195142                    411020.91820 399887.175  2.71%   5.9  463s
+ 655645 195890 infeasible   92      411020.918 399887.175  2.71%   5.9  466s
+H656259 195890                    411020.91351 399887.175  2.71%   5.9  466s
+H661012 196410                    411020.91344 399887.178  2.71%   5.9  468s
+ 663947 197327 402152.044  134   11 411020.913 399887.180  2.71%   5.9  471s
+H667893 197327                    411020.91338 399887.183  2.71%   5.9  471s
+H671531 198404                    411020.90544 399887.185  2.71%   5.9  473s
+ 673727 199320 399894.023   98   10 411020.905 399887.189  2.71%   5.9  476s
+ 681325 201057 399891.555   90    9 411020.905 399887.193  2.71%   5.9  480s
+H683452 201057                    411020.90528 399887.193  2.71%   5.9  480s
+ 693810 202963 399891.469   99   10 411020.905 399887.201  2.71%   6.0  486s
+ 703344 204345 infeasible  102      411020.905 399887.207  2.71%   6.0  491s
+ 710839 205847 399889.218   98   12 411020.905 399887.210  2.71%   6.0  496s
+H713014 205847                    411020.90524 399887.211  2.71%   6.0  496s
+ 717344 207123 399891.120   90    8 411020.905 399887.215  2.71%   6.0  500s
+ 726048 208184 399896.428   95    9 411020.905 399887.219  2.71%   6.0  505s
+ 734008 209724 399891.125   95    8 411020.905 399887.224  2.71%   6.0  510s
+ 740580 210883 399887.273   93    8 411020.905 399887.229  2.71%   6.0  515s
+ 746962 212171 infeasible  100      411020.905 399887.233  2.71%   6.0  520s
+H753743 212818                    411020.90516 399887.235  2.71%   6.1  523s
+ 754243 213557 399891.311   92   10 411020.905 399887.236  2.71%   6.1  525s
+ 762419 215538 infeasible  119      411020.905 399887.239  2.71%   6.1  530s
+ 769738 217210 399891.117   94    8 411020.905 399887.242  2.71%   6.1  535s
+ 777945 218709 399894.341   87   10 411020.905 399887.248  2.71%   6.1  541s
+ 782808 219679 399891.503   98   10 411020.905 399887.250  2.71%   6.1  546s
+ 789902 221097 infeasible   98      411020.905 399887.255  2.71%   6.1  550s
+ 796482 222175 399890.107   94   11 411020.905 399887.257  2.71%   6.1  555s
+ 803751 223958 399915.915   91   12 411020.905 399887.260  2.71%   6.1  561s
+ 809930 225602 399887.418   94    9 411020.905 399887.263  2.71%   6.1  566s
+ 816322 227229 infeasible   97      411020.905 399887.266  2.71%   6.1  571s
+ 825252 228450 399890.108   93   11 411020.905 399887.270  2.71%   6.1  575s
+ 833204 229562 399888.239   90   10 411020.905 399887.273  2.71%   6.1  580s
+ 844605 231319 400180.545  131   12 411020.905 399887.278  2.71%   6.1  587s
+ 852155 232331 399891.201   89    8 411020.905 399887.281  2.71%   6.2  591s
+ 858691 233452 399891.433   93    9 411020.905 399887.285  2.71%   6.2  595s
+ 864971 234653 infeasible   98      411020.905 399887.286  2.71%   6.2  600s
+
+Cutting planes:
+  RLT: 8
+  PSD: 3
+
+Explored 867650 nodes (5354839 simplex iterations) in 600.14 seconds (46.60 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 10: 411021 411021 411021 ... 411021
+
+Time limit reached
+Best objective 4.110209051517e+05, best bound 3.998872887029e+05, gap 2.7088%
+Gurobi 12.0.3: time limit, feasible solution; objective 411020.9052
+5.35484e+06 simplex iterations
+67 barrier iterations
+867650 branching nodes
+absmipgap=11133.6, relmipgap=0.0270877
+eps :=
+1 2   1.91927e-07
+2 3   1.91927e-07
+2 4   1.91927e-07
+3 5   1.91927e-07
+4 5   1.91927e-07
+4 6   1.91927e-07
+5 7   1.91927e-07
+6 7   1.91927e-07
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 2.521274708100485e-05
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |   0.31109    |                 0        |              -0        |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |   0.0995325  |                -0        |              -0        |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |   0.183788   |                 8e-08    |               8e-08    |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |   0.0717625  |                 5.26e-06 |               5.26e-06 |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |   0.00212557 |                -0        |              -7e-08    |             -7e-08   |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |   0.148332   |                -1.9e-07  |              -1.9e-07  |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |  -0.00111197 |                -0        |               1.3e-07  |              1.3e-07 |               -1e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |   0.056662   |                 0        |              -0        |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 5.522984937389452e-06
+Sum of violation of approx headloss constraint: 5.714926925026731e-06
+
+Con2 sum of absolute violation between original function and approximate function: 1.920506491615015e-07
+Con2 sum of relative violation between original function and approximate function: 1.6175038770960213e-08
+*******************************************************************************
+
+Total cost using gurobi: 411020.90515169734
+gurobi solve time: 600.51 seconds
+*******************************************************************************
+

@@ -1,0 +1,796 @@
+Water Network: 2
+*******************************************************************************
+
+-------------------------------- Solving with IPOPT --------------------------
+Ipopt solver outputs: 
+
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = no
+bound_relax_factor=0
+tol = 1e-9
+bound_push = 0.01
+bound_frac = 0.01
+warm_start_init_point = no
+halt_on_ampl_error = yes
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 417178.7280979495 
+
+*******************************************************************************
+
+q :=
+1 2   0.31109
+2 3   0.158031
+2 4   0.125289
+3 5   0.130261
+4 5   0.000157045
+4 6   0.0918023
+5 7   0.0554177
+6 7   0.000132339
+;
+
+eps :=
+1 2   7.11687e-08
+2 3   7.11687e-08
+2 4   7.11687e-08
+3 5   7.11687e-08
+4 5   7.11687e-08
+4 6   7.11687e-08
+5 7   7.11687e-08
+6 7   7.11687e-08
+;
+
+q[4,5]: 0.000157045490120303
+q[6,7]: 0.00013233948993255837
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 5.38305511277315e-13
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.31109     |                       -0 |                     -0 |                   -0 |                   -0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.158031    |                       -0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |  0.125289    |                        0 |                      0 |                   -0 |                   -0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |  0.130261    |                       -0 |                     -0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.000157045 |                       -0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |  0.0918023   |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |  0.0554177   |                       -0 |                     -0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.000132339 |                       -0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 9.370282327836321e-14
+Sum of violation of approx headloss constraint: 8.659739592076221e-14
+
+Con2 sum of absolute violation between original function and approximate function: 9.059419880941277e-14
+Con2 sum of relative violation between original function and approximate function: 1.6168633400872873e-14
+*******************************************************************************
+
+Total cost using ipopt: 417178.7280979495
+IPOPT solve time: 0.81 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with gurobi --------------------------
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = no
+bound_relax_factor=0
+tol = 1e-9
+bound_push = 0.01
+bound_frac = 0.01
+warm_start_init_point = yes
+halt_on_ampl_error = yes
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+q :=
+1 2   0.31109
+2 3   0.158031
+2 4   0.125289
+3 5   0.130261
+4 5   0.000157045
+4 6   0.0918023
+5 7   0.0554177
+6 7   0.000132339
+;
+
+eps :=
+1 2   5.35e-06
+2 3   5.35e-06
+2 4   5.35e-06
+3 5   5.35e-06
+4 5   5.35e-06
+4 6   5.35e-06
+5 7   5.35e-06
+6 7   5.35e-06
+;
+
+eps:  5.3500000000000004e-06
+q[4,5]: 0.00015704549012018331
+q[6,7]: 0.00013233948993255802
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 2.7594011277956576e-06
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.31109     |                       -0 |              -0        |             0        |              0       |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.158031    |                       -0 |              -0        |             0        |              0       |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |  0.125289    |                        0 |               0        |             0        |              0       |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |  0.130261    |                       -0 |              -0        |            -0        |             -0       |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.000157045 |                       -0 |               1.13e-06 |             1.13e-06 |              1.6e-07 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |  0.0918023   |                        0 |               0        |             0        |              0       |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |  0.0554177   |                        0 |               0        |            -0        |             -0       |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.000132339 |                       -0 |               1.63e-06 |             1.63e-06 |              3.3e-07 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 4.796163466380676e-14
+Sum of violation of approx headloss constraint: 2.759400672847079e-06
+
+Con2 sum of absolute violation between original function and approximate function: 2.7594006701825435e-06
+Con2 sum of relative violation between original function and approximate function: 4.90527429596979e-07
+*******************************************************************************
+
+Total cost using gurobi: 417178.72809789365
+gurobi solve time: 0.87 seconds
+*******************************************************************************
+
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:start = 1
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+  sol:chk:feastol = 1e-05
+  sol:chk:feastolrel = 1e-09
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  tech:optionfile = gurobiOpt.prm
+
+AMPL MP initial flat model has 126 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  14 linear; 32 quadratic;
+Algebraic expressions:  8 div; 16 powconstexp;
+
+AMPL MP final model has 182 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  22 linear; 32 quadratic;
+Algebraic expressions:  8 div; 16 powconstexp;
+
+
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Warning: small constant in general constraint NL will be treated as zero (node 11)
+Warning: small constant in general constraint NL will be treated as zero (node 17)
+Warning: small constant in general constraint NL will be treated as zero (node 32)
+Warning: small constant in general constraint NL will be treated as zero (node 38)
+Warning: small constant in general constraint NL will be treated as zero (node 53)
+Warning: small constant in general constraint NL will be treated as zero (node 59)
+Warning: small constant in general constraint NL will be treated as zero (node 74)
+Warning: small constant in general constraint NL will be treated as zero (node 80)
+Warning: small constant in general constraint NL will be treated as zero (node 95)
+Warning: small constant in general constraint NL will be treated as zero (node 101)
+Warning: small constant in general constraint NL will be treated as zero (node 116)
+Warning: small constant in general constraint NL will be treated as zero (node 122)
+Warning: small constant in general constraint NL will be treated as zero (node 137)
+Warning: small constant in general constraint NL will be treated as zero (node 143)
+Warning: small constant in general constraint NL will be treated as zero (node 158)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 179)
+Warning: small constant in general constraint NL will be treated as zero (node 185)
+Warning: small constant in general constraint NL will be treated as zero (node 200)
+Warning: small constant in general constraint NL will be treated as zero (node 206)
+Warning: small constant in general constraint NL will be treated as zero (node 221)
+Warning: small constant in general constraint NL will be treated as zero (node 227)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 248)
+Warning: small constant in general constraint NL will be treated as zero (node 263)
+Warning: small constant in general constraint NL will be treated as zero (node 269)
+Warning: small constant in general constraint NL will be treated as zero (node 284)
+Warning: small constant in general constraint NL will be treated as zero (node 290)
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+MIPGap  1e-09
+MIPGapAbs  1e-06
+BarConvTol  1e-09
+InfUnbdInfo  1
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 22 rows, 182 columns and 150 nonzeros
+Model fingerprint: 0x97b75de2
+Model has 8 general nonlinear constraints (784 nonlinear terms)
+Variable types: 182 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 6e+02]
+  Bounds range     [2e-15, 5e+12]
+  RHS range        [3e-02, 1e+03]
+Warning: Model contains large bounds
+
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC0" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC1" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC2" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC3" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC4" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC5" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC6" will be treated as zero (node 290)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 11)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 17)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 32)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 38)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 53)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 59)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 74)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 80)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 95)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 101)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 116)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 122)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 137)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 143)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 158)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 164)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 179)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 185)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 200)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 206)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 221)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 227)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 242)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 248)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 263)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 269)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 284)
+Warning: small constant in general constraint NL "GC7" will be treated as zero (node 290)
+User MIP start did not produce a new incumbent solution
+
+Presolve model has 8 nlconstr
+Added 264 variables to disaggregate expressions.
+Presolve removed 1 rows and 49 columns
+Presolve time: 0.00s
+Presolved: 781 rows, 398 columns, 2041 nonzeros
+Presolved model has 136 bilinear constraint(s)
+Presolved model has 16 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 398 continuous, 0 integer (0 binary)
+
+Root relaxation: infeasible, 507 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0               - infeasible      -     -    0s
+
+Explored 1 nodes (507 simplex iterations) in 0.53 seconds (0.01 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+Gurobi 12.0.1: infeasible problem
+507 simplex iterations
+1 branching node
+
+suffix dunbdd OUT;
+q :=
+1 2   0.31109
+2 3   0.158031
+2 4   0.125289
+3 5   0.130261
+4 5   0.000157045
+4 6   0.0918023
+5 7   0.0554177
+6 7   0.000132339
+;
+
+eps :=
+1 2   7.11687e-08
+2 3   7.11687e-08
+2 4   7.11687e-08
+3 5   7.11687e-08
+4 5   7.11687e-08
+4 6   7.11687e-08
+5 7   7.11687e-08
+6 7   7.11687e-08
+;
+
+eps:  7.116872267927372e-08
+q[4,5]: 0.000157045490120303
+q[6,7]: 0.00013233948993255837
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 5.38305511277315e-13
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.31109     |                       -0 |                     -0 |                   -0 |                   -0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.158031    |                       -0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |  0.125289    |                        0 |                      0 |                   -0 |                   -0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |  0.130261    |                       -0 |                     -0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.000157045 |                       -0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |  0.0918023   |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |  0.0554177   |                       -0 |                     -0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.000132339 |                       -0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 9.370282327836321e-14
+Sum of violation of approx headloss constraint: 8.659739592076221e-14
+
+Con2 sum of absolute violation between original function and approximate function: 9.059419880941277e-14
+Con2 sum of relative violation between original function and approximate function: 1.6168633400872873e-14
+*******************************************************************************
+
+Total cost using gurobi: 417178.7280979495
+gurobi solve time: 0.65 seconds
+*******************************************************************************
+

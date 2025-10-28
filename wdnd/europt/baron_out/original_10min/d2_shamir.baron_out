@@ -1,0 +1,129 @@
+Water Network: 2
+Results smooth approximation 1 of Hazen--Williams headloss constraint
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with baron --------------------------
+BARON 24.5.8 (2024.05.08): optfile=optfile
+EpsA=1e-5
+EpsR=1e-6
+AbsConFeasTol=1e-5
+RelConFeasTol=1e-6
+MaxTime=600
+DoLocal=1
+PrLevel=1
+version 
+objbound 
+wantsol = 2
+outlev = 2
+barstats
+BARON 24.5.8 (2024.05.08) (Linux x86_64), driver(20250308), liccheck(20211124), ASL(20241202)
+Licensed to AMPL Community Edition License for <nitishdumoliya@iitb.ac.in>.
+Temporary license expires 20261010.
+Using license file "/home/nitishdumoliya/miniconda3/lib/python3.13/site-packages/ampl_module_base/bin/ampl.lic".
+
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl (2024). 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 471496.
+ Solving bounding LP
+ Starting multi-start local search
+ Preprocessing found feasible solution with value 403390.
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.91    12MB     16000.0         403390.        NA
+          5           1.42    12MB     403390.         403390.      100.00%
+
+                         *** Normal completion ***            
+
+ Wall clock time:                     1.42
+ Total CPU time used:                 1.42
+
+ Total no. of BaR iterations:       5
+ Best solution found at node:      -1
+ Max. no. of nodes in memory:       2
+ 
+ All done
+===========================================================================
+BARON 24.5.8 (2024.05.08): 5 iterations, optimal within tolerances.
+Objective 403389.7617
+Objective lower bound = 403389.76168928936, upper bound = 403389.76168928936
+barstatus = 1, modelstatus = 1
+max nodes in memory = 2
+optimum found at node -1
+Baron run time (excluding setup) = 1.42 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+eps :=
+1 2   7.05711e-08
+2 3   7.05711e-08
+2 4   7.05711e-08
+3 5   7.05711e-08
+4 5   7.05711e-08
+4 6   7.05711e-08
+5 7   7.05711e-08
+6 7   7.05711e-08
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 2.8689486564620337e-06
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.31109     |                 -9.1e-07 |               -9.1e-07 |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.102307    |                 -1.4e-07 |               -1.4e-07 |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |  0.181013    |                 -3.3e-07 |               -3.3e-07 |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |  0.0745366   |                 -6e-08   |               -6e-08   |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.000271006 |                 -2e-08   |               -5.6e-07 |             -5.4e-07 |               -3e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |  0.147412    |                 -2.5e-07 |               -2.5e-07 |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             | -0.000192412 |                 -0       |                5.7e-07 |              5.7e-07 |               -6e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.0557424   |                 -4e-08   |               -4e-08   |             -0       |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 1.7484189762662083e-06
+Sum of violation of approx headloss constraint: 2.86419438655372e-06
+
+Con2 sum of absolute violation between original function and approximate function: 1.1178004926115648e-06
+Con2 sum of relative violation between original function and approximate function: 8.619428168019738e-08
+*******************************************************************************
+
+Total cost using baron: 403389.76168928936
+baron solve time: 1.48 seconds
+*******************************************************************************
+

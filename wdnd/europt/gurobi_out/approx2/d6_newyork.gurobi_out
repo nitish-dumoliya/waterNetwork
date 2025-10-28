@@ -1,0 +1,101 @@
+Water Network: 6
+Results smooth approximation 1 of Hazen--Williams headloss constraint
+
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+58331.778897275144
+99566.3606118719
+36708.85304859365
+41737.44045526376
+43246.0166772648
+96046.3494272028
+48274.604083934915
+62857.507563278254
+48274.604083934915
+56320.3439346071
+72914.68237661848
+61348.93134127722
+121189.28646055338
+106103.52424054306
+77943.4347631904
+132755.20247579645
+156892.422027813
+120686.42771988639
+72411.82363595147
+193098.41633573966
+132755.20247579645
+epsilon: {(1, 2): 0.00039, (2, 3): 0.00029, (3, 4): 0.0004900000000000001, (4, 5): 0.00045999999999999996, (5, 6): 0.00045000000000000004, (6, 7): 0.00029, (7, 8): 0.00043, (8, 9): 0.00037000000000000005, (9, 10): 0.00043, (11, 9): 0.00039, (12, 11): 0.00034, (13, 12): 0.00038, (14, 13): 0.00026000000000000003, (15, 14): 0.00028, (1, 15): 0.00033, (10, 17): 0.00025, (12, 18): 0.00022999999999999998, (18, 19): 0.00026000000000000003, (11, 20): 0.00034, (20, 16): 0.0002, (9, 16): 0.00025}
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-06
+  mip:gap = 1e-06
+  sol:chk:feastol = 1e-05
+
+AMPL MP initial flat model has 397 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  61 linear; 105 quadratic;
+Algebraic expressions:  42 powconstexp;
+
+AMPL MP final model has 544 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  103 linear; 105 quadratic;
+Algebraic expressions:  42 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  1e-06
+MIPGapAbs  1e-06
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 103 rows, 544 columns and 580 nonzeros
+Model fingerprint: 0x372c6f3a
+Model has 42 general nonlinear constraints (1029 nonlinear terms)
+Variable types: 544 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [3e+02, 3e+03]
+  Bounds range     [4e-08, 1e+05]
+  RHS range        [3e-02, 1e+04]
+Presolve model has 42 nlconstr
+Added 819 variables to disaggregate expressions.
+Presolve removed 6 rows and 113 columns
+Presolve time: 0.01s
+Presolved: 2281 rows, 1251 columns, 5247 nonzeros
+Presolved model has 399 bilinear constraint(s)
+Presolved model has 42 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 1251 continuous, 0 integer (0 binary)
+
+Root relaxation: objective 3.420146e+07, 201 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3.4201e+07    0   70          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   69          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   76          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   76          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   91          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   91          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   90          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   92          - 3.4201e+07      -     -    0s
+     0     0 3.4201e+07    0   99          - 3.4201e+07      -     -    1s
+     0     0 3.4623e+07    0  108          - 3.4623e+07      -     -    1s
+     0     2 3.4623e+07    0  108          - 3.4623e+07      -     -    5s

@@ -2,10 +2,10 @@ Water Network: 1
 *******************************************************************************
 
 -------------------------------- Solving with ipopt --------------------------
-Ipopt 3.12.13: outlev = 4
-expect_infeasible_problem = yes
+Ipopt 3.12.13: outlev = 0
+expect_infeasible_problem = no
 bound_relax_factor=0
-tol = 1e-6
+tol = 1e-9
 bound_push = 0.01
 bound_frac = 0.01
 warm_start_init_point = no
@@ -18,39 +18,6 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit http://projects.coin-or.org/Ipopt
 ******************************************************************************
 
-Total number of variables............................:       83
-                     variables with only lower bounds:        6
-                variables with lower and upper bounds:       77
-                     variables with only upper bounds:        0
-Total number of equality constraints.................:       20
-Total number of inequality constraints...............:        0
-        inequality constraints with only lower bounds:        0
-   inequality constraints with lower and upper bounds:        0
-        inequality constraints with only upper bounds:        0
-
-In iteration 298, 1 Slack too small, adjusting variable bound
-
-Number of Iterations....: 299
-
-                                   (scaled)                 (unscaled)
-Objective...............:   1.2388261436200900e+05    1.2388261436200900e+05
-Dual infeasibility......:   8.9235304563648095e-03    8.9235304563648095e-03
-Constraint violation....:   8.3488771451811772e-13    8.3488771451811772e-13
-Complementarity.........:   9.0958673768008035e-08    9.0958673768008035e-08
-Overall NLP error.......:   4.2466066241687718e-09    8.9235304563648095e-03
-
-
-Number of objective function evaluations             = 746
-Number of objective gradient evaluations             = 277
-Number of equality constraint evaluations            = 746
-Number of inequality constraint evaluations          = 0
-Number of equality constraint Jacobian evaluations   = 300
-Number of inequality constraint Jacobian evaluations = 0
-Number of Lagrangian Hessian evaluations             = 299
-Total CPU secs in IPOPT (w/o function evaluations)   =      0.252
-Total CPU secs in NLP function evaluations           =      0.009
-
-EXIT: Optimal Solution Found.
  
 Ipopt 3.12.13: Optimal Solution Found
 
@@ -62,17 +29,28 @@ q :=
 2 6   0.128219
 3 4   0.248771
 4 5   0.208481
-6 7   0.0804393
-7 5   0.000119277
+6 7   0.0804392
+7 5   0.000119248
 ;
 
-q[7,5]: 0.00011927686552621511
+eps :=
+1 2   1.90041e-05
+2 3   5.54193e-05
+2 6   3.11038e-05
+3 4   2.92906e-05
+4 5   2.59165e-05
+6 7   2.61143e-05
+7 5   2.3531e-05
+;
+
+eps:  1.9004097781957383e-05
+q[7,5]: 0.00011924821673950234
 *******************************************************************************
 
 Constraints violation:
 
 
-Sum of constraints violation: 3.0121807825800317e-12
+Sum of constraints violation: 1.6075248771008077e-12
 *******************************************************************************
 
 *******************************************************************************
@@ -82,29 +60,29 @@ Absolute and relative violations between original and approximation constraint 2
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 | Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
 +=================+==============+==========================+========================+======================+======================+
-| 1,2             |  0.42043     |                        0 |                      0 |                    0 |              0       |
+| 1,2             |  0.42043     |                  0       |                      0 |              0       |           0          |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.292211    |                        0 |                      0 |                    0 |              0       |
+| 2,3             |  0.292211    |                 -0       |                     -0 |              0       |           0          |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,6             |  0.128219    |                        0 |                      0 |                    0 |              0       |
+| 2,6             |  0.128219    |                 -0       |                     -0 |              0       |           0          |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,4             |  0.248771    |                       -0 |                     -0 |                    0 |              0       |
+| 3,4             |  0.248771    |                  0       |                      0 |              0       |           0          |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.208481    |                        0 |                      0 |                    0 |              0       |
+| 4,5             |  0.208481    |                 -0       |                     -0 |              0       |           0          |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0804393   |                       -0 |                     -0 |                   -0 |             -0       |
+| 6,7             |  0.0804392   |                 -0       |                      0 |              0       |           0          |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,5             |  0.000119277 |                       -0 |                      0 |                    0 |              4.9e-07 |
+| 7,5             |  0.000119248 |                 -1.3e-06 |                     -0 |              1.3e-06 |           0.00017871 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 
-Sum of violation of original headloss constraint: 3.5954839374893743e-09
-Sum of violation of approx headloss constraint: 1.65612662472725e-12
+Sum of violation of original headloss constraint: 1.3003189226878237e-06
+Sum of violation of approx headloss constraint: 6.054236972863336e-13
 
-Con2 sum of absolute violation between original function and approximate function: 3.5953477200631467e-09
-Con2 sum of relative violation between original function and approximate function: 4.939143379210848e-07
+Con2 sum of absolute violation between original function and approximate function: 1.300318322593197e-06
+Con2 sum of relative violation between original function and approximate function: 0.0001787120275190733
 *******************************************************************************
 
-Total cost using ipopt: 123882.614362009
-ipopt solve time: 0.27 seconds
+Total cost using ipopt: 123882.61397636466
+ipopt solve time: 0.10 seconds
 *******************************************************************************
 

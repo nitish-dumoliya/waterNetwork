@@ -1,0 +1,127 @@
+Water Network: 1
+Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with bonmin --------------------------
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 5
+bonmin.nlp_log_level 2
+warm_start_init_point = no
+bonmin.num_resolve_at_root = 10
+tol = 1e-9
+expect_infeasible_problem = yes
+bound_relax_factor = 0
+bound_push = 0.01
+bound_frac = 0.01
+
+Cbc3007W No integer variables - nothing to do
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0010I Ipopt return (for initialSolve): status  1, iter count   61, time 0.129985
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1         OPT 123882.62       61 0.129985
+NLP0001I After 1 tries found a solution of 123882.62 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (1 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   58, time 0.065978
+NLP0011I Solution of value 123882.62 found on 1'th attempt
+NLP0014I *           1         OPT 123882.62       58 0.065978         resolve cost
+NLP0001I After 2 tries found a solution of 123882.62 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (2 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   60, time 0.065472
+NLP0014I             2         OPT 123882.62       60 0.065472         resolve cost
+NLP0001I After 3 tries found a solution of 123882.62 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (3 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   65, time 0.069987
+NLP0014I             3         OPT 139186.82       65 0.069987         resolve cost
+NLP0001I After 4 tries found a solution of 139186.82 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (4 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   62, time 0.068576
+NLP0014I             4         OPT 123882.62       62 0.068576         resolve cost
+NLP0001I After 5 tries found a solution of 123882.62 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (5 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   79, time 0.087653
+NLP0014I             5         OPT 139186.82       79 0.087653         resolve cost
+NLP0001I After 6 tries found a solution of 139186.82 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (6 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   62, time 0.067044
+NLP0014I             6         OPT 123882.62       62 0.067044         resolve cost
+NLP0001I After 7 tries found a solution of 123882.62 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (7 attempts).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count 1363, time 6.03339
+NLP0014I             7      FAILED 58562.84     1363 6.03339         resolve cost
+NLP3003W Trying to resolve NLP with different starting point (8 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count 2062, time 4.632122
+NLP0014I             8         OPT 136554.38     2062 4.632122         resolve cost
+NLP0001I After 9 tries found a solution of 136554.38 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (9 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   75, time 0.09039
+NLP0014I             9         OPT 123882.62       75 0.09039         resolve cost
+NLP0001I After 10 tries found a solution of 123882.62 (previous best 123882.62).
+NLP3003W Trying to resolve NLP with different starting point (10 attempts).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   50, time 0.054653
+NLP0014I            10         OPT 123882.62       50 0.054653         resolve cost
+NLP0001I After 11 tries found a solution of 123882.62 (previous best 123882.62).
+Cbc3007W No integer variables - nothing to do
+
+ 	"Finished"
+
+bonmin: Optimal
+eps :=
+1 2   4.26278e-06
+2 3   1.2431e-05
+2 6   6.97685e-06
+3 4   6.57014e-06
+4 5   5.81329e-06
+6 7   5.85767e-06
+7 5   5.27819e-06
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.38222183392198e-08
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.42043     |                 0        |                  0     |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.292211    |                 0        |                  0     |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,6             |  0.128219    |                 1e-08    |                  0     |            -1e-08    |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |  0.248771    |                 0        |                  0     |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.208481    |                 0        |                  0     |            -0        |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.0804393   |                 2e-08    |                  0     |            -2e-08    |          -0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,5             |  0.000119287 |                 6.01e-06 |                 -6e-08 |            -6.07e-06 |          -0.00083359 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 6.04003980556999e-06
+Sum of violation of approx headloss constraint: 6.328657669706778e-08
+
+Con2 sum of absolute violation between original function and approximate function: 6.101790048096065e-06
+Con2 sum of relative violation between original function and approximate function: 0.0008335951589189291
+*******************************************************************************
+
+Total cost using bonmin: 123882.61613040365
+bonmin solve time: 11.65 seconds
+*******************************************************************************
+

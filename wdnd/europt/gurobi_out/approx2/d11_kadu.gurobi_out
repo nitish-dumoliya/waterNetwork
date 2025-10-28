@@ -1,0 +1,116 @@
+Water Network: 11
+Results smooth approximation 1 of Hazen--Williams headloss constraint
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with gurobi --------------------------
+32939821.58592528
+90035512.33486243
+103211440.96923253
+80153565.85908484
+177875036.56399652
+65879643.17185056
+87839524.22913408
+153719167.40098464
+129014301.21154068
+82349553.9648132
+23057875.110147692
+76859583.70049232
+34037815.63878945
+54899702.6432088
+215206834.3613785
+98819464.75777584
+93329494.49345496
+71369613.43617144
+83447548.01767737
+120779345.81505936
+72467607.48903562
+128465304.18510859
+107603417.18068925
+73565601.54189979
+118583357.709331
+82349553.9648132
+98819464.75777584
+71369613.43617144
+169091084.1410831
+80153565.85908484
+128465304.18510859
+181169018.72258905
+144935214.97807124
+356848067.1808572
+epsilon: {(1, 3): 1.3000000000000001e-05, (3, 4): 7.2999999999999996e-06, (4, 5): 6.799999999999999e-06, (5, 6): 7.8e-06, (6, 7): 5.0999999999999995e-06, (7, 8): 8.7e-06, (4, 9): 7.4e-06, (6, 10): 5.5e-06, (8, 13): 6e-06, (8, 14): 7.699999999999999e-06, (2, 14): 1.5000000000000002e-05, (9, 10): 8e-06, (10, 11): 1.2e-05, (11, 12): 9.6e-06, (12, 13): 4.599999999999999e-06, (9, 15): 7e-06, (15, 18): 7.2e-06, (10, 19): 8.3e-06, (13, 20): 7.599999999999999e-06, (13, 16): 6.2e-06, (14, 17): 8.2e-06, (19, 20): 6e-06, (20, 21): 6.5999999999999995e-06, (16, 21): 8.2e-06, (17, 21): 6.3e-06, (18, 23): 7.699999999999999e-06, (19, 24): 7e-06, (20, 25): 8.3e-06, (21, 26): 5.2e-06, (17, 22): 7.8e-06, (23, 24): 6e-06, (24, 25): 4.9999999999999996e-06, (25, 26): 5.7e-06, (22, 26): 3.5e-06}
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-06
+  mip:gap = 1e-06
+  sol:chk:feastol = 1e-05
+
+AMPL MP initial flat model has 534 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  58 linear; 102 quadratic;
+Algebraic expressions:  34 powconstexp;
+
+AMPL MP final model has 670 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  92 linear; 102 quadratic;
+Algebraic expressions:  34 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  1e-06
+MIPGapAbs  1e-06
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 92 rows, 670 columns and 642 nonzeros
+Model fingerprint: 0xf945557c
+Model has 34 general nonlinear constraints (1904 nonlinear terms)
+Variable types: 670 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+03, 2e+04]
+  Bounds range     [1e-11, 5e+05]
+  RHS range        [3e-02, 3e+03]
+Presolve model has 34 nlconstr
+Added 1054 variables to disaggregate expressions.
+Presolve removed 2 rows and 104 columns
+Presolve time: 0.02s
+Presolved: 2946 rows, 1655 columns, 6843 nonzeros
+Presolved model has 544 bilinear constraint(s)
+Presolved model has 34 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 1655 continuous, 0 integer (0 binary)
+
+Root relaxation: objective 3.745842e+07, 962 iterations, 0.02 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   94          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   94          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   94          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     0 3.7458e+07    0   95          - 3.7458e+07      -     -    0s
+     0     2 3.7458e+07    0   95          - 3.7458e+07      -     -    3s
+    55    34 3.9555e+07    6   91          - 3.7682e+07      -  47.5    5s

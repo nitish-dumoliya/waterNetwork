@@ -1,46 +1,19 @@
 Water Network: 10
-*******************************************************************************
-
--------------------------------- Solving with IPOPT --------------------------
-Ipopt solver outputs: 
-
-Ipopt 3.12.13: outlev = 0
-expect_infeasible_problem = yes
-bound_relax_factor=0
-bound_push = 0.01
-bound_frac = 0.01
-warm_start_init_point = yes
-halt_on_ampl_error = yes
-
-
-******************************************************************************
-This program contains Ipopt, a library for large-scale nonlinear optimization.
- Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit http://projects.coin-or.org/Ipopt
-******************************************************************************
-
- 
-Ipopt 3.12.13: Optimal Solution Found
-
-suffix ipopt_zU_out OUT;
-suffix ipopt_zL_out OUT;
-total_cost: 22601.820302506563 
+Results smooth approximation 1 of Hazen--Williams headloss constraint
 
 *******************************************************************************
-
-Total cost using ipopt: 22601.820302506563
-IPOPT solve time: 10.18 seconds
-*******************************************************************************
-
+wdnmodel.mod
 
 -------------------------------- Solving with gurobi --------------------------
 Gurobi 12.0.1: Set parameter LogToConsole to value 1
   tech:outlev = 1
 Set parameter Presolve to value 1
   pre:solve = 1
-Set parameter TimeLimit to value 3600
-  lim:time = 3600
-  alg:start = 1
+Set parameter TimeLimit to value 600
+  lim:time = 600
+  alg:start = 0
+Set parameter Method to value 1
+  alg:method = 1
 Set parameter MIPGapAbs to value 1e-06
   mip:gapabs = 1e-06
 Set parameter MIPGap to value 1e-09
@@ -48,979 +21,1336 @@ Set parameter MIPGap to value 1e-09
 Set parameter BarConvTol to value 1e-09
   bar:convtol = 1e-09
   sol:chk:feastol = 1e-05
-  sol:chk:feastolrel = 0
+  sol:chk:feastolrel = 1e-09
 Set parameter NumericFocus to value 1
   alg:numericfocus = 1
-Set parameter MIPGap to value 1e-09
-  mip:gap = 1e-09
   tech:optionfile = gurobiOpt.prm
 
-AMPL MP initial flat model has 1428 variables (0 integer, 0 binary);
+AMPL MP initial flat model has 1370 variables (0 integer, 0 binary);
 Objectives: 1 linear; 
-Constraints:  94 linear; 232 quadratic;
-Algebraic expressions:  58 div; 116 powconstexp;
+Constraints:  94 linear; 174 quadratic;
+Algebraic expressions:  58 powconstexp;
 
-AMPL MP final model has 1834 variables (0 integer, 0 binary);
+AMPL MP final model has 1602 variables (0 integer, 0 binary);
 Objectives: 1 linear; 
-Constraints:  152 linear; 232 quadratic;
-Algebraic expressions:  58 div; 116 powconstexp;
+Constraints:  152 linear; 174 quadratic;
+Algebraic expressions:  58 powconstexp;
 
 
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
+Warning: small constant in general constraint NL will be treated as zero (node 8)
+Warning: small constant in general constraint NL will be treated as zero (node 21)
+Warning: small constant in general constraint NL will be treated as zero (node 34)
+Warning: small constant in general constraint NL will be treated as zero (node 47)
+Warning: small constant in general constraint NL will be treated as zero (node 60)
+Warning: small constant in general constraint NL will be treated as zero (node 73)
+Warning: small constant in general constraint NL will be treated as zero (node 86)
+Warning: small constant in general constraint NL will be treated as zero (node 99)
+Warning: small constant in general constraint NL will be treated as zero (node 112)
+Warning: small constant in general constraint NL will be treated as zero (node 125)
+Warning: small constant in general constraint NL will be treated as zero (node 138)
+Warning: small constant in general constraint NL will be treated as zero (node 151)
+Warning: small constant in general constraint NL will be treated as zero (node 164)
+Warning: small constant in general constraint NL will be treated as zero (node 177)
+Warning: small constant in general constraint NL will be treated as zero (node 190)
+Warning: small constant in general constraint NL will be treated as zero (node 203)
+Warning: small constant in general constraint NL will be treated as zero (node 216)
+Warning: small constant in general constraint NL will be treated as zero (node 229)
+Warning: small constant in general constraint NL will be treated as zero (node 242)
+Warning: small constant in general constraint NL will be treated as zero (node 255)
+Warning: small constant in general constraint NL will be treated as zero (node 268)
+Warning: small constant in general constraint NL will be treated as zero (node 281)
 Set parameter InfUnbdInfo to value 1
 Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
 
-CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
 Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
 
 Non-default parameters:
-TimeLimit  3600
+TimeLimit  600
 MIPGap  1e-09
 MIPGapAbs  1e-06
+Method  1
 BarConvTol  1e-09
 InfUnbdInfo  1
 NumericFocus  1
 Presolve  1
 
-Optimize a model with 152 rows, 1834 columns and 1564 nonzeros
-Model fingerprint: 0xe70fbda5
-Model has 58 general nonlinear constraints (11484 nonlinear terms)
-Variable types: 1834 continuous, 0 integer (0 binary)
+Optimize a model with 152 rows, 1602 columns and 1564 nonzeros
+Model fingerprint: 0x752bca7c
+Model has 58 general nonlinear constraints (5104 nonlinear terms)
+Variable types: 1602 continuous, 0 integer (0 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [4e-01, 2e+02]
-  Bounds range     [4e-23, 5e+16]
+  Bounds range     [1e-15, 6e+05]
   RHS range        [3e-04, 4e+02]
-Warning: Model contains large bounds
-
-User MIP start did not produce a new incumbent solution
-
 Presolve model has 58 nlconstr
-Added 5626 variables to disaggregate expressions.
-Presolve removed 1 rows and 349 columns
-Presolve time: 0.04s
-Presolved: 19639 rows, 7112 columns, 47030 nonzeros
-Presolved model has 2726 bilinear constraint(s)
-Presolved model has 1392 nonlinear constraint(s)
+Added 2669 variables to disaggregate expressions.
+Presolve removed 1 rows and 175 columns
+Presolve time: 0.07s
+Presolved: 7286 rows, 4155 columns, 17108 nonzeros
+Presolved model has 1392 bilinear constraint(s)
+Presolved model has 58 nonlinear constraint(s)
 
 Solving non-convex MINLP
 
-Variable types: 7112 continuous, 0 integer (0 binary)
+Variable types: 4155 continuous, 0 integer (0 binary)
 
-Root relaxation: objective 3.194227e+03, 1702 iterations, 0.02 seconds (0.01 work units)
+Root relaxation: objective 3.195719e+03, 2411 iterations, 0.68 seconds (0.10 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0 3194.22680    0 1378          - 3194.22680      -     -    2s
-     0     0 3194.22680    0 1390          - 3194.22680      -     -    2s
-     0     0 3194.22680    0 1395          - 3194.22680      -     -    2s
-     0     0 3194.22680    0 1406          - 3194.22680      -     -    2s
-     0     0 3194.22680    0 1412          - 3194.22680      -     -    2s
-     0     0 3194.22680    0 1419          - 3194.22680      -     -    2s
-     0     2 3194.22680    0 1419          - 3194.22680      -     -   39s
-     3     8 3194.22680    2 1351          - 3194.22680      -  21.0   40s
-   446   612 3194.22680   13 1279          - 3194.22680      -  11.2   45s
-  2689  1937 infeasible   65               - 3194.22680      -  13.5   52s
-  4256  2514 infeasible  103               - 3194.22680      -  14.0   56s
-  7998  3720 infeasible  194               - 3194.22680      -  15.2   62s
-  9853  4328 infeasible  236               - 3194.22680      -  15.1   66s
- 11705  4940 infeasible  281               - 3194.22680      -  14.9   70s
-  NLP heuristic elapsed time = 5.03s
-  NLP heuristic elapsed time = 10.02s
-  NLP heuristic elapsed time = 15.03s
- 15374  5561 3194.22680   35    0          - 3194.22680      -  14.4   93s
- 15386  5569 3195.72036   67    0          - 3195.72036      -  14.4   95s
-  NLP heuristic elapsed time = 5.07s
-  NLP heuristic elapsed time = 10.22s
-  NLP heuristic elapsed time = 15.02s
-  NLP heuristic elapsed time = 20.03s
-  NLP heuristic elapsed time = 25.17s
-  NLP heuristic elapsed time = 30.17s
-  NLP heuristic elapsed time = 35.14s
-  NLP heuristic elapsed time = 40.09s
-  NLP heuristic elapsed time = 45.07s
-  NLP heuristic elapsed time = 50.12s
-  NLP heuristic elapsed time = 55.06s
-  NLP heuristic elapsed time = 60.08s
-  NLP heuristic elapsed time = 65.08s
-  NLP heuristic elapsed time = 70.10s
-  NLP heuristic elapsed time = 75.15s
-  NLP heuristic elapsed time = 80.07s
- 15387  5569 3195.72036  133    0          - 3195.72036      -  14.4  175s
- 15388  5573 3195.74179   12 1301          - 3195.72036      -  14.6  228s
- 15390  5576 3195.74178   13 1285          - 3195.72036      -  14.6  233s
- 15394  5583 3195.74178   14 1308          - 3195.72036      -  14.6  237s
- 15785  6286 3195.74178   22 1223          - 3195.72036      -  14.6  240s
- 17349  7100 3195.74178   48 1245          - 3195.72036      -  14.7  260s
- 17633  9491 3195.74178   70 1239          - 3195.72036      -  14.8  267s
- 21436  9414 3195.74178  100 1257          - 3195.72036      -  14.7  272s
- 23455  9823 infeasible  185               - 3195.72036      -  15.1  276s
- 26039  9953 infeasible  285               - 3195.72036      -  14.8  280s
- 31061 10332 infeasible  459               - 3195.72036      -  14.0  288s
- 34475 11048 infeasible  570               - 3195.72036      -  13.5  292s
- 37546 12062 infeasible  670               - 3195.72036      -  13.2  296s
- 40104 13043 infeasible  764               - 3195.72036      -  13.2  300s
- 44980 15192 infeasible  940               - 3195.72036      -  13.2  308s
- 47544 16307 infeasible 1025               - 3195.72036      -  13.1  311s
- 52485 18473 infeasible 1188               - 3195.72036      -  12.8  318s
- 54861 19479 infeasible 1267               - 3195.72036      -  12.7  322s
- 57205 20538 infeasible 1345               - 3195.72036      -  12.6  325s
- 61681 21625 3195.72036  181  305          - 3195.72036      -  12.5  330s
- 64750 23863 infeasible 1595               - 3195.72036      -  12.4  338s
- 67379 25046 infeasible 1685               - 3195.72036      -  12.4  342s
- 70106 26249 infeasible 1779               - 3195.72036      -  12.4  346s
- 72921 27557 infeasible 1876               - 3195.72036      -  12.4  351s
- 75923 28911 infeasible 1977               - 3195.72036      -  12.4  356s
- 79019 30408 infeasible 2083               - 3195.72036      -  12.4  361s
- 82304 32066 infeasible 2193               - 3195.72036      -  12.4  367s
- 85776 33836 infeasible 2307               - 3195.72036      -  12.3  373s
- 89434 35711 infeasible 2426               - 3195.72036      -  12.3  379s
- 93265 37624 infeasible 2550               - 3195.72036      -  12.2  386s
- 97216 39599 infeasible 2679               - 3195.72036      -  12.1  393s
- 101243 41521 infeasible 2810               - 3195.72036      -  12.1  400s
- 105171 43403 infeasible 2940               - 3195.72036      -  12.0  406s
- 109063 45273 infeasible 3069               - 3195.72036      -  12.0  412s
- 112925 47120 infeasible 3197               - 3195.72036      -  12.0  418s
- 116756 48981 infeasible 3324               - 3195.72036      -  11.9  425s
- 120595 50885 infeasible 3451               - 3195.72036      -  11.9  432s
- 124475 52836 infeasible 3577               - 3195.72036      -  11.9  440s
- 129315 55342 infeasible 3730               - 3195.72036      -  11.8  451s
- 133270 57344 infeasible 3857               - 3195.72036      -  11.8  458s
- 137014 59322 infeasible 3983               - 3195.72036      -  11.8  464s
- 140748 61290 infeasible 4109               - 3195.72036      -  11.8  470s
- 144428 63283 infeasible 4234               - 3195.72036      -  11.8  476s
- 148097 65288 infeasible 4359               - 3195.72036      -  11.8  482s
- 151764 67320 infeasible 4483               - 3195.72036      -  11.7  488s
- 155388 69346 infeasible 4607               - 3195.72036      -  11.7  494s
- 159058 71371 infeasible 4731               - 3195.72036      -  11.7  500s
- 162699 73400 infeasible 4855               - 3195.72036      -  11.7  506s
- 166376 75423 infeasible 4979               - 3195.72036      -  11.7  512s
- 170019 77419 infeasible 5102               - 3195.72036      -  11.7  518s
- 173655 79441 infeasible 5225               - 3195.72036      -  11.6  525s
- 177285 80803 infeasible 5348               - 3195.72036      -  11.6  530s
- 179695 82862 infeasible 5431               - 3195.72036      -  11.6  537s
- 183368 84920 infeasible 5554               - 3195.72036      -  11.6  543s
- 186990 86975 infeasible 5677               - 3195.72036      -  11.6  550s
- 190681 89062 infeasible 5799               - 3195.72036      -  11.5  557s
- 194388 91080 infeasible 5921               - 3195.72036      -  11.5  564s
- 198094 93103 infeasible 6043               - 3195.72036      -  11.5  570s
- 201783 93442 infeasible 6164               - 3195.72036      -  11.4  575s
- 202336 95543 infeasible 6179               - 3195.72036      -  11.5  581s
- 206029 97636 infeasible 6302               - 3195.72036      -  11.5  588s
- 209730 99694 infeasible 6425               - 3195.72036      -  11.4  594s
- 212756 99694 3195.72036  304  305          - 3195.72036      -  11.4  595s
- 213392 101741 infeasible 6547               - 3195.72036      -  11.4  601s
- 217077 103782 infeasible 6669               - 3195.72036      -  11.4  608s
- 220744 105826 infeasible 6791               - 3195.72036      -  11.4  614s
- 224404 107848 infeasible 6913               - 3195.72036      -  11.4  620s
- 228050 109870 infeasible 7034               - 3195.72036      -  11.3  628s
- 231660 111893 infeasible 7155               - 3195.72036      -  11.3  635s
- 235279 113900 infeasible 7276               - 3195.72036      -  11.3  642s
- 238868 115912 infeasible 7397               - 3195.72036      -  11.2  648s
- 242566 117922 infeasible 7518               - 3195.72036      -  11.2  654s
- 246206 119935 infeasible 7638               - 3195.72036      -  11.2  660s
- 250081 121957 infeasible 7758               - 3195.72036      -  11.1  667s
- 253793 123982 infeasible 7878               - 3195.72036      -  11.1  674s
- 257506 125093 infeasible 7998               - 3195.72036      -  11.1  679s
- 259557 127137 infeasible 8065               - 3195.72036      -  11.1  685s
- 263245 129203 infeasible 8185               - 3195.72036      -  11.0  691s
- 266937 131253 infeasible 8305               - 3195.72036      -  11.0  697s
- 270611 133289 infeasible 8425               - 3195.72036      -  11.0  704s
- 274259 135309 infeasible 8544               - 3195.72036      -  11.0  710s
- 277897 137392 infeasible 8663               - 3195.72036      -  10.9  716s
- 281600 139529 infeasible 8782               - 3195.72036      -  10.9  723s
- 285331 141692 infeasible 8901               - 3195.72036      -  10.9  730s
- 288952 142103 infeasible 9020               - 3195.72036      -  10.9  735s
- 289611 144282 infeasible 9039               - 3195.72036      -  10.9  741s
- 293256 146405 infeasible 9159               - 3195.72036      -  10.9  748s
- 296861 148446 infeasible 9278               - 3195.72036      -  10.9  755s
- 300438 150477 infeasible 9397               - 3195.72036      -  10.9  762s
- 303953 152550 infeasible 9516               - 3195.72036      -  10.9  769s
- 307566 154590 infeasible 9635               - 3195.72036      -  10.8  776s
- 311148 156539 infeasible 9754               - 3195.72036      -  10.8  782s
- 314687 158494 infeasible 9873               - 3195.72036      -  10.8  789s
- 318148 160470 infeasible 9992               - 3195.72036      -  10.8  795s
- 321766 162535 infeasible 10111               - 3195.72036      -  10.8  801s
- 325335 164587 infeasible 10229               - 3195.72036      -  10.8  807s
- 328905 166641 infeasible 10347               - 3195.72036      -  10.7  813s
- 332421 168664 infeasible 10465               - 3195.72036      -  10.7  820s
- 335964 170685 infeasible 10583               - 3195.72036      -  10.7  825s
- 339485 172709 infeasible 10701               - 3195.72036      -  10.7  831s
- 343023 173065 infeasible 10819               - 3195.72036      -  10.7  835s
- 343591 175111 infeasible 10833               - 3195.72036      -  10.7  841s
- 347169 177178 infeasible 10952               - 3195.72036      -  10.7  847s
- 350762 179236 infeasible 11071               - 3195.72036      -  10.7  854s
- 354298 181300 infeasible 11190               - 3195.72036      -  10.7  860s
- 357882 183375 infeasible 11308               - 3195.72036      -  10.7  867s
- 361441 185490 infeasible 11426               - 3195.72036      -  10.7  873s
- 364954 187598 infeasible 11544               - 3195.72036      -  10.7  879s
- 368454 189712 infeasible 11662               - 3195.72036      -  10.7  886s
- 371950 191822 infeasible 11780               - 3195.72036      -  10.7  892s
- 375444 193907 infeasible 11898               - 3195.72036      -  10.7  898s
- 378941 195992 infeasible 12016               - 3195.72036      -  10.7  904s
- 382434 198084 infeasible 12134               - 3195.72036      -  10.7  911s
- 385926 200158 infeasible 12252               - 3195.72036      -  10.7  918s
- 389410 202240 infeasible 12370               - 3195.72036      -  10.6  924s
- 392896 204329 infeasible 12488               - 3195.72036      -  10.6  930s
- 396963 206811 infeasible 12623               - 3195.72036      -  10.6  941s
- 400481 208907 infeasible 12741               - 3195.72036      -  10.6  948s
- 404001 211018 infeasible 12859               - 3195.72036      -  10.6  954s
- 407524 213141 infeasible 12977               - 3195.72036      -  10.6  959s
- 411053 215251 infeasible 13095               - 3195.72036      -  10.6  966s
- 414569 217352 infeasible 13213               - 3195.72036      -  10.6  972s
- 418078 219467 infeasible 13331               - 3195.72036      -  10.6  979s
- 421581 221577 infeasible 13449               - 3195.72036      -  10.6  986s
- 425101 223693 infeasible 13567               - 3195.72036      -  10.6  992s
- 428627 225804 infeasible 13685               - 3195.72036      -  10.6  998s
- 432136 227925 infeasible 13803               - 3195.72036      -  10.6 1004s
- 435655 230040 infeasible 13921               - 3195.72036      -  10.6 1011s
- 439146 232146 infeasible 14038               - 3195.72036      -  10.5 1017s
- 442648 234249 infeasible 14155               - 3195.72036      -  10.5 1023s
- 446155 236385 infeasible 14272               - 3195.72036      -  10.5 1029s
- 449545 237396 3195.74178 14334 1229          - 3195.72036      -  10.5 1034s
- 451142 239515 3195.74178 14351 1229          - 3195.72036      -  10.5 1041s
- 454427 241641 3195.74178 14386 1229          - 3195.72036      -  10.5 1047s
- 457711 243766 3195.74178 14421 1229          - 3195.72036      -  10.5 1054s
- 460998 245893 infeasible 14456               - 3195.72036      -  10.5 1060s
- 464309 248034 infeasible 14491               - 3195.72036      -  10.6 1067s
- 467630 250147 3195.74178 14527 1230          - 3195.72036      -  10.6 1073s
- 470933 252247 infeasible 14561               - 3195.72036      -  10.6 1080s
- 474205 254344 3195.74178 14597 1211          - 3195.72036      -  10.6 1085s
- 477486 256421 3195.74178 14632 1211          - 3195.72036      -  10.6 1091s
- 480747 257773 3195.74178 14667 1211          - 3195.72036      -  10.6 1096s
- 482865 259805 3195.74178 14690 1230          - 3195.72036      -  10.6 1101s
- 486083 261824 3195.74178 14725 1231          - 3195.72036      -  10.6 1107s
- 489304 263839 3195.74178 14760 1231          - 3195.72036      -  10.6 1113s
- 492521 265845 3195.74178 14795 1231          - 3195.72036      -  10.6 1119s
- 495741 267858 3195.74178 14830 1211          - 3195.72036      -  10.6 1124s
- 498952 269880 3195.74178 14866 1231          - 3195.72036      -  10.6 1130s
- 502721 272291 3195.74178 14911 1231          - 3195.72036      -  10.7 1139s
- 505977 274357 3195.74178 14947 1231          - 3195.72036      -  10.7 1146s
- 509255 276438 3195.74178 14983 1211          - 3195.72036      -  10.7 1152s
- 512546 278534 3195.74178 15019 1231          - 3195.72036      -  10.7 1158s
- 515862 280631 3195.74178 15055 1211          - 3195.72036      -  10.7 1164s
- 519175 282730 3195.74178 15091 1231          - 3195.72036      -  10.7 1170s
- 522492 284819 infeasible 15126               - 3195.72036      -  10.6 1176s
- 525809 286907 infeasible 15161               - 3195.72036      -  10.6 1181s
- 529113 288992 3195.74178 15197 1211          - 3195.72036      -  10.6 1187s
- 532408 291084 3195.74178 15232 1231          - 3195.72036      -  10.6 1193s
- 535720 293180 infeasible 15267               - 3195.72036      -  10.6 1199s
- 539044 295278 3195.74178 15303 1211          - 3195.72036      -  10.6 1205s
- 542356 297415 3195.74178 15338 1211          - 3195.72036      -  10.6 1211s
- 545551 299563 3195.74178 15374 1231          - 3195.72036      -  10.6 1217s
- 548745 301657 3195.74178 15409 1231          - 3195.72036      -  10.6 1222s
- 552049 302038 3195.74178 15444 1231          - 3195.72036      -  10.6 1226s
- 552608 304139 3195.74178 15452 1211          - 3195.72036      -  10.6 1232s
- 555923 306244 3195.74178 15488 1231          - 3195.72036      -  10.6 1239s
- 559248 308370 3195.74178 15524 1211          - 3195.72036      -  10.6 1244s
- 562546 310557 3195.74178 15560 1231          - 3195.72036      -  10.6 1250s
- 565747 312730 3195.74178 15596 1231          - 3195.72036      -  10.6 1256s
- 568928 314858 3195.74178 15631 1231          - 3195.72036      -  10.6 1262s
- 572074 316971 3195.74178 15666 1231          - 3195.72036      -  10.6 1267s
- 575207 319123 infeasible 15701               - 3195.72036      -  10.6 1273s
- 578321 321271 3195.74178 15737 1211          - 3195.72036      -  10.6 1279s
- 581467 323388 3195.74178 15773 1232          - 3195.72036      -  10.6 1284s
- 583385 323388 3195.72036 5021 1182          - 3195.72036      -  10.6 1285s
- 584604 325493 3195.74178 15808 1211          - 3195.72036      -  10.6 1291s
- 587731 327596 3195.74178 15844 1232          - 3195.72036      -  10.6 1297s
- 590854 329688 infeasible 15879               - 3195.72036      -  10.6 1303s
- 593966 331790 3195.74178 15916 1232          - 3195.72036      -  10.6 1309s
- 597092 333911 infeasible 15951               - 3195.72036      -  10.6 1316s
- 600153 334274 3195.74178 15987 1234          - 3195.72036      -  10.6 1320s
- 600686 336337 3195.74178 15997 1234          - 3195.72036      -  10.7 1326s
- 603599 338394 3195.74178 16033 1234          - 3195.72036      -  10.7 1332s
- 606500 340567 3195.74178 16068 1234          - 3195.72036      -  10.7 1338s
- 609469 342776 infeasible 16103               - 3195.72036      -  10.7 1344s
- 612470 344984 3195.74178 16138 1233          - 3195.72036      -  10.7 1349s
- 615472 347218 infeasible 16173               - 3195.72036      -  10.7 1356s
- 618502 349470 3195.74178 16209 1233          - 3195.72036      -  10.7 1362s
- 621534 351723 infeasible 16244               - 3195.72036      -  10.7 1368s
- 624577 354007 3195.74178 16280 1211          - 3195.72036      -  10.7 1374s
- 627535 356222 infeasible 16314               - 3195.72036      -  10.7 1381s
- 630610 358395 infeasible 16349               - 3195.72036      -  10.7 1387s
- 633867 360583 3195.74178 16385 1232          - 3195.72036      -  10.7 1394s
- 637083 362749 infeasible 16420               - 3195.72036      -  10.7 1400s
- 640369 364904 3195.74178 16456 1211          - 3195.72036      -  10.6 1406s
- 643624 365302 3195.74178 16491 1211          - 3195.72036      -  10.6 1410s
- 644182 367448 3195.74178 16500 1211          - 3195.72036      -  10.6 1416s
- 647450 369608 3195.74178 16536 1233          - 3195.72036      -  10.6 1423s
- 650734 371760 3195.74178 16571 1233          - 3195.72036      -  10.6 1429s
- 654004 373917 3195.74178 16607 1234          - 3195.72036      -  10.6 1436s
- 657269 376083 3195.74178 16642 1233          - 3195.72036      -  10.6 1442s
- 660521 378241 3195.74178 16679 1232          - 3195.72036      -  10.6 1448s
- 663799 380387 3195.74178 16715 1233          - 3195.72036      -  10.6 1454s
- 667071 382538 3195.74178 16752 1233          - 3195.72036      -  10.6 1460s
- 670350 384698 3195.74178 16789 1233          - 3195.72036      -  10.6 1466s
- 673586 386849 3195.74178 16825 1233          - 3195.72036      -  10.6 1472s
- 676861 388997 3195.74178 16862 1233          - 3195.72036      -  10.6 1478s
- 680133 391134 3195.74178 16898 1233          - 3195.72036      -  10.5 1484s
- 683398 393274 3195.74178 16935 1233          - 3195.72036      -  10.5 1490s
- 686664 395410 3195.74178 16971 1211          - 3195.72036      -  10.5 1496s
- 689926 397549 3195.74178 17006 1232          - 3195.72036      -  10.5 1502s
- 693161 398471 3195.74178 17043 1232          - 3195.72036      -  10.5 1507s
- 694573 400617 3195.74178 17060 1232          - 3195.72036      -  10.5 1513s
- 697835 402769 3195.74178 17096 1231          - 3195.72036      -  10.5 1519s
- 701091 404922 3195.74178 17132 1207          - 3195.72036      -  10.5 1525s
- 704242 407167 3195.74178 17167 1230          - 3195.72036      -  10.5 1532s
- 707359 409391 3195.74178 17203 1207          - 3195.72036      -  10.5 1539s
- 710447 411639 3195.74178 17239 1230          - 3195.72036      -  10.5 1545s
- 713563 413850 3195.74178 17274 1207          - 3195.72036      -  10.5 1551s
- 716642 416063 3195.74178 17310 1230          - 3195.72036      -  10.5 1558s
- 719721 418265 3195.74178 17346 1207          - 3195.72036      -  10.5 1564s
- 722793 420481 3195.74178 17381 1230          - 3195.72036      -  10.5 1570s
- 725881 421637 3195.74178 17417 1207          - 3195.72036      -  10.5 1575s
- 727503 423865 3195.74178 17434 1230          - 3195.72036      -  10.5 1581s
- 730605 426119 3195.74178 17470 1207          - 3195.72036      -  10.5 1587s
- 733735 428402 3195.74178 17506 1226          - 3195.72036      -  10.5 1594s
- 736896 430672 3195.74178 17542 1226          - 3195.72036      -  10.5 1600s
- 740044 432941 3195.74178 17579 1226          - 3195.72036      -  10.5 1606s
- 743191 435216 infeasible 17615               - 3195.72036      -  10.5 1612s
- 746344 437478 3195.74178 17652 1226          - 3195.72036      -  10.5 1619s
- 749484 439735 3195.74178 17689 1226          - 3195.72036      -  10.5 1625s
- 752613 442012 3195.74178 17725 1226          - 3195.72036      -  10.5 1631s
- 755768 442427 3195.74178 17762 1226          - 3195.72036      -  10.5 1635s
- 756309 444717 3195.74178 17771 1226          - 3195.72036      -  10.5 1641s
- 759489 447011 3195.74178 17807 1226          - 3195.72036      -  10.5 1648s
- 762663 449333 3195.74178 17844 1231          - 3195.72036      -  10.5 1654s
- 765859 451635 3195.74178 17891 1233          - 3195.72036      -  10.5 1661s
- 769069 453949 3195.74178 17940 1249          - 3195.72036      -  10.5 1667s
- 772293 456261 3195.74178 17989 1249          - 3195.72036      -  10.5 1673s
- 775529 458586 3195.74178 18038 1237          - 3195.72036      -  10.5 1679s
- 778778 460865 infeasible 18086               - 3195.72036      -  10.4 1686s
- 782011 463130 3195.74178 18135 1249          - 3195.72036      -  10.4 1692s
- 785230 465408 3195.74178 18184 1237          - 3195.72036      -  10.4 1699s
- 788476 467692 3195.74178 18232 1249          - 3195.72036      -  10.4 1705s
- 791720 469965 3195.74178 18279 1237          - 3195.72036      -  10.4 1711s
- 794957 472254 3195.74178 18327 1249          - 3195.72036      -  10.4 1716s
- 798206 474450 3195.74178 18376 1249          - 3195.72036      -  10.4 1723s
- 801394 476626 3195.74178 18426 1249          - 3195.72036      -  10.4 1729s
- 804562 477031 3195.74178 18475 1249          - 3195.72036      -  10.4 1733s
- 805121 479229 3195.74178 18485 1237          - 3195.72036      -  10.4 1739s
- 808311 481417 3195.74178 18535 1249          - 3195.72036      -  10.4 1745s
- 811495 483595 3195.74178 18583 1237          - 3195.72036      -  10.4 1751s
- 814677 485795 3195.74178 18632 1249          - 3195.72036      -  10.4 1758s
- 817875 488017 3195.74178 18680 1237          - 3195.72036      -  10.4 1764s
- 821051 490207 3195.74178 18728 1249          - 3195.72036      -  10.4 1770s
- 824239 492405 3195.74178 18776 1237          - 3195.72036      -  10.4 1776s
- 827437 494578 3195.74178 18824 1237          - 3195.72036      -  10.4 1783s
- 830614 496682 3195.74178 18872 1249          - 3195.72036      -  10.4 1789s
- 833722 498826 3195.74178 18921 1249          - 3195.72036      -  10.4 1796s
- 836860 500973 3195.74178 18970 1249          - 3195.72036      -  10.4 1801s
- 840015 503121 3195.74178 19020 1249          - 3195.72036      -  10.4 1807s
- 843155 505275 infeasible 19069               - 3195.72036      -  10.4 1814s
- 846297 507445 3195.74178 19118 1249          - 3195.72036      -  10.4 1821s
- 849477 509606 3195.74178 19167 1249          - 3195.72036      -  10.4 1827s
- 852640 510006 3195.74178 19216 1249          - 3195.72036      -  10.4 1831s
- 853190 512164 infeasible 19225               - 3195.72036      -  10.4 1837s
- 856342 514294 3195.74178 19274 1249          - 3195.72036      -  10.4 1843s
- 859558 516496 infeasible 19322               - 3195.72036      -  10.4 1849s
- 862760 518686 3195.74178 19371 1250          - 3195.72036      -  10.4 1856s
- 865952 520873 3195.74178 19420 1250          - 3195.72036      -  10.4 1862s
- 869133 523070 infeasible 19467               - 3195.72036      -  10.4 1868s
- 872292 525357 infeasible 19516               - 3195.72036      -  10.4 1874s
- 875377 527667 infeasible 19565               - 3195.72036      -  10.4 1881s
- 878471 530056 3195.74178 19614 1251          - 3195.72036      -  10.4 1887s
- 881624 532448 3195.74178 19664 1251          - 3195.72036      -  10.4 1894s
- 884790 534831 3195.74178 19713 1251          - 3195.72036      -  10.4 1901s
- 887943 537212 3195.74178 19762 1251          - 3195.72036      -  10.4 1907s
- 891104 539604 3195.74178 19811 1251          - 3195.72036      -  10.4 1914s
- 894260 541990 3195.74178 19860 1251          - 3195.72036      -  10.4 1920s
- 897424 544379 3195.74178 19908 1237          - 3195.72036      -  10.4 1926s
- 900557 544806 infeasible 19956               - 3195.72036      -  10.4 1930s
- 901104 547211 3195.74178 19966 1237          - 3195.72036      -  10.4 1937s
- 904249 549593 3195.74178 20015 1251          - 3195.72036      -  10.4 1943s
- 907383 551972 3195.74178 20062 1237          - 3195.72036      -  10.4 1950s
- 910518 554364 3195.74178 20111 1237          - 3195.72036      -  10.4 1956s
- 913642 556750 3195.74178 20161 1251          - 3195.72036      -  10.4 1961s
- 916776 559142 3195.74178 20210 1251          - 3195.72036      -  10.4 1967s
- 919908 561544 3195.74178 20259 1251          - 3195.72036      -  10.4 1974s
- 923020 563921 infeasible 20308               - 3195.72036      -  10.4 1980s
- 926147 566326 3195.74178 20357 1251          - 3195.72036      -  10.4 1985s
- 929296 568729 3195.74178 20406 1251          - 3195.72036      -  10.4 1991s
- 932431 571098 infeasible 20455               - 3195.72036      -  10.4 1999s
- 935556 573492 3195.74178 20504 1251          - 3195.72036      -  10.4 2005s
- 938510 575991 3195.74178 20553 1251          - 3195.72036      -  10.4 2012s
- 941525 578476 3195.74178 20602 1252          - 3195.72036      -  10.4 2019s
- 944502 579320 3195.74178 20651 1252          - 3195.72036      -  10.4 2023s
- 945522 581805 3195.74178 20668 1252          - 3195.72036      -  10.4 2030s
- 948495 584307 3195.74178 20715 1236          - 3195.72036      -  10.4 2036s
- 951491 586802 3195.74178 20765 1252          - 3195.72036      -  10.4 2043s
- 954480 589311 3195.74178 20816 1252          - 3195.72036      -  10.4 2053s
- 957483 591823 3195.74178 20867 1252          - 3195.72036      -  10.4 2059s
- 960499 594339 3195.74178 20918 1252          - 3195.72036      -  10.4 2071s
- 963509 596844 3195.74178 20968 1252          - 3195.72036      -  10.4 2077s
- 966512 599361 infeasible 21017               - 3195.72036      -  10.4 2090s
- 969529 601859 3195.74178 21068 1252          - 3195.72036      -  10.4 2096s
- 972543 604319 infeasible 21117               - 3195.72036      -  10.4 2103s
- 975521 606819 3195.74178 21167 1236          - 3195.72036      -  10.4 2109s
- 978529 608528 3195.74178 21216 1252          - 3195.72036      -  10.4 2116s
- 980592 611012 3195.74178 21251 1252          - 3195.72036      -  10.4 2122s
- 983592 613505 3195.74178 21301 1236          - 3195.72036      -  10.4 2129s
- 986593 616021 3195.74178 21349 1252          - 3195.72036      -  10.4 2136s
- 989621 618491 3195.74178 21397 1236          - 3195.72036      -  10.4 2142s
- 992767 620963 3195.74178 21447 1236          - 3195.72036      -  10.4 2148s
- 995993 621395 infeasible 21497               - 3195.72036      -  10.4 2153s
- 996555 623839 3195.74178 21507 1236          - 3195.72036      -  10.4 2159s
- 999765 626294 3195.74178 21558 1236          - 3195.72036      -  10.4 2166s
- 1002986 628725 3195.74178 21608 1236          - 3195.72036      -  10.4 2173s
- 1006183 631203 3195.74178 21659 1236          - 3195.72036      -  10.4 2180s
- 1009423 633658 3195.74178 21709 1252          - 3195.72036      -  10.4 2187s
- 1012646 636096 3195.74178 21759 1252          - 3195.72036      -  10.4 2193s
- 1015948 638500 3195.74178 21810 1252          - 3195.72036      -  10.4 2200s
- 1019220 640918 infeasible 21859               - 3195.72036      -  10.4 2207s
- 1022512 643344 3195.74178 21909 1252          - 3195.72036      -  10.4 2213s
- 1025808 645759 3195.74178 21959 1236          - 3195.72036      -  10.4 2220s
- 1029091 648175 3195.74178 22009 1252          - 3195.72036      -  10.4 2227s
- 1032371 650590 3195.74178 22050 1251          - 3195.72036      -  10.4 2235s
- 1035654 653006 3195.74178 22100 1251          - 3195.72036      -  10.4 2241s
- 1038938 655415 3195.74178 22152 1252          - 3195.72036      -  10.4 2249s
- 1042225 656088 3195.74178 22205 1252          - 3195.72036      -  10.4 2254s
- 1043136 658507 3195.74178 22218 1237          - 3195.72036      -  10.4 2260s
- 1046427 660936 3195.74178 22271 1237          - 3195.72036      -  10.4 2267s
- 1049732 663396 infeasible 22322               - 3195.72036      -  10.3 2273s
- 1053062 665854 3195.74178 22375 1252          - 3195.72036      -  10.3 2279s
- 1056400 668315 infeasible 22425               - 3195.72036      -  10.3 2285s
- 1059739 670777 3195.74178 22476 1252          - 3195.72036      -  10.3 2292s
- 1063069 673230 3195.74178 22526 1252          - 3195.72036      -  10.3 2297s
- 1066394 675684 3195.74178 22577 1251          - 3195.72036      -  10.3 2304s
- 1069716 678132 3195.74178 22627 1251          - 3195.72036      -  10.3 2310s
- 1073034 680586 3195.74178 22678 1251          - 3195.72036      -  10.3 2316s
- 1076352 683037 3195.74178 22728 1251          - 3195.72036      -  10.3 2323s
- 1079677 685525 3195.74178 22777 1251          - 3195.72036      -  10.3 2329s
- 1082875 688034 3195.74178 22828 1251          - 3195.72036      -  10.3 2336s
- 1086058 688737 3195.74178 22880 1251          - 3195.72036      -  10.3 2340s
- 1086949 691253 3195.74178 22894 1251          - 3195.72036      -  10.3 2347s
- 1090135 693769 3195.74178 22945 1251          - 3195.72036      -  10.3 2353s
- 1093325 696278 3195.74178 22995 1251          - 3195.72036      -  10.3 2360s
- 1096526 698730 infeasible 23054               - 3195.72036      -  10.3 2367s
- 1099864 701136 infeasible 23181               - 3195.72036      -  10.3 2373s
- 1103160 703478 infeasible 23308               - 3195.72036      -  10.3 2380s
- 1106432 705843 infeasible 23435               - 3195.72036      -  10.3 2387s
- 1109717 708212 infeasible 23562               - 3195.72036      -  10.3 2394s
- 1112998 710569 infeasible 23689               - 3195.72036      -  10.3 2401s
- 1116283 712933 infeasible 23816               - 3195.72036      -  10.3 2407s
- 1119571 715287 infeasible 23943               - 3195.72036      -  10.3 2414s
- 1122845 717558 infeasible 24070               - 3195.72036      -  10.3 2421s
- 1126090 719906 infeasible 24197               - 3195.72036      -  10.3 2428s
- 1129374 721126 infeasible 24324               - 3195.72036      -  10.3 2434s
- 1131068 723520 infeasible 24386               - 3195.72036      -  10.3 2440s
- 1134406 725920 infeasible 24513               - 3195.72036      -  10.3 2447s
- 1137748 728316 infeasible 24640               - 3195.72036      -  10.3 2454s
- 1141094 730699 infeasible 24767               - 3195.72036      -  10.3 2461s
- 1144435 733093 infeasible 24894               - 3195.72036      -  10.3 2467s
- 1147763 735465 infeasible 25021               - 3195.72036      -  10.3 2474s
- 1151073 737888 3195.74178 25144 1251          - 3195.72036      -  10.3 2482s
- 1154246 740319 3195.74178 25198 1251          - 3195.72036      -  10.3 2489s
- 1157413 742746 3195.74178 25252 1251          - 3195.72036      -  10.3 2495s
- 1160584 743265 3195.74178 25306 1251          - 3195.72036      -  10.3 2500s
- 1161263 745701 3195.74178 25317 1251          - 3195.72036      -  10.3 2506s
- 1164451 748145 3195.74178 25371 1251          - 3195.72036      -  10.3 2513s
- 1167645 750625 3195.74178 25425 1251          - 3195.72036      -  10.3 2520s
- 1170815 753180 3195.74178 25479 1251          - 3195.72036      -  10.3 2527s
- 1173866 755781 3195.74178 25533 1251          - 3195.72036      -  10.3 2534s
- 1176957 758376 3195.74178 25587 1251          - 3195.72036      -  10.3 2542s
- 1180032 760954 3195.74178 25639 1251          - 3195.72036      -  10.3 2548s
- 1183106 763546 3195.74178 25691 1251          - 3195.72036      -  10.3 2555s
- 1186172 766134 3195.74178 25745 1251          - 3195.72036      -  10.3 2562s
- 1189252 768728 infeasible 25799               - 3195.72036      -  10.3 2568s
- 1192322 771324 infeasible 25853               - 3195.72036      -  10.3 2575s
- 1195386 773909 3195.74178 25907 1251          - 3195.72036      -  10.3 2582s
- 1198443 776501 3195.74178 25961 1251          - 3195.72036      -  10.3 2589s
- 1201511 779076 infeasible 26015               - 3195.72036      -  10.3 2596s
- 1204568 781422 infeasible 26069               - 3195.72036      -  10.3 2602s
- 1207358 783970 infeasible 26119               - 3195.72036      -  10.3 2609s
- 1210326 785084 infeasible 26173               - 3195.72036      -  10.3 2615s
- 1211626 787609 3195.74178 26198 1237          - 3195.72036      -  10.3 2622s
- 1214549 790149 3195.74178 26253 1250          - 3195.72036      -  10.3 2629s
- 1217489 792715 3195.74178 26308 1237          - 3195.72036      -  10.3 2636s
- 1220459 795244 3195.74178 26363 1250          - 3195.72036      -  10.3 2643s
- 1223390 797806 3195.74178 26417 1250          - 3195.72036      -  10.3 2651s
- 1226344 800352 3195.74178 26472 1237          - 3195.72036      -  10.3 2657s
- 1229286 802888 3195.74178 26525 1250          - 3195.72036      -  10.3 2665s
- 1232170 805423 3195.74178 26579 1250          - 3195.72036      -  10.3 2672s
- 1235051 807960 infeasible 26633               - 3195.72036      -  10.3 2679s
- 1237946 810488 3195.74178 26688 1237          - 3195.72036      -  10.3 2686s
- 1240810 811719 3195.74178 26743 1250          - 3195.72036      -  10.4 2691s
- 1242219 814250 infeasible 26769               - 3195.72036      -  10.4 2698s
- 1245128 816768 3195.74178 26825 1250          - 3195.72036      -  10.4 2704s
- 1247998 819286 3195.74178 26880 1250          - 3195.72036      -  10.4 2710s
- 1250850 821805 3195.74178 26934 1251          - 3195.72036      -  10.4 2716s
- 1253743 824402 3195.74178 26989 1237          - 3195.72036      -  10.4 2723s
- 1256778 826992 3195.74178 27044 1251          - 3195.72036      -  10.4 2730s
- 1259812 829567 infeasible 27098               - 3195.72036      -  10.4 2737s
- 1262837 832142 3195.74178 27154 1251          - 3195.72036      -  10.4 2743s
- 1265844 834718 infeasible 27208               - 3195.72036      -  10.4 2750s
- 1268868 836362 3195.74178 27264 1251          - 3195.72036      -  10.4 2755s
- 1270798 838951 3195.74178 27298 1251          - 3195.72036      -  10.4 2762s
- 1273819 841548 infeasible 27352               - 3195.72036      -  10.4 2769s
- 1276872 844134 infeasible 27406               - 3195.72036      -  10.4 2776s
- 1279902 846722 infeasible 27460               - 3195.72036      -  10.4 2783s
- 1282934 849300 3195.74178 27516 1251          - 3195.72036      -  10.4 2790s
- 1285966 851889 3195.74178 27572 1251          - 3195.72036      -  10.4 2797s
- 1289113 854215 3195.74178 27627 1237          - 3195.72036      -  10.4 2803s
- 1291965 856881 3195.74178 27680 1251          - 3195.72036      -  10.4 2810s
- 1295083 858391 3195.74178 27735 1237          - 3195.72036      -  10.4 2817s
- 1296843 861086 3195.74178 27765 1237          - 3195.72036      -  10.4 2824s
- 1299986 863785 infeasible 27820               - 3195.72036      -  10.4 2831s
- 1303137 866482 3195.74178 27876 1251          - 3195.72036      -  10.4 2838s
- 1306266 869167 3195.74178 27931 1237          - 3195.72036      -  10.4 2845s
- 1309403 871860 3195.74178 27986 1251          - 3195.72036      -  10.4 2852s
- 1312546 874549 3195.74178 28041 1237          - 3195.72036      -  10.4 2859s
- 1315673 877246 3195.74178 28096 1250          - 3195.72036      -  10.4 2865s
- 1318814 879942 3195.74178 28152 1250          - 3195.72036      -  10.4 2872s
- 1321952 880397 infeasible 28206               - 3195.72036      -  10.4 2877s
- 1322499 883097 3195.74178 28217 1237          - 3195.72036      -  10.4 2883s
- 1325663 885804 infeasible 28272               - 3195.72036      -  10.4 2890s
- 1328808 888504 3195.74178 28325 1251          - 3195.72036      -  10.4 2897s
- 1331952 891183 3195.74178 28378 1237          - 3195.72036      -  10.4 2903s
- 1335075 893853 3195.74178 28434 1237          - 3195.72036      -  10.4 2909s
- 1338183 896534 3195.74178 28490 1237          - 3195.72036      -  10.4 2915s
- 1341306 899215 infeasible 28545               - 3195.72036      -  10.4 2922s
- 1344443 901896 infeasible 28601               - 3195.72036      -  10.4 2929s
- 1347562 904583 3195.74178 28657 1251          - 3195.72036      -  10.4 2935s
- 1350687 907294 3195.74178 28713 1251          - 3195.72036      -  10.4 2941s
- 1353842 910019 3195.74178 28768 1237          - 3195.72036      -  10.4 2947s
- 1356991 912751 infeasible 28823               - 3195.72036      -  10.4 2954s
- 1360143 915485 3195.74178 28879 1251          - 3195.72036      -  10.4 2961s
- 1363305 918212 3195.74178 28935 1251          - 3195.72036      -  10.4 2967s
- 1366456 920942 3195.74178 28990 1237          - 3195.72036      -  10.4 2974s
- 1369608 921400 3195.74178 29045 1251          - 3195.72036      -  10.4 2979s
- 1370158 924111 3195.74178 29056 1237          - 3195.72036      -  10.4 2986s
- 1373305 926819 3195.74178 29111 1251          - 3195.72036      -  10.4 2993s
- 1376421 929522 3195.74178 29167 1251          - 3195.72036      -  10.4 3000s
- 1379538 932241 3195.74178 29223 1251          - 3195.72036      -  10.4 3007s
- 1382679 934888 3195.74178 29279 1251          - 3195.72036      -  10.4 3014s
- 1385758 937528 3195.74178 29333 1251          - 3195.72036      -  10.4 3020s
- 1388834 940175 3195.74178 29388 1237          - 3195.72036      -  10.4 3026s
- 1391909 942823 3195.74178 29443 1251          - 3195.72036      -  10.4 3033s
- 1394995 945486 3195.74178 29499 1251          - 3195.72036      -  10.4 3040s
- 1398092 948147 3195.74178 29555 1251          - 3195.72036      -  10.4 3046s
- 1401187 950801 3195.74178 29611 1251          - 3195.72036      -  10.4 3055s
- 1404269 953478 3195.74178 29667 1251          - 3195.72036      -  10.4 3061s
- 1407390 956168 infeasible 29722               - 3195.72036      -  10.4 3068s
- 1410562 958911 3195.74178 29778 1251          - 3195.72036      -  10.4 3074s
- 1413723 961632 3195.74178 29834 1251          - 3195.72036      -  10.4 3080s
- 1416860 962091 3195.74178 29890 1251          - 3195.72036      -  10.4 3085s
- 1417409 964783 infeasible 29900               - 3195.72036      -  10.5 3091s
- 1420525 967474 3195.74178 29956 1251          - 3195.72036      -  10.5 3098s
- 1423638 970188 3195.74178 30012 1251          - 3195.72036      -  10.5 3104s
- 1426794 972902 3195.74178 30068 1251          - 3195.72036      -  10.5 3111s
- 1429958 975584 3195.74178 30124 1251          - 3195.72036      -  10.5 3118s
- 1433068 978244 3195.74178 30180 1251          - 3195.72036      -  10.5 3125s
- 1436268 980912 3195.74178 30236 1251          - 3195.72036      -  10.5 3131s
- 1439596 983597 3195.74178 30235 1201          - 3195.72036      -  10.5 3138s
- 1442917 986273 3195.74178 30237 1177          - 3195.72036      -  10.5 3145s
- 1446245 988953 3195.72036 14372 1246          - 3195.72036      -  10.5 3151s
- 1449565 991601 3195.72036 14404 1226          - 3195.72036      -  10.5 3157s
- 1452851 994270 3195.72036 14421 1206          - 3195.72036      -  10.5 3165s
- 1456154 996913 3195.72036 14457 1229          - 3195.72036      -  10.5 3171s
- 1459449 999580 3195.72036 14482 1229          - 3195.72036      -  10.5 3178s
- 1462756 1002243 3195.72036 14510 1229          - 3195.72036      -  10.5 3184s
- 1466065 1002697 3195.72036 14536 1229          - 3195.72036      -  10.5 3188s
- 1466623 1005350 3195.72036 14534 1209          - 3195.72036      -  10.5 3194s
- 1469912 1007996 3195.72036 14571 1229          - 3195.72036      -  10.5 3201s
- 1473214 1010641 3195.72036 14596 1229          - 3195.72036      -  10.5 3208s
- 1476437 1013332 3195.72036 14624 1229          - 3195.72036      -  10.5 3215s
- 1479620 1015978 3195.72036 14650 1229          - 3195.72036      -  10.5 3221s
- 1482780 1018544 3195.72036 14678 1229          - 3195.72036      -  10.5 3227s
- 1485850 1021166 3195.72036 14704 1229          - 3195.72036      -  10.5 3235s
- 1488974 1023746 3195.72036 14722 1209          - 3195.72036      -  10.5 3243s
- 1492092 1026323 3195.72036 14758 1229          - 3195.72036      -  10.5 3251s
- 1495201 1028912 3195.72036 14776 1210          - 3195.72036      -  10.5 3257s
- 1498314 1031465 3195.72036 14812 1229          - 3195.72036      -  10.5 3264s
- 1501391 1034005 3195.72036 14830 1210          - 3195.72036      -  10.5 3270s
- 1504485 1036585 3195.72036 14866 1229          - 3195.72036      -  10.5 3277s
- 1507609 1039116 3195.72036 14884 1210          - 3195.72036      -  10.5 3284s
- 1510670 1041526 3195.72036 14920 1229          - 3195.72036      -  10.5 3290s
- 1513586 1043761 3195.72036 14936 1210          - 3195.72036      -  10.5 3296s
- 1516339 1046190 3195.72036 14969 1230          - 3195.72036      -  10.5 3303s
- 1519254 1048507 3195.72036 14996 1229          - 3195.72036      -  10.5 3310s
- 1522041 1050811 3195.72036 15021 1229          - 3195.72036      -  10.5 3316s
- 1524779 1053147 3195.72036 15046 1229          - 3195.72036      -  10.5 3322s
- 1527569 1053592 3195.72036 15073 1229          - 3195.72036      -  10.5 3326s
- 1528110 1056060 3195.72036 15071 1211          - 3195.72036      -  10.5 3334s
- 1530832 1058547 3195.72036 15107 1226          - 3195.72036      -  10.6 3341s
- 1533791 1061052 3195.72036 15133 1227          - 3195.72036      -  10.6 3347s
- 1536686 1063584 3195.72036 15158 1228          - 3195.72036      -  10.6 3354s
- 1539460 1066093 3195.72036 15186 1228          - 3195.72036      -  10.6 3362s
- 1542237 1068551 3195.72036 15212 1228          - 3195.72036      -  10.6 3368s
- 1545001 1071001 3195.72036 15240 1229          - 3195.72036      -  10.6 3375s
- 1547715 1073435 3195.72036 15266 1229          - 3195.72036      -  10.6 3382s
- 1550453 1075845 3195.72036 15294 1229          - 3195.72036      -  10.6 3389s
- 1553159 1078260 3195.72036 15320 1229          - 3195.72036      -  10.6 3396s
- 1555840 1080708 3195.72036 15348 1229          - 3195.72036      -  10.6 3403s
- 1558582 1083167 3195.72036 15374 1229          - 3195.72036      -  10.7 3410s
- 1561259 1085650 3195.72036 15402 1229          - 3195.72036      -  10.7 3417s
- 1563966 1088047 3195.72036 15428 1229          - 3195.72036      -  10.7 3424s
- 1566595 1088492 3195.72036 15446 1210          - 3195.72036      -  10.7 3429s
- 1567138 1090954 3195.72036 15463 1228          - 3195.72036      -  10.7 3436s
- 1569836 1093292 3195.72036 15488 1228          - 3195.72036      -  10.7 3443s
- 1572466 1095782 3195.72036 15516 1228          - 3195.72036      -  10.7 3450s
- 1575322 1098319 3195.72036 15542 1228          - 3195.72036      -  10.7 3457s
- 1578259 1100843 3195.72036 15560 1210          - 3195.72036      -  10.7 3464s
- 1581173 1103387 3195.72036 15596 1227          - 3195.72036      -  10.8 3470s
- 1584115 1105942 3195.72036 15623 1227          - 3195.72036      -  10.8 3478s
- 1587074 1108534 3195.72036 15650 1227          - 3195.72036      -  10.8 3486s
- 1590056 1111052 3195.72036 15677 1227          - 3195.72036      -  10.8 3492s
- 1592944 1113656 3195.72036 15704 1227          - 3195.72036      -  10.8 3500s
- 1595926 1116251 3195.72036 15722 1210          - 3195.72036      -  10.8 3507s
- 1598907 1118849 3195.72036 15758 1228          - 3195.72036      -  10.8 3514s
- 1601891 1121447 3195.72036 15776 1210          - 3195.72036      -  10.8 3521s
- 1604881 1124024 3195.72036 15812 1228          - 3195.72036      -  10.8 3528s
- 1607838 1124495 3195.72036 15839 1228          - 3195.72036      -  10.8 3533s
- 1608377 1127082 3195.72036 15846 1228          - 3195.72036      -  10.8 3539s
- 1611354 1129675 3195.72036 15872 1228          - 3195.72036      -  10.8 3546s
- 1614335 1132259 3195.72036 15899 1228          - 3195.72036      -  10.8 3553s
- 1617303 1134822 3195.72036 15926 1228          - 3195.72036      -  10.8 3559s
- 1620276 1137270 3195.72036 15954 1228          - 3195.72036      -  10.8 3567s
- 1623124 1139715 3195.72036 15980 1229          - 3195.72036      -  10.9 3573s
- 1625957 1142079 3195.72036 16008 1228          - 3195.72036      -  10.9 3579s
- 1628667 1144491 3195.72036 16034 1228          - 3195.72036      -  10.9 3586s
- 1631403 1146903 3195.72036 16062 1228          - 3195.72036      -  10.9 3593s
- 1634167 1149284 3195.72036 16088 1228          - 3195.72036      -  10.9 3597s
- 1636882 1151559 3195.72036 16116 1228          - 3195.72036      -  10.9 3600s
-
-Cutting planes:
-  RLT: 396
-
-Explored 1639483 nodes (17913163 simplex iterations) in 3600.18 seconds (257.12 work units)
-Thread count was 32 (of 64 available processors)
-
-Solution count 0
-
-Time limit reached
-Best objective -, best bound 3.195720361371e+03, gap -
-Gurobi 12.0.1: time limit, without a feasible solution
-1.79132e+07 simplex iterations
-1.63948e+06 branching nodes
-q [*,*]
-:         1              2             3             4             5         :=
-2      .             .            6.13453e-05    .             .
-3      .             .             .            3.25921e-05    .
-4      .             .             .             .            4.20575e-05
-12     .             .             .            0.000819465    .
-17     .            7.86824e-05    .             .             .
-36   -0.000979391    .             .             .             .
-37    0.03391        .             .             .             .
-
-:         6              7              8              9              10     :=
-5    -7.3865e-05      .              .              .              .
-6      .            -9.15543e-05     .              .              .
-18     .              .              .              .            -0.00302682
-21    0.000772311     .              .              .              .
-22     .             9.20505e-05     .              .              .
-24     .              .            -0.000800923     .              .
-25     .              .             0.00159677      .              .
-28     .              .              .            -2.89965e-05     .
-30     .              .              .             2.97631e-05     .
-31     .              .              .              .             0.000121412
-
-:         11            12            13            14             15        :=
-3    -0.000991247    .             .              .             .
-5      .             .           -0.000514077     .             .
-10    0.00799732     .             .              .             .
-12     .             .            3.87899e-05     .             .
-13     .             .             .            -0.00163529     .
-19     .            0.00176826     .              .             .
-20     .             .             .              .           -5.06743e-05
-26     .             .             .              .            3.63322e-05
-
-:         16            17            18            19           20         :=
-1      .            0.00136452     .             .            .
-2      .             .           -0.00102266     .            .
-11     .             .             .            0.00370303    .
-14     .             .             .             .           0.000824555
-15   -0.000573926    .             .             .            .
-17     .             .            1.58404e-05    .            .
-19     .             .             .             .           5.47709e-05
-27    0.0116239      .             .             .            .
-
-:        21             22             23             24            25       :=
-7      .             .              .            -0.000259504     .
-14   -0.00299984     .              .              .              .
-15     .           -0.000540416     .              .              .
-16     .             .              .              .             0.00968997
-21     .           -0.00473215      .              .              .
-22     .             .            -0.00633462      .              .
-23     .             .              .              .            -0.0073232
-24     .             .            -0.000128581     .              .
-
-:        26            27            28             29            30         :=
-8     .             .            0.000215846     .             .
-11   0.00155305     .             .              .             .
-16    .             .             .             0.000150045    .
-26    .           -0.000173282    .              .             .
-28    .             .             .            -5.51573e-05    .
-29    .             .             .              .            5.48179e-05
-32    .            0.0132172      .              .             .
-
-:       31           32           33            34            35         :=
-1    0.0310761     .            .             .            .
-10    .          -0.0120127     .             .            .
-29    .            .          -0.00057993     .            .
-30    .            .            .             .          -0.000514945
-31    .            .            .            0.0300547     .
-32    .            .          -0.02626        .            .
-33    .            .            .           -0.0276099     .
-34    .            .            .             .           0.00170479
-
-:         36         :=
-9    -0.000539233
-35    2.98421e-05
-;
-
-eps [*,*]
-:         1             2             3             4             5         :=
-2     .             .            1.10541e-08    .             .
-3     .             .             .            6.58447e-09    .
-4     .             .             .             .            6.86963e-09
-12    .             .             .            1.71665e-08    .
-17    .            5.97258e-09    .             .             .
-36   8.14739e-09    .             .             .             .
-37   1.46416e-07    .             .             .             .
-
-:         6             7             8             9            10         :=
-5    6.33089e-09    .             .             .             .
-6     .            1.03277e-08    .             .             .
-18    .             .             .             .            1.33887e-08
-21   8.16098e-09    .             .             .             .
-22    .            6.28426e-09    .             .             .
-24    .             .            1.04648e-08    .             .
-25    .             .            9.87787e-09    .             .
-28    .             .             .            8.98697e-09    .
-30    .             .             .            1.08437e-08    .
-31    .             .             .             .            8.83346e-09
-
-:        11            12            13            14            15         :=
-3    8.4419e-09     .             .             .             .
-5     .             .            1.39907e-08    .             .
-10   9.89708e-09    .             .             .             .
-12    .             .            8.2953e-09     .             .
-13    .             .             .            1.14397e-08    .
-19    .            1.22067e-08    .             .             .
-20    .             .             .             .            1.16379e-08
-26    .             .             .             .            1.13619e-08
-
-:        16            17            18            19            20         :=
-1     .            1.04551e-08    .             .             .
-2     .             .            9.35985e-09    .             .
-11    .             .             .            9.36854e-09    .
-14    .             .             .             .            2.07351e-08
-15   8.79689e-09    .             .             .             .
-17    .             .            7.68919e-09    .             .
-19    .             .             .             .            7.46131e-09
-27   1.22313e-08    .             .             .             .
-
-:        21            22            23            24           25         :=
-7     .             .             .            8.3523e-09    .
-14   1.53482e-08    .             .             .            .
-15    .            1.3667e-08     .             .            .
-16    .             .             .             .           1.35347e-08
-21    .            9.87498e-09    .             .            .
-22    .             .            1.19402e-08    .            .
-23    .             .             .             .           1.42215e-08
-24    .             .            8.14301e-09    .            .
-
-:        26            27            28           29            30        :=
-8     .             .            9.9817e-09    .             .
-11   1.34459e-08    .             .            .             .
-16    .             .             .           1.03191e-08    .
-26    .            8.8633e-09     .            .             .
-28    .             .             .           9.82193e-09    .
-29    .             .             .            .            1.6549e-08
-32    .            1.38836e-08    .            .             .
-
-:        31            32           33            34            35         :=
-1    1.41878e-08    .            .             .             .
-10    .            1.7746e-08    .             .             .
-29    .             .           8.05885e-09    .             .
-30    .             .            .             .            1.10426e-08
-31    .             .            .            1.60614e-08    .
-32    .             .           9.9899e-09     .             .
-33    .             .            .            2.1559e-08     .
-34    .             .            .             .            9.27721e-09
-
-:        36         :=
-9    1.14507e-08
-35   1.34572e-08
-;
-
-eps:  1.045505954278339e-08
-q[17,2]: 7.868244795314282e-05
-q[2,3]: 6.134529967097963e-05
-q[3,4]: 3.259210465692719e-05
-q[4,5]: 4.205751610029875e-05
-q[5,6]: -7.386501422265639e-05
-q[6,7]: -9.155431469214829e-05
-q[7,24]: -0.00025950385247938955
-q[24,8]: -0.0008009230416680163
-q[8,28]: 0.0002158462544804719
-q[28,9]: -2.8996508009020607e-05
-q[9,36]: -0.0005392334829752648
-q[36,1]: -0.0009793914370984343
-q[31,10]: 0.000121412150095742
-q[12,4]: 0.0008194654054492071
-q[3,11]: -0.0009912468010021332
-q[26,15]: 3.63322050793816e-05
-q[15,22]: -0.0005404158736699646
-q[22,7]: 9.205048912635657e-05
-q[5,13]: -0.0005140774615227273
-q[14,20]: 0.0008245547297744295
-q[20,15]: -5.067432201542952e-05
-q[15,16]: -0.0005739262390907894
-q[16,29]: 0.00015004513111540775
-q[29,30]: 5.4817853254478364e-05
-q[30,9]: 2.9763073662691828e-05
-q[17,18]: 1.5840386646023074e-05
-q[12,13]: 3.8789925889604106e-05
-q[19,20]: 5.477093810067808e-05
-q[21,6]: 0.0007723106695990895
-q[24,23]: -0.0001285808203396902
-q[26,27]: -0.00017328240683924445
-q[28,29]: -5.515725738204292e-05
-q[29,33]: -0.0005799299988619176
-q[30,35]: -0.0005149452471065228
-q[35,36]: 2.984206321572364e-05
-*******************************************************************************
-
-Constraints violation:
-
-
-Sum of constraints violation: 3.739798246473261e-10
-*******************************************************************************
-
-*******************************************************************************
-
-Absolute and relative violations between original and approximation constraint 2:
-
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
-+=================+==============+==========================+========================+======================+======================+
-| 1,17            |  0.00136452  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 1,31            |  0.0310761   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  6.13453e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,18            | -0.00102266  |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,4             |  3.25921e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,11            | -0.000991247 |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  4.20575e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 5,6             | -7.3865e-05  |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 5,13            | -0.000514077 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             | -9.15543e-05 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,24            | -0.000259504 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 8,28            |  0.000215846 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 9,36            | -0.000539233 |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 10,11           |  0.00799732  |                        0 |                      0 |                   -0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 10,32           | -0.0120127   |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 11,19           |  0.00370303  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 11,26           |  0.00155305  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 12,4            |  0.000819465 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 12,13           |  3.87899e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 13,14           | -0.00163529  |                       -0 |                     -0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 14,20           |  0.000824555 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 14,21           | -0.00299984  |                        0 |                      0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 15,16           | -0.000573926 |                       -0 |                     -0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 15,22           | -0.000540416 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 16,25           |  0.00968997  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 16,29           |  0.000150045 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 17,2            |  7.86824e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 17,18           |  1.58404e-05 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 18,10           | -0.00302682  |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 19,12           |  0.00176826  |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 19,20           |  5.47709e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 20,15           | -5.06743e-05 |                       -0 |                     -0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 21,6            |  0.000772311 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 21,22           | -0.00473215  |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 22,7            |  9.20505e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 22,23           | -0.00633462  |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 23,25           | -0.0073232   |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 24,8            | -0.000800923 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 24,23           | -0.000128581 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 25,8            |  0.00159677  |                       -0 |                     -0 |                   -0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 26,15           |  3.63322e-05 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 26,27           | -0.000173282 |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 27,16           |  0.0116239   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 28,9            | -2.89965e-05 |                        0 |                      0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 28,29           | -5.51573e-05 |                        0 |                      0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 29,30           |  5.48179e-05 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 29,33           | -0.00057993  |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 30,9            |  2.97631e-05 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 30,35           | -0.000514945 |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 31,10           |  0.000121412 |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 31,34           |  0.0300547   |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 32,27           |  0.0132172   |                        0 |                      0 |                   -0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 32,33           | -0.02626     |                       -0 |                     -0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 33,34           | -0.0276099   |                        0 |                      0 |                   -0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 34,35           |  0.00170479  |                        0 |                      0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 35,36           |  2.98421e-05 |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 36,1            | -0.000979391 |                        0 |                      0 |                    0 |                   -0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 37,1            |  0.03391     |                       -0 |                     -0 |                    0 |                    0 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-
-Sum of violation of original headloss constraint: 1.0558207086397431e-11
-Sum of violation of approx headloss constraint: 1.0556153173801874e-11
-
-Con2 sum of absolute violation between original function and approximate function: 1.4710455076283324e-14
-Con2 sum of relative violation between original function and approximate function: 2.1129976538300846e-14
-*******************************************************************************
-
-Total cost using gurobi: 22601.820302506563
-gurobi solve time: 3619.65 seconds
-*******************************************************************************
-
+     0     0 3195.71878    0  157          - 3195.71878      -     -    4s
+     0     0 3195.71878    0  157          - 3195.71878      -     -    4s
+     0     2 3195.71878    0  157          - 3195.71878      -     -   18s
+     7    16 5134.84606    3  154          - 3195.72952      -  45.1   20s
+    95   167 5578.45394    7  151          - 3195.84720      -   566   25s
+   805   663 4411.08645   20  159          - 3200.53511      -   190   30s
+  1998  1599 4417.96496   38  155          - 3200.53511      -   111   36s
+  3345  2727 infeasible   54               - 3222.95373      -  83.3   40s
+  3818  2868 4563.39781   15    0          - 3224.28101      -  82.1   45s
+  3819  2869 6050.77249   27    0          - 3224.28101      -  82.1   51s
+  3820  2870 4518.55534   41    0          - 3224.28101      -  82.0   57s
+  3821  2873 3224.28101   16  148          - 3224.28101      -  83.4   78s
+  3851  2923 3494.12804   20  147          - 3224.28101      -  83.0   80s
+  5235  3736 3224.28101   34  147          - 3224.28101      -  78.8   85s
+  6417  4315 5802.50564   43  148          - 3224.28101      -  82.2   90s
+  7540  4838 7852.74206   50  111          - 3224.28101      -  88.4   96s
+  9016  5613 8615.04792   77  112          - 3224.28101      -  92.0  100s
+ 10610  6491 12383.4496   90  125          - 3224.28101      -  93.8  106s
+ 12410  7304 14345.0344  105  120          - 3224.28101      -  93.4  110s
+ 14073  8720 18276.0535  114  125          - 3224.28101      -  97.4  115s
+ 14571  8743 18120.0109  117  107          - 3224.28101      -  97.7  138s

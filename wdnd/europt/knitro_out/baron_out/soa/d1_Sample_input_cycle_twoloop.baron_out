@@ -1,0 +1,350 @@
+Water Network: ../data/d1_Sample_input_cycle_twoloop.dat 
+
+Results of second order approximation of head loss constraint
+
+*******************************************************************************
+min_demand: 0.027777
+max_demand: 0.091666
+max_flow: 0.3111087
+eps: 1e-06
+Ipopt solver outputs: 
+
+Ipopt 3.14.13: outlev = 0
+expect_infeasible_problem = yes
+tol = 1e-8
+bound_relax_factor=0
+bound_push = 0.01
+bound_frac = 0.01
+nlp_scaling_method = none
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+total_cost: 417194.9525626991 
+
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using ipopt: 3.091850649026182e-16
+Total relative constraint violation using ipopt: 3.754915700124431e-09
+*******************************************************************************
+
+total_cost using ipopt: 417194.9525626991
+solve_time using ipopt: 0.24719999999999998
+*******************************************************************************
+
+baron solver outputs:
+
+eps: 1e-06 
+
+BARON 24.5.8 (2024.05.08): maxtime = 3600
+outlev = 1
+iisfind = 4
+lpsolver = cplex
+lsolver = conopt
+threads = 8
+===========================================================================
+ BARON version 24.12.21. Built: LNX-64 Sat Dec 21 23:17:18 EST 2024
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Puranik, Y. and N. V. Sahinidis, Deletion presolve for
+ accelerating infeasibility diagnosis in optimization models,
+ INFORMS Journal on Computing, 29:754-766, 2017.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Starting solution is feasible with a value of   417195.          
+ Doing local search
+ Preprocessing found feasible solution with value 417195.
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+          1           0.73    12MB     71254.9         417195.        8.79%
+constraint _scon[5]: Initial function value too large = 2.1E+12
+
+/opt/ampl/conopt: bad bound triple 114 in bounds file "boundsfile.9":
+	L = 190
+	x = 1812322210097.8613
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+*         8           1.89    12MB     71254.9         416705.       11.58%
+*        12           2.76    12MB     71254.9         403406.       14.61%
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+
+/opt/ampl/conopt: bad bound triple 114 in bounds file "boundsfile.14":
+	L = 190
+	x = 1812322210092.802
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+*       101           5.64    12MB     71254.9         403406.       15.30%
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+       5411          35.66    12MB     73600.0         403406.       25.18%
+       9697          65.66    12MB     74082.4         403406.       27.33%
+      13550          95.71    12MB     74082.4         403406.       28.53%
+      17380         125.71    12MB     74082.4         403406.       29.36%
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+      21557         155.74    12MB     74082.4         403406.       30.05%
+constraint _scon[2]: Initial function value too large = 4.9E+13
+constraint _scon[3]: Initial function value too large = 2.3E+13
+constraint _scon[4]: Initial function value too large = 1.6E+13
+constraint _scon[6]: Initial function value too large = 3.0E+12
+
+/opt/ampl/conopt: bad bound triple 114 in bounds file "boundsfile.24":
+	L = 190
+	x = 1812322210093.2742
+	U = 1e+10
+Surprise errno 4 ==> Interrupted system call
+      26072         185.74    12MB     74082.4         403406.       30.48%
+      30434         215.75    12MB     74082.4         403406.       31.04%
+      36342         245.76    22MB     74082.4         403406.       32.02%
+      43208         275.77    22MB     74082.4         403406.       33.10%
+      48964         305.79    22MB     74144.3         403406.       33.82%
+      55081         335.79    22MB     74195.4         403406.       34.68%
+      63504         365.79    22MB     74249.3         403406.       35.55%
+      71648         395.79    22MB     75632.9         403406.       36.47%
+      80076         425.80    22MB     76482.3         403406.       37.16%
+variable _svar[119]: Variable considered fixed at Lower Bound.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+      86927         455.80    22MB     76594.2         403406.       37.85%
+      93602         485.81    22MB     76655.3         403406.       38.34%
+constraint _scon[2]: Initial function value too large = 5.3E+13
+constraint _scon[3]: Initial function value too large = 2.3E+13
+constraint _scon[4]: Initial function value too large = 1.8E+13
+constraint _scon[6]: Initial function value too large = 2.9E+12
+     100387         515.81    32MB     76716.3         403406.       38.76%
+     107083         545.81    32MB     76766.1         403406.       39.20%
+     113803         575.82    32MB     77793.4         403406.       39.64%
+     120141         605.84    32MB     77845.5         403406.       40.04%
+     126834         635.85    32MB     92526.4         403406.       40.37%
+     134592         665.85    32MB     95479.4         403406.       40.43%
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+     143655         695.85    32MB     99582.7         403406.       40.55%
+     150089         725.86    32MB     101116.         403406.       40.83%
+constraint _scon[4]: Initial function value too large = 2.1E+13
+constraint _scon[6]: Initial function value too large = 3.1E+12
+variable _svar[119]: Variable considered fixed at Lower Bound and Initial value is moved.
+constraint _scon[14]: Infeasibility in pre-triangular part of model.
+variable _svar[120]: Infeasibility in pre-triangular part of model.
+     152998         755.86    32MB     101894.         403406.       41.02%
+     156943         785.87    32MB     102775.         403406.       41.25%
+     160821         815.87    32MB     103856.         403406.       41.52%
+     166107         845.88    32MB     105425.         403406.       41.89%
+     171431         875.89    32MB     106879.         403406.       42.24%
+     175550         905.89    32MB     108419.         403406.       42.61%
+     181104+        935.91    32MB     110638.         403406.       43.53%
+     187068         965.91    32MB     113662.         403406.       44.17%
+     192693         995.91    32MB     129470.         403406.       45.34%
+     195472        1025.92    32MB     145388.         403406.       46.51%
+     201599        1055.92    32MB     164692.         403406.       47.87%
+     206028        1085.93    32MB     168151.         403406.       48.47%
+     211966        1115.93    41MB     170259.         403406.       49.07%
+     219156        1145.93    41MB     171576.         403406.       49.27%
+     225539        1175.93    41MB     173808.         403406.       49.57%
+     231345        1205.93    41MB     176425.         403406.       49.73%
+     238033        1235.93    41MB     178660.         403406.       49.86%
+     244456        1265.94    41MB     181971.         403406.       50.06%
+     251120        1295.94    41MB     182358.         403406.       50.21%
+     257758        1325.96    41MB     182591.         403406.       50.27%
+     263903        1355.96    41MB     183433.         403406.       50.41%
+     269547        1385.96    41MB     184522.         403406.       50.60%
+     276664        1415.96    41MB     185398.         403406.       50.78%
+     283748        1445.96    41MB     186067.         403406.       50.98%
+     289743        1475.97    41MB     186590.         403406.       51.11%
+     296028        1505.97    41MB     188140.         403406.       51.27%
+     301354        1535.99    41MB     188342.         403406.       51.31%
+     307618        1565.99    41MB     189041.         403406.       51.42%
+     314477        1595.99    41MB     191020.         403406.       51.53%
+     323264        1625.99    41MB     191134.         403406.       51.55%
+     329966        1656.00    41MB     191838.         403406.       51.62%
+     337201        1686.00    41MB     192487.         403406.       51.66%
+     342632        1716.01    41MB     193287.         403406.       51.78%
+     348282        1746.01    41MB     194157.         403406.       51.87%
+     354063        1776.01    41MB     194985.         403406.       51.99%
+     360542        1806.01    51MB     195486.         403406.       52.06%
+     368160        1836.01    51MB     196318.         403406.       52.14%
+     374628        1866.02    51MB     196904.         403406.       52.19%
+     381062        1896.02    51MB     197494.         403406.       52.33%
+     386988        1926.02    51MB     198533.         403406.       52.45%
+     395428        1956.02    51MB     198957.         403406.       52.51%
+     402962        1986.03    51MB     199946.         403406.       52.59%
+     410535        2016.03    51MB     200409.         403406.       52.67%
+     418509        2046.03    51MB     200753.         403406.       52.72%
+     426698        2076.04    51MB     200798.         403406.       52.74%
+     435158        2106.05    51MB     200915.         403406.       52.79%
+     442762        2136.06    51MB     201253.         403406.       52.85%
+     447243        2166.06    51MB     201773.         403406.       52.89%
+     451351        2196.07    51MB     202176.         403406.       52.93%
+     455279        2226.10    51MB     202824.         403406.       52.99%
+     459438        2256.11    51MB     203989.         403406.       53.05%
+     463036        2286.11    51MB     205628.         403406.       53.10%
+     467855        2316.12    51MB     206910.         403406.       53.15%
+     471273        2346.12    51MB     207941.         403406.       53.21%
+     475354        2376.12    51MB     208720.         403406.       53.26%
+     479086        2406.13    51MB     209469.         403406.       53.31%
+     483992        2436.13    51MB     210334.         403406.       53.39%
+     489191        2466.14    51MB     210601.         403406.       53.44%
+     494415        2496.14    51MB     212001.         403406.       53.51%
+     499116        2526.14    51MB     213065.         403406.       53.60%
+     502096        2556.15    51MB     215439.         403406.       53.66%
+     503996        2586.15    51MB     216590.         403406.       53.68%
+     505700+       2616.15    51MB     217568.         403406.       53.71%
+     510251+       2646.16    51MB     220641.         403406.       53.79%
+     514177        2676.16    51MB     222443.         403406.       53.85%
+     518443        2706.16    51MB     224888.         403406.       53.94%
+     522650        2736.16    51MB     227230.         403406.       53.98%
+     527256+       2766.18    51MB     229843.         403406.       54.05%
+     530050        2796.18    51MB     230918.         403406.       54.10%
+     534310        2826.19    51MB     233494.         403406.       54.15%
+     539249+       2856.19    51MB     236002.         403406.       54.25%
+     543416        2886.20    51MB     239366.         403406.       54.33%
+     548162        2916.20    51MB     241830.         403406.       54.42%
+     552775        2946.20    51MB     244313.         403406.       54.51%
+     557243        2976.21    51MB     246143.         403406.       54.62%
+     560962+       3006.23    51MB     247879.         403406.       54.71%
+     566588        3036.23    51MB     250965.         403406.       54.81%
+     572722        3066.24    51MB     254338.         403406.       54.99%
+     579167        3096.24    51MB     256909.         403406.       55.08%
+     585799        3126.25    51MB     258226.         403406.       55.21%
+     591888        3156.25    51MB     260066.         403406.       55.35%
+     596535        3186.25    51MB     262071.         403406.       55.49%
+     602375        3216.26    51MB     264081.         403406.       55.66%
+     606229        3246.27    51MB     265463.         403406.       55.76%
+     611634        3276.27    51MB     267585.         403406.       55.91%
+     616843        3306.27    51MB     270544.         403406.       56.01%
+     622590        3336.27    51MB     274179.         403406.       56.10%
+     628371        3366.28    51MB     276288.         403406.       56.20%
+     635474        3396.28    51MB     277083.         403406.       56.31%
+     642466        3426.28    51MB     278379.         403406.       56.41%
+     647867        3456.28    51MB     280634.         403406.       56.52%
+     652866        3486.29    51MB     281822.         403406.       56.62%
+     658768        3516.30    51MB     283842.         403406.       56.71%
+     664883        3546.30    51MB     286372.         403406.       56.78%
+     671420        3576.30    51MB     288293.         403406.       56.85%
+     675088        3600.00    51MB     288871.         403406.       56.89%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                  3600.00
+ Total CPU time used:              3286.07
+
+ Total no. of BaR iterations:  675088
+ Best solution found at node:    6007
+ Max. no. of nodes in memory:    6917
+ 
+ All done
+===========================================================================
+Executable for subsolver cplex not found
+License not available for "lpsolver=cplex"; assuming "lpsolver=cbc".
+BARON 24.5.8 (2024.05.08): 675088 iterations, CPU time limit reached.
+Objective 403406.1549
+*******************************************************************************
+
+Violations between approximation constraint and original constraint:
+
++-----------------+----------------------+----------------------+
+| Constraint ID   |   Absolute Violation |   Relative Violation |
++=================+======================+======================+
+| con2_1,2        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,3        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_2,4        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_3,5        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,5        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_4,6        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_6,7        |                    0 |                    0 |
++-----------------+----------------------+----------------------+
+| con2_7,5        |                   -0 |                    0 |
++-----------------+----------------------+----------------------+
+
+Total absolute constraint violation using baron: 1.8846649836019673e-16
+Total relative constraint violation using baron: 1.0394695142455587e-09
+*******************************************************************************
+
+total_cost using baron: 403406.1548737882
+solve_time using baron: 3600.061926
+*******************************************************************************
+

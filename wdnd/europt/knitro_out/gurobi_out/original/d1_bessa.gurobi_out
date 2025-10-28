@@ -1,0 +1,185 @@
+Water Network: 1
+*******************************************************************************
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 3600
+  lim:time = 3600
+  alg:start = 1
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1e-09
+Set parameter BarConvTol to value 1e-09
+  bar:convtol = 1e-09
+  sol:chk:feastol = 1e-05
+  sol:chk:feastolrel = 1e-09
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+  tech:optionfile = gurobiOpt.prm
+
+AMPL MP initial flat model has 83 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  13 linear; 14 quadratic;
+Algebraic expressions:  7 abs; 7 powconstexp;
+
+AMPL MP final model has 111 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  20 linear; 14 quadratic;
+Algebraic expressions:  7 abs; 7 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  3600
+MIPGap  1e-09
+MIPGapAbs  1e-06
+BarConvTol  1e-09
+InfUnbdInfo  1
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 20 rows, 111 columns and 103 nonzeros
+Model fingerprint: 0x1ae680f9
+Model has 7 simple general constraints
+  7 ABS
+Model has 7 general nonlinear constraints (210 nonlinear terms)
+Variable types: 111 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 2e+01]
+  Bounds range     [2e-01, 5e+04]
+  RHS range        [4e-02, 3e+03]
+Presolve model has 7 nlconstr
+Added 147 variables to disaggregate expressions.
+Presolve added 18 rows and 0 columns
+Presolve removed 0 rows and 3 columns
+Presolve time: 0.00s
+Presolved: 458 rows, 263 columns, 1062 nonzeros
+Presolved model has 77 bilinear constraint(s)
+Presolved model has 7 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 259 continuous, 4 integer (4 binary)
+
+Root relaxation: objective 5.445956e+04, 148 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 54459.5613    0   12          - 54459.5613      -     -    0s
+     0     0 55206.0553    0   16          - 55206.0553      -     -    0s
+H    0     0                    139543.56125 55206.0553  60.4%     -    0s
+     0     0 58967.2289    0   18 139543.561 58967.2289  57.7%     -    0s
+     0     0 59249.4633    0   19 139543.561 59249.4633  57.5%     -    0s
+H    0     0                    139411.10127 59249.4633  57.5%     -    0s
+H    0     0                    139359.37854 59249.4633  57.5%     -    0s
+H    0     0                    139212.64617 59249.4633  57.4%     -    0s
+H    0     0                    139190.87608 59249.4633  57.4%     -    0s
+H    0     0                    139186.91269 59249.4633  57.4%     -    0s
+H    0     0                    138360.59734 98386.7656  28.9%     -    0s
+H    0     0                    134841.74308 98386.7656  27.0%     -    1s
+     0     2 98386.7656    0   19 134841.743 98386.7656  27.0%     -    1s
+H    3     8                    134749.32773 98386.7656  27.0%  37.7    1s
+*  383   104              12    133496.29873 98386.7656  26.3%  11.6    1s
+H  456   113                    123884.39361 98386.7656  20.6%  11.0    1s
+* 1044    59              21    123882.82833 119800.074  3.30%   9.1    1s
+* 1551   247              28    123882.69669 123878.481  0.00%   7.6    1s
+ 25553  2557          -   52      123882.697 123881.967  0.00%   1.0    5s
+ 52237  2806 123881.967   14   18 123882.697 123881.967  0.00%   0.8   10s
+
+Cutting planes:
+  Implied bound: 3
+  RLT: 5
+
+Explored 53525 nodes (53321 simplex iterations) in 10.68 seconds (0.79 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 10: 123883 123883 123884 ... 139213
+
+Sub-optimal termination (unable to solve some node relaxations)
+Warning: max constraint violation (6.7786e-05) exceeds tolerance
+Warning: max general constraint violation (6.7786e-05) exceeds tolerance
+Best objective 1.238826966935e+05, best bound 1.238823189625e+05, gap 0.0003%
+Gurobi 12.0.1: suboptimal solution, can be infeasible; objective 123882.6967
+53321 simplex iterations
+53525 branching nodes
+absmipgap=0.377731, relmipgap=3.0491e-06
+------------ WARNINGS ------------
+WARNING:  "Tolerance violations"
+  Type                         MaxAbs [Name]   MaxRel [Name]
+* quadratic con(s)             7E-05           -             
+*: Using the solver's aux variable values.
+Documentation: mp.ampl.com/modeling-tools.html#automatic-solution-check.
+q :=
+1 2   0.42043
+2 3   0.292212
+2 6   0.128218
+3 4   0.248772
+4 5   0.208482
+6 7   0.0804383
+7 5   0.000118303
+;
+
+eps :=
+1 2   1.90041e-05
+2 3   5.54193e-05
+2 6   3.11038e-05
+3 4   2.92906e-05
+4 5   2.59165e-05
+6 7   2.61143e-05
+7 5   2.3531e-05
+;
+
+eps:  1.9004097781957383e-05
+q[7,5]: 0.0001183030096292281
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.744595010044034e-05
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.42043     |                0         |              0         |             0        |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.292212    |               -1e-08     |             -1e-08     |             0        |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,6             |  0.128218    |               -1.3e-07   |             -1.3e-07   |             0        |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |  0.248772    |               -2e-08     |             -2e-08     |             0        |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.208482    |               -5e-08     |             -5e-08     |             0        |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.0804383   |               -7.8e-07   |             -7.8e-07   |             0        |           0          |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,5             |  0.000118303 |               -6.779e-05 |             -6.646e-05 |             1.32e-06 |           0.00018439 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 6.876791726919459e-05
+Sum of violation of approx headloss constraint: 6.744594759919113e-05
+
+Con2 sum of absolute violation between original function and approximate function: 1.3219696700034547e-06
+Con2 sum of relative violation between original function and approximate function: 0.00018438529752693068
+*******************************************************************************
+
+Total cost using gurobi: 123882.69669353832
+gurobi solve time: 10.82 seconds
+*******************************************************************************
+

@@ -1,0 +1,146 @@
+Water Network: 4
+Results smooth approximation 1 of Hazen--Williams headloss constraint
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with gurobi --------------------------
+100440.622110885
+4691862.970577673
+3127908.647051782
+3996772.160121721
+5039408.375805649
+1563954.323525891
+2954135.944437794
+2954135.944437794
+2780363.2418238064
+3301681.34966577
+4170544.862735709
+12164089.182979152
+2780363.2418238064
+1737727.026139879
+1911499.7287538669
+9487989.56272374
+6082044.591489576
+2780363.2418238064
+1390181.6209119032
+7645998.915015467
+5213181.078419637
+1737727.026139879
+9209953.238541357
+4274808.484304102
+4518090.267963685
+2954135.944437794
+1042636.2156839273
+2606590.5392098185
+5213181.078419637
+6950908.104559516
+5560726.483647613
+521318.10784196365
+2988890.484960592
+3301681.34966577
+4691862.970577673
+3127908.647051782
+3996772.160121721
+5039408.375805649
+1563954.323525891
+2954135.944437794
+2954135.944437794
+2780363.2418238064
+3301681.34966577
+4170544.862735709
+12164089.182979152
+2780363.2418238064
+1737727.026139879
+1911499.7287538669
+9487989.56272374
+6082044.591489576
+2780363.2418238064
+1390181.6209119032
+7645998.915015467
+5213181.078419637
+1737727.026139879
+9209953.238541357
+4274808.484304102
+4518090.267963685
+2954135.944437794
+1042636.2156839273
+2606590.5392098185
+5213181.078419637
+6950908.104559516
+5560726.483647613
+521318.10784196365
+2988890.484960592
+3301681.34966577
+epsilon: {(1, 2): 0.00029, (2, 3): 3.6e-05, (3, 4): 4.5e-05, (4, 5): 3.9e-05, (5, 6): 3.5000000000000004e-05, (6, 7): 6.500000000000001e-05, (7, 8): 4.6e-05, (8, 9): 4.6e-05, (9, 10): 4.8e-05, (10, 11): 4.4000000000000006e-05, (11, 12): 3.8e-05, (12, 13): 2.2000000000000003e-05, (10, 14): 4.8e-05, (14, 15): 6.2e-05, (15, 16): 5.900000000000001e-05, (16, 17): 2.5e-05, (17, 18): 3.1e-05, (18, 19): 4.8e-05, (19, 3): 7.000000000000001e-05, (3, 20): 2.8e-05, (20, 21): 3.4e-05, (21, 22): 6.2e-05, (20, 23): 2.5e-05, (23, 24): 3.8e-05, (24, 25): 3.7000000000000005e-05, (25, 26): 4.6e-05, (26, 27): 8.1e-05, (27, 16): 5e-05, (23, 28): 3.4e-05, (28, 29): 2.9e-05, (29, 30): 3.3e-05, (30, 31): 0.00012, (31, 32): 4.6e-05, (32, 25): 4.4000000000000006e-05, (2, 33): 3.6e-05, (33, 34): 4.5e-05, (34, 35): 3.9e-05, (35, 36): 3.5000000000000004e-05, (36, 37): 6.500000000000001e-05, (37, 38): 4.6e-05, (38, 39): 4.6e-05, (39, 40): 4.8e-05, (40, 41): 4.4000000000000006e-05, (41, 42): 3.8e-05, (42, 43): 2.2000000000000003e-05, (40, 44): 4.8e-05, (44, 45): 6.2e-05, (45, 46): 5.900000000000001e-05, (47, 46): 2.5e-05, (48, 47): 3.1e-05, (49, 48): 4.8e-05, (33, 49): 7.000000000000001e-05, (33, 50): 2.8e-05, (50, 51): 3.4e-05, (51, 52): 6.2e-05, (50, 53): 2.5e-05, (53, 54): 3.8e-05, (54, 55): 3.7000000000000005e-05, (56, 55): 4.6e-05, (57, 56): 8.1e-05, (46, 57): 5e-05, (53, 58): 3.4e-05, (58, 59): 2.9e-05, (59, 60): 3.3e-05, (60, 61): 0.00012, (62, 61): 4.6e-05, (55, 62): 4.4000000000000006e-05}
+Gurobi 12.0.1: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 1e-06
+Set parameter MIPGap to value 1e-06
+  mip:gap = 1e-06
+  sol:chk:feastol = 1e-05
+
+AMPL MP initial flat model has 520 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  128 linear; 171 quadratic;
+Algebraic expressions:  57 powconstexp;
+
+AMPL MP final model has 748 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  185 linear; 171 quadratic;
+Algebraic expressions:  57 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  1e-06
+MIPGapAbs  1e-06
+InfUnbdInfo  1
+Presolve  1
+
+Optimize a model with 185 rows, 748 columns and 765 nonzeros
+Model fingerprint: 0xef063667
+Model has 57 general nonlinear constraints (1363 nonlinear terms)
+Variable types: 748 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [3e-05, 1e+00]
+  Objective range  [5e+01, 3e+02]
+  Bounds range     [6e-10, 1e+05]
+  RHS range        [2e-02, 4e+03]
+Presolve model has 57 nlconstr
+Added 857 variables to disaggregate expressions.
+Presolve removed 11 rows and 186 columns
+Presolve time: 0.01s
+Presolved: 2683 rows, 1476 columns, 6157 nonzeros
+Presolved model has 456 bilinear constraint(s)
+Presolved model has 57 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 1476 continuous, 0 integer (0 binary)
+
+Root relaxation: objective 3.599299e+06, 980 iterations, 0.14 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3599299.18    0  164          - 3599299.18      -     -    1s
+     0     0 3599299.18    0  162          - 3599299.18      -     -    1s
+     0     0 3599299.18    0  163          - 3599299.18      -     -    1s
+     0     0 3599299.18    0  164          - 3599299.18      -     -    1s
+     0     0 3599299.18    0  159          - 3599299.18      -     -    1s
+     0     0 3599299.18    0  162          - 3599299.18      -     -    1s
+     0     0 3599299.18    0  164          - 3599299.18      -     -    2s
+     0     0 4155336.29    0  158          - 4155336.29      -     -    4s
+     0     2 4155336.29    0  158          - 4155336.29      -     -    7s

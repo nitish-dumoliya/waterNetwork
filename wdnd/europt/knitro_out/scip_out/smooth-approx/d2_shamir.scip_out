@@ -1,0 +1,102 @@
+Water Network: 2
+*******************************************************************************
+
+-------------------------------- Solving with scip --------------------------
+SCIP 9.2.2:   tech:outlev = 1
+  lim:time = 3600
+  lim:gap = 1e-09
+  sol:chk:feastol = 1e-05
+  sol:chk:feastolrel = 0
+
+AMPL MP initial flat model has 126 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  14 linear; 32 quadratic;
+Algebraic expressions:  8 div; 16 powconstexp;
+
+AMPL MP final model has 190 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  14 linear; 40 quadratic; 16 nonlinear;
+Algebraic expressions:  16 powconstexp;
+
+
+presolving:
+(round 1, fast)       59 del vars, 3 del conss, 0 add conss, 13 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) no symmetry present (symcode time: 0.00)
+presolving (2 rounds: 2 fast, 1 medium, 1 exhaustive):
+ 59 deleted vars, 3 deleted constraints, 0 added constraints, 13 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 131 variables (0 bin, 0 int, 0 impl, 131 cont) and 27 constraints
+     11 constraints of type <linear>
+     16 constraints of type <nonlinear>
+Presolving Time: 0.01
+
+(node 1) unresolved numerical troubles in LP 1 -- using pseudo solution instead (loop 1)
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.2s|     1 |     2 |    84 |     - |  4490k |   0 | 297 |  27 | 182 |   0 |  0 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  0.2s|   100 |   101 |  9207 |  92.2 |  4663k |  99 | 297 |  27 | 182 |   0 |  0 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+error running scip:
+	termination code 4
+<BREAK>
+q :=
+1 2   0
+2 3   0
+2 4   0
+3 5   0
+4 5   0
+4 6   0
+5 7   0
+6 7   0
+;
+
+q[1,2]: 0
+q[2,3]: 0
+q[2,4]: 0
+q[4,5]: 0
+q[4,6]: 0
+q[6,7]: 0
+q[3,5]: 0
+q[5,7]: 0
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 9330.31109
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |            0 |                      210 |                    210 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,4             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,6             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 5,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |            0 |                        0 |                      0 |                    0 |                    0 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 210.0
+Sum of violation of approx headloss constraint: 210.0
+
+Con2 sum of absolute violation between original function and approximate function: 0.0
+Con2 sum of relative violation between original function and approximate function: 0.0
+*******************************************************************************
+
+Total cost using scip: 0.0
+scip solve time: 0.26 seconds
+*******************************************************************************
+
