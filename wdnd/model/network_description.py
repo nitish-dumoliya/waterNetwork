@@ -71,7 +71,7 @@ for i in range(len(data_list)):
     d_min = ampl.getParameter('d_min').getValues().to_list()[0]
     max_k = max(ampl.getParameter('MaxK').getValues().to_list())
     r_min = min(ampl.getParameter('R').getValues().to_list())
-    epsilon = max(ampl.getParameter('eps').getValues().to_list())
+    #epsilon = max(ampl.getParameter('eps').getValues().to_list())
     #L = ampl.getParameter('L').getValues().to_dict()
 
     #L = [item[2] for item in ampl.getParameter('L').getValues().to_list()]
@@ -79,10 +79,10 @@ for i in range(len(data_list)):
     #R_min = min(R)
     #L_max = max(L)
     #print(R_min)
-    #MaxK = 10.67*L_max/((R_min**1.852) * (d_min**4.87))
+    MaxK = 10.67*max_length/((r_min[1]**1.852) * (d_min**4.87))
  
-    #epsilon = ((10**(-6))/(0.07508*MaxK))**(1/0.926)
-
+    epsilon = 0.0535*((10**(-1))/(MaxK))**(1/1.852)
+    print("epsilon:", epsilon)
     # Write one row to CSV (unrounded values)
     csv_writer.writerow([
         data_list[i],
@@ -96,7 +96,8 @@ for i in range(len(data_list)):
         d_max,
         r_min,
         max_k[2],
-        epsilon[2]
+        epsilon
+        # epsilon[2]
     ])
 
 # Close CSV file

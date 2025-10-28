@@ -106,8 +106,8 @@ class WaterNetworkSolver:
                 original_rhs = q1[i, j] * (abs(q1[i, j])) ** 0.852 * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + q2[i, j] * (abs(q2[i, j])) ** 0.852 * alpha_rhs  
                 # original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
                 # Approximated constraint value
-                # approx_rhs = (q1[i, j]**3 * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q1[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j]**3 * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q2[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
-                approx_rhs = (q1[i, j] * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j] * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
+                approx_rhs = (q1[i, j]**3 * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q1[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j]**3 * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q2[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                # approx_rhs = (q1[i, j] * ((q1[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * 10.67 * self.L[i,j]/(self.R[i,j]**1.852 * self.exdiam[i,j]**4.87) + (q2[i, j] * ((q2[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
                 con2_original_gap[f"{i},{j}"] = lhs - original_rhs
@@ -139,8 +139,8 @@ class WaterNetworkSolver:
                     original_rhs = q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs  
                     #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs 
                     # Approximated constraint value
-                    # approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
-                    approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
+                    approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                    # approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
 
                     #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
                     con2_original_gap[f"{i},{j}"] = lhs - original_rhs
@@ -170,8 +170,8 @@ class WaterNetworkSolver:
                 #original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
 
                 # Approximated constraint value
-                # approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
-                approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
+                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
+                # approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * 10.67 * self.L[i,j]/(self.fix_r[i,j]**1.852 * self.exdiam[i,j]**4.87) 
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
@@ -203,8 +203,9 @@ class WaterNetworkSolver:
                 original_rhs =  q_values[i, j] * (abs(q_values[i, j])) ** 0.852 * alpha_rhs
                 
                 # Approximated constraint value
-                # approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
-                approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
+                approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)/(q_values[i,j]**2 + 0.426*epsilon[i,j]**2)) * alpha_rhs
+                # approx_rhs = (q_values[i, j] * ((q_values[i, j]**2 + epsilon[i,j]**2) ** 0.426)) * alpha_rhs
+                # approx_rhs = self.a[i,j]*q_values[i, j]*abs(q_values[i,j]) + self.b[i,j]*q_values[i,j]
 
                 #approx_rhs = (q_values[i, j]**3 * ((q_values[i, j]**2 + 1e-12) ** 0.426)/(q_values[i,j]**2 + 0.426*1e-12))*alpha_rhs
 
@@ -598,9 +599,6 @@ class WaterNetworkSolver:
         print("best optimal solution:", self.total_cost)
 
     def second_solve(self,model_file, solver_name):
-        """
-        Second solve with user-specified solver, using IPOPT solution as a starting point.
-        """
         print(f"\n-------------------------------- Solving with {self.solver_name} --------------------------")
 
         # self.ampl.reset()
@@ -640,6 +638,14 @@ class WaterNetworkSolver:
 
         # print("epsilon:", eps)
         # self.ampl.param["eps"] = eps
+
+        # q1 = [0.005053, 0.003739, 0.066567, 0.066567, 0.066567, 0.68658, 0.0011742, 0.0004075, 0.00040753, 0.0004075, 0.0370986, 0.005988, 0.004891, 0.029482]
+        # q1 = [0.105772, 0.078264, 1.393482, 1.393482, 1.393482, 14.37264, 0.02458, 0.0085311, 0.0085311, 0.0085311, 0.776606, 0.125357, 0.102378, 0.61715]
+        # q1 = [0.271782, 0.201101, 3.58056, 3.58056, 3.58056, 36.93059, 0.063159, 0.02192076, 0.0219208, 0.0219208, 1.99549, 0.3221, 0.263062, 1.58578]
+        # q1 = [0.36625, 0.271001, 4.82512, 4.82512, 4.82512, 49.76716, 0.085113, 0.02954012, 0.0295401, 0.0295401, 2.6891, 0.43406, 0.354499, 2.13698]
+        # self.ampl.param["q1"] = q1[data_number]
+        # print(q1[data_number])
+
         # Set initial values
         #q_var = self.ampl.get_variable('q')
         #h_var = self.ampl.get_variable('h')
@@ -683,31 +689,23 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
 
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
-        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01"
+        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01 bonmin.time_limit = 600"
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 600 warmstart = 0 method = 1  mipgapabs = 1e-6 mipgap = 1e-9 barconvtol = 1e-9 sol:chk:feastol = 1e-5 sol:chk:feastolrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 1 pre:scale = 1 method = 2 nodemethod = 1 varbranch = 3  nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-5 mipgap = 1e-6 alg:feastol = 1e-5 pre:feastol = 1e-5 pre:feastolrel = 1e-6 chk:feastol = 1e-5 chk:feastolrel = 1e-6" 
+        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-5 mipgap = 1e-6 alg:feastol = 1e-5 pre:feastol = 1e-5 pre:feastolrel = 1e-6 chk:feastol = 1e-5 chk:feastolrel = 1e-6" 
         # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
         # self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
         self.ampl.option["baron_options"]= "optfile = optfile version objbound wantsol = 2 outlev = 2 barstats" # lsolver = conopt
         #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
-        # self.ampl.option["scip_options"] = (
-        #                                     "outlev=1 "
-        #                                     "timelimit=10 "
-        #                                     "lim:gap=1e-9 "
-        #                                     "chk:feastol=1e-8 "
-        #                                     "chk:feastolrel=1e-8 "
-        #                                     "param:read=scip.set"
-        #                                      )
         # self.ampl.option["scip_options"] = "outlev 1 timelimit 20 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
-        self.ampl.option["scip_options"] = "outlev 1 timelimit 100 heu:settings = 0 method = p lim:absgap=1e-5 lim:gap = 1e-6 chk:feastol = 1e-5 chk:feastolrel=1e-6 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        self.ampl.option["scip_options"] = "outlev 1 timelimit 600 heu:settings = 0 method = p lim:absgap=1e-5 lim:gap = 1e-6 chk:feastol = 1e-5 chk:feastolrel=1e-6 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         # self.ampl.option["scip_options"] = "outlev  1 "
-        self.ampl.option["knitro_options"] = "maxtime_real = 3600 outlev = 4 opttol_abs=1e-5 opttol = 1e-6 feastol_abs = 1.0e-5 feastol = 1.0e-5  ms_enable = 1 ms_maxsolves = 10"
+        self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-5 opttol = 1e-6 feastol_abs = 1.0e-5 feastol = 1.0e-5  ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "1"
         self.ampl.option["presolve_eps"] = "8.53e-15"
@@ -775,7 +773,10 @@ class WaterNetworkSolver:
         self.l = self.ampl.get_variable('l').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
         # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
-        # self.ampl.eval("display eps;")
+        # self.a = self.ampl.get_variable('a').get_values().to_dict()
+        # self.b = self.ampl.get_variable('b').get_values().to_dict()
+
+        self.ampl.eval("display eps;")
         # self.ampl.eval("display q;")
         # self.ampl.eval("display h;")
         # self.ampl.eval("display q1;")
@@ -1033,8 +1034,11 @@ if __name__ == "__main__":
     #print("Water Network:", f"{data_list[(data_number)]}.dat")
     print("Water Network:", f"{sys.argv[3]}")
 
-    print("Results smooth approximation 1 of Hazen--Williams headloss constraint\n")
-    # print("Results smooth approximation 2 of Hazen--Williams headloss constraint\n")
+    print("Results of actual Hazen--Williams headloss constraint\n")
+    # print("Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error\n")
+    # print("Results smooth approximation 1 of Hazen--Williams headloss constraint using relative error\n")
+    # print("Results smooth approximation 2 of Hazen--Williams headloss constraint using absolute error\n")
+    # print("Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error\n")
 
     print("*******************************************************************************")
 
