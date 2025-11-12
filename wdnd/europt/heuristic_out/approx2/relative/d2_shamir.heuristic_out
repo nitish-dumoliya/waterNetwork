@@ -1,0 +1,84 @@
+Water Network: d2_shamir 
+
+NLP solve using: smooth approximation 2, epsilon selection using relative error
+
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 3), (2, 4)] 
+
+Ipopt 3.14.13: outlev = 0
+tol = 1e-9
+bound_relax_factor=0
+bound_push = 0.1
+bound_frac = 0.1
+halt_on_ampl_error = yes
+halt_on_ampl_error = yes
+warm_start_init_point = no
+expect_infeasible_problem = no
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  403389.78016720526
+Solve_result:  solved
+Solve_time: 0.042824999999999995 
+
+
+---------------------------Reverse Arc Direction Approach------------------------------------
+
+*********************************************************************************************
+Iteration : 1 
+
+sorted_arcs:  [(3, 5), (5, 7), (4, 5)]
+----------------------------------------------------------------------------------------
+Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(3, 5)    4,03,390      4,29,332      0.43s       solved        No        0.5s
+(5, 7)    4,03,390      4,22,634      0.06s       solved        No        0.58s
+(4, 5)    4,03,390      4,55,620      0.06s       solved        No        0.65s
+
+-----------------------------Headloss increase Approach--------------------------------------
+
+*********************************************************************************************
+Iteration : 1 
+
+sorted_arcs: [(4, 6), (6, 7), (3, 5), (5, 7), (4, 5)]
+----------------------------------------------------------------------------------------
+Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(4, 6)    4,03,390      9,12,577      0.09s       infeasible    No        0.75s 
+(6, 7)    4,03,390      4,03,489      0.06s       solved        No        0.83s
+(3, 5)    4,03,390      4,03,405      0.05s       solved        No        0.9s
+(5, 7)    4,03,390      4,03,399      0.05s       solved        No        0.96s
+(4, 5)    4,03,390      4,03,408      0.05s       solved        No        1.03s
+
+----------------------------Diameter Reduction Approach--------------------------------------
+
+*********************************************************************************************
+Iteration : 3 
+
+dual_value: {(1, 2): 12933.618140940947, (2, 3): 2030.4659993182393, (2, 4): 10903.152141622115, (3, 5): 546.7145357531731, (4, 5): 1.0303557538060168, (4, 6): 10902.121785867314, (5, 7): 5.725589201280973, (6, 7): 936.381564343372}
+sorted_arcs: [(4, 6), (6, 7), (3, 5)]
+----------------------------------------------------------------------------------------
+Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(4, 6)    4,03,390      4,07,002      0.05s       solved        No        1.09s
+(6, 7)    4,03,390      6,89,184      0.05s       solved        No        1.16s
+(3, 5)    4,03,390      4,16,160      0.1s        solved        No        1.27s
+
+-----------------------------------Max Flow Approach-----------------------------------------
+
+**********************************Final best results*****************************************
+
+Water Network: d2_shamir
+Final best objective: 403389.78016720526
+Number of nlp problem solved: 12
+Total number of iteration: 2
+Solver_time: 1.09 seconds
+Heuristic elapsed time: 1.27 seconds
+

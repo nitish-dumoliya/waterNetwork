@@ -31,13 +31,15 @@ param R_min = min{k in pipes} R[k];
 
 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 #param eps{arcs};
-#param eps{(i,j) in arcs} := (1e-6 / (0.07508 * MaxK[i,j]))^(1/1.852);
-#param eps{(i,j) in arcs} := (1e-5 / (0.36061 * MaxK[i,j]))^(0.54);
+
+#param eps{(i,j) in arcs} := (1e-5 / (0.07508 * MaxK[i,j]))^(1/1.852);
+#param eps{(i,j) in arcs} := 0.0953*(1e-2/MaxK[i,j])^(0.54);
+param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
+
 #param eps{(i,j) in arcs} := (1e-6 / (1.267 * MaxK[i,j]))^(1 / 1.852);
-param eps{(i,j) in arcs} := 0.1703*(1e-2/MaxK[i,j])^(0.54);
+
+#param eps{(i,j) in arcs} := (1e-6 / (0.36061 * MaxK[i,j]))^(0.54);
 #param eps{(i,j) in arcs} := 0.0153*(1e-2/MaxK[i,j])^(0.54);
-#param eps{(i,j) in arcs} := 0.0485*1e-5;
-#param eps{(i,j) in arcs} := 1e-4;
 
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
@@ -55,13 +57,13 @@ subject to con1{j in nodes diff Source}:
 ;
 
 # hazen-Williams Constraint 
-subject to con2{(i,j) in arcs}: 
-     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
+#subject to con2{(i,j) in arcs}: 
+#     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
 
 # Smooth-Approximation of Hazen-Williams Constraint
-#subject to con2{(i,j) in arcs}: 
+subject to con2{(i,j) in arcs}: 
      #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    #h[i] - h[j]  =  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
+    h[i] - h[j]  =  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #(h[i] - h[j])  =  q[i,j] * ((q[i,j]^2 + eps[i,j]^2))^0.426 * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + 0.574 * eps[i,j]^2) / (q[i,j]^2 + eps[i,j]^2)^0.574) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + eps[i,j]^2)^0.426 - (0.426 * eps[i,j]^2 / (q[i,j]^2 + eps[i,j]^2)^0.574)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));

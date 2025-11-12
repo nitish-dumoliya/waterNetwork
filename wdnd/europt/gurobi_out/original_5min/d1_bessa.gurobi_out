@@ -1,0 +1,290 @@
+Water Network: 1
+Results of actual Hazen--Williams headloss constraint
+
+*******************************************************************************
+wdnmodel.mod
+
+-------------------------------- Solving with gurobi --------------------------
+Gurobi 12.0.3: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+  tech:outlev_mp = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter Aggregate to value 1
+  pre:aggregate = 1
+Set parameter TimeLimit to value 300
+  lim:time = 300
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter OBBT to value 0
+  mip:obbt = 0
+Set parameter ScaleFlag to value 1
+  pre:scale = 1
+Set parameter Method to value 2
+  alg:method = 2
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter MIPFocus to value 1
+  mip:focus = 1
+Set parameter NLPHeur to value 1
+  alg:nlpheur = 1
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 9.9999999999999995e-07
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1.0000000000000001e-09
+Set parameter FeasibilityTol to value 1e-06
+  alg:feastol = 9.9999999999999995e-07
+  cvt:pre:feastol = 9.9999999999999995e-07
+  cvt:pre:feastolrel = 1.0000000000000001e-09
+  sol:chk:feastol = 9.9999999999999995e-07
+  sol:chk:feastolrel = 1.0000000000000001e-09
+Set parameter Heuristics to value 0.05
+  mip:heurfrac = 0.050000000000000003
+
+AMPL MP initial flat model has 83 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  13 linear; 14 quadratic;
+Algebraic expressions:  7 abs; 7 powconstexp;
+
+AMPL MP final model has 111 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  20 linear; 14 quadratic;
+Algebraic expressions:  7 abs; 7 powconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 12.0.3 build v12.0.3rc0 (linux64 - "Debian GNU/Linux 12 (bookworm)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  1e-09
+MIPGapAbs  1e-06
+Method  2
+ScaleFlag  1
+MIPFocus  1
+NodeMethod  1
+OBBT  0
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 20 rows, 111 columns and 103 nonzeros
+Model fingerprint: 0x1ae680f9
+Model has 7 simple general constraints
+  7 ABS
+Model has 7 general nonlinear constraints (210 nonlinear terms)
+Variable types: 111 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 2e+01]
+  Bounds range     [2e-01, 5e+04]
+  RHS range        [4e-02, 3e+03]
+Presolve model has 7 nlconstr
+Added 147 variables to disaggregate expressions.
+Presolve added 18 rows and 0 columns
+Presolve removed 0 rows and 3 columns
+Presolve time: 0.00s
+Presolved: 458 rows, 263 columns, 1062 nonzeros
+Presolved model has 77 bilinear constraint(s)
+Presolved model has 7 nonlinear constraint(s)
+
+Solving non-convex MINLP
+
+Variable types: 259 continuous, 4 integer (4 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 2.935e+03
+ Factor NZ  : 4.472e+03
+ Factor Ops : 8.615e+04 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   1.12472217e+06 -7.22632925e+05  1.47e+04 1.78e-15  1.88e+04     0s
+   1   1.71937225e+05 -2.31206030e+05  2.08e+03 1.07e-14  2.73e+03     0s
+   2   8.48134572e+04 -3.70381609e+04  4.49e+02 8.53e-14  6.08e+02     0s
+   3   6.66065492e+04  4.43001757e+03  1.66e+02 7.46e-14  2.47e+02     0s
+   4   5.74901156e+04  3.60937790e+04  5.38e+01 6.75e-14  8.18e+01     0s
+   5   5.54137908e+04  5.00283022e+04  1.66e+01 4.49e-14  2.41e+01     0s
+   6   5.54025404e+04  5.17839994e+04  5.08e+00 7.17e-14  1.05e+01     0s
+   7   5.45893654e+04  5.32717528e+04  8.25e-01 4.62e-14  2.80e+00     0s
+   8   5.45160865e+04  5.42297851e+04  3.46e-01 5.33e-14  7.04e-01     0s
+   9   5.44673609e+04  5.44249068e+04  3.95e-02 1.06e-13  9.35e-02     0s
+  10   5.44622574e+04  5.44491217e+04  1.24e-02 6.37e-14  2.84e-02     0s
+  11   5.44598899e+04  5.44594385e+04  1.41e-03 6.27e-14  1.54e-03     0s
+  12   5.44595643e+04  5.44595599e+04  1.25e-05 3.91e-14  1.42e-05     0s
+  13   5.44595613e+04  5.44595612e+04  2.80e-07 5.74e-14  2.97e-07     0s
+  14   5.44595613e+04  5.44595613e+04  6.19e-08 6.43e-14  7.54e-10     0s
+
+Barrier solved model in 14 iterations and 0.39 seconds (0.01 work units)
+Optimal objective 5.44595613e+04
+
+
+Root relaxation: objective 5.445956e+04, 37 iterations, 0.13 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 54459.5613    0   16          - 54459.5613      -     -    0s
+     0     0 54459.5613    0   13          - 54459.5613      -     -    0s
+     0     0 55037.7466    0   16          - 55037.7466      -     -    1s
+     0     0 60970.1235    0   24          - 60970.1235      -     -    1s
+     0     0 61235.9043    0   23          - 61235.9043      -     -    1s
+     0     0 66240.2879    0   29          - 66240.2879      -     -    1s
+     0     0 68082.4178    0   31          - 68082.4178      -     -    1s
+     0     0 69147.6115    0   27          - 69147.6115      -     -    1s
+     0     0 70506.2570    0   33          - 70506.2570      -     -    1s
+     0     0 71394.4892    0   31          - 71394.4892      -     -    1s
+H    0     0                    137715.90306 71394.4892  48.2%     -    1s
+H    0     0                    136592.65451 71394.4892  47.7%     -    1s
+     0     2 71394.4892    0   31 136592.655 71394.4892  47.7%     -    2s
+H   47    36                    123884.39361 99454.8266  19.7%  32.0    3s
+*  546   162              36    123882.80759 123875.240  0.01%  10.7    4s
+   944   782 infeasible   52      123882.808 123875.240  0.01%   6.6    5s
+ 43882  4010 infeasible   70      123882.808 123875.522  0.01%   0.2   10s
+ 72028  4244 123875.522   15   18 123882.808 123875.522  0.01%   0.1   15s
+ 114291  8208 123878.222  115    2 123882.808 123877.687  0.00%   0.2   20s
+ 146074  8596 123878.222  111    2 123882.808 123877.687  0.00%   0.2   25s
+ 188069  8507 123878.222  114    2 123882.808 123877.687  0.00%   0.1   30s
+ 225620  8585          -  113      123882.808 123877.687  0.00%   0.1   35s
+ 260060  8546          -  111      123882.808 123877.687  0.00%   0.1   40s
+ 295953  8510 123878.222  112    2 123882.808 123877.687  0.00%   0.1   45s
+ 333124  8586 123878.227   95    2 123882.808 123877.687  0.00%   0.1   50s
+ 367690  8484 123878.227  114    2 123882.808 123877.687  0.00%   0.1   55s
+ 398727  8612 123878.222  114    2 123882.808 123877.687  0.00%   0.1   60s
+ 433051  8546 123878.222  114    2 123882.808 123877.687  0.00%   0.1   65s
+ 465210  8491          -  122      123882.808 123877.687  0.00%   0.0   70s
+ 495795  8405 123878.222  118    2 123882.808 123877.687  0.00%   0.0   75s
+ 527033  8595          -  123      123882.808 123877.687  0.00%   0.0   80s
+ 557880  8525          -  115      123882.808 123877.687  0.00%   0.0   85s
+ 588978  8522 123878.222  117    2 123882.808 123877.687  0.00%   0.0   90s
+ 622063  8602 123878.222  114    2 123882.808 123877.687  0.00%   0.0   95s
+ 652435  8742          -  120      123882.808 123877.687  0.00%   0.0  100s
+ 686405  8740          -  116      123882.808 123877.687  0.00%   0.0  105s
+ 720751  8723 123878.222  117    2 123882.808 123877.687  0.00%   0.0  110s
+ 751149  8760 123878.222  110    2 123882.808 123877.687  0.00%   0.0  115s
+ 785699  8852 123878.222  120    2 123882.808 123877.687  0.00%   0.0  120s
+ 818368  8717 123878.222  112    2 123882.808 123877.687  0.00%   0.0  125s
+ 845632  8650 123878.222  116    2 123882.808 123877.687  0.00%   0.0  130s
+ 873316  8686          -  118      123882.808 123877.687  0.00%   0.0  135s
+ 900002  8940          -  117      123882.808 123877.687  0.00%   0.0  140s
+ 935048  9073          -  119      123882.808 123877.687  0.00%   0.0  145s
+ 968517  9210          -  115      123882.808 123877.687  0.00%   0.0  150s
+ 1002630  9584 123878.222  117    2 123882.808 123877.687  0.00%   0.0  155s
+ 1027326  9494          -  114      123882.808 123877.687  0.00%   0.0  160s
+ 1054613  9496 123878.222  113    2 123882.808 123877.687  0.00%   0.0  165s
+ 1084355  9681          -  114      123882.808 123877.687  0.00%   0.0  170s
+ 1115837  9721          -  117      123882.808 123877.687  0.00%   0.0  175s
+ 1149884  9667          -  122      123882.808 123877.687  0.00%   0.0  180s
+ 1177538  9664 123878.222  117    2 123882.808 123877.687  0.00%   0.0  185s
+ 1207626  9669          -  114      123882.808 123877.687  0.00%   0.0  190s
+ 1231747  9741 123878.222  114    2 123882.808 123877.687  0.00%   0.0  195s
+ 1248603  9754 123878.222  116    2 123882.808 123877.687  0.00%   0.0  200s
+ 1279999  9999          -  110      123882.808 123877.687  0.00%   0.0  205s
+ 1306736  9956 123878.222  116    2 123882.808 123877.687  0.00%   0.0  210s
+ 1334354 10027 123878.222  117    2 123882.808 123877.687  0.00%   0.0  215s
+ 1358324  9959          -  117      123882.808 123877.687  0.00%   0.0  220s
+ 1385775 10064 123878.223  109    2 123882.808 123877.687  0.00%   0.0  225s
+ 1413938 10108 123878.222  118    2 123882.808 123877.687  0.00%   0.0  230s
+ 1441266 10155 123878.222  119    2 123882.808 123877.687  0.00%   0.0  235s
+ 1468537 10225          -  117      123882.808 123877.687  0.00%   0.0  240s
+ 1495630 10350 123878.222  111    2 123882.808 123877.687  0.00%   0.0  245s
+ 1522924 10323          -  117      123882.808 123877.687  0.00%   0.0  250s
+ 1546710 10247 123878.222  113    2 123882.808 123877.687  0.00%   0.0  255s
+ 1573855 10370 123878.222  120    2 123882.808 123877.687  0.00%   0.0  260s
+ 1604556 10498 123878.222  116    2 123882.808 123877.687  0.00%   0.0  265s
+ 1627806 10398          -  119      123882.808 123877.687  0.00%   0.0  270s
+ 1661302 10396          -  119      123882.808 123877.687  0.00%   0.0  275s
+ 1688575 10623 123878.222  117    2 123882.808 123877.687  0.00%   0.0  280s
+ 1719989 10515          -  122      123882.808 123877.687  0.00%   0.0  285s
+ 1744415 10512          -  116      123882.808 123877.687  0.00%   0.0  290s
+ 1772305 10427 123878.222  116    2 123882.808 123877.687  0.00%   0.0  295s
+
+Cutting planes:
+  Implied bound: 20
+  RLT: 10
+  Relax-and-lift: 17
+
+Explored 1799860 nodes (22639 simplex iterations) in 300.06 seconds (12.51 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 4: 123883 123884 136593 137716 
+
+Time limit reached
+Warning: max constraint violation (7.4265e-05) exceeds tolerance
+Warning: max general constraint violation (7.4265e-05) exceeds tolerance
+Best objective 1.238828075948e+05, best bound 1.238776865544e+05, gap 0.0041%
+Gurobi 12.0.3: time limit, feasible solution; objective 123882.8076
+22639 simplex iterations
+33 barrier iterations
+1.79986e+06 branching nodes
+absmipgap=5.12104, relmipgap=4.13378e-05
+------------ WARNINGS ------------
+WARNING:  "Tolerance violations"
+  Type                         MaxAbs [Name]   MaxRel [Name]
+* quadratic con(s)             7E-05           -             
+*: Using the solver's aux variable values.
+Documentation: mp.ampl.com/modeling-tools.html#automatic-solution-check.
+eps :=
+1 2   1.58069e-06
+2 3   4.60957e-06
+2 6   2.5871e-06
+3 4   2.43629e-06
+4 5   2.15564e-06
+6 7   2.1721e-06
+7 5   1.95722e-06
+;
+
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 7.460376395816877e-05
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
++=================+==============+==========================+========================+======================+======================+
+| 1,2             |  0.42043     |               -0         |             -0         |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,3             |  0.292253    |               -0         |             -0         |                   -0 |               -0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 2,6             |  0.128177    |               -9e-08     |             -9e-08     |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 3,4             |  0.248813    |               -1e-08     |             -1e-08     |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 4,5             |  0.208523    |               -3e-08     |             -3e-08     |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 6,7             |  0.0803965   |               -2e-07     |             -2e-07     |                    0 |                0     |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+| 7,5             |  7.65294e-05 |               -7.427e-05 |             -7.427e-05 |                    0 |                5e-08 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
+
+Sum of violation of original headloss constraint: 7.460393123066584e-05
+Sum of violation of approx headloss constraint: 7.460376395801611e-05
+
+Con2 sum of absolute violation between original function and approximate function: 1.6727309381375788e-10
+Con2 sum of relative violation between original function and approximate function: 5.2271613057194575e-08
+*******************************************************************************
+
+Total cost using gurobi: 123882.80759479776
+gurobi solve time: 301.35 seconds
+*******************************************************************************
+

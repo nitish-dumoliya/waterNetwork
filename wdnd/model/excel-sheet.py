@@ -508,7 +508,7 @@ Heuristic_Rel_error = []
 Heuristic_Number_of_NLP = []
 Heuristic_Number_of_Iteration = []
 
-dir1 = "original_10min"
+dir1 = "original_5min"
 dir = "smooth-approx"
 dir2 = "approx2"
 # error = "absolute"
@@ -537,7 +537,7 @@ for ins in data_list:
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../europt/baron_out/{dir2}/{error}/{ins}.baron_out") as output:
+    with open(f"../europt/baron_out/{dir1}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         out = output
         obj, lower_bound, time, violation_con,violation_abs, violation_rel= BaronInstanceOutput(ins,out)
@@ -559,7 +559,7 @@ for ins in data_list:
 print("**********************Results of GUROBI Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/gurobi_out/{dir2}/{error}/{ins}.gurobi_out") as output:
+    with open(f"../europt/gurobi_out/{dir1}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, best_bound, time, violation_con,violation_abs, violation_rel = GurobiInstanceOutput(ins,output)
@@ -580,7 +580,7 @@ for ins in data_list:
 print("**********************Results of SCIP Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/scip_out/{dir2}/{error}/{ins}.scip_out") as output:
+    with open(f"../europt/scip_out/{dir1}/{ins}.scip_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, dual_bound, time, violation_con,violation_abs, violation_rel = SCIPInstanceOutput(ins,output)
@@ -617,7 +617,7 @@ for ins in data_list:
 print("**********************Results of Knitro Solver *********************************")
  
 for ins in data_list:
-    with open(f"../europt/knitro_out/{dir2}/{error}/{ins}.knitro_out") as output:
+    with open(f"../europt/knitro_out/{dir1}/{ins}.knitro_out") as output:
         print("Model Name:",ins)
         obj, time = KnitroInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -653,7 +653,7 @@ for ins in data_list:
 print("**********************Results of Heuristic *********************************")
 
 for ins in data_list:
-    with open(f"../europt/heuristic_out/{ins}.heuristic_out") as output:
+    with open(f"../europt/heuristic_out/{dir2}/{error}/{ins}.heuristic_out") as output:
         print("Model Name:",ins)
         obj, time, violation_con,violation_abs, violation_rel, nlp, iter = HeuristicInstanceOutput(ins,output)
         print("Objective :",obj)

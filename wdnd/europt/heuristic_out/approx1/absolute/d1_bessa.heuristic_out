@@ -1,0 +1,103 @@
+Water Network: d1_bessa 
+
+NLP solve using:  smooth approximation 1, Epsilon selection using absolute error
+
+fix_arc_set: {(1, 2)}
+super_source_out_arc: [(1, 2), (2, 3), (2, 6)] 
+
+Ipopt 3.12.13: outlev = 0
+tol = 1e-6
+bound_relax_factor=0
+bound_push = 0.1
+bound_frac = 0.1
+halt_on_ampl_error = yes
+halt_on_ampl_error = yes
+warm_start_init_point = no
+expect_infeasible_problem = no
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.12.13: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:  123882.61449145888
+Solve_result:  solved
+Solve_time: 0.317272 
+
+
+---------------------------Reverse Arc Direction Approach------------------------------------
+
+*********************************************************************************************
+Iteration : 1 
+
+sorted_arcs:  [(4, 5), (7, 5)]
+----------------------------------------------------------------------------------------
+Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(4, 5)    1,23,883      1,39,229      0.33s       solved        No        1.14s
+(7, 5)    1,23,883      1,23,884      0.12s       solved        No        1.34s
+
+----------------------------Diameter Reduction Approach--------------------------------------
+
+*********************************************************************************************
+Iteration : 2 
+
+sorted_arcs: [(3, 4), (4, 5), (6, 7)]
+----------------------------------------------------------------------------------------
+Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+(3, 4)    1,23,883      1,25,050      0.11s       solved        No        1.58s
+(4, 5)    1,23,883      1,38,130      0.17s       solved        No        1.95s
+(6, 7)    1,23,883      1,24,809      0.13s       solved        No        2.52s
+
+**********************************Final best results*****************************************
+
+Water Network: d1_bessa
+*******************************************************************************
+
+Constraints violation:
+
+
+Sum of constraints violation: 6.408778082094696e-08
+*******************************************************************************
+
+*******************************************************************************
+
+Absolute and relative violations between original and approximation constraint 2:
+
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation(in %) |
++=================+==============+==========================+========================+======================+============================+
+| 1,2             |  0.42043     |                  0       |                  0     |             -0       |                 -0         |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| 2,3             |  0.292211    |                  0       |                  0     |             -0       |                 -0         |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| 2,6             |  0.128219    |                  0       |                 -0     |             -0       |                 -0         |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| 3,4             |  0.248771    |                  0       |                  0     |             -0       |                 -0         |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| 4,5             |  0.208481    |                  0       |                 -0     |             -0       |                 -0         |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| 6,7             |  0.0804393   |                  0       |                  0     |             -0       |                 -0         |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+| 7,5             |  0.000119279 |                  4.4e-07 |                 -6e-08 |             -5.1e-07 |                 -6.938e-05 |
++-----------------+--------------+--------------------------+------------------------+----------------------+----------------------------+
+
+Sum of violation of original headloss constraint: 4.4654781537409316e-07
+Sum of violation of approx headloss constraint: 6.363208880904442e-08
+
+Con2 sum of absolute violation between original function and approximate function: 5.077898067298511e-07
+Con2 sum of relative violation between original function and approximate function: 6.938060874073942e-05
+*******************************************************************************
+
+Final best objective: 123882.61449145888
+Number of nlp problem solved: 6
+Total number of iteration: 2
+Solver_time: 1.19 seconds
+Heuristic elapsed time: 2.54 seconds
+

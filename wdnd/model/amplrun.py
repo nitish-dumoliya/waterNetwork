@@ -689,13 +689,13 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-6 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes"
 
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
-        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01 bonmin.time_limit = 600"
+        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.1 bound_frac = 0.1 bonmin.time_limit = 600"
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 600 warmstart = 0 method = 1  mipgapabs = 1e-6 mipgap = 1e-9 barconvtol = 1e-9 sol:chk:feastol = 1e-5 sol:chk:feastolrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-5 mipgap = 1e-6 alg:feastol = 1e-5 pre:feastol = 1e-5 pre:feastolrel = 1e-6 chk:feastol = 1e-5 chk:feastolrel = 1e-6" 
+        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 300 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-6 mipgap = 1e-9 alg:feastol = 1e-6 pre:feastol = 1e-6 pre:feastolrel = 1e-9 chk:feastol = 1e-6 chk:feastolrel = 1e-9  mip:heurfrac = 0.05" 
         # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         
@@ -703,9 +703,9 @@ class WaterNetworkSolver:
         self.ampl.option["baron_options"]= "optfile = optfile version objbound wantsol = 2 outlev = 2 barstats" # lsolver = conopt
         #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
         # self.ampl.option["scip_options"] = "outlev 1 timelimit 20 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
-        self.ampl.option["scip_options"] = "outlev 1 timelimit 600 heu:settings = 0 method = p lim:absgap=1e-5 lim:gap = 1e-6 chk:feastol = 1e-5 chk:feastolrel=1e-6 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        self.ampl.option["scip_options"] = "outlev 1 timelimit 300 heu:settings = 0 method = p lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-6 chk:feastolrel=1e-9 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         # self.ampl.option["scip_options"] = "outlev  1 "
-        self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-5 opttol = 1e-6 feastol_abs = 1.0e-5 feastol = 1.0e-5  ms_enable = 1 ms_maxsolves = 10"
+        self.ampl.option["knitro_options"] = "maxtime_real = 300 outlev = 4 opttol_abs=1e-6 opttol = 1e-9 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "1"
         self.ampl.option["presolve_eps"] = "8.53e-15"
@@ -1034,11 +1034,11 @@ if __name__ == "__main__":
     #print("Water Network:", f"{data_list[(data_number)]}.dat")
     print("Water Network:", f"{sys.argv[3]}")
 
-    print("Results of actual Hazen--Williams headloss constraint\n")
+    # print("Results of actual Hazen--Williams headloss constraint\n")
     # print("Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error\n")
     # print("Results smooth approximation 1 of Hazen--Williams headloss constraint using relative error\n")
     # print("Results smooth approximation 2 of Hazen--Williams headloss constraint using absolute error\n")
-    # print("Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error\n")
+    print("Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error\n")
 
     print("*******************************************************************************")
 

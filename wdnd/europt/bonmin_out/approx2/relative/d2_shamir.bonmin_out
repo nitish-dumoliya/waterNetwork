@@ -1,4 +1,6 @@
 Water Network: 2
+Results of actual Hazen--Williams headloss constraint
+
 Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error
 
 *******************************************************************************
@@ -10,11 +12,11 @@ bonmin: bonmin.bb_log_level 5
 bonmin.nlp_log_level 2
 warm_start_init_point = no
 bonmin.num_resolve_at_root = 10
-tol = 1e-9
+tol = 1e-6
 expect_infeasible_problem = yes
 bound_relax_factor = 0
-bound_push = 0.01
-bound_frac = 0.01
+bound_push = 0.1
+bound_frac = 0.1
 bonmin.time_limit = 600
 
 Cbc3007W No integer variables - nothing to do
@@ -25,62 +27,64 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
          For more information visit http://projects.coin-or.org/Ipopt
 ******************************************************************************
 
-NLP0010I Ipopt return (for initialSolve): status  1, iter count   93, time 0.19644
+NLP0010I Ipopt return (for initialSolve): status  1, iter count   97, time 0.19942
 NLP0012I 
               Num      Status      Obj             It       time                 Location
-NLP0014I             1         OPT 423978.93       93 0.19644
-NLP0001I After 1 tries found a solution of 423978.93 (previous best 423978.93).
+NLP0014I             1         OPT 433714.94       97 0.19942
+NLP0001I After 1 tries found a solution of 433714.94 (previous best 433714.94).
 NLP3003W Trying to resolve NLP with different starting point (1 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  160, time 0.234638
-NLP0014I             1         OPT 429333.65      160 0.234638         resolve cost
-NLP0001I After 2 tries found a solution of 429333.65 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  130, time 0.17537
+NLP0014I             1         OPT 664351.14      130 0.17537         resolve cost
+NLP0001I After 2 tries found a solution of 664351.14 (previous best 433714.94).
 NLP3003W Trying to resolve NLP with different starting point (2 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  119, time 0.165909
-NLP0014I             2         OPT 423978.93      119 0.165909         resolve cost
-NLP0001I After 3 tries found a solution of 423978.93 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  109, time 0.160985
+NLP0011I Solution of value 403389.78 found on 2'th attempt
+NLP0014I *           2         OPT 403389.78      109 0.160985         resolve cost
+NLP0001I After 3 tries found a solution of 403389.78 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (3 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  127, time 0.178786
-NLP0014I             3         OPT 471755.2      127 0.178786         resolve cost
-NLP0001I After 4 tries found a solution of 471755.2 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  501, time 0.946333
+NLP0014I             3         OPT 417178.73      501 0.946333         resolve cost
+NLP0001I After 4 tries found a solution of 417178.73 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (4 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  100, time 0.137994
-NLP0014I             4         OPT 502236.95      100 0.137994         resolve cost
-NLP0001I After 5 tries found a solution of 502236.95 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  103, time 0.132057
+NLP0014I             4         OPT 502238.12      103 0.132057         resolve cost
+NLP0001I After 5 tries found a solution of 502238.12 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (5 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  111, time 0.147948
-NLP0014I             5         OPT 471754.08      111 0.147948         resolve cost
-NLP0001I After 6 tries found a solution of 471754.08 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  106, time 0.140417
+NLP0014I             5         OPT 471754.67      106 0.140417         resolve cost
+NLP0001I After 6 tries found a solution of 471754.67 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (6 attempts).
-NLP0010I Ipopt return (for resolve cost): status  3, iter count  163, time 0.317477
-NLP0014I             6      INFEAS 0.2182639      163 0.317477         resolve cost
+NLP0010I Ipopt return (for resolve cost): status  3, iter count  126, time 0.242297
+NLP0014I             6      INFEAS 0.18933356      126 0.242297         resolve cost
 NLP3003W Trying to resolve NLP with different starting point (7 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  105, time 0.135237
-NLP0014I             7         OPT 471496.46      105 0.135237         resolve cost
-NLP0001I After 8 tries found a solution of 471496.46 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status  1, iter count   95, time 0.116197
+NLP0014I             7         OPT 471755.2       95 0.116197         resolve cost
+NLP0001I After 8 tries found a solution of 471755.2 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (8 attempts).
-NLP0010I Ipopt return (for resolve cost): status  3, iter count  437, time 0.98007
-NLP0014I             8      INFEAS 0.20594909      437 0.98007         resolve cost
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  105, time 0.160298
+NLP0014I             8         OPT 403389.78      105 0.160298         resolve cost
+NLP0001I After 9 tries found a solution of 403389.78 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (9 attempts).
-NLP0010I Ipopt return (for resolve cost): status  3, iter count  843, time 1.836774
-NLP0014I             9      INFEAS 0.14933036      843 1.836774         resolve cost
+NLP0010I Ipopt return (for resolve cost): status  1, iter count  482, time 0.837377
+NLP0014I             9         OPT 423039.53      482 0.837377         resolve cost
+NLP0001I After 10 tries found a solution of 423039.53 (previous best 403389.78).
 NLP3003W Trying to resolve NLP with different starting point (10 attempts).
-NLP0010I Ipopt return (for resolve cost): status  1, iter count  150, time 0.229594
-NLP0014I            10         OPT 648628.54      150 0.229594         resolve cost
-NLP0001I After 11 tries found a solution of 648628.54 (previous best 423978.93).
+NLP0010I Ipopt return (for resolve cost): status -3, iter count  598, time 1.460927
+NLP0014I            10      FAILED 414121.69      598 1.460927         resolve cost
 Cbc3007W No integer variables - nothing to do
 
  	"Finished"
 
 bonmin: Optimal
 eps :=
-1 2   7.85507e-07
-2 3   7.85507e-07
-2 4   7.85507e-07
-3 5   7.85507e-07
-4 5   7.85507e-07
-4 6   7.85507e-07
-5 7   7.85507e-07
-6 7   7.85507e-07
+1 2   7.11687e-08
+2 3   7.11687e-08
+2 4   7.11687e-08
+3 5   7.11687e-08
+4 5   7.11687e-08
+4 6   7.11687e-08
+5 7   7.11687e-08
+6 7   7.11687e-08
 ;
 
 *******************************************************************************
@@ -88,7 +92,7 @@ eps :=
 Constraints violation:
 
 
-Sum of constraints violation: 1.2823526962524312e-12
+Sum of constraints violation: 4.966283398410987e-09
 *******************************************************************************
 
 *******************************************************************************
@@ -100,29 +104,29 @@ Absolute and relative violations between original and approximation constraint 2
 +=================+==============+==========================+========================+======================+======================+
 | 1,2             |  0.31109     |                       -0 |                     -0 |                   -0 |                   -0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.0279624   |                        0 |                      0 |                    0 |                    0 |
+| 2,3             |  0.102307    |                       -0 |                     -0 |                    0 |                    0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,4             |  0.255358    |                        0 |                      0 |                    0 |                    0 |
+| 2,4             |  0.181013    |                       -0 |                     -0 |                    0 |                    0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,5             |  0.000192412 |                       -0 |                      0 |                    0 |                    0 |
+| 3,5             |  0.0745366   |                        0 |                      0 |                   -0 |                   -0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.0746152   |                       -0 |                     -0 |                    0 |                    0 |
+| 4,5             |  0.000271006 |                       -0 |                     -0 |                    0 |                    0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,6             |  0.147412    |                        0 |                      0 |                    0 |                    0 |
+| 4,6             |  0.147412    |                       -0 |                     -0 |                    0 |                    0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 5,7             | -0.000192412 |                        0 |                     -0 |                   -0 |                    0 |
+| 5,7             | -0.000192412 |                       -0 |                     -0 |                   -0 |                    0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0557424   |                        0 |                      0 |                    0 |                    0 |
+| 6,7             |  0.0557424   |                       -0 |                     -0 |                    0 |                    0 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 
-Sum of violation of original headloss constraint: 6.78836986622855e-10
-Sum of violation of approx headloss constraint: 5.688782778179302e-13
+Sum of violation of original headloss constraint: 4.964565203380289e-09
+Sum of violation of approx headloss constraint: 4.964577193788955e-09
 
-Con2 sum of absolute violation between original function and approximate function: 6.791847084741676e-10
-Con2 sum of relative violation between original function and approximate function: 6.791839246531934e-11
+Con2 sum of absolute violation between original function and approximate function: 3.952393967665557e-14
+Con2 sum of relative violation between original function and approximate function: 3.678618349611285e-15
 *******************************************************************************
 
-Total cost using bonmin: 423978.93357543426
-bonmin solve time: 4.68 seconds
+Total cost using bonmin: 403389.78016083245
+bonmin solve time: 4.75 seconds
 *******************************************************************************
 

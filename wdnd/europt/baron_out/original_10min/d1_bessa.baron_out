@@ -1,15 +1,15 @@
 Water Network: 1
-Results smooth approximation 1 of Hazen--Williams headloss constraint
+Results of actual Hazen--Williams headloss constraint
 
 *******************************************************************************
 wdnmodel.mod
 
 -------------------------------- Solving with baron --------------------------
 BARON 24.5.8 (2024.05.08): optfile=optfile
-EpsA=1e-5
-EpsR=1e-6
-AbsConFeasTol=1e-5
-RelConFeasTol=1e-6
+EpsA=1e-6
+EpsR=1e-9
+AbsConFeasTol=1e-6
+RelConFeasTol=1e-9
 MaxTime=600
 DoLocal=1
 PrLevel=1
@@ -50,38 +50,40 @@ Using license file "/home/nitishdumoliya/miniconda3/lib/python3.13/site-packages
  Done with local search
 ===========================================================================
   Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
-          1           2.88    12MB     57517.8         123883.        8.33%
-         15           7.22    12MB     123883.         123883.      100.00%
+          1           0.94    12MB     55773.0         123883.        8.24%
+*         2           1.02    12MB     55773.0         123883.        9.82%
+*         3           6.01    12MB     55773.0         123883.       63.60%
+         13           6.82    12MB     123883.         123883.      100.00%
 
                          *** Normal completion ***            
 
- Wall clock time:                     7.22
- Total CPU time used:                 7.22
+ Wall clock time:                     6.83
+ Total CPU time used:                 6.82
 
- Total no. of BaR iterations:      15
- Best solution found at node:      15
- Max. no. of nodes in memory:       4
+ Total no. of BaR iterations:      13
+ Best solution found at node:       3
+ Max. no. of nodes in memory:       3
  
  All done
 ===========================================================================
-BARON 24.5.8 (2024.05.08): 15 iterations, optimal within tolerances.
+BARON 24.5.8 (2024.05.08): 13 iterations, optimal within tolerances.
 Objective 123882.6143
-Objective lower bound = 123882.61434914616, upper bound = 123882.61434914616
+Objective lower bound = 123882.61430818084, upper bound = 123882.61430818084
 barstatus = 1, modelstatus = 1
-max nodes in memory = 4
-optimum found at node 15
-Baron run time (excluding setup) = 7.21 seconds
+max nodes in memory = 3
+optimum found at node 3
+Baron run time (excluding setup) = 6.81 seconds
 
 suffix obj_ub OUT;
 suffix obj_lb OUT;
 eps :=
-1 2   1.56742e-06
-2 3   4.57086e-06
-2 6   2.56538e-06
-3 4   2.41583e-06
-4 5   2.13754e-06
-6 7   2.15386e-06
-7 5   1.94078e-06
+1 2   1.58069e-06
+2 3   4.60957e-06
+2 6   2.5871e-06
+3 4   2.43629e-06
+4 5   2.15564e-06
+6 7   2.1721e-06
+7 5   1.95722e-06
 ;
 
 *******************************************************************************
@@ -89,7 +91,7 @@ eps :=
 Constraints violation:
 
 
-Sum of constraints violation: 8.375743569787042e-07
+Sum of constraints violation: 1.833320277576725e-07
 *******************************************************************************
 
 *******************************************************************************
@@ -99,29 +101,29 @@ Absolute and relative violations between original and approximation constraint 2
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 | Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
 +=================+==============+==========================+========================+======================+======================+
-| 1,2             |  0.42043     |                       -0 |               -0       |             -0       |          -0          |
+| 1,2             |  0.42043     |                  0       |                0       |                    0 |                0     |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.292211    |                       -0 |               -0       |             -0       |          -0          |
+| 2,3             |  0.292211    |                 -0       |               -0       |                    0 |                0     |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,6             |  0.128219    |                       -0 |               -0       |             -0       |          -0          |
+| 2,6             |  0.128219    |                 -0       |               -0       |                    0 |                0     |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,4             |  0.248771    |                       -0 |               -0       |             -0       |          -0          |
+| 3,4             |  0.248771    |                 -0       |               -0       |                    0 |                0     |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.208481    |                       -0 |               -0       |             -0       |          -0          |
+| 4,5             |  0.208481    |                 -0       |               -0       |                    0 |                0     |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0804393   |                       -0 |               -0       |             -0       |          -0          |
+| 6,7             |  0.0804393   |                 -0       |               -0       |                    0 |                0     |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,5             |  0.000119277 |                       -0 |               -8.2e-07 |             -8.2e-07 |          -0.00011278 |
+| 7,5             |  0.000119277 |                 -1.7e-07 |               -1.7e-07 |                    0 |                1e-08 |
 +-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
 
-Sum of violation of original headloss constraint: 1.0186159004818562e-08
-Sum of violation of approx headloss constraint: 8.355697168442588e-07
+Sum of violation of original headloss constraint: 1.8204731577157324e-07
+Sum of violation of approx headloss constraint: 1.8198281133852828e-07
 
-Con2 sum of absolute violation between original function and approximate function: 8.253835578394403e-07
-Con2 sum of relative violation between original function and approximate function: 0.00011277689094109714
+Con2 sum of absolute violation between original function and approximate function: 6.450798575863281e-11
+Con2 sum of relative violation between original function and approximate function: 8.861582808832914e-09
 *******************************************************************************
 
-Total cost using baron: 123882.61434914618
-baron solve time: 7.27 seconds
+Total cost using baron: 123882.6143081808
+baron solve time: 6.87 seconds
 *******************************************************************************
 
