@@ -33,6 +33,7 @@ class WaterNetworkOptimizer:
         self.solver_time = 0
         self.best_acyclic_flow = None
         self.number_of_nlp = 0
+        self.tol = 0
 
     def load_model(self):
         """Load the model and data."""
@@ -1311,7 +1312,7 @@ class WaterNetworkOptimizer:
             for (x, y, k), val in self.l.items():
                 # if (x,y) != (i,j):
                 # if val >= 1e-3 and val <=1e-3:
-                ampl.eval(f'let l[{x},{y},{k}] := {val};')
+                ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
                 ampl.eval(f'let q[{x},{y}] := {val};')
                 if self.data_number ==5:
@@ -1319,6 +1320,17 @@ class WaterNetworkOptimizer:
                     ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
             for x, val in self.h.items():
                 ampl.eval(f'let h[{x}] := {val};') 
+            
+            current_duals = {}
+            for con_name, val in ampl.get_constraints():
+                dual_values = val.get_values()
+                current_duals[con_name] = dual_values
+
+            # Initialize dual values for all constraints
+            for con_name, dual_values in self.all_duals.items():
+                if con_name in current_duals:
+                    ampl.get_constraint(con_name).set_values(dual_values)
+ 
             # self.update_initial_points_with_perturbation(ampl, self.l, self.q, self.h) 
             
             # ampl.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] <= {self.current_cost};""")
@@ -1333,7 +1345,7 @@ class WaterNetworkOptimizer:
 
             ampl.option['solver'] = "ipopt" 
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
-            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_init = {self.mu_init}"
             #ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes"
             #with self.suppress_output():
             #ampl.option["presolve_eps"]= "7.19e-13"
@@ -1455,7 +1467,7 @@ class WaterNetworkOptimizer:
             for (x, y, k), val in self.l.items():
                 # if (x,y) != (i,j):
                 # if val >= 1e-3 and val <=1e-3:
-                ampl.eval(f'let l[{x},{y},{k}] := {val};')
+                ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
                 ampl.eval(f'let q[{x},{y}] := {val};')
                 if self.data_number ==5:
@@ -1463,6 +1475,18 @@ class WaterNetworkOptimizer:
                     ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
             for x, val in self.h.items():
                 ampl.eval(f'let h[{x}] := {val};') 
+            
+            current_duals = {}
+            for con_name, val in ampl.get_constraints():
+                dual_values = val.get_values()
+                current_duals[con_name] = dual_values
+
+            # Initialize dual values for all constraints
+            for con_name, dual_values in self.all_duals.items():
+                if con_name in current_duals:
+                    # Initialize dual values for each constraint
+                    ampl.get_constraint(con_name).set_values(dual_values) 
+ 
             # self.update_initial_points_with_perturbation(ampl, self.l, self.q, self.h)
             # ampl.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] <= {self.current_cost};""")
             # ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
@@ -1479,7 +1503,7 @@ class WaterNetworkOptimizer:
 
             ampl.option['solver'] = "ipopt" 
 
-            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_init = {self.mu_init}"
             #ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes"
             #with self.suppress_output():
             #ampl.option["presolve_eps"]= "7.19e-13"
@@ -1601,7 +1625,7 @@ class WaterNetworkOptimizer:
             for (x, y, k), val in self.l.items():
                 # if (x,y) != (i,j):
                 # if val >= 1e-3 and val <=1e-3:
-                ampl.eval(f'let l[{x},{y},{k}] := {val};')
+                ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
                 ampl.eval(f'let q[{x},{y}] := {val};')
                 if self.data_number ==5:
@@ -1609,7 +1633,18 @@ class WaterNetworkOptimizer:
                     ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
             for x, val in self.h.items():
                 ampl.eval(f'let h[{x}] := {val};') 
-                
+            
+            current_duals = {}
+            for con_name, val in ampl.get_constraints():
+                dual_values = val.get_values()
+                current_duals[con_name] = dual_values
+
+            # Initialize dual values for all constraints
+            for con_name, dual_values in self.all_duals.items():
+                if con_name in current_duals:
+                    # Initialize dual values for each constraint
+                    ampl.get_constraint(con_name).set_values(dual_values)               
+            
             #self.ampl.eval(f"set inarc := {{{inarc_set}}};")
             #self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
             fix_arc_set = self.fix_leaf_arc_flow()
@@ -1621,7 +1656,7 @@ class WaterNetworkOptimizer:
                 ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
             # with self.suppress_output():
             ampl.option["solver"] = "ipopt"
-            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
+            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes mu_init = {self.mu_init}")   #max_iter = 1000
             ampl.option["presolve_eps"] = "6.82e-14"
             ampl.option['presolve'] = 1
             with self.suppress_output():
@@ -1722,7 +1757,7 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         self.ampl.option["solver"] = "ipopt"
-        self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no mu_init = {self.mu_init} warm_start_same_structure = no")   #max_iter = 1000
         # self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
         # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
         #self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0 warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
@@ -1788,6 +1823,7 @@ class WaterNetworkOptimizer:
         """Main method to run the optimization process."""
         self.start_time = time.time()
         self.bound_push , self.bound_frac = (0.1, 0.1)
+        self.mu_init = 0.1
         # print("NLP solve using:  smooth approximation 1, Epsilon selection using absolute error\n")
         # print("NLP solve using: smooth approximation 1, epsilon selection using relative error\n")
         # print("NLP solve using: smooth approximation 2, epsilon selection using absolute error\n")

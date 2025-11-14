@@ -14,7 +14,7 @@ class WaterNetworkSolver:
         self.data_file = data_file
         self.data_number = data_number
         self.ampl = AMPL()
-        
+        self.ampl.setOption('hsllib', '/usr/local/lib/libma57.so')        
         # To store solutions
         self.q_init = {}
         self.h_init = {}
@@ -689,7 +689,7 @@ class WaterNetworkSolver:
 
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
 
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes "
 
         #ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.001 bound_frac = 0.001 nlp_scaling_method = gradient-based  warm_start_init_point = yes halt_on_ampl_error = yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9")   #max_iter = 1000
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 5 bonmin.nlp_log_level 2 warm_start_init_point = no bonmin.num_resolve_at_root = 10 tol = 1e-9 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.1 bound_frac = 0.1 bonmin.time_limit = 600"
@@ -708,8 +708,8 @@ class WaterNetworkSolver:
         self.ampl.option["knitro_options"] = "maxtime_real = 300 outlev = 4 opttol_abs=1e-6 opttol = 1e-9 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "1"
-        self.ampl.option["presolve_eps"] = "8.53e-15"
-        
+        self.ampl.option["presolve_eps"] = "8.53e-15" 
+        self.ampl.option["hsllib"]= "/usr/local/lib/libma57.so"        
         # self.ampl.option["presolve_eps"] = "3.75e-14"
         #print(f"{self.solver_name} solver outputs:\n")
         
@@ -922,8 +922,10 @@ class WaterNetworkSolver:
 
         # Change solver and solve
         self.ampl.option['solver'] = self.solver_name
+        self.ampl.option["hsllib"]= "/usr/local/lib/libma57.so"        
+
         self.ampl.option["mmultistart_options"] = "--presolve 1 --log_level 3 --eval_within_bnds 1 --nlp_engine IPOPT"
-        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+        self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes hsllib = /usr/local/lib/libma57.so"
         self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0 mipgap = 1e-9 NumericFocus = 1" 
         self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 barstats version objbound" # lsolver = conopt
         self.ampl.option["scip_options"] = "outlev  1 timelimit 3600 lim:gap = 1e-9 chk:feastol = 1e-5 chk:feastolrel=0 " #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
