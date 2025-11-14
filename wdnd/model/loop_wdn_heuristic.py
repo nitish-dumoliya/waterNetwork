@@ -1668,15 +1668,16 @@ class WaterNetworkOptimizer:
         self.number_of_nlp += 1
 
     def run(self):
-        """Main method to run the optimization process."""
+        """Main function to run the Heuristic Approach."""
         self.start_time = time.time()
         self.bound_push , self.bound_frac = (0.1, 0.1)
         self.mu_init = 0.1
         # print("NLP solve using:  smooth approximation 1, Epsilon selection using absolute error\n")
         # print("NLP solve using: smooth approximation 1, epsilon selection using relative error\n")
         # print("NLP solve using: smooth approximation 2, epsilon selection using absolute error\n")
-        print("NLP solve using: smooth approximation 2, epsilon selection using relative error\n")
-        print("********************Initail Ipopt Solution of Approximate WDN Design Model******************\n")
+        print("NLP Model: Smooth Approximatate Model 2, Epsilon Selection using Relative Error")
+        print("NLP Solver: Ipopt")
+        print("********************Initail Ipopt Solution of Approximate WDN Design Model******************")
         self.load_model()
         fix_arc_set = self.fix_leaf_arc_flow()
         print("fix_arc_set:",fix_arc_set)
@@ -1784,7 +1785,7 @@ if __name__ == "__main__":
     #input_data_file = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{file_name}"
     input_data_file = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{data_list[(data_number)]}.dat"
     # print(data_number)
-    print("Water Network:", data_list[(data_number)],"\n")
+    print("Water Network:", data_list[(data_number)])
     if data_number==5:
         optimizer = WaterNetworkOptimizer("newyork_model.mod", input_data_file, data_number, data_list)
     elif data_number == 6:
