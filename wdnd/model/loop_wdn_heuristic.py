@@ -1127,7 +1127,7 @@ class WaterNetworkOptimizer:
     def headloss_increase(self):
         improved = False
         # print("\n*********************************************************************************************")
-        print("Iteration :", self.headloss_increase_iteration + self.iteration, "\n")
+        print("Iteration :", self.headloss_increase_iteration + self.iteration)
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
             self.all_duals[con_name] = val.getValues()
@@ -1280,7 +1280,7 @@ class WaterNetworkOptimizer:
                     else:
                         arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
         # print("\n*********************************************************************************************")
-        print("Iteration :",self.dia_red_iteration + self.headloss_increase_iteration + self.iteration, "\n")
+        print("Iteration :",self.dia_red_iteration + self.headloss_increase_iteration + self.iteration)
 
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -1425,7 +1425,7 @@ class WaterNetworkOptimizer:
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
 
         # print("\n*********************************************************************************************")
-        print("Iteration :",self.iteration, "\n")
+        print("Iteration :",self.iteration)
         improved = False
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -1677,7 +1677,7 @@ class WaterNetworkOptimizer:
         # print("NLP solve using: smooth approximation 2, epsilon selection using absolute error\n")
         print("NLP Model: Smooth Approximatate Model 2, Epsilon Selection using Relative Error")
         print("NLP Solver: Ipopt")
-        print("********************Initial Ipopt Solution of Approximate WDN Design Model******************")
+        print("************************Initial Solution of Approximate WDN Design Model**********************")
         self.load_model()
         fix_arc_set = self.fix_leaf_arc_flow()
         print("fix_arc_set:",fix_arc_set)
@@ -1707,7 +1707,7 @@ class WaterNetworkOptimizer:
             self.q1 = self.ampl.getVariable('q1').getValues().to_dict()
             self.q2 = self.ampl.getVariable('q2').getValues().to_dict()
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
-        print("***************************Improve the Initial Ipopt Solution**********************************\n")
+        print("*****************************Improve the Initial Solution*************************************\n")
         self.super_source_out_arc = self.fix_arc_set()
         self.network_graph = self.generate_random_acyclic_from_solution(self.q)
         # print("Fix the flow direction in optimization model and solve the updated model")
@@ -1746,7 +1746,7 @@ class WaterNetworkOptimizer:
         # self.max_flow_iteration = 1
         # self.visited_arc = []
         # self.max_flow() 
-        print("\n**********************************Final Best Results*****************************************\n")
+        print("\n************************************Final Best Results*****************************************")
         print("Water Network:", self.data_list[self.data_number])
         # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').getValues().to_dict()
@@ -1759,7 +1759,7 @@ class WaterNetworkOptimizer:
         solver_time = self.solver_time
         print(f"Solver_time: {solver_time:.2f} seconds")
         # print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
-        print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds\n")
+        print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds")
         print("***********************************************************************************************\n")
 
 if __name__ == "__main__":
