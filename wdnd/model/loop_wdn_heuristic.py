@@ -1675,7 +1675,7 @@ class WaterNetworkOptimizer:
         # print("NLP solve using:  smooth approximation 1, Epsilon selection using absolute error\n")
         # print("NLP solve using: smooth approximation 1, epsilon selection using relative error\n")
         # print("NLP solve using: smooth approximation 2, epsilon selection using absolute error\n")
-        print("NLP Model: Smooth Approximatate Model 2, Epsilon Selection using Relative Error")
+        print("NLP Model: Smooth Approximatate WDN Design Model 2, Epsilon Selection using Relative Error")
         print("NLP Solver: Ipopt")
         print("************************Initial Solution of Approximate WDN Design Model**********************")
         self.load_model()
@@ -1753,7 +1753,7 @@ class WaterNetworkOptimizer:
         print(f"Final best objective: {self.current_cost}")
         #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
-        print("Total number of iteration:", self.iteration + self.dia_red_iteration)
+        print("Total number of iteration:", self.iteration + self.headloss_increase_iteration + self.dia_red_iteration)
         self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
