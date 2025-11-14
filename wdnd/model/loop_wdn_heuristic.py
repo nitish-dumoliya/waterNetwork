@@ -9,7 +9,6 @@ import os
 import contextlib
 from sklearn.decomposition import PCA
 import random
-
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 from tabulate import tabulate
@@ -18,7 +17,7 @@ import warnings
 warnings.filterwarnings("ignore")
 from pyswarm import pso
 import multiprocessing
-
+from network_layout import node_position
 
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number, data_list):
@@ -39,15 +38,13 @@ class WaterNetworkOptimizer:
         """Load the model and data."""
         self.ampl.reset()
         self.ampl.read(self.model_file)
-        self.ampl.read_data(self.data_file)
-        
+        self.ampl.read_data(self.data_file) 
         self.nodes = self.ampl.getSet('nodes')
         self.source = self.ampl.getSet('Source')
         self.arcs = self.ampl.getSet('arcs')
         self.pipes = self.ampl.getSet('pipes')
         if self.data_number == 6:
             self.fixarcs = self.ampl.getSet('fixarcs')
-
         self.L = self.ampl.getParameter('L').to_dict()
         self.D = self.ampl.getParameter('D').to_dict()
         self.C = self.ampl.getParameter('C').to_dict()
@@ -56,8 +53,6 @@ class WaterNetworkOptimizer:
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
         #self.eps = self.ampl.getParameter('eps').to_dict()
-        
-        
         self.delta = 0.1
         self.p = 1.852
         self.omega = 10.67
@@ -81,129 +76,33 @@ class WaterNetworkOptimizer:
         print("Objective:", self.total_cost)
     
     def plot_graph(self, super_source_out_arc=None, current_cost = None, iteration = 1, edge_weights= None, h = None, D = None, arc=(0,0), l ={}, C = {}):           
-        node_coordinate_d1 = {
-             2 : (2000.00, 3000.00),
-             3 : (1000.00, 3000.00),        
-             4 : (2000.00, 2000.00),        
-             5 : (1000.00, 2000.00),       
-             6 : (2000.00, 1000.00),       
-             7 : (1000.00, 1000.00),      
-             1 : (3000.00, 3000.00)     
-            }  
-        
-        node_coordinate_d2 = {
-            2: (6000.00, 2000.00),
-            3: (6000.00, 4000.00),
-            4: (7500.00, 4000.00),
-            5: (9000.00, 4000.00),
-            6: (10000.00, 4000.00),
-            7: (10000.00, 6000.00),
-            8: (10000.00, 8000.00),
-            9: (10000.00, 10000.00),
-            10: (9000.00, 10000.00),
-            11: (9000.00, 11500.00),
-            12: (9000.00, 13000.00),
-            13: (7000.00, 13000.00),
-            14: (8000.00, 10000.00),
-            15: (7000.00, 10000.00),
-            16: (6000.00, 10000.00),
-            17: (6000.00, 8500.00),
-            18: (6000.00, 7000.00),
-            19: (6000.00, 5500.00),
-            20: (4500.00, 4000.00),
-            21: (4500.00, 2000.00),
-            22: (4500.00, 0.00),
-            23: (3000.00, 4000.00),
-            24: (3000.00, 7000.00),
-            25: (3000.00, 10000.00),
-            26: (4000.00, 10000.00),
-            27: (5000.00, 10000.00),
-            28: (1500.00, 4000.00),
-            29: (0.00, 4000.00),
-            30: (0.00, 7000.00),
-            31: (0.00, 10000.00),
-            32: (1500.00, 10000.00),
-            1: (8000.00, 0.00)
-        }       
-        
-        node_coordinate_d16 = {
-            2: (5679.61, 9538.83),
-            3: (4862.46, 9538.83),
-            4: (2750.81, 9474.11),
-            5: (1852.75, 8357.61),
-            6: (1974.11, 6076.05),
-            7: (1974.11, 5149.68),
-            8: (4235.44, 5076.86),
-            9: (6411.81, 5093.04),
-            10: (5412.62, 7888.35),
-            11: (4510.52, 8264.56),
-            12: (3033.98, 9243.53),
-            13: (2301.78, 8078.48),
-            14: (2944.98, 7669.90),
-            15: (3786.41, 7139.97),
-            16: (4830.10, 6480.58),
-            17: (7099.51, 8438.51),
-            18: (5505.66, 8450.65),
-            19: (3563.92, 8839.00),
-            20: (3167.48, 7532.36),
-            21: (2730.58, 7285.60),
-            22: (3511.33, 6666.67),
-            23: (4097.90, 6286.41),
-            24: (3337.38, 5121.36),
-            25: (4530.74, 6011.33),
-            26: (4215.21, 7783.17),
-            27: (5194.17, 7055.02),
-            28: (5218.45, 5089.00),
-            29: (5622.98, 5999.19),
-            30: (5950.65, 5796.93),
-            31: (6614.08, 7621.36),
-            32: (5380.26, 7544.50),
-            33: (6318.77, 7281.55),
-            34: (6549.35, 7212.78),
-            35: (6585.76, 6092.23),
-            36: (7152.10, 6104.37),
-            1: (7111.65, 7532.36),
-            37: (7669.90, 7783.17)
-        }
-
+        pos = node_position[self.data_number]
         # # Update node positions
-        pos = node_coordinate_d1
+        # pos = node_coordinate_d1
         # pos = nx.spectral_layout(self.network_graph)
-
         cost = {}
-
         for (i,j) in self.ampl.getSet('arcs'):
             cost[i,j] = sum(l[i,j,k] * C[k] for k in self.pipes)
-        
         plt.figure(figsize=(10, 8))
         # plt.figure(figsize=(15, 11))
         cmap = plt.cm.plasma
         network_graph = self.generate_random_acyclic_from_solution(edge_weights)
-        nx.draw_networkx_nodes(network_graph, pos, node_color='lightblue',edgecolors="black", node_size=300,linewidths=0.5, label='Regular Nodes')
-        
+        nx.draw_networkx_nodes(network_graph, pos, node_color='lightblue',edgecolors="black", node_size=300,linewidths=0.5, label='Regular Nodes') 
         indegree_2_or_more = [node for node, indeg in network_graph.in_degree() if indeg >= 2]
         if indegree_2_or_more:
             nx.draw_networkx_nodes(network_graph, pos, nodelist=indegree_2_or_more, node_color='orange',edgecolors="orange", node_size=300, label='Nodes with In-Degree ≥ 2')
-        
         # nx.draw_networkx_nodes(self.network_graph, pos, nodelist=list(self.source), node_color='cornflowerblue',edgecolors="black", node_size=300,linewidths=0.5, label='Source node')
         # if not self.visited_nodes:
         #     nx.draw_networkx_nodes(self.network_graph, pos, nodelist=indegree_2_or_more, node_color='orange',edgecolors="black", node_size=300,linewidths=0.5, label='Nodes with In-Degree ≥ 2')
-            
         # if self.sorted_nodes:
         #     nx.draw_networkx_nodes(self.network_graph, pos, nodelist=self.sorted_nodes, node_color='orange',edgecolors="black", node_size=300,linewidths=0.5, label='Visited nodes')
-            
         # if self.visited_nodes:
         #     visited_nodes = [item for item in  self.visited_nodes if item in self.indegree_2_or_more]
         #     nx.draw_networkx_nodes(self.network_graph, pos, nodelist=visited_nodes, node_color='violet',edgecolors="black", node_size=300,linewidths=0.5, label='Sorted nodes')
-
-        
         nx.draw_networkx_labels(network_graph, pos, font_size=10)
-        
         nx.draw_networkx_edges(network_graph, pos, arrowstyle="->", arrowsize=12, edge_color='black', label='Regular Arcs', arrows=True) # arrows=False
-
         if super_source_out_arc:
             nx.draw_networkx_edges(network_graph, pos, edgelist=super_source_out_arc,arrowstyle="->", arrowsize=12, edge_color='red', width=1, label='Fix arc direction')
-        
         # if best_arc:
         #     nx.draw_networkx_edges(self.network_graph, pos, edgelist=[best_arc],arrowstyle="->", arrowsize=12, edge_color='magenta', width=1, label = 'Best arc')
         # Annotate node demands
@@ -220,7 +119,6 @@ class WaterNetworkOptimizer:
                 demand = D.get(node, 0)  # Get the demand for the node, default to 0 if not in dictionary
                 # plt.text(x-250, y - 400, f"{demand*1000:.2f}", fontsize=10, color='black', ha='center')  # Annotate demand below the node
                 plt.text(x-80, y - 130 , f"{demand:.2f}", fontsize=10, color='magenta', ha='center')  # Annotate demand below the node
-            
         if edge_weights:
             for (u, v), weight in edge_weights.items():
                 # if self.network_graph.has_edge(u, v):
@@ -241,8 +139,7 @@ class WaterNetworkOptimizer:
             for k in self.pipes:
                 if l[i,j,k]>= 1e-5:
                     list_.append(k)
-            pipe_dia_arc[i,j] = list_
-        
+            pipe_dia_arc[i,j] = list_ 
         if pipe_dia_arc:
             for (u, v), weight in pipe_dia_arc.items():
                 # if self.network_graph.has_edge(u, v):
@@ -265,7 +162,6 @@ class WaterNetworkOptimizer:
         plt.savefig(f"/home/nitishdumoliya/waterNetwork/wdnd/figure/newfigure/d{self.data_number}_iteration_{iteration}.png")
         plt.box(False)
         plt.show()
-
     
     def cycle_basis(self):
         root = self.ampl.getSet('Source').to_list()[0]
@@ -278,61 +174,49 @@ class WaterNetworkOptimizer:
         print("cycle basis for given water network: ",nx.cycle_basis(uwg, root))
         
     def generate_random_acyclic_from_solution(self, q):
-        # print("Generate the acyclic network using ipopt solution")
-        
+        # print("Generate the acyclic network using ipopt solution") 
         self.network_graph = nx.DiGraph()
-        self.network_graph.add_nodes_from(self.nodes)
-        
+        self.network_graph.add_nodes_from(self.nodes) 
         # q = self.ampl.getVariable('q').getValues().toDict()
         for (i,j) in self.arcs:
             if q[i,j] >= 0:
                 self.network_graph.add_edge(i,j)
             else:
                 self.network_graph.add_edge(j,i)
-        
         return self.network_graph
-
-    
+ 
     def generate_random_acyclic_graph(self):
         uwg = nx.Graph()
         nodes_list = [i for i in self.ampl.getSet('nodes')]
         edges_list = self.ampl.getSet('arcs').to_list()
         uwg.add_nodes_from(nodes_list)
         uwg.add_edges_from(edges_list)
-        print("Edges in the undirected graph:", edges_list)
-        
+        print("Edges in the undirected graph:", edges_list) 
         # Generate a random spanning tree using Wilson's algorithm
-        random_tree = nx.random_spanning_tree(uwg)
-        
+        random_tree = nx.random_spanning_tree(uwg) 
         # Retrieve the root from the AMPL source set
         root_l = self.ampl.getSet('Source').to_list()
         root = root_l[0]
         print("Root node:", root)
-
         # Ensure the root is present in the random tree
         if root not in random_tree.nodes:
             raise ValueError("The specified root must be a node in the graph.")
-
         # Create a directed graph from the random tree starting from the specified root
         self.network_graph = nx.DiGraph()
         visited = set()
-
         def dfs(node):
             visited.add(node)
             for neighbor in random_tree.neighbors(node):
                 if neighbor not in visited:
                     self.network_graph.add_edge(node, neighbor) 
                     dfs(neighbor)
-
         # Start DFS from the specified root
         dfs(root)
-
         # Draw the initial directed tree
         plt.figure(figsize=(15, 10))
         plt.subplot(121)
         nx.draw_spectral(self.network_graph, with_labels=True, node_color='lightgreen', font_weight='bold', arrows=True)
         plt.title("Directed Spanning Tree")
-
         # Add remaining edges from the original graph and check for cycles
         for u, v in uwg.edges():
             if not self.network_graph.has_edge(u, v):  
@@ -340,7 +224,6 @@ class WaterNetworkOptimizer:
                 if not nx.is_directed_acyclic_graph(self.network_graph):  
                     self.network_graph.remove_edge(u, v)  
                     self.network_graph.add_edge(v, u)  
-
         # Draw the final directed graph after adding remaining edges
         plt.subplot(122)
         nx.draw_spectral(self.network_graph, with_labels=True, node_color='lightgreen', font_weight='bold', arrows=True)
@@ -360,7 +243,6 @@ class WaterNetworkOptimizer:
                 self.ampl.eval(f"s.t. flow_direction{i}_{j}: q[{j},{i}] <=0;")
                 # self.ampl.eval(f"s.t. head_bound_left{i}_{j}: E[{i}]+P[{i}] <= h[{i}];")
                 # self.ampl.eval(f"s.t. head_bound_right{i}_{j}: E[{i}] + P[{i}] <= h[{j}];")  
-
 
     def is_valid_edge(self, source, target):
         """Check if adding the directed edge (source -> target) maintains acyclicity."""
@@ -517,17 +399,13 @@ class WaterNetworkOptimizer:
 
     def update_initial_points1(self,l_solution, q_solution, h_solution, inarc):
         for (i, j, k), val in l_solution.items():
-            self.ampl.eval(f'let l[{i},{j},{k}] := {val};')
-        
+            self.ampl.eval(f'let l[{i},{j},{k}] := {val};')        
         edge_list_network = self.network_graph.edges
-        
         for i, val in h_solution.items():
-            self.ampl.eval(f'let h[{i}] := {val};')
-        
+            self.ampl.eval(f'let h[{i}] := {val};') 
         for (i, j), val in q_solution.items():
             edge = (i, j)
-            if edge in edge_list_network:
-                 
+            if edge in edge_list_network: 
                 if (i,j) not in inarc:
                     # print(f"self.ampl.eval(let q[{i},{j}] := {val};)")
                     self.ampl.eval(f"let q[{i},{j}] := {val} ;")
@@ -540,8 +418,7 @@ class WaterNetworkOptimizer:
                     self.ampl.eval(f"let q[{i},{j}] := {val};")
                 else:
                     # print(f"self.ampl.eval(let q[{j},{i}] := {-val};)")
-                    self.ampl.eval(f"let q[{j},{i}] := {val} ;")
-        
+                    self.ampl.eval(f"let q[{j},{i}] := {val} ;") 
         # current_duals = {}
         # for con_name, val in self.ampl.get_constraints():
         #     dual_values = val.get_values()
@@ -554,7 +431,7 @@ class WaterNetworkOptimizer:
                 # self.ampl.get_constraint(con_name).set_values(dual_values)
             # else:
             #     print(f"Skipping initialization for constraint: {con_name} (not in current model)")
-    
+
     def update_initial_points_with_perturbation1(self, l_solution, q_solution, h_solution,all_duals, inarc, delta=0.1):
         edge_list_network = self.network_graph.edges
         L = self.ampl.getParameter('L').getValues().to_dict()
@@ -574,14 +451,12 @@ class WaterNetworkOptimizer:
                     new_val = val + perturbation
                     self.ampl.eval(f'let l[{i},{j},{k}] := {new_val};')
                 else:
-                    self.ampl.eval(f'let l[{i},{j},{k}] := {0};')
-                    
+                    self.ampl.eval(f'let l[{i},{j},{k}] := {0};')            
         # Perturb h values
         for i, val in h_solution.items():
             perturbation = random.gauss(0, 1)
             new_val = val + perturbation
             self.ampl.eval(f'let h[{i}] := {new_val};')
-
         # Modify q values based on heuristic
         for (i, j), val in q_solution.items():
             edge = (i, j)
@@ -595,13 +470,11 @@ class WaterNetworkOptimizer:
                 if (j, i) not in inarc:
                     self.ampl.eval(f"let q[{i},{j}] := {val + perturbation};")
                 else:
-                    self.ampl.eval(f"let q[{j},{i}] := {(val + perturbation)};")
-        
+                    self.ampl.eval(f"let q[{j},{i}] := {(val + perturbation)};") 
         current_duals = {}
         for con_name, val in self.ampl.get_constraints():
             dual_values = val.get_values()
             current_duals[con_name] = dual_values
-
         # Initialize dual values for all constraints
         for con_name, dual_values in all_duals.items():
             if con_name in current_duals:
@@ -621,13 +494,11 @@ class WaterNetworkOptimizer:
             #     ampl.eval(f'let l[{i},{j},{k}] := {new_val};')
             # else:
             #     ampl.eval(f'let l[{i},{j},{k}] := {0};')
-
         # Perturb h values
         for i, val in h_solution.items():
             perturbation = random.gauss(0, delta)
             new_val = val + perturbation
             ampl.eval(f'let h[{i}] := {new_val};')
-
         # Modify q values based on heuristic
         for (i, j), val in q_solution.items():
             edge = (i, j)
@@ -635,8 +506,7 @@ class WaterNetworkOptimizer:
             if val >= 0:
                 ampl.eval(f"let q[{i},{j}] := {val + perturbation};")
             else:
-                ampl.eval(f"let q[{i},{j}] := {val + perturbation};")
-                    
+                ampl.eval(f"let q[{i},{j}] := {val + perturbation};") 
         # current_duals = {}
         # for con_name, val in ampl.get_constraints():
         #     dual_values = val.get_values()
@@ -654,26 +524,20 @@ class WaterNetworkOptimizer:
         max_q = self.ampl.getParameter('D').getValues().toDict()
         # print(max_q[1])
         # for i, value in max_q.items():
-        #     print(value)
-        
+        #     print(value) 
         source = self.ampl.getSet('Source').to_list()
         E = self.ampl.getParameter('E').getValues().toDict()
-        P = self.ampl.getParameter('P').getValues().toDict()
-        
+        P = self.ampl.getParameter('P').getValues().toDict() 
         # Define the number of starts for multistart heuristic
-        num_starts = 10
-        
+        num_starts = 10 
         # Set a random seed for reproducibility
-        random.seed(num_starts)
-        
+        random.seed(num_starts) 
         # Loop for multistart heuristic
-        for start in range(num_starts):
-            
+        for start in range(num_starts): 
             for (i,j) in self.arcs:
                 for k in self.pipes:
                     value = random.uniform(0, max_l)  
                     self.ampl.eval(f' let l[{i},{j},{k}] := {self.l[i,j,k]};')
-
             for (i,j) in self.network_graph.edges:
                 if (i,j) not in inarc:
                     if (i,j) in self.arcs:
@@ -689,19 +553,16 @@ class WaterNetworkOptimizer:
                     else:
                         value = random.uniform(max_q[1], 0)
                         self.ampl.eval(f'let q[{j},{i}] := {value};')
-
             # for (i,j) in self.ampl.get_set("arcs").to_list():
             #     value = random.uniform(max_q[1], -max_q[1])  
             #     self.ampl.eval(f'let q[{i},{j}] := {value};')
             for i in self.nodes:
                 value = random.uniform(E[i]+P[i], E[source[0]])  
                 self.ampl.eval(f'let h[{i}] := {self.h[i]};')
-
             self.ampl.set_option("solver", "ipopt")
             self.ampl.set_option("ipopt_options", "outlev = 0 expect_infeasible_problem = yes bound_push = 0.01 bound_frac = 0.001 warm_start_init_point = yes halt_on_ampl_error = yes")
             # ampl.option[""]
             self.ampl.solve()
-
             if self.ampl.solve_result == 'solved':
                 cost = self.ampl.get_objective("total_cost").value()
                 print(cost)
@@ -744,15 +605,13 @@ class WaterNetworkOptimizer:
                         #     acyclic_arc.add((u,v))
                         # else:
                         #     acyclic_arc.add((v,u))
-
                     network_graph.remove_edge(v, u)
                     network_graph.add_edge(u, v)
         return acyclic_arc
     
     def constraint_violations(self, q_values, h_values, l_values, epsilon, solver):
         total_absolute_constraint_violation = 0
-        total_relative_constraint_violation = 0
-         
+        total_relative_constraint_violation = 0 
         con1_gap = {}
         if self.data_number==5:
             q1 = self.q1
@@ -968,8 +827,8 @@ class WaterNetworkOptimizer:
                 total_absolute_constraint_violation += abs(con6_violation)
         #print("con6_gap:", con6_gap)
 
-        print("*******************************************************************************\n")
-        print("Constraints violation:\n")
+        # print("*******************************************************************************\n")
+        # print("Constraints violation:")
 
         table_data = []
         for constraint, vio in con1_gap.items():
@@ -987,43 +846,36 @@ class WaterNetworkOptimizer:
 
         #headers = ["Constraint ID", "Violation"]
         #print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        print("\nSum of constraints violation:", total_absolute_constraint_violation)
-
+        print("Sum of constraints violation:", total_absolute_constraint_violation)
         #print("*******************************************************************************\n")
         #table_data = []
         #for constraint, vio in con2_original_gap.items():
         #       table_data.append([constraint, f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}"])
 
-        print("*******************************************************************************\n")
+        # print("*******************************************************************************\n")
         #print("Constraint 2 violations:\n")
         #headers = ["Constraint ID", "Original Con Violation", "Approx Con Violation"]
-        #print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        
+        #print(tabulate(table_data, headers=headers, tablefmt="grid")) 
         #print("\nSum of violation of original con2:", con2_original_violation) 
         #print("Sum of violation of approx con2:", con2_approx_violation)
-
-
         table_data = []
         for constraint, vio in relative_violations.items():
             i_str, j_str = constraint.split(',')
             i, j = int(i_str), int(j_str)
-
             table_data.append([constraint, q_values[i,j], f"{con2_original_gap[constraint]:.8f}",  f"{con2_approx_gap[constraint]:.8f}", f"{absolute_violations[constraint]:.8f}", f"{relative_violations[constraint]:.8f}"])
-
-        print("*******************************************************************************\n")
-        print("Absolute and relative violations between original and approximation constraint 2:\n")
-        headers = ["Constraint ID", "flow value", "Original Con Violation", "Approx Con Violation", "Absolute Violation", "Relative Violation(in %)"]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
-        print("\nSum of violation of original headloss constraint:", con2_original_violation) 
+        # print("*******************************************************************************\n")
+        # print("Absolute and relative violations between original and approximation constraint 2:\n")
+        # headers = ["Constraint ID", "flow value", "Original Con Violation", "Approx Con Violation", "Absolute Violation", "Relative Violation(in %)"]
+        # print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print("Sum of violation of original headloss constraint:", con2_original_violation) 
         print("Sum of violation of approx headloss constraint:", con2_approx_violation)
-        print("\nCon2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
+        print("Con2 sum of absolute violation between original function and approximate function:", con2_absolute_constraint_violation)
         print("Con2 sum of relative violation between original function and approximate function:", con2_relative_constraint_violation)
-
         # Print total violations
         #print("\nTotal absolute constraint violation:", total_absolute_constraint_violation)
         #print("Total relative constraint violation:", total_relative_constraint_violation)
 
-        print("*******************************************************************************\n")
+        # print("*******************************************************************************\n")
 
     def head_increase(self):
         improved = False
@@ -1274,10 +1126,8 @@ class WaterNetworkOptimizer:
  
     def headloss_increase(self):
         improved = False
-
-        print("\n*********************************************************************************************")
-        print("Iteration :", self.headloss_increase_iteration + self.iteration -1, "\n")
-
+        # print("\n*********************************************************************************************")
+        print("Iteration :", self.headloss_increase_iteration + self.iteration, "\n")
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
             self.all_duals[con_name] = val.getValues()
@@ -1310,8 +1160,6 @@ class WaterNetworkOptimizer:
             ampl.read_data(self.data_file)
 
             for (x, y, k), val in self.l.items():
-                # if (x,y) != (i,j):
-                # if val >= 1e-3 and val <=1e-3:
                 ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
                 ampl.eval(f'let q[{x},{y}] := {val};')
@@ -1390,6 +1238,7 @@ class WaterNetworkOptimizer:
                     #    self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
                     #print("sorted_nodes", self.sorted_nodes) 
                     self.fix_arc_set = list(set(self.super_source_out_arc) | set(self.fix_arc_set))
+                    print("----------------------------------------------------------------------------------------")
                 else:
                     print(f"{str((i,j)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
@@ -1409,6 +1258,7 @@ class WaterNetworkOptimizer:
                 self.headloss_increase_iteration = self.headloss_increase_iteration + 1
                 self.headloss_increase()
                 break
+
     def diameter_reduction(self):
         improved = False
         arc_max_dia = {}
@@ -1429,7 +1279,7 @@ class WaterNetworkOptimizer:
                         arc_max_dia[(i, j)] = d
                     else:
                         arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
-        print("\n*********************************************************************************************")
+        # print("\n*********************************************************************************************")
         print("Iteration :",self.dia_red_iteration + self.headloss_increase_iteration + self.iteration, "\n")
 
         self.all_duals = {}
@@ -1465,8 +1315,6 @@ class WaterNetworkOptimizer:
             ampl.read_data(self.data_file)
 
             for (x, y, k), val in self.l.items():
-                # if (x,y) != (i,j):
-                # if val >= 1e-3 and val <=1e-3:
                 ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
                 ampl.eval(f'let q[{x},{y}] := {val};')
@@ -1550,6 +1398,7 @@ class WaterNetworkOptimizer:
                     #    self.sorted_nodes = [item for item in self.sorted_nodes if item not in self.visited_nodes]
                     #print("sorted_nodes", self.sorted_nodes) 
                     self.fix_arc_set = list(set(self.super_source_out_arc) | set(self.fix_arc_set))
+                    print("----------------------------------------------------------------------------------------")
                 else:
                     print(f"{str((i,j)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
@@ -1575,7 +1424,7 @@ class WaterNetworkOptimizer:
         self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
 
-        print("\n*********************************************************************************************")
+        # print("\n*********************************************************************************************")
         print("Iteration :",self.iteration, "\n")
         improved = False
         self.all_duals = {}
@@ -1623,8 +1472,6 @@ class WaterNetworkOptimizer:
             ampl.read_data(self.data_file)
 
             for (x, y, k), val in self.l.items():
-                # if (x,y) != (i,j):
-                # if val >= 1e-3 and val <=1e-3:
                 ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
                 ampl.eval(f'let q[{x},{y}] := {val};')
@@ -1698,6 +1545,7 @@ class WaterNetworkOptimizer:
                         self.q1 = ampl.getVariable('q1').getValues().to_dict()
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
                     self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+                    print("----------------------------------------------------------------------------------------")
                 else:
                     print(f"{str((u, v)):<10}"
                       f"{self.format_indian_number(round(self.current_cost)):<14}"
@@ -1828,7 +1676,7 @@ class WaterNetworkOptimizer:
         # print("NLP solve using: smooth approximation 1, epsilon selection using relative error\n")
         # print("NLP solve using: smooth approximation 2, epsilon selection using absolute error\n")
         print("NLP solve using: smooth approximation 2, epsilon selection using relative error\n")
-
+        print("********************Initail Ipopt Solution of Approximate WDN Design Model******************\n")
         self.load_model()
         fix_arc_set = self.fix_leaf_arc_flow()
         print("fix_arc_set:",fix_arc_set)
@@ -1858,7 +1706,7 @@ class WaterNetworkOptimizer:
             self.q1 = self.ampl.getVariable('q1').getValues().to_dict()
             self.q2 = self.ampl.getVariable('q2').getValues().to_dict()
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
-
+        print("***************************Improve the Initail Ipopt Solution**********************************\n")
         self.super_source_out_arc = self.fix_arc_set()
         self.network_graph = self.generate_random_acyclic_from_solution(self.q)
         # print("Fix the flow direction in optimization model and solve the updated model")
@@ -1870,7 +1718,7 @@ class WaterNetworkOptimizer:
         # self.visited_arc = []
         self.visited_arc_reverse = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
-        print("\n---------------------------Reverse Arc Direction Approach------------------------------------")
+        print("---------------------------Reverse Arc Direction Approach------------------------------------")
         self.iteration = 1
         self.iterate_acyclic_flows() 
         # print("\n----------------------------Diameter Reduction Approach--------------------------------------")
@@ -1893,31 +1741,27 @@ class WaterNetworkOptimizer:
         # self.visited_arc_reverse = []
         # self.iteration = 1
         # self.iterate_acyclic_flows() 
-
-
-        print("\n-----------------------------------Max Flow Approach-----------------------------------------")
+        # print("\n-----------------------------------Max Flow Approach-----------------------------------------")
         # self.max_flow_iteration = 1
         # self.visited_arc = []
         # self.max_flow() 
-
-        print("\n**********************************Final best results*****************************************\n")
+        print("\n**********************************Final Best Results*****************************************\n")
         print("Water Network:", self.data_list[self.data_number])
-
         # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').getValues().to_dict()
-        # self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         print(f"Final best objective: {self.current_cost}")
         #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
         print("Total number of iteration:", self.iteration + self.dia_red_iteration)
+        self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
         print(f"Solver_time: {solver_time:.2f} seconds")
         # print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
         print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds\n")
+        print("***********************************************************************************************\n")
 
 if __name__ == "__main__":
-
     data_list = [
         "d1_bessa",
         "d2_shamir",
