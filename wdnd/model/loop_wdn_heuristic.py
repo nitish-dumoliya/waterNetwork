@@ -1,6 +1,8 @@
+from matplotlib.cbook import violin_stats
 import networkx as nx
 from amplpy import AMPL
 import matplotlib.pyplot as plt
+from networkx.algorithms import cycle_basis
 import numpy as np
 import time
 import copy
@@ -18,7 +20,7 @@ warnings.filterwarnings("ignore")
 from pyswarm import pso
 import multiprocessing
 from network_layout import node_position
-
+import math
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number, data_list):
         self.ampl = AMPL()
@@ -885,7 +887,7 @@ class WaterNetworkOptimizer:
             if round(val,1) == self.E[j] + self.P[j]:
                 min_head_node.append(j)
         print("\n*********************************************************************************************")
-        print("Iteration :",self.dia_red_iteration + self.iteration -1, "\n")
+        print("Iteration :",self.head_increase_iter + self.dia_red_iteration + self.iteration -1, "\n")
 
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -931,9 +933,9 @@ class WaterNetworkOptimizer:
                 ampl.eval(f'let h[{x}] := {val};') 
             # self.update_initial_points_with_perturbation(ampl, self.l, self.q, self.h) 
             if i in min_head_node:
-                ampl.eval(f"s.t. headloss{i}: h[{i}] >= {self.h[i]} + 1e-4;")
+                ampl.eval(f"s.t. headloss{i}: h[{i}] >= {self.h[i]} + 1e-2;")
             else:
-                ampl.eval(f"s.t. headloss{i}: h[{i}] <= {self.h[i]} - 1e-4;")
+                ampl.eval(f"s.t. headloss{i}: h[{i}] <= {self.h[i]} - 1e-2;")
 
             ampl.option['solver'] = "ipopt" 
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
@@ -1004,7 +1006,15 @@ class WaterNetworkOptimizer:
         improved = False
 
         print("\n*********************************************************************************************")
-        print("Iteration :", self.max_flow_iteration + self.headloss_increase_iteration + self.dia_red_iteration + self.iteration -1, "\n")
+        print("Iteration :", self.max_flow_iteration + self.headloss_increase_iteration + self.dia_red_iteration + self.iteration, "\n")
+        
+        # self.sen_score = {}
+        # for (i,j) in self.arcs:
+        #     self.sen_score[i,j] = -1.852 * (self.h[i] - self.h[j])/(np.abs(self.q[i,j])**2.852)
+        #     # print((i,j), self.sen_score[i,j])
+        # # print("sen_score:", self.sen_score)
+        # edge = min(self.sen_score, key=self.sen_score.get) 
+        # print("minimum sen_score:",edge, self.sen_score[edge[0], edge[1]])
 
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -1048,14 +1058,16 @@ class WaterNetworkOptimizer:
             for x, val in self.h.items():
                 ampl.eval(f'let h[{x}] := {val};') 
             # self.update_initial_points_with_perturbation(ampl, self.l, self.q, self.h) 
- 
+            
             # ampl.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] <= {self.current_cost};""")
             if self.q[i,j]>= 0:
                 # print(self.h[i] - self.h[j])
-                ampl.eval(f"s.t. max_flow{i}_{j}: q[{i},{j}]<={self.q[i,j]};")
+                ampl.eval(f"s.t. max_flow{i}_{j}: q[{i},{j}]<={self.q[i,j]} - 1e-4;")
             else:
                 # print(self.h[i] - self.h[j])
-                ampl.eval(f"s.t. max_flow{i}_{j}: q[{i},{j}]>={self.q[i,j]};")
+                ampl.eval(f"s.t. max_flow{i}_{j}: q[{i},{j}]>={self.q[i,j]} + 1e-4;")
+            # ampl.eval(f"s.t. max_flow{i}_{j}: abs(q[{i},{j}]-{self.q[i,j]}) >= 1e-3;")
+            # ampl.eval(f"s.t. max_head: sum{{i in nodes}} h[i] <= {sum(self.h[x] for x in self.nodes)}-1e-2;")
 
             ampl.option['solver'] = "ipopt" 
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
@@ -1123,11 +1135,567 @@ class WaterNetworkOptimizer:
                 self.dia_red_iteration = self.dia_red_iteration + 1
                 self.max_flow()
                 break
- 
+    def iterate_two_arc_reversals(self):
+        """
+        Try reversing two incoming arcs (at the same node) at a time for nodes with indegree >= 3.
+        Uses duals (con2) to rank candidate pairs by |dual1| + |dual2|.
+        Warm-starts the AMPL model with previous l,q,h and duals. Ensures no directed cycle is created.
+        If an improved feasible solution is found, updates self.* and recurses (one improvement per call).
+        """
+        import itertools
+        import networkx as nx
+        import time
+    
+        # gather candidate nodes (indegree >= 3)
+        self.indegree_3_or_more = [n for n, deg in self.network_graph.in_degree() if deg >= 3]
+        print("indegree_3_or_more:", self.indegree_3_or_more)
+        print("Iteration :", self.iteration)
+    
+        # collect duals from the current stored AMPL (self.ampl) or recompute if needed
+        # Build self.all_duals if not present or stale
+        self.all_duals = {}
+        try:
+            # If you have a prior AMPL object in self.ampl, use it
+            source_ampl = getattr(self, "ampl", None)
+            if source_ampl is not None:
+                for con_name, val in source_ampl.get_constraints():
+                    # attempt both variants used historically
+                    try:
+                        dual_vals = val.getValues()
+                    except Exception:
+                        dual_vals = val.get_values()
+                    self.all_duals[con_name] = dual_vals
+        except Exception as e:
+            # fallback: empty duals
+            print("Warning: failed reading duals from self.ampl:", e)
+    
+        # We only use con2 (as in your earlier code) to build dual dict on arcs
+        dual_dict = {}
+        if "con2" in self.all_duals:
+            try:
+                # convert to python dict: prefer .to_dict() if available
+                dv = self.all_duals["con2"]
+                try:
+                    dual_py = dv.to_dict()
+                except Exception:
+                    # if it's an AMPLValue with getValues or python mapping
+                    try:
+                        dual_py = dict(dv)
+                    except Exception:
+                        # last resort: iterate
+                        dual_py = {}
+                        for k in dv:
+                            dual_py[k] = dv[k]
+                dual_dict = {idx: val for idx, val in dual_py.items()}
+            except Exception as e:
+                print("Warning: couldn't parse con2 duals:", e)
+    
+        # Build incoming-arc lists for nodes with indegree >=3
+        node_incoming = {}
+        for node in self.indegree_3_or_more:
+            arcs = list(self.network_graph.in_edges(node))
+            # normalize orientation to (u,v) as stored in self.arcs if possible
+            norm_arcs = []
+            for (a, b) in arcs:
+                if (a, b) in self.arcs:
+                    norm_arcs.append((a, b))
+                elif (b, a) in self.arcs:
+                    norm_arcs.append((b, a))
+                else:
+                    # keep as-is
+                    norm_arcs.append((a, b))
+            # remove arcs that are fixed or already visited as pairs with the same orientation
+            norm_arcs = [e for e in norm_arcs if e not in self.fix_arc_set]
+            if norm_arcs:
+                node_incoming[node] = norm_arcs
+    
+        # generate candidate pairs (two incoming arcs of the same node)
+        candidate_pairs = []
+        for node, arcs in node_incoming.items():
+            if len(arcs) < 2:
+                continue
+            for e1, e2 in itertools.combinations(arcs, 2):
+                # do not attempt same arc twice
+                if e1 == e2:
+                    continue
+                # skip if pair already tried (either order)
+                pair_key = tuple(sorted([e1, e2]))
+                if hasattr(self, "visited_arc_reverse_pairs") and pair_key in self.visited_arc_reverse_pairs:
+                    continue
+                # compute score = |dual(e1)| + |dual(e2)|
+                d1 = abs(dual_dict.get(e1, 0)) if dual_dict else 0
+                d2 = abs(dual_dict.get(e2, 0)) if dual_dict else 0
+                score = d1 + d2
+                candidate_pairs.append((score, node, e1, e2))
+    
+        # sort candidate pairs by descending score
+        candidate_pairs.sort(reverse=True, key=lambda x: x[0])
+        print(f"Found {len(candidate_pairs)} candidate pairs (two-arc reversal)")
+    
+        # ensure visited pairs container exists
+        if not hasattr(self, "visited_arc_reverse_pairs"):
+            self.visited_arc_reverse_pairs = set()
+    
+        improved = False
+    
+        # header for printing results (same format as your existing output)
+        print("----------------------------------------------------------------------------------------")
+        print(f"{'ArcPair':<24}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
+    
+        # iterate candidate pairs
+        for score, node, e1, e2 in candidate_pairs:
+            # mark pair as visited
+            pair_key = tuple(sorted([e1, e2]))
+            self.visited_arc_reverse_pairs.add(pair_key)
+    
+            # quick cycle check: simulate reversing both edges in a copy of graph and check DAG
+            Gcopy = self.network_graph.copy()
+            # remove original directed edges (take care if they don't exist in that orientation)
+            try:
+                if Gcopy.has_edge(*e1):
+                    Gcopy.remove_edge(*e1)
+                else:
+                    # maybe stored reversed — try to remove reversed orientation
+                    if Gcopy.has_edge(e1[1], e1[0]):
+                        Gcopy.remove_edge(e1[1], e1[0])
+            except Exception:
+                pass
+            try:
+                if Gcopy.has_edge(*e2):
+                    Gcopy.remove_edge(*e2)
+                else:
+                    if Gcopy.has_edge(e2[1], e2[0]):
+                        Gcopy.remove_edge(e2[1], e2[0])
+            except Exception:
+                pass
+    
+            # add reversed versions
+            Gcopy.add_edge(e1[1], e1[0])
+            Gcopy.add_edge(e2[1], e2[0])
+    
+            # if reversing both creates a directed cycle, skip
+            if not nx.is_directed_acyclic_graph(Gcopy):
+                # optionally you can try to detect if only trivial cycles are made, but skip for safety
+                # print("Skipping pair (would create cycle):", e1, e2)
+                continue
+    
+            # Build a fresh AMPL instance for the test solve (same structure as your earlier code)
+            ampl = AMPL()
+            ampl.reset()
+            if self.data_number == 5:
+                ampl.read("newyork_model.mod")
+            elif self.data_number == 6:
+                ampl.read("blacksburg_model.mod")
+            else:
+                ampl.read("wdnmodel.mod")
+            ampl.read_data(self.data_file)
+    
+            # set variables warm-start (l, q, h) - use existing self.l, self.q, self.h
+            # we subtract small tol from l (like you did) to keep feasibility margin
+            for (x, y, k), val in self.l.items():
+                ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
+            for (x, y), val in self.q.items():
+                ampl.eval(f'let q[{x},{y}] := {val};')
+                if self.data_number == 5:
+                    ampl.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
+                    ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
+            for x, val in self.h.items():
+                ampl.eval(f'let h[{x}] := {val};')
+    
+            # initialize dual values in the new AMPL with self.all_duals if present
+            current_duals = {}
+            for con_name, val in ampl.get_constraints():
+                try:
+                    current_duals[con_name] = val.get_values()
+                except Exception:
+                    try:
+                        current_duals[con_name] = val.getValues()
+                    except Exception:
+                        current_duals[con_name] = None
+    
+            for con_name, dual_vals in self.all_duals.items():
+                if con_name in current_duals and dual_vals is not None:
+                    try:
+                        ampl.get_constraint(con_name).set_values(dual_vals)
+                    except Exception:
+                        # try alternate method if names differ; ignore failures
+                        try:
+                            ampl.get_constraint(con_name).setValues(dual_vals)
+                        except Exception:
+                            pass
+    
+            # add two flow-direction constraints for e1 and e2 (flip sign requirement)
+            def add_direction_constraint(edge):
+                (u, v) = edge
+                try:
+                    # if current q >= 0 then reversing means we require q[u,v] <= 0 (push to opposite sign)
+                    if self.q.get((u, v), 0) >= 0:
+                        ampl.eval(f"s.t. flow_dir_{u}_{v}: q[{u},{v}] <= 0;")
+                    else:
+                        ampl.eval(f"s.t. flow_dir_{u}_{v}: q[{u},{v}] >= 0;")
+                except Exception:
+                    # if q stored reversed, attempt with reversed indexing
+                    if self.q.get((v, u), 0) >= 0:
+                        ampl.eval(f"s.t. flow_dir_{v}_{u}: q[{v},{u}] <= 0;")
+                    else:
+                        ampl.eval(f"s.t. flow_dir_{v}_{u}: q[{v},{u}] >= 0;")
+    
+            add_direction_constraint(e1)
+            add_direction_constraint(e2)
+    
+            # solver options (same as your function)
+            ampl.option["solver"] = "ipopt"
+            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes mu_init = {self.mu_init}")
+            ampl.option["presolve_eps"] = "6.82e-14"
+            ampl.option['presolve'] = 1
+    
+            # solve quietly
+            with self.suppress_output():
+                try:
+                    ampl.solve()
+                except Exception as solve_err:
+                    # if AMPL raised, treat as no improvement
+                    self.solve_result = getattr(ampl, "solve_result", str(solve_err))
+                    self.total_cost = None
+                    solve_time = ampl.get_value('_solve_elapsed_time') if 'ampl' in locals() else 0.0
+                    self.solver_time += solve_time
+                    self.number_of_nlp += 1
+                    print(f"{str((e1, e2)):<24}"
+                          f"{self.format_indian_number(round(self.current_cost)):<14}"
+                          f"{'---':<14}"
+                          f"{(str(round(solve_time, 2)) + 's'):<12}"
+                          f"{str(self.solve_result):<14}{'No':<10}"
+                          f"{round(time.time() - self.start_time, 2)}s")
+                    continue
+    
+            # record result and timing
+            self.solve_result = ampl.solve_result
+            try:
+                self.total_cost = ampl.get_objective("total_cost").value()
+            except Exception:
+                # if objective not available, skip
+                self.total_cost = None
+            try:
+                solve_time = ampl.get_value('_solve_elapsed_time')
+            except Exception:
+                solve_time = 0.0
+            self.solver_time += solve_time
+            self.number_of_nlp += 1
+    
+            # handle solved case
+            if self.solve_result == "solved" and self.total_cost is not None:
+                # get variable values
+                try:
+                    lnew = ampl.getVariable('l').getValues().to_dict()
+                except Exception:
+                    lnew = self.l.copy()
+                try:
+                    qnew = ampl.getVariable('q').getValues().to_dict()
+                except Exception:
+                    qnew = self.q.copy()
+                try:
+                    hnew = ampl.getVariable('h').getValues().to_dict()
+                except Exception:
+                    hnew = self.h.copy()
+    
+                if self.total_cost < self.current_cost:
+                    # success: update everything and change graph orientation for both edges
+                    print(f"{str((e1, e2)):<24}"
+                          f"{self.format_indian_number(round(self.current_cost)):<14}"
+                          f"{self.format_indian_number(round(self.total_cost)):<14}"
+                          f"{(str(round(solve_time, 2)) + 's'):<12}"
+                          f"{self.solve_result:<14}{'Yes':<10}"
+                          f"{round(time.time() - self.start_time, 2)}s")
+    
+                    # update current solution
+                    self.current_cost = self.total_cost
+                    improved = True
+                    # keep the AMPL instance that solved
+                    self.ampl = ampl
+    
+                    # update graph orientation: remove original edges and add reversed ones
+                    # careful to use correct orientation existing in self.network_graph
+                    if self.network_graph.has_edge(*e1):
+                        self.network_graph.remove_edge(*e1)
+                    elif self.network_graph.has_edge(e1[1], e1[0]):
+                        self.network_graph.remove_edge(e1[1], e1[0])
+                    self.network_graph.add_edge(e1[1], e1[0])
+    
+                    if self.network_graph.has_edge(*e2):
+                        self.network_graph.remove_edge(*e2)
+                    elif self.network_graph.has_edge(e2[1], e2[0]):
+                        self.network_graph.remove_edge(e2[1], e2[0])
+                    self.network_graph.add_edge(e2[1], e2[0])
+    
+                    # update stored solution vectors
+                    self.l = lnew
+                    self.q = qnew
+                    self.h = hnew
+                    # copy to backup fields as you did earlier
+                    self.l1 = self.l
+                    self.q1 = self.q
+                    self.h1 = self.h
+                    if self.data_number == 5:
+                        self.q1 = ampl.getVariable('q1').getValues().to_dict()
+                        self.q2 = ampl.getVariable('q2').getValues().to_dict()
+    
+                    # update fix_arc_set to include super_source_out_arc and any leaf-fixed arcs
+                    fix_arc_set = self.fix_leaf_arc_flow()
+                    self.fix_arc_set = list(set(self.super_source_out_arc) | set(fix_arc_set))
+    
+                    print("----------------------------------------------------------------------------------------")
+                else:
+                    # not improved
+                    print(f"{str((e1, e2)):<24}"
+                          f"{self.format_indian_number(round(self.current_cost)):<14}"
+                          f"{self.format_indian_number(round(self.total_cost)):<14}"
+                          f"{(str(round(solve_time, 2)) + 's'):<12}"
+                          f"{self.solve_result:<14}{'No':<10}"
+                          f"{round(time.time() - self.start_time, 2)}s")
+            else:
+                # not solved/infeasible
+                print(f"{str((e1, e2)):<24}"
+                      f"{self.format_indian_number(round(self.current_cost)):<14}"
+                      f"{'---' if self.total_cost is None else self.format_indian_number(round(self.total_cost)):<14}"
+                      f"{(str(round(solve_time, 2)) + 's'):<12}"
+                      f"{self.solve_result:<14}{'No':<10}"
+                      f"{round(time.time() - self.start_time, 2)}s")
+    
+            # if we improved, recurse to continue search from new graph/solution
+            if improved:
+                self.iteration += 1
+                # recursively continue searching from the improved graph
+                self.iterate_two_arc_reversals()
+                break
+    
+        # finished trying all pairs (or broke after improvement)
+        if not improved:
+            print("No two-arc reversal improved the solution in this iteration.")
+
+
+    def flow_change_in_cycle1(self):
+        import networkx as nx
+        improved = False
+        # Convert directed solution-flow graph to undirected for basic cycle detection
+        G_undir = nx.Graph()
+        G_undir.add_nodes_from(self.network_graph.nodes())
+        G_undir.add_edges_from(self.network_graph.edges())
+        basic_cycles = nx.cycle_basis(G_undir)
+        print("Basic Cycles:", basic_cycles)
+        delta = 1e-3   # Small safe flow shift
+        for cycle in basic_cycles:
+            print("\nProcessing Cycle:", cycle)
+            # Convert node list to arc list
+            arcs = [(cycle[k], cycle[(k + 1) % len(cycle)]) 
+                    for k in range(len(cycle))]
+            print("Cycle arcs:", arcs)
+            # Try to adjust flow along the cycle
+            ampl = AMPL()
+            ampl.reset()
+            # Load your model
+            if self.data_number == 5:
+                ampl.read("newyork_model.mod")
+            elif self.data_number == 6:
+                ampl.read("blacksburg_model.mod")
+            else:
+                ampl.read("wdnmodel.mod")
+            ampl.read_data(self.data_file)
+            # Set initial points
+            for (i, j), val in self.q.items():
+                ampl.eval(f"let q[{i},{j}] := {val};")
+            # Apply flow change in the cycle
+            for (i, j) in arcs:
+                if (i,j) in self.arcs:
+                    new_val = self.q[i, j] + delta
+                    ampl.eval(f"let q[{i},{j}] := {new_val};")
+                    # print(f"Changed flow on arc {(i,j)} from {self.q[i,j]} to {new_val}")
+                else:
+                    new_val = self.q[j, i] - delta
+                    ampl.eval(f"let q[{j},{i}] := {new_val};")
+                    # print(f"Changed flow on arc {(j,i)} from {self.q[j,i]} to {new_val}")
+
+            # Solve
+            ampl.option["solver"] = "ipopt"
+            ampl.set_option("ipopt_options",
+                f"outlev=0 tol=1e-9 warm_start_init_point=yes")
+            try:
+                ampl.solve()
+            except:
+                print("Solve failed for this cycle")
+                continue
+            new_cost = ampl.get_objective("total_cost").value()
+            if new_cost < self.current_cost:
+                print("Cycle flow adjustment improved solution!")
+                self.current_cost = new_cost
+                self.q = ampl.getVariable('q').getValues().to_dict()
+                improved = True
+                break
+
+    def flow_change_in_cycle(self):
+        import networkx as nx
+        from amplpy import AMPL
+        import time
+        improved = False
+        start_time_total = time.time()
+        # ----------------------------
+        # 1. Build undirected graph for cycle detection
+        # ----------------------------
+        G_undir = nx.Graph()
+        G_undir.add_nodes_from(self.network_graph.nodes())
+        G_undir.add_edges_from(self.network_graph.edges())
+        basic_cycles = nx.cycle_basis(G_undir)
+        print("Basic Cycles:", basic_cycles)
+        delta = 1e-2
+        # Ensure visited_cycles exists
+        if not hasattr(self, "visited_cycles"):
+            self.visited_cycles = set()
+
+        # Step 2: Normalize & filter out visited cycles
+        normalized = [tuple(sorted(c)) for c in basic_cycles]
+        remaining_cycles = [
+            c for c, nc in zip(basic_cycles, normalized)
+            if nc not in self.visited_cycles
+        ]
+        print("Iteration:",self.flow_change_in_cycle_iteration)
+        print("\nAll cycles found:", len(basic_cycles))
+        print("Visited cycles:", len(self.visited_cycles))
+        print("Remaining new cycles:", len(remaining_cycles))
+
+        print("-" * 90)
+        print(f"{'Cycle':<14}{'C_Best_Sol':<14}{'New_Sol':<14}"
+              f"{'Solve_Time':<12}{'Result':<14}{'Improved':<10}{'Time':<12}")
+        print("-" * 90)
+
+        # ----------------------------
+        # 2. Iterate all simple fundamental cycles
+        # ----------------------------
+        # for cycle in basic_cycles:
+        for idx, cycle in enumerate(remaining_cycles, start=1):
+            norm_cycle = tuple(sorted(cycle))
+            # print(f"\nProcessing New Cycle-{idx}: {norm_cycle}")
+            # Store visited cycle
+            self.visited_cycles.add(norm_cycle)
+            # ---- Normalize cycle to avoid duplicates ----
+            # norm_cycle = tuple(sorted(cycle))
+            #
+            # # ---- Skip if already used ----
+            # if norm_cycle in self.visited_cycles:
+            #     print(f"Skipping Cycle-{idx} (already used)")
+            #     continue
+            # Build arc sequence of the cycle
+            arcs = [(cycle[k], cycle[(k+1) % len(cycle)]) for k in range(len(cycle))]
+            cycle_name = str(arcs)
+            t0 = time.time()
+            # ----------------------------
+            # 3. Load AMPL fresh model
+            # ----------------------------
+            ampl = AMPL()
+            ampl.reset()
+            if self.data_number == 5:
+                ampl.read("newyork_model.mod")
+            elif self.data_number == 6:
+                ampl.read("blacksburg_model.mod")
+            else:
+                ampl.read("wdnmodel.mod")
+            ampl.read_data(self.data_file)
+            # Set current q as starting point
+            
+            # for (x, y, k), val in self.l.items():
+            #     ampl.eval(f'let l[{x},{y},{k}] := {val};')
+            # for (x, y), val in self.q.items():
+            #     ampl.eval(f'let q[{x},{y}] := {val};')
+            #     if self.data_number ==5:
+            #         ampl.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
+            #         ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
+            # for x, val in self.h.items():
+            #     ampl.eval(f'let h[{x}] := {val};') 
+    
+            # for (i, j), val in self.q.items():
+            #     ampl.eval(f"let q[{i},{j}] := {val};")
+            # ----------------------------
+            # 4. Apply flow perturbation on cycle
+            # ----------------------------
+            for (i, j) in arcs:
+                if (i, j) in self.arcs:
+                    ampl.eval(f"let q[{i},{j}] := {self.q[i,j] + delta};")
+                else:
+                    # reverse arc direction
+                    ampl.eval(f"let q[{j},{i}] := {self.q[j,i] - delta};")
+            # ----------------------------
+            # 5. Solve
+            # ----------------------------
+            ampl.option["solver"] = "ipopt"
+            # ampl.set_option("ipopt_options", "outlev=0 tol=1e-9 warm_start_init_point=yes")
+            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            try:
+                with self.suppress_output():
+                    ampl.solve()
+                solve_time = ampl.get_value('_solve_elapsed_time')
+                self.solver_time += solve_time
+                self.number_of_nlp += 1
+            except:
+                solve_time = time.time() - t0
+                print(f"{idx:<14}"
+                      f"{self.format_indian_number(round(self.current_cost)):<14}"
+                      f"{'-':<14}"
+                      f"{str(round(solve_time, 2))+'s':<12}"
+                      f"{'failed':<14}{'No':<10}"
+                      f"{round(time.time() - start_time_total, 2)}s")
+                continue
+            solve_time = time.time() - t0
+            result = ampl.solve_result
+            new_cost = ampl.get_objective("total_cost").value()
+            # ----------------------------
+            # 6. Improvement check
+            # ----------------------------
+            if result == "solved" and new_cost < self.current_cost:
+                print(f"{idx:<14}"
+                      f"{self.format_indian_number(round(self.current_cost)):<14}"
+                      f"{self.format_indian_number(round(new_cost)):<14}"
+                      f"{str(round(solve_time, 2))+'s':<12}"
+                      f"{result:<14}{'Yes':<10}"
+                      f"{round(time.time() - start_time_total, 2)}s")
+                # Update internal state
+                self.current_cost = new_cost
+                self.q = ampl.getVariable('q').getValues().to_dict()
+                # Update graph based on new flow
+                self.network_graph = self.generate_random_acyclic_from_solution(self.q)
+                self.indegree_2_or_more = [
+                    n for n, indeg in self.network_graph.in_degree() if indeg >= 2
+                ]
+                self.best_acyclic_flow = self.network_graph.copy()
+                # Get updated h and l
+                self.h = ampl.getVariable('h').getValues().to_dict()
+                self.l = ampl.getVariable('l').getValues().to_dict()
+                improved = True
+                # self.headloss_increase_iteration += 1
+                # self.headloss_increase()
+                # break
+            else:
+                print(f"{idx:<14}"
+                      f"{self.format_indian_number(round(self.current_cost)):<14}"
+                      f"{self.format_indian_number(round(new_cost)):<14}"
+                      f"{str(round(solve_time, 2))+'s':<12}"
+                      f"{result:<14}{'No':<10}"
+                      f"{round(time.time() - start_time_total, 2)}s")
+            if improved:
+                self.flow_change_in_cycle_iteration += 1
+                self.flow_change_in_cycle()
+                break
+  
     def headloss_increase(self):
         improved = False
         # print("\n*********************************************************************************************")
         print("Iteration :", self.headloss_increase_iteration + self.iteration)
+        
+        # self.sen_score = {}
+        # for (i,j) in self.arcs:
+        #     self.sen_score[i,j] = -1.852 * (self.h[i] - self.h[j])/(np.abs(self.q[i,j])**2.852)
+            # print((i,j), self.sen_score[i,j])
+        # print("sen_score:", self.sen_score)
+        # edge = min(self.sen_score, key=self.sen_score.get) 
+        # print("minimum sen_score:",edge, self.sen_score[edge[0], edge[1]])
+
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
             self.all_duals[con_name] = val.getValues()
@@ -1158,7 +1726,7 @@ class WaterNetworkOptimizer:
             else:
                 ampl.read("wdnmodel.mod")
             ampl.read_data(self.data_file)
-
+            
             for (x, y, k), val in self.l.items():
                 ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
@@ -1184,11 +1752,12 @@ class WaterNetworkOptimizer:
             # ampl.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] <= {self.current_cost};""")
             # if self.h[i] - self.h[j]>= 0:
             #     # print(self.h[i] - self.h[j])
-            #     ampl.eval(f"s.t. headloss1{i}_{j}: 0 <= h[{i}]- h[{j}]<={self.h[i] - self.h[j]} - 1e-3;")
+            #     ampl.eval(f"s.t. headloss1{i}_{j}: h[{i}]- h[{j}]<={self.h[i] - self.h[j]} - 1e-3;")
             # else:
             #     # print(self.h[i] - self.h[j])
-            #     ampl.eval(f"s.t. headloss2{i}_{j}: {self.h[i] - self.h[j]} + 1e-3 <= h[{i}]- h[{j}] <= 0;")
+            #     ampl.eval(f"s.t. headloss2{i}_{j}: {self.h[i] - self.h[j]} + 1e-3 <= h[{i}]- h[{j}];")
             ampl.eval(f"s.t. headloss1{i}_{j}: abs(h[{i}]- h[{j}])>=abs({self.h[i] - self.h[j]}) + 1e-2;")
+            # ampl.eval(f"s.t. max_head: sum{{i in nodes}} h[i] <= {sum(self.h[x] for x in self.nodes)}-1e-2;")
             # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {sum(self.C[k] * self.l[i,j,k] for k in self.pipes)} - 1e-2;")
 
             ampl.option['solver'] = "ipopt" 
@@ -1205,18 +1774,18 @@ class WaterNetworkOptimizer:
             l1 = ampl.getVariable('l').getValues().to_dict()
             q1 = ampl.getVariable('q').getValues().to_dict()
             h1 = ampl.getVariable('h').getValues().to_dict()
-            total_cost = ampl.getObjective("total_cost").value()
+            self.total_cost = ampl.getObjective("total_cost").value()
             if ampl.solve_result == "solved":
                 # self.plot_graph(self.super_source_out_arc, total_cost, 0, q, h, self.D, (0,0), l, self.C)
-                if total_cost < self.current_cost:
+                if self.total_cost < self.current_cost:
                     print(f"{str((i,j)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
-                        f"{self.format_indian_number(round(total_cost)):<14}"
+                        f"{self.format_indian_number(round(self.total_cost)):<14}"
                         f"{(str(round(solve_time, 2)) + 's'):<12}"
                         f"{ampl.solve_result:<14}{'Yes':<10}"
                         f"{round(time.time() - self.start_time, 2)}s")
                     self.ampl = ampl
-                    self.current_cost = total_cost
+                    self.current_cost = self.total_cost
                     improved = True
                     self.network_graph = self.generate_random_acyclic_from_solution(q1)
                     self.best_acyclic_flow = self.network_graph.copy()
@@ -1227,6 +1796,9 @@ class WaterNetworkOptimizer:
                     self.l = l1 
                     self.q = q1
                     self.h = h1 
+                    self.l1 = h1 
+                    self.q1 = h1 
+                    self.h1 = h1 
                     # ampl.eval("display l;")
                     # ampl.eval("display l.rc;")
                     if self.data_number==5:
@@ -1242,7 +1814,7 @@ class WaterNetworkOptimizer:
                 else:
                     print(f"{str((i,j)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
-                        f"{self.format_indian_number(round(total_cost)):<14}"
+                        f"{self.format_indian_number(round(self.total_cost)):<14}"
                         f"{(str(round(solve_time, 2)) + 's'):<12}"
                         f"{ampl.solve_result:<14}{'No':<10}"
                         f"{round(time.time() - self.start_time, 2)}s")
@@ -1250,10 +1822,11 @@ class WaterNetworkOptimizer:
             else:
                 print(f"{str((i,j)):<10}" 
                     f"{self.format_indian_number(round(self.current_cost)):<14}"
-                    f"{self.format_indian_number(round(total_cost)):<14}" 
+                    f"{self.format_indian_number(round(self.total_cost)):<14}" 
                     f"{(str(round(solve_time, 2)) + 's'):<12}"
                     f"{ampl.solve_result:<14}{'No':<10}"
                     f"{round(time.time() - self.start_time, 2)}s ")
+            
             if improved:
                 self.headloss_increase_iteration = self.headloss_increase_iteration + 1
                 self.headloss_increase()
@@ -1281,6 +1854,13 @@ class WaterNetworkOptimizer:
                         arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
         # print("\n*********************************************************************************************")
         print("Iteration :",self.dia_red_iteration + self.headloss_increase_iteration + self.iteration)
+        # self.sen_score = {}
+        # for (i,j) in self.arcs:
+        #     self.sen_score[i,j] = -1.852 * (self.h[i] - self.h[j])/(np.abs(self.q[i,j])**2.852)
+            # print((i,j), self.sen_score[i,j])
+        # print("sen_score:", self.sen_score)
+        # edge = min(self.sen_score, key=self.sen_score.get) 
+        # print("minimum sen_score:",edge, self.sen_score[edge[0], edge[1]])
 
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -1334,16 +1914,24 @@ class WaterNetworkOptimizer:
                 if con_name in current_duals:
                     # Initialize dual values for each constraint
                     ampl.get_constraint(con_name).set_values(dual_values) 
- 
+            
+            # for (i,j) in self.arcs:
+            #     if self.q[i,j]>=0:
+            #         ampl.eval(f"s.t. flow_dir{i}_{j}: q[{i},{j}]>=0;")
+            #     else:
+            #         ampl.eval(f"s.t. flow_dir{i}_{j}: q[{i},{j}]<=0;")
+
             # self.update_initial_points_with_perturbation(ampl, self.l, self.q, self.h)
             # ampl.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] <= {self.current_cost};""")
             # ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
-            # ampl.eval(f"subject to con3_l{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]}] = 0;")
-            # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {sum(self.C[k] * self.l[i,j,k] for k in self.pipes)}*(1-0.2);")
+            # ampl.eval(f"subject to con3_l{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]}] <= {self.l[i,j,arc_max_dia[i,j]]} - 1e-0;"
+            # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} (omega * l[{i},{j},k] / (R[k]^1.852 * d[k]^4.87)) <= {sum(10.67 * self.l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes)}*(1-0.);")
             # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {self.C[arc_max_dia[i,j]] * self.L[i,j]};")
+            
             for k in self.pipes:
-                if k>=arc_max_dia[i,j]:
-                    ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
+               if k>=arc_max_dia[i,j]:
+                   ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
+            
             # if self.h[i] - self.h[j]>= 0:
             #     ampl.eval(f"s.t. headloss1{i}_{j}: h[{i}]- h[{j}]>={self.h[i] - self.h[j]} + 1e-0;")
             # else:
@@ -1361,7 +1949,7 @@ class WaterNetworkOptimizer:
             solve_time = ampl.get_value('_solve_elapsed_time')
             self.solver_time += solve_time
             self.number_of_nlp += 1
-             
+ 
             l1 = ampl.getVariable('l').getValues().to_dict()
             q1 = ampl.getVariable('q').getValues().to_dict()
             h1 = ampl.getVariable('h').getValues().to_dict()
@@ -1385,7 +1973,6 @@ class WaterNetworkOptimizer:
                     self.l = l1 
                     self.q = q1
                     self.h = h1 
-
                     # ampl.eval("display l;")
                     # ampl.eval("display l.rc;")
                     if self.data_number==5:
@@ -1409,11 +1996,11 @@ class WaterNetworkOptimizer:
                     # self.plot_graph(self.super_source_out_arc, total_cost, 0, q1, h1, self.D, (0,0), l1, self.C)
             else:
                 print(f"{str((i,j)):<10}" 
-                    f"{self.format_indian_number(round(self.current_cost)):<14}"
-                    f"{self.format_indian_number(round(total_cost)):<14}" 
-                    f"{(str(round(solve_time, 2)) + 's'):<12}"
-                    f"{ampl.solve_result:<14}{'No':<10}"
-                    f"{round(time.time() - self.start_time, 2)}s ")
+                        f"{self.format_indian_number(round(self.current_cost)):<14}"
+                        f"{self.format_indian_number(round(total_cost)):<14}" 
+                        f"{(str(round(solve_time, 2)) + 's'):<12}"
+                        f"{ampl.solve_result:<14}{'No':<10}"
+                        f"{round(time.time() - self.start_time, 2)}s ")
             if improved:
                 self.dia_red_iteration = self.dia_red_iteration + 1
                 self.diameter_reduction()
@@ -1423,7 +2010,6 @@ class WaterNetworkOptimizer:
         # self.network_graph = self.best_acyclic_flow.copy()
         self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
-
         # print("\n*********************************************************************************************")
         print("Iteration :",self.iteration)
         improved = False
@@ -1470,7 +2056,7 @@ class WaterNetworkOptimizer:
             else:
                 ampl.read("wdnmodel.mod")
             ampl.read_data(self.data_file)
-
+            
             for (x, y, k), val in self.l.items():
                 ampl.eval(f'let l[{x},{y},{k}] := {val - self.tol};')
             for (x, y), val in self.q.items():
@@ -1492,6 +2078,13 @@ class WaterNetworkOptimizer:
                     # Initialize dual values for each constraint
                     ampl.get_constraint(con_name).set_values(dual_values)               
             
+            # for (i,j) in self.arcs:
+            #     if (i,j)!=(u,v):
+            #         if self.q[i,j]>=0:
+            #             ampl.eval(f"s.t. flow_dir{i}_{j}: q[{i},{j}]>=0;")
+            #         else:
+            #             ampl.eval(f"s.t. flow_dir{i}_{j}: q[{i},{j}]<=0;")
+
             #self.ampl.eval(f"set inarc := {{{inarc_set}}};")
             #self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
             fix_arc_set = self.fix_leaf_arc_flow()
@@ -1541,12 +2134,15 @@ class WaterNetworkOptimizer:
                     self.l = l 
                     self.q = q
                     self.h = h 
+                    self.l1 = l
+                    self.q1 = q
+                    self.h1 = h
                     if self.data_number==5:
                         self.q1 = ampl.getVariable('q1').getValues().to_dict()
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
                     self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
                     print("----------------------------------------------------------------------------------------")
-                else:
+                else: 
                     print(f"{str((u, v)):<10}"
                       f"{self.format_indian_number(round(self.current_cost)):<14}"
                       f"{self.format_indian_number(round(self.total_cost)):<14}"
@@ -1634,16 +2230,16 @@ class WaterNetworkOptimizer:
     def solve1(self):
         with self.suppress_output():
             # """Solve the optimization problem."""
-            ampl.option["solver"] = "ipopt"
+            self.ampl.option["solver"] = "ipopt"
             #print("bound_push:", self.bound_push)
             #print("bound_frac:", self.bound_frac)
             #self.bound_push , self.bound_frac = (0.001, 0.000001)
-            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
+            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
             # self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
-            ampl.option["presolve_eps"] = "6.82e-14"
-            ampl.option['presolve'] = 1
+            self.ampl.option["presolve_eps"] = "6.82e-14"
+            self.ampl.option['presolve'] = 1
             
             #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
             #max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
@@ -1655,15 +2251,15 @@ class WaterNetworkOptimizer:
             #d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
             #d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
 
-            ampl.solve()
+            self.ampl.solve()
             #self.ampl.eval("display q;")
-            self.solve_result = ampl.solve_result
-            self.total_cost = ampl.get_objective("total_cost").value()
+            self.solve_result = self.ampl.solve_result
+            self.total_cost = self.ampl.get_objective("total_cost").value()
         #self.ampl.eval("display q;")
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
         # print("eps:", epsilon)
-        solve_time = ampl.get_value('_solve_elapsed_time')
+        solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.solver_time += solve_time
         self.number_of_nlp += 1
 
@@ -1719,8 +2315,12 @@ class WaterNetworkOptimizer:
         # self.visited_arc = []
         self.visited_arc_reverse = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
+        print("\n-----------------------------------Flow change in cycle Approach-----------------------------------------")
+        self.flow_change_in_cycle_iteration = 1
+        self.flow_change_in_cycle()
+
         print("---------------------------Reverse Arc Direction Approach------------------------------------")
-        self.iteration = 1
+        self.iteration = self.flow_change_in_cycle_iteration + 1
         self.iterate_acyclic_flows() 
         # print("\n----------------------------Diameter Reduction Approach--------------------------------------")
         # self.dia_red_iteration = 1
@@ -1738,14 +2338,23 @@ class WaterNetworkOptimizer:
         self.dia_red_iteration = 1
         self.visited_arc = []
         self.diameter_reduction()
-        # print("\n---------------------------Reverse Arc Direction Approach------------------------------------")
+        # print("\n---------------------------Reverse 2 Arc Direction Approach------------------------------------")
         # self.visited_arc_reverse = []
         # self.iteration = 1
         # self.iterate_acyclic_flows() 
+        # self.iterate_two_arc_reversals()
         # print("\n-----------------------------------Max Flow Approach-----------------------------------------")
-        # self.max_flow_iteration = 1
-        # self.visited_arc = []
+        self.max_flow_iteration = 1
+        self.visited_arc = []
         # self.max_flow() 
+        # print("\n-----------------------------------Head increase Approach-----------------------------------------")
+        self.head_increase_iter = 1
+        self.visited_nodes = []
+        # self.head_increase()
+
+        # print("\n-----------------------------------Flow change in cycle Approach-----------------------------------------")
+        # self.flow_change_in_cycle_iteration = 1
+        # self.flow_change_in_cycle()
         print("\n************************************Final Best Results*****************************************")
         print("Water Network:", self.data_list[self.data_number])
         # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
