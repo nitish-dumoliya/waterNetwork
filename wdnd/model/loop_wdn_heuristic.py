@@ -1535,6 +1535,7 @@ class WaterNetworkOptimizer:
         import networkx as nx
         from amplpy import AMPL
         import time
+        print("\nIteration:",self.flow_change_in_cycle_iteration)
         improved = False
         start_time_total = time.time()
         # ----------------------------
@@ -1545,19 +1546,19 @@ class WaterNetworkOptimizer:
         G_undir.add_edges_from(self.network_graph.edges())
         basic_cycles = nx.cycle_basis(G_undir)
         print("Basic Cycles:", basic_cycles)
-        delta = 1e-2
+
+        if self.data_number==5:
+            delta = 1e-3
+        else:
+            delta = 1e-2
         # Ensure visited_cycles exists
         if not hasattr(self, "visited_cycles"):
             self.visited_cycles = set()
 
         # Step 2: Normalize & filter out visited cycles
         normalized = [tuple(sorted(c)) for c in basic_cycles]
-        remaining_cycles = [
-            c for c, nc in zip(basic_cycles, normalized)
-            if nc not in self.visited_cycles
-        ]
-        print("Iteration:",self.flow_change_in_cycle_iteration)
-        print("\nAll cycles found:", len(basic_cycles))
+        remaining_cycles = [c for c, nc in zip(basic_cycles, normalized) if nc not in self.visited_cycles]
+        print("All cycles found:", len(basic_cycles))
         print("Visited cycles:", len(self.visited_cycles))
         print("Remaining new cycles:", len(remaining_cycles))
 
@@ -1602,31 +1603,51 @@ class WaterNetworkOptimizer:
             
             # for (x, y, k), val in self.l.items():
             #     ampl.eval(f'let l[{x},{y},{k}] := {val};')
-            # for (x, y), val in self.q.items():
-            #     ampl.eval(f'let q[{x},{y}] := {val};')
-            #     if self.data_number ==5:
-            #         ampl.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
-            #         ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
+            for (x, y), val in self.q.items():
+                ampl.eval(f'let q[{x},{y}] := {val};')
+                if self.data_number ==5:
+                    ampl.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
+                    ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
             # for x, val in self.h.items():
             #     ampl.eval(f'let h[{x}] := {val};') 
     
             # for (i, j), val in self.q.items():
-            #     ampl.eval(f"let q[{i},{j}] := {val};")
+                # if (i,j) in arcs:
+                #     continue
+                # else:
+                # ampl.eval(f"let q[{i},{j}] := {val};")
             # ----------------------------
             # 4. Apply flow perturbation on cycle
             # ----------------------------
             for (i, j) in arcs:
                 if (i, j) in self.arcs:
-                    ampl.eval(f"let q[{i},{j}] := {self.q[i,j] + delta};")
+                    if self.data_number == 5:
+                        ampl.eval(f"let q1[{i},{j}] := {-self.q1[i,j] - delta};")
+                        ampl.eval(f"let q2[{i},{j}] := {-self.q2[i,j] - delta};")
+                    else:
+                        ampl.eval(f"let q[{i},{j}] := {-self.q[i,j] - delta};")
                 else:
-                    # reverse arc direction
-                    ampl.eval(f"let q[{j},{i}] := {self.q[j,i] - delta};")
+                    if self.data_number == 5:
+                        # reverse arc direction
+                        ampl.eval(f"let q1[{j},{i}] := {-self.q1[j,i] + delta};")
+                        ampl.eval(f"let q2[{j},{i}] := {-self.q2[j,i] + delta};")
+                    else:
+                        ampl.eval(f"let q[{j},{i}] := {-self.q[j,i] + delta};")
+
+            # for (i, j) in arcs:
+            #     if (i, j) in self.arcs:
+            #         ampl.eval(f"s.t. cycle_flow_{i}_{j}: q[{i},{j}] = {self.q[i,j] + delta};")
+            #     else:
+            #         # reverse arc direction
+            #         ampl.eval(f"s.t. cycle_flow_{j}_{i}: q[{j},{i}] = {self.q[j,i] - delta};")
+
             # ----------------------------
             # 5. Solve
             # ----------------------------
             ampl.option["solver"] = "ipopt"
             # ampl.set_option("ipopt_options", "outlev=0 tol=1e-9 warm_start_init_point=yes")
             ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            # ampl.option["presolve_eps"]= "7.19e-10"
             try:
                 with self.suppress_output():
                     ampl.solve()
@@ -1657,12 +1678,15 @@ class WaterNetworkOptimizer:
                       f"{round(time.time() - start_time_total, 2)}s")
                 # Update internal state
                 self.current_cost = new_cost
+                self.l = ampl.getVariable('l').getValues().to_dict()
                 self.q = ampl.getVariable('q').getValues().to_dict()
+                if self.data_number == 5:
+                    self.q1 = ampl.getVariable('q1').getValues().to_dict()
+                    self.q2 = ampl.getVariable('q2').getValues().to_dict()
+                self.h = ampl.getVariable('h').getValues().to_dict()
                 # Update graph based on new flow
                 self.network_graph = self.generate_random_acyclic_from_solution(self.q)
-                self.indegree_2_or_more = [
-                    n for n, indeg in self.network_graph.in_degree() if indeg >= 2
-                ]
+                self.indegree_2_or_more = [n for n, indeg in self.network_graph.in_degree() if indeg >= 2]
                 self.best_acyclic_flow = self.network_graph.copy()
                 # Get updated h and l
                 self.h = ampl.getVariable('h').getValues().to_dict()
@@ -1671,6 +1695,7 @@ class WaterNetworkOptimizer:
                 # self.headloss_increase_iteration += 1
                 # self.headloss_increase()
                 # break
+                print("-" * 90)
             else:
                 print(f"{idx:<14}"
                       f"{self.format_indian_number(round(self.current_cost)):<14}"
@@ -2039,6 +2064,11 @@ class WaterNetworkOptimizer:
                 # print(f"  Max abs dual = {max_dual} at index {max_index}")
         sorted_by_abs_dual = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
         print("sorted_arcs: ",list(sorted_by_abs_dual.keys()))
+        # remaining_arcs = [c for c, nc in sorted_by_abs_dual if nc not in self.visited_arc_reverse]
+        # print("All cycles found:", len(sorted_by_abs_dual))
+        # print("Visited cycles:", len(self.visited_arc_reverse))
+        # print("Remaining new cycles:", len(remaining_arcs))
+
 
         print("----------------------------------------------------------------------------------------")
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
