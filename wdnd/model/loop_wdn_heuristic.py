@@ -1739,6 +1739,7 @@ class WaterNetworkOptimizer:
         # sorted_arcs = [sorted_arcs[0]] 
         print("----------------------------------------------------------------------------------------")
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
+        print("----------------------------------------------------------------------------------------")
 
         for (i,j) in sorted_arcs:
             self.visited_arc.append((i,j))
@@ -1903,9 +1904,10 @@ class WaterNetworkOptimizer:
         sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fix_arc_set]
         sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] != 1]
         print("sorted_arcs:", sorted_arcs)
-        
+
         print("----------------------------------------------------------------------------------------")
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
+        print("----------------------------------------------------------------------------------------")
 
         for (i,j) in sorted_arcs:
             self.visited_arc.append((i,j))
@@ -2072,6 +2074,7 @@ class WaterNetworkOptimizer:
 
         print("----------------------------------------------------------------------------------------")
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
+        print("----------------------------------------------------------------------------------------")
 
         for edge in sorted_by_abs_dual.keys():
             self.visited_arc_reverse.append(edge)
@@ -2126,7 +2129,7 @@ class WaterNetworkOptimizer:
                 ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
             # with self.suppress_output():
             ampl.option["solver"] = "ipopt"
-            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes mu_init = {self.mu_init}")   #max_iter = 1000
+            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_init = {self.mu_init}")   #max_iter = 1000
             ampl.option["presolve_eps"] = "6.82e-14"
             ampl.option['presolve'] = 1
             with self.suppress_output():
@@ -2231,7 +2234,7 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         self.ampl.option["solver"] = "ipopt"
-        self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no mu_init = {self.mu_init} warm_start_same_structure = no")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
         # self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
         # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
         #self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0 warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
@@ -2345,13 +2348,16 @@ class WaterNetworkOptimizer:
         # self.visited_arc = []
         self.visited_arc_reverse = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
+        # print("\n-----------------------------------Flow change in cycle Approach-----------------------------------------")
+        # self.flow_change_in_cycle_iteration = 1
+        # self.flow_change_in_cycle()
+        #
+        print("---------------------------Reverse Arc Direction Approach------------------------------------")
+        self.iteration = 1
+        self.iterate_acyclic_flows() 
         print("\n-----------------------------------Flow change in cycle Approach-----------------------------------------")
         self.flow_change_in_cycle_iteration = 1
         self.flow_change_in_cycle()
-
-        print("---------------------------Reverse Arc Direction Approach------------------------------------")
-        self.iteration = self.flow_change_in_cycle_iteration + 1
-        self.iterate_acyclic_flows() 
         # print("\n----------------------------Diameter Reduction Approach--------------------------------------")
         # self.dia_red_iteration = 1
         # self.visited_arc = []
