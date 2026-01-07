@@ -240,43 +240,253 @@ class WaterNetworkOptimizer:
             "iteration": iteration,
             "objective": self.current_cost,
             "q": {f"{i},{j}": v for (i,j), v in self.q.items()},
+            # "q": self.q,
             "h": self.h,
-            "D": self.D,
             "l": {f"{i},{j},{k}": self.l[i,j,k] 
-                  for (i,j) in self.arcs for k in self.pipes if self.l[i,j,k] > 1e-6},
+                  for (i,j) in self.arcs for k in self.pipes if self.l[i,j,k] > 1e-3},
+            "D": self.D,
+            "L": {f"{i},{j}": v for (i,j), v in self.L.items()},
             "C": self.C,
+            "hmin": {f"{i}": self.E[i] if i == list(self.source)[0] else self.E[i] + self.P[i] for i in self.nodes},
+            # "pipe_diameters": self.l,
             "nodes": list(self.nodes),
             "arcs": [(i,j) for (i,j) in self.arcs]
         }
     
         with open(f"../figure/json_file/solution_{self.data_number}.json", "w") as f:
             json.dump(solution, f, indent=2)
-    
+
     def plot_interactive_wdn(self, solution_file, node_pos):
+        """
+        Interactive WDN plot (server-safe HTML):
+        - Green = positive flow, Red = negative flow
+        - Arrows show direction (boundary to boundary)
+        - Hover on arc: flow + pipe diameters & lengths
+        - Hover on node: head, min head, demand
+        """
+        # --------------------------------------------------
+        # Load solution
+        # --------------------------------------------------
         with open(solution_file) as f:
             sol = json.load(f)
-        G = nx.DiGraph()
-        G.add_edges_from(sol["arcs"])
-        # q = {tuple(map(str.split, [k])): v for k,v in sol["q"].items()}
-        q = {tuple(k.split(",")): v for k, v in sol["q"].items()}
-        edge_x, edge_y, edge_text = [], [], []
-        for i,j in sol["arcs"]:
-            x0,y0 = node_pos[i]
-            x1,y1 = node_pos[j]
-            edge_x += [x0,x1,None]
-            edge_y += [y0,y1,None]
-            edge_text.append(f"""Arc: {i}→{j}<br>Flow: {sol['q'][f'{i},{j}']:.4f}""")
-        edge_trace = go.Scatter(x=edge_x, y=edge_y,line=dict(width=2),mode="lines",hoverinfo="text",text=edge_text)
-        node_x, node_y, node_text = [], [], []
-        for n in sol["nodes"]:
-            x,y = node_pos[n]
+        def parse_key(k):
+            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
+        q = {parse_key(k): v for k, v in sol["q"].items()}
+        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
+        # Pipe info: l[i,j,k]
+        pipe_info = {}
+        for k_str, val in sol.get("l", {}).items():
+            if val < 1e-6:
+                continue
+            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
+            pipe_info.setdefault((i, j), []).append((d, val))
+        h = {int(k): v for k, v in sol["h"].items()}
+        hmin = {int(k): v for k, v in sol["hmin"].items()}
+        D = {int(k): v for k, v in sol["D"].items()}
+        
+        # --------------------------------------------------
+        # Compute node radius in DATA coordinates
+        # --------------------------------------------------
+        node_marker_size=22
+        fig_width=1800
+        fig_height=1800
+        xs = [p[0] for p in node_pos.values()]
+        ys = [p[1] for p in node_pos.values()]
+
+        xmin, xmax = min(xs), max(xs)
+        ymin, ymax = min(ys), max(ys)
+        
+        data_width  = xmax - xmin
+        data_height = ymax - ymin
+        BASE_SIZE = 1800 
+        if data_width >= data_height:
+            fig_width  = BASE_SIZE
+            fig_height = int(BASE_SIZE * data_height / data_width)
+        else:
+            fig_height = BASE_SIZE
+            fig_width  = int(BASE_SIZE * data_width / data_height)
+
+        data_range = max(xs) - min(xs)
+        node_radius = (node_marker_size / 2) * (data_width / fig_width)
+
+        # --------------------------------------------------
+        # Edge containers
+        # --------------------------------------------------
+        edge_x_pos, edge_y_pos, edge_text_pos = [], [], []
+        edge_x_neg, edge_y_neg, edge_text_neg = [], [], []
+        click_x, click_y, click_text = [], [], []
+        
+        arrows = []
+        # --------------------------------------------------
+        # EDGES + ARROWS
+        # --------------------------------------------------
+        for (i, j), flow in q.items():
+            if i not in node_pos or j not in node_pos:
+                continue
+            x0, y0 = node_pos[i]
+            x1, y1 = node_pos[j]
+            if flow >= 0:
+                # Direction: i -> j
+                xs, ys = x0, y0
+                xe, ye = x1, y1
+            else:
+                # Direction: j -> i
+                xs, ys = x1, y1
+                xe, ye = x0, y0
+            
+            dx, dy = xe - xs, ye - ys
+            dist = math.hypot(dx, dy)
+            if dist < 1e-8:
+                continue
+            
+            # Shorten to node boundaries (ALWAYS correct now)
+            sx = xs + node_radius * dx / dist
+            sy = ys + node_radius * dy / dist
+            ex = xe - node_radius * dx / dist
+            ey = ye - node_radius * dy / dist
+
+            mx = 0.5 * (sx + ex)
+            my = 0.5 * (sy + ey)
+
+            # Pipe hover text
+            pipes = pipe_info.get((i, j), [])
+            if pipes:
+                pipe_txt = "<br>".join([f"  {d} : {l:.2f}" for d, l in pipes])
+            else:
+                pipe_txt = "No pipe selected"
+            hover_text = (
+                f"<b>Arc {i} → {j}</b><br>"
+                f"Flow: {flow:.5f}<br>"
+                f"Length: {L.get((i,j),0):.2f}<br>"
+                f"<b>Pipes:</b><br>{pipe_txt}"
+            )
+            click_x.append(mx)
+            click_y.append(my)
+            click_text.append(hover_text)   # same hover text as arc
+
+            if flow >= 0:
+                edge_x_pos += [sx, ex, None]
+                edge_y_pos += [sy, ey, None]
+                # edge_text_pos.append(hover_text)
+                arrows.append(dict(
+                ax=sx, ay=sy,
+                x=ex, y=ey,
+                xref="x", yref="y",
+                axref="x", ayref="y",
+                showarrow=True,
+                arrowhead=3,
+                arrowsize=1,
+                arrowwidth=2,
+                arrowcolor="green"
+            ))
+            else:
+                edge_x_neg += [sx, ex, None]
+                edge_y_neg += [sy, ey, None]
+                # edge_text_neg.append(hover_text)
+                arrows.append(dict(
+                ax=sx, ay=sy,
+                x=ex, y=ey,
+                xref="x", yref="y",
+                axref="x", ayref="y",
+                showarrow=True,
+                arrowhead=3,
+                arrowsize=1,
+                arrowwidth=2,
+                arrowcolor="red"
+            ))
+        edge_pos = go.Scatter(
+            x=edge_x_pos, y=edge_y_pos,
+            mode="lines",
+            line=dict(width=2, color="green"),
+            hoverinfo="text",
+            # hovertext=edge_text_pos,
+            name="Positive flow"
+        )
+        edge_neg = go.Scatter(
+            x=edge_x_neg, y=edge_y_neg,
+            mode="lines",
+            line=dict(width=2, color="red"),
+            hoverinfo="text",
+            # hovertext=edge_text_neg,
+            name="Negative flow"
+        )
+        arc_click_trace = go.Scatter(
+        x=click_x,
+        y=click_y,
+        mode="markers",
+        marker=dict(size=0,color="lightgreen",symbol="circle",opacity=0.0),
+        hoverinfo="text",
+        hovertext=click_text,
+        name="Arc info points",
+        showlegend=False,
+        )
+
+        # --------------------------------------------------
+        # NODES
+        # --------------------------------------------------
+        node_x, node_y, node_text, node_labels = [], [], [], []
+        node_colors = []
+        for n, (x, y) in node_pos.items():
             node_x.append(x)
             node_y.append(y)
-            node_text.append(f"""Node {n}<br>Head: {sol['h'][str(n)]:.2f}<br>Demand: {sol['D'][str(n)]:.3f}""")
-        node_trace = go.Scatter(x=node_x, y=node_y,mode="markers",marker=dict(size=12),hoverinfo="text",text=node_text)
-        fig = go.Figure([edge_trace, node_trace])
-        fig.update_layout(title=f"WDN Local Solution – Cost {sol['objective']:.2f}",showlegend=False)
-        fig.show()
+            node_labels.append(str(n))
+            node_text.append(
+                f"<b>Node {n}</b><br>"
+                f"Head: {h.get(n,0):.2f}<br>"
+                f"Min Head: {hmin.get(n,0):.2f}<br>"
+                f"Demand: {D.get(n,0):.5f}"
+            )
+            if n in list(self.source):
+                node_colors.append("royalblue")
+            else:
+                node_colors.append("skyblue")
+
+        node_trace = go.Scatter(
+            x=node_x, y=node_y,
+            mode="markers+text",
+            text=node_labels,
+            textposition="middle center",
+            hoverinfo="text",
+            hovertext=node_text,
+            marker=dict(size=22,color=node_colors,line=dict(width=1.5, color="black")),
+            textfont=dict(size=12, color="black"),
+            name="Nodes"
+        )
+        # --------------------------------------------------
+        # FIGURE
+        # --------------------------------------------------
+        fig = go.Figure([edge_pos, edge_neg, arc_click_trace, node_trace])
+
+        fig.update_layout(
+            title=f"WDN Network = {data_list[(self.data_number)]}, Total Cost = {sol['objective']:.2f}",
+            annotations=arrows,
+            # width=fig_width,
+            # height=fig_height,
+            hovermode="closest",
+            showlegend=True,
+            xaxis=dict(visible=True,zeroline=False,    # constrain="domain"   # 🔴 KEY LINE
+            ),
+            yaxis=dict(visible=True,zeroline=False,scaleanchor="x",scaleratio=1),
+            margin=dict(l=20, r=20, t=50, b=20),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)"
+        )
+
+        # fig.update_layout(
+        #     title=f"WDN Local Solution (Objective = {sol['objective']:.2f})",
+        #     annotations=arrows,
+        #     hovermode="closest",
+        #     showlegend=True,
+        #     xaxis=dict(visible=False),
+        #     yaxis=dict(visible=False),
+        #     margin=dict(l=20, r=20, t=50, b=20)
+        # )
+        # --------------------------------------------------
+        # SAVE (SERVER SAFE)
+        # --------------------------------------------------
+        fig.write_html(f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html", 
+                       auto_open=False)
+        print("✔ Interactive WDN plot saved (HTML)")
 
     def update_model(self):
         # print("Fix the arcs direction using the acyclic network\n")
