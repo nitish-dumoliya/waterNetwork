@@ -21,6 +21,9 @@ from pyswarm import pso
 import multiprocessing
 from network_layout import node_position
 import math
+import json
+import plotly.graph_objects as go
+
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number, data_list):
         self.ampl = AMPL()
@@ -231,6 +234,49 @@ class WaterNetworkOptimizer:
         nx.draw_spectral(self.network_graph, with_labels=True, node_color='lightgreen', font_weight='bold', arrows=True)
         plt.title("Acyclic Directed Graph")
         plt.show()
+    
+    def export_solution(self, iteration=1):
+        solution = {
+            "iteration": iteration,
+            "objective": self.current_cost,
+            "q": {f"{i},{j}": v for (i,j), v in self.q.items()},
+            "h": self.h,
+            "D": self.D,
+            "l": {f"{i},{j},{k}": self.l[i,j,k] 
+                  for (i,j) in self.arcs for k in self.pipes if self.l[i,j,k] > 1e-6},
+            "C": self.C,
+            "nodes": list(self.nodes),
+            "arcs": [(i,j) for (i,j) in self.arcs]
+        }
+    
+        with open(f"../figure/json_file/solution_{self.data_number}.json", "w") as f:
+            json.dump(solution, f, indent=2)
+    
+    def plot_interactive_wdn(self, solution_file, node_pos):
+        with open(solution_file) as f:
+            sol = json.load(f)
+        G = nx.DiGraph()
+        G.add_edges_from(sol["arcs"])
+        # q = {tuple(map(str.split, [k])): v for k,v in sol["q"].items()}
+        q = {tuple(k.split(",")): v for k, v in sol["q"].items()}
+        edge_x, edge_y, edge_text = [], [], []
+        for i,j in sol["arcs"]:
+            x0,y0 = node_pos[i]
+            x1,y1 = node_pos[j]
+            edge_x += [x0,x1,None]
+            edge_y += [y0,y1,None]
+            edge_text.append(f"""Arc: {i}→{j}<br>Flow: {sol['q'][f'{i},{j}']:.4f}""")
+        edge_trace = go.Scatter(x=edge_x, y=edge_y,line=dict(width=2),mode="lines",hoverinfo="text",text=edge_text)
+        node_x, node_y, node_text = [], [], []
+        for n in sol["nodes"]:
+            x,y = node_pos[n]
+            node_x.append(x)
+            node_y.append(y)
+            node_text.append(f"""Node {n}<br>Head: {sol['h'][str(n)]:.2f}<br>Demand: {sol['D'][str(n)]:.3f}""")
+        node_trace = go.Scatter(x=node_x, y=node_y,mode="markers",marker=dict(size=12),hoverinfo="text",text=node_text)
+        fig = go.Figure([edge_trace, node_trace])
+        fig.update_layout(title=f"WDN Local Solution – Cost {sol['objective']:.2f}",showlegend=False)
+        fig.show()
 
     def update_model(self):
         # print("Fix the arcs direction using the acyclic network\n")
@@ -3267,6 +3313,9 @@ class WaterNetworkOptimizer:
         self.sorted_nodes = []
         # self.visited_arc = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
+        self.export_solution()
+        self.plot_interactive_wdn(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number])
+
         print("\n--------------------------Continuous Variable Branching Approach-------------------------------")
         self.cont_branching_iteration = 1
         self.visited_arc_reverse = []
@@ -3304,7 +3353,7 @@ class WaterNetworkOptimizer:
         self.dia_red_iteration = self.headloss_increase_iteration + 1
         self.visited_arc = []
         # self.diameter_reduction()
-        self.arc_dia_red()
+        # self.arc_dia_red()
 
         # print("\n--------------------------Continuous Variable Branching Approach---------------------------")
         # self.cont_branching_iteration = self.dia_red_iteration + 1
