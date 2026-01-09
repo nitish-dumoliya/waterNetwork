@@ -237,17 +237,18 @@ class WaterNetworkOptimizer:
         plt.title("Acyclic Directed Graph")
         plt.show()
     
-    def export_solution(self, iteration=1):
+    def export_solution(self, iteration):
         solution = {
             "iteration": iteration,
             "objective": self.current_cost,
-            "solve_time": self.ampl.get_value('_solve_elapsed_time'), 
+            "solve_time": self.elapsed_time, 
             "q": {f"{i},{j}": float(v) for (i,j), v in self.q.items()},
             # "q": self.q,
             "h": self.h,
             "l": {f"{i},{j},{k}": self.l[i,j,k] 
                   for (i,j) in self.arcs for k in self.pipes if self.l[i,j,k] > 1e-3},
             "D": self.D,
+            "Diameters": {f"{i}": self.d[i] for i in self.pipes},
             "L": {f"{i},{j}": v for (i,j), v in self.L.items()},
             "C": self.C,
             "hmin": {f"{i}": self.E[i] if i == list(self.source)[0] else self.E[i] + self.P[i] for i in self.nodes},
@@ -257,1505 +258,34 @@ class WaterNetworkOptimizer:
             "source": list(self.source)
         }
     
-        with open(f"../figure/json_file/solution_{self.data_number}.json", "w") as f:
+        with open(f"../figure/json_file/solution_{self.data_number+1}.json", "w") as f:
             json.dump(solution, f, indent=2)
 
-    def plot_interactive_wdn1(self, solution_file, node_pos):
-        """
-        Interactive WDN plot (server-safe HTML):
-        - Green = positive flow, Red = negative flow
-        - Arrows show direction (boundary to boundary)
-        - Hover on arc: flow + pipe diameters & lengths
-        - Hover on node: head, min head, demand
-        - Optional text layers toggleable from legend
-        """
-        # --------------------------------------------------
-        # Load solution
-        # --------------------------------------------------
-        with open(solution_file) as f:
-            sol = json.load(f)
-    
-        def parse_key(k):
-            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
-    
-        q = {parse_key(k): v for k, v in sol["q"].items()}
-        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
-    
-        # Pipe info l[i,j,k]
-        pipe_info = {}
-        for k_str, val in sol.get("l", {}).items():
-            if val < 1e-6:
-                continue
-            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
-            pipe_info.setdefault((i, j), []).append((d, val))
-    
-        h    = {int(k): v for k, v in sol["h"].items()}
-        hmin = {int(k): v for k, v in sol["hmin"].items()}
-        D    = {int(k): v for k, v in sol["D"].items()}
-    
-        # --------------------------------------------------
-        # Compute node radius in DATA coordinates
-        # --------------------------------------------------
-        node_marker_size = 22
-        BASE_SIZE = 1800
-    
-        xs = [p[0] for p in node_pos.values()]
-        ys = [p[1] for p in node_pos.values()]
-    
-        xmin, xmax = min(xs), max(xs)
-        ymin, ymax = min(ys), max(ys)
-    
-        data_width  = xmax - xmin
-        data_height = ymax - ymin
-    
-        if data_width >= data_height:
-            fig_width  = BASE_SIZE
-            fig_height = int(BASE_SIZE * data_height / data_width)
-        else:
-            fig_height = BASE_SIZE
-            fig_width  = int(BASE_SIZE * data_width / data_height)
-    
-        node_radius = (node_marker_size / 2) * (data_width / fig_width)
-    
-        # --------------------------------------------------
-        # Edge containers
-        # --------------------------------------------------
-        edge_x_pos, edge_y_pos = [], []
-        edge_x_neg, edge_y_neg = [], []
-    
-        click_x, click_y, click_text = [], [], []
-    
-        flow_text_x, flow_text_y, flow_text = [], [], []
-        pipe_text_x, pipe_text_y, pipe_text = [], [], []
-    
-        arrows = []
-    
-        # --------------------------------------------------
-        # EDGES + ARROWS
-        # --------------------------------------------------
-        for (i, j), flow in q.items():
-            if i not in node_pos or j not in node_pos:
-                continue
-    
-            x0, y0 = node_pos[i]
-            x1, y1 = node_pos[j]
-    
-            if flow >= 0:
-                xs_, ys_ = x0, y0
-                xe_, ye_ = x1, y1
-            else:
-                xs_, ys_ = x1, y1
-                xe_, ye_ = x0, y0
-    
-            dx, dy = xe_ - xs_, ye_ - ys_
-            dist = math.hypot(dx, dy)
-            if dist < 1e-8:
-                continue
-    
-            # Boundary-to-boundary
-            sx = xs_ + node_radius * dx / dist
-            sy = ys_ + node_radius * dy / dist
-            ex = xe_ - node_radius * dx / dist
-            ey = ye_ - node_radius * dy / dist
-    
-            mx = 0.5 * (sx + ex)
-            my = 0.5 * (sy + ey)
-    
-            pipes = pipe_info.get((i, j), [])
-            if pipes:
-                pipe_txt = "<br>".join([f"D{d} : {l:.2f}" for d, l in pipes])
-                pipe_label = ", ".join([f"D{d}:{l:.1f}" for d, l in pipes])
-            else:
-                pipe_txt = "No pipe selected"
-                pipe_label = "No pipe"
-    
-            hover_text = (
-                f"<b>Arc {i} → {j}</b><br>"
-                f"Flow: {flow:.5f}<br>"
-                f"Length: {L.get((i, j), 0):.2f}<br>"
-                f"<b>Pipes:</b><br>{pipe_txt}"
-            )
-    
-            click_x.append(mx)
-            click_y.append(my)
-            click_text.append(hover_text)
-    
-            # Flow text
-            flow_text_x.append(mx)
-            flow_text_y.append(my)
-            flow_text.append(f"{flow:.3f}")
-    
-            # Pipe text
-            pipe_text_x.append(mx)
-            pipe_text_y.append(my - 0.02 * data_height)
-            pipe_text.append(pipe_label)
-    
-            if flow >= 0:
-                edge_x_pos += [sx, ex, None]
-                edge_y_pos += [sy, ey, None]
-                arrow_color = "green"
-            else:
-                edge_x_neg += [sx, ex, None]
-                edge_y_neg += [sy, ey, None]
-                arrow_color = "red"
-    
-            arrows.append(dict(
-                ax=sx, ay=sy,
-                x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor=arrow_color
-            ))
-    
-        # --------------------------------------------------
-        # EDGE TRACES
-        # --------------------------------------------------
-        edge_pos = go.Scatter(
-            x=edge_x_pos, y=edge_y_pos,
-            mode="lines",
-            line=dict(width=2, color="green"),
-            name="Positive flow"
-        )
-    
-        edge_neg = go.Scatter(
-            x=edge_x_neg, y=edge_y_neg,
-            mode="lines",
-            line=dict(width=2, color="green"),
-            name="Negative flow"
-        )
-    
-        arc_click_trace = go.Scatter(
-            x=click_x, y=click_y,
-            mode="markers",
-            marker=dict(size=0, opacity=0),
-            hoverinfo="text",
-            hovertext=click_text,
-            showlegend=False
-        )
-    
-        # --------------------------------------------------
-        # NODES
-        # --------------------------------------------------
-        node_x, node_y, node_text, node_labels = [], [], [], []
-        node_colors = []
-    
-        head_text_x, head_text_y, head_text = [], [], []
-    
-        for n, (x, y) in node_pos.items():
-            node_x.append(x)
-            node_y.append(y)
-            node_labels.append(str(n))
-            node_text.append(
-                f"<b>Node {n}</b><br>"
-                f"Head: {h.get(n,0):.2f}<br>"
-                f"Min Head: {hmin.get(n,0):.2f}<br>"
-                f"Demand: {D.get(n,0):.5f}"
-            )
-            head_text_x.append(x)
-            head_text_y.append(y + 0.03 * data_height)
-            head_text.append(f"{h.get(n,0):.2f}")
-    
-            node_colors.append("royalblue" if n in list(self.source) else "skyblue")
-    
-        node_trace = go.Scatter(
-            x=node_x, y=node_y,
-            mode="markers+text",
-            text=node_labels,
-            textposition="middle center",
-            hoverinfo="text",
-            hovertext=node_text,
-            marker=dict(size=22, color=node_colors, line=dict(width=1.5, color="black")),
-            textfont=dict(size=12, color="black"),
-            name="Nodes"
-        )
-    
-        # --------------------------------------------------
-        # TOGGLEABLE TEXT TRACES
-        # --------------------------------------------------
-        flow_text_trace = go.Scatter(
-            x=flow_text_x, y=flow_text_y,
-            mode="text",
-            text=flow_text,
-            textfont=dict(size=11, color="darkgreen"),
-            name="Flow values",
-            visible="legendonly"
-        )
-    
-        pipe_text_trace = go.Scatter(
-            x=pipe_text_x, y=pipe_text_y,
-            mode="text",
-            text=pipe_text,
-            textfont=dict(size=10, color="brown"),
-            name="Pipe diameters & lengths",
-            visible="legendonly"
-        )
-    
-        head_text_trace = go.Scatter(
-            x=head_text_x, y=head_text_y,
-            mode="text",
-            text=head_text,
-            textfont=dict(size=11, color="black"),
-            name="Head values",
-            visible="legendonly"
-        )
-    
-        # --------------------------------------------------
-        # FIGURE
-        # --------------------------------------------------
-        fig = go.Figure([
-            edge_pos,
-            edge_neg,
-            arc_click_trace,
-            node_trace,
-            flow_text_trace,
-            pipe_text_trace,
-            head_text_trace
-        ])
-    
-        fig.update_layout(
-            title=f"WDN = {data_list[self.data_number]}, Total Cost = {sol['objective']:.2f}",
-            annotations=arrows,
-            hovermode="closest",
-            showlegend=True,
-            xaxis=dict(visible=True, zeroline=False, showgrid=True),
-            yaxis=dict(visible=True, zeroline=False, scaleanchor="x", scaleratio=1),
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)"
-        )
-    
-        # --------------------------------------------------
-        # SAVE
-        # --------------------------------------------------
-        fig.write_html(
-            f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html",
-            auto_open=False,
-            config={
-            "scrollZoom": True,
-            "toImageButtonOptions": {
-                "format": "pdf",
-                "filename": "wdn_high_quality",
-                "height": 3000,
-                "width": 3000,
-                "scale": 3   # 🔥 KEY PARAMETER
-            }
-        }
-        )
-        print("✔ Interactive WDN plot saved (HTML)")
-
-    def plot_interactive_wdn2(self, solution_file, node_pos):
-    
-        import json, math
-        import plotly.graph_objects as go
-    
-        # --------------------------------------------------
-        # Load solution
-        # --------------------------------------------------
-        with open(solution_file) as f:
-            sol = json.load(f)
-    
-        def parse_key(k):
-            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
-    
-        q = {parse_key(k): v for k, v in sol["q"].items()}
-        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
-    
-        # Pipe info: l[i,j,k]
-        pipe_info = {}
-        for k_str, val in sol.get("l", {}).items():
-            if val < 1e-6:
-                continue
-            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
-            pipe_info.setdefault((i, j), []).append((d, val))
-    
-        h = {int(k): v for k, v in sol["h"].items()}
-        hmin = {int(k): v for k, v in sol["hmin"].items()}
-        D = {int(k): v for k, v in sol["D"].items()}
-    
-        # --------------------------------------------------
-        # Compute node radius in DATA coordinates
-        # --------------------------------------------------
-        node_marker_size = 22
-        xs = [p[0] for p in node_pos.values()]
-        ys = [p[1] for p in node_pos.values()]
-    
-        xmin, xmax = min(xs), max(xs)
-        ymin, ymax = min(ys), max(ys)
-    
-        data_width = xmax - xmin
-        fig_width = 1800
-    
-        node_radius = (node_marker_size / 2) * (data_width / fig_width)
-    
-        # --------------------------------------------------
-        # NEW: Determine diameter per arc
-        # --------------------------------------------------
-        arc_diameter = {}
-        all_diameters = set()
-    
-        for (i, j), pipes in pipe_info.items():
-            max_d = max(d for d, _ in pipes)
-            arc_diameter[(i, j)] = max_d
-            all_diameters.add(max_d)
-    
-        # Sorted unique diameters → ordered thickness
-        sorted_diams = sorted(all_diameters)
-        thickness_levels = [2, 4, 6, 9, 12]
-    
-        diameter_to_width = {
-            d: thickness_levels[min(i, len(thickness_levels)-1)]
-            for i, d in enumerate(sorted_diams)
+    def export_solution_iteration(self, iteration):
+        solution = {
+            "iteration": iteration,
+            "objective": self.current_cost,
+            "solve_time": time.time() - self.start_time, 
+            "q": {f"{i},{j}": float(v) for (i,j), v in self.q.items()},
+            # "q": self.q,
+            "h": self.h,
+            "l": {f"{i},{j},{k}": self.l[i,j,k] 
+                  for (i,j) in self.arcs for k in self.pipes if self.l[i,j,k] > 1e-3},
+            "D": self.D,
+            "Diameters": {f"{i}": self.d[i] for i in self.pipes},
+            "L": {f"{i},{j}": v for (i,j), v in self.L.items()},
+            "C": self.C,
+            "hmin": {f"{i}": self.E[i] if i == list(self.source)[0] else self.E[i] + self.P[i] for i in self.nodes},
+            # "pipe_diameters": self.l,
+            "nodes": list(self.nodes),
+            "arcs": [(i,j) for (i,j) in self.arcs],
+            "source": list(self.source)
         }
     
-        # --------------------------------------------------
-        # Edge containers (now grouped by width)
-        # --------------------------------------------------
-        edge_traces_pos = {}
-        edge_traces_neg = {}
-        click_x, click_y, click_text = [], [], []
-        arrows = []
-    
-        # --------------------------------------------------
-        # EDGES + ARROWS
-        # --------------------------------------------------
-        for (i, j), flow in q.items():
-    
-            if i not in node_pos or j not in node_pos:
-                continue
-    
-            x0, y0 = node_pos[i]
-            x1, y1 = node_pos[j]
-    
-            if flow >= 0:
-                xs, ys = x0, y0
-                xe, ye = x1, y1
-            else:
-                xs, ys = x1, y1
-                xe, ye = x0, y0
-    
-            dx, dy = xe - xs, ye - ys
-            dist = math.hypot(dx, dy)
-            if dist < 1e-8:
-                continue
-    
-            sx = xs + node_radius * dx / dist
-            sy = ys + node_radius * dy / dist
-            ex = xe - node_radius * dx / dist
-            ey = ye - node_radius * dy / dist
-    
-            mx, my = 0.5 * (sx + ex), 0.5 * (sy + ey)
-    
-            pipes = pipe_info.get((i, j), [])
-            pipe_txt = "<br>".join([f"{d} : {l:.2f}" for d, l in pipes]) if pipes else "No pipe"
-    
-            hover_text = (
-                f"<b>Arc {i} → {j}</b><br>"
-                f"Flow: {flow:.5f}<br>"
-                f"Length: {L.get((i,j),0):.2f}<br>"
-                f"<b>Pipes:</b><br>{pipe_txt}"
-            )
-    
-            click_x.append(mx)
-            click_y.append(my)
-            click_text.append(hover_text)
-    
-            width = diameter_to_width.get(arc_diameter.get((i, j), None), 2)
-    
-            target = edge_traces_pos if flow >= 0 else edge_traces_neg
-            target.setdefault(width, {"x": [], "y": []})
-            target[width]["x"] += [sx, ex, None]
-            target[width]["y"] += [sy, ey, None]
-    
-            arrows.append(dict(
-                ax=sx, ay=sy,
-                x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=1,
-                arrowcolor="green" if flow >= 0 else "red"
-            ))
-    
-        # --------------------------------------------------
-        # Create edge traces
-        # --------------------------------------------------
-        traces = []
-    
-        for w, data in edge_traces_pos.items():
-            traces.append(go.Scatter(
-                x=data["x"], y=data["y"],
-                mode="lines",
-                line=dict(width=w, color="green"),
-                name=f"Positive flow (D~{w})",
-                hoverinfo="skip"
-            ))
-    
-        for w, data in edge_traces_neg.items():
-            traces.append(go.Scatter(
-                x=data["x"], y=data["y"],
-                mode="lines",
-                line=dict(width=w, color="red"),
-                name=f"Negative flow (D~{w})",
-                hoverinfo="skip"
-            ))
-    
-        traces.append(go.Scatter(
-            x=click_x, y=click_y,
-            mode="markers",
-            marker=dict(size=0, opacity=0),
-            hoverinfo="text",
-            hovertext=click_text,
-            showlegend=False
-        ))
-    
-        # --------------------------------------------------
-        # Nodes
-        # --------------------------------------------------
-        node_x, node_y, node_text, node_labels, node_colors = [], [], [], [], []
-    
-        for n, (x, y) in node_pos.items():
-            node_x.append(x)
-            node_y.append(y)
-            node_labels.append(str(n))
-            node_text.append(
-                f"<b>Node {n}</b><br>"
-                f"Head: {h.get(n,0):.2f}<br>"
-                f"Min Head: {hmin.get(n,0):.2f}<br>"
-                f"Demand: {D.get(n,0):.5f}"
-            )
-            node_colors.append("royalblue" if n in self.source else "skyblue")
-    
-        traces.append(go.Scatter(
-            x=node_x, y=node_y,
-            mode="markers+text",
-            text=node_labels,
-            textposition="middle center",
-            hoverinfo="text",
-            hovertext=node_text,
-            marker=dict(size=22, color=node_colors, line=dict(width=1.5, color="black")),
-            name="Nodes"
-        ))
-    
-        # --------------------------------------------------
-        # Figure
-        # --------------------------------------------------
-        fig = go.Figure(traces)
-    
-        fig.update_layout(
-            title=f"WDN = {data_list[self.data_number]}, Total Cost = {sol['objective']:.2f}",
-            annotations=arrows,
-            dragmode="pan",
-            hovermode="closest",
-            xaxis=dict(fixedrange=False),
-            yaxis=dict(scaleanchor="x", fixedrange=False),
-            plot_bgcolor="white",
-            paper_bgcolor="white"
-        )
-    
-        fig.write_html(
-            f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html",
-            auto_open=False,
-            config={"scrollZoom": True}
-        )
-    
-        print("✔ Interactive WDN plot saved (HTML)")
+        with open(f"../figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json", "w") as f:
+            json.dump(solution, f, indent=2)
 
-    def plot_interactive_wdn3(self, solution_file, node_pos):
-        """
-        Interactive WDN plot (server-safe HTML):
-        - Green = positive flow, Red = negative flow
-        - Arrows show direction (boundary to boundary)
-        - Hover on arc: flow + pipe diameters & lengths
-        - Hover on node: head, min head, demand
-        """
-        # --------------------------------------------------
-        # Load solution
-        # --------------------------------------------------
-        with open(solution_file) as f:
-            sol = json.load(f)
-        def parse_key(k):
-            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
-        q = {parse_key(k): v for k, v in sol["q"].items()}
-        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
-        # Pipe info: l[i,j,k]
-        pipe_info = {}
-        for k_str, val in sol.get("l", {}).items():
-            if val < 1e-6:
-                continue
-            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
-            pipe_info.setdefault((i, j), []).append((d, val))
-        h = {int(k): v for k, v in sol["h"].items()}
-        hmin = {int(k): v for k, v in sol["hmin"].items()}
-        D = {int(k): v for k, v in sol["D"].items()}
-        
-        # --------------------------------------------------
-        # Compute node radius in DATA coordinates
-        # --------------------------------------------------
-        node_marker_size=22
-        fig_width=1800
-        fig_height=1800
-        xs = [p[0] for p in node_pos.values()]
-        ys = [p[1] for p in node_pos.values()]
-
-        xmin, xmax = min(xs), max(xs)
-        ymin, ymax = min(ys), max(ys)
-        
-        data_width  = xmax - xmin
-        data_height = ymax - ymin
-        BASE_SIZE = 1800 
-        if data_width >= data_height:
-            fig_width  = BASE_SIZE
-            fig_height = int(BASE_SIZE * data_height / data_width)
-        else:
-            fig_height = BASE_SIZE
-            fig_width  = int(BASE_SIZE * data_width / data_height)
-
-        data_range = max(xs) - min(xs)
-        node_radius = (node_marker_size / 2) * (data_width / fig_width)
-
-        # --------------------------------------------------
-        # Edge containers
-        # --------------------------------------------------
-        edge_x_pos, edge_y_pos, edge_text_pos = [], [], []
-        edge_x_neg, edge_y_neg, edge_text_neg = [], [], []
-        click_x, click_y, click_text = [], [], []
-        
-        arrows = []
-        # --------------------------------------------------
-        # EDGES + ARROWS
-        # --------------------------------------------------
-        for (i, j), flow in q.items():
-            if i not in node_pos or j not in node_pos:
-                continue
-            x0, y0 = node_pos[i]
-            x1, y1 = node_pos[j]
-            if flow >= 0:
-                # Direction: i -> j
-                xs, ys = x0, y0
-                xe, ye = x1, y1
-            else:
-                # Direction: j -> i
-                xs, ys = x1, y1
-                xe, ye = x0, y0
-            
-            dx, dy = xe - xs, ye - ys
-            dist = math.hypot(dx, dy)
-            if dist < 1e-8:
-                continue
-            
-            # Shorten to node boundaries (ALWAYS correct now)
-            sx = xs + node_radius * dx / dist
-            sy = ys + node_radius * dy / dist
-            ex = xe - node_radius * dx / dist
-            ey = ye - node_radius * dy / dist
-
-            mx = 0.5 * (sx + ex)
-            my = 0.5 * (sy + ey)
-
-            # Pipe hover text
-            pipes = pipe_info.get((i, j), [])
-            if pipes:
-                pipe_txt = "<br>".join([f"  {d} : {l:.2f}" for d, l in pipes])
-            else:
-                pipe_txt = "No pipe selected"
-            hover_text = (
-                f"<b>Arc {i} → {j}</b><br>"
-                f"Flow: {flow:.5f}<br>"
-                f"Length: {L.get((i,j),0):.2f}<br>"
-                f"<b>Pipes:</b><br>{pipe_txt}"
-            )
-            click_x.append(mx)
-            click_y.append(my)
-            click_text.append(hover_text)   # same hover text as arc
-
-            if flow >= 0:
-                edge_x_pos += [sx, ex, None]
-                edge_y_pos += [sy, ey, None]
-                # edge_text_pos.append(hover_text)
-                arrows.append(dict(
-                ax=sx, ay=sy,
-                x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor="green"
-            ))
-            else:
-                edge_x_neg += [sx, ex, None]
-                edge_y_neg += [sy, ey, None]
-                # edge_text_neg.append(hover_text)
-                arrows.append(dict(
-                ax=sx, ay=sy,
-                x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor="red"
-            ))
-        edge_pos = go.Scatter(
-            x=edge_x_pos, y=edge_y_pos,
-            mode="lines",
-            line=dict(width=2, color="green"),
-            hoverinfo="text",
-            # hovertext=edge_text_pos,
-            name="Positive flow"
-        )
-        edge_neg = go.Scatter(
-            x=edge_x_neg, y=edge_y_neg,
-            mode="lines",
-            line=dict(width=2, color="red"),
-            hoverinfo="text",
-            # hovertext=edge_text_neg,
-            name="Negative flow"
-        )
-        arc_click_trace = go.Scatter(
-        x=click_x,
-        y=click_y,
-        mode="markers",
-        marker=dict(size=0,color="lightgreen",symbol="circle",opacity=0.0),
-        hoverinfo="text",
-        hovertext=click_text,
-        name="Arc info points",
-        showlegend=False,
-        )
-
-        # --------------------------------------------------
-        # NODES
-        # --------------------------------------------------
-        node_x, node_y, node_text, node_labels = [], [], [], []
-        node_colors = []
-        for n, (x, y) in node_pos.items():
-            node_x.append(x)
-            node_y.append(y)
-            node_labels.append(str(n))
-            node_text.append(
-                f"<b>Node {n}</b><br>"
-                f"Head: {h.get(n,0):.2f}<br>"
-                f"Min Head: {hmin.get(n,0):.2f}<br>"
-                f"Demand: {D.get(n,0):.5f}"
-            )
-            if n in list(self.source):
-                node_colors.append("royalblue")
-            else:
-                node_colors.append("skyblue")
-
-        node_trace = go.Scatter(
-            x=node_x, y=node_y,
-            mode="markers+text",
-            text=node_labels,
-            textposition="middle center",
-            hoverinfo="text",
-            hovertext=node_text,
-            marker=dict(size=22,color=node_colors,line=dict(width=1.5, color="black")),
-            textfont=dict(size=12, color="black"),
-            name="Nodes"
-        )
-        # --------------------------------------------------
-        # FIGURE
-        # --------------------------------------------------
-        fig = go.Figure([edge_pos, edge_neg, arc_click_trace, node_trace])
-
-        fig.update_layout(
-            title=f"WDN = {data_list[(self.data_number)]}, Total Cost = {sol['objective']:.2f}",
-            annotations=arrows,
-            # width=2000,
-            # height=1000,
-            # autosize = False,
-            hovermode="closest",
-            showlegend=True,
-            xaxis=dict(visible=True,zeroline=False,showgrid=True    # constrain="domain"   # 🔴 KEY LINE
-            ),
-            yaxis=dict(visible=True,zeroline=False,scaleanchor="x",scaleratio=1),
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)"
-        )
-
-        # fig.update_layout(
-        #     title=f"WDN Local Solution (Objective = {sol['objective']:.2f})",
-        #     annotations=arrows,
-        #     hovermode="closest",
-        #     showlegend=True,
-        #     xaxis=dict(visible=False),
-        #     yaxis=dict(visible=False),
-        #     margin=dict(l=20, r=20, t=50, b=20)
-        # )
-        # --------------------------------------------------
-        # SAVE (SERVER SAFE)
-        # --------------------------------------------------
-        fig.write_html(f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html", 
-                       auto_open=False)
-        print("✔ Interactive WDN plot saved (HTML)")
-
-    def plot_interactive_wdn5(self, solution_file, node_pos):
-        import json, math
-        import plotly.graph_objects as go
-    
-        # --------------------------------------------------
-        # Load solution
-        # --------------------------------------------------
-        with open(solution_file) as f:
-            sol = json.load(f)
-    
-        def parse_key(k):
-            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
-    
-        q = {parse_key(k): v for k, v in sol["q"].items()}
-        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
-    
-        # Pipe info: l[i,j,d]
-        pipe_info = {}
-        diameters_used = set()
-        for k_str, val in sol.get("l", {}).items():
-            if val < 1e-6:
-                continue
-            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
-            pipe_info.setdefault((i, j), []).append((d, val))
-            diameters_used.add(d)
-    
-        diameters_used = sorted(diameters_used)
-    
-        # --------------------------------------------------
-        # Diameter → thickness mapping
-        # --------------------------------------------------
-        min_w, max_w = 2.0, 10.0
-        if len(diameters_used) > 1:
-            dmin, dmax = min(diameters_used), max(diameters_used)
-            def width_from_d(d):
-                return min_w + (max_w - min_w) * (d - dmin) / (dmax - dmin)
-        else:
-            def width_from_d(d):
-                return (min_w + max_w) / 2
-    
-        h = {int(k): v for k, v in sol["h"].items()}
-        hmin = {int(k): v for k, v in sol["hmin"].items()}
-        D = {int(k): v for k, v in sol["D"].items()}
-    
-        # --------------------------------------------------
-        # Node radius (data coordinates)
-        # --------------------------------------------------
-        node_marker_size = 22
-        xs = [p[0] for p in node_pos.values()]
-        data_width = max(xs) - min(xs)
-        fig_width = 1800
-        node_radius = (node_marker_size / 2) * (data_width / fig_width)
-    
-        # --------------------------------------------------
-        # Containers
-        # --------------------------------------------------
-        edge_x, edge_y = [], []
-        click_x, click_y, click_text = [], [], []
-        arrows = []
-    
-        # --------------------------------------------------
-        # EDGES + ARROWS
-        # --------------------------------------------------
-        for (i, j), flow in q.items():
-            if i not in node_pos or j not in node_pos:
-                continue
-    
-            x0, y0 = node_pos[i]
-            x1, y1 = node_pos[j]
-    
-            # Flow direction
-            if flow >= 0:
-                xs0, ys0, xe0, ye0 = x0, y0, x1, y1
-            else:
-                xs0, ys0, xe0, ye0 = x1, y1, x0, y0
-    
-            dx, dy = xe0 - xs0, ye0 - ys0
-            dist = math.hypot(dx, dy)
-            if dist < 1e-8:
-                continue
-    
-            sx = xs0 + node_radius * dx / dist
-            sy = ys0 + node_radius * dy / dist
-            ex = xe0 - node_radius * dx / dist
-            ey = ye0 - node_radius * dy / dist
-    
-            pipes = pipe_info.get((i, j), [])
-            if pipes:
-                max_d = max(d for d, _ in pipes)
-                width = width_from_d(max_d)
-                pipe_txt = "<br>".join([f"Ø {d} : {l:.2f}" for d, l in pipes])
-            else:
-                width = min_w
-                pipe_txt = "No pipe selected"
-    
-            edge_x += [sx, ex, None]
-            edge_y += [sy, ey, None]
-    
-            mx, my = 0.5 * (sx + ex), 0.5 * (sy + ey)
-            click_x.append(mx)
-            click_y.append(my)
-            click_text.append(
-                f"<b>Arc {i} → {j}</b><br>"
-                f"Flow: {flow:.5f}<br>"
-                f"Length: {L.get((i,j),0):.2f}<br>"
-                f"<b>Pipes:</b><br>{pipe_txt}"
-            )
-    
-            arrows.append(dict(
-                ax=sx, ay=sy, x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor="green"
-            ))
-    
-        # --------------------------------------------------
-        # MAIN EDGE TRACE
-        # --------------------------------------------------
-        edge_trace = go.Scatter(
-            x=edge_x,
-            y=edge_y,
-            mode="lines",
-            line=dict(color="green", width=4),
-            hoverinfo="skip",
-            name="Pipes"
-        )
-    
-        # --------------------------------------------------
-        # CLICK TRACE
-        # --------------------------------------------------
-        arc_click_trace = go.Scatter(
-            x=click_x,
-            y=click_y,
-            mode="markers",
-            marker=dict(size=0, opacity=0),
-            hoverinfo="text",
-            hovertext=click_text,
-            showlegend=False
-        )
-    
-        # --------------------------------------------------
-        # NODES
-        # --------------------------------------------------
-        node_x, node_y, node_text, node_labels, node_colors = [], [], [], [], []
-        for n, (x, y) in node_pos.items():
-            node_x.append(x)
-            node_y.append(y)
-            node_labels.append(str(n))
-            node_text.append(
-                f"<b>Node {n}</b><br>"
-                f"Head: {h.get(n,0):.2f}<br>"
-                f"Min Head: {hmin.get(n,0):.2f}<br>"
-                f"Demand: {D.get(n,0):.5f}"
-            )
-            node_colors.append("royalblue" if n in self.source else "skyblue")
-    
-        node_trace = go.Scatter(
-            x=node_x, y=node_y,
-            mode="markers+text",
-            text=node_labels,
-            textposition="middle center",
-            hoverinfo="text",
-            hovertext=node_text,
-            marker=dict(size=22, color=node_colors, line=dict(width=1.5, color="black")),
-            name="Nodes"
-        )
-    
-        # --------------------------------------------------
-        # DIAMETER → THICKNESS LEGEND (dummy traces)
-        # --------------------------------------------------
-        legend_traces = []
-        for d in diameters_used:
-            legend_traces.append(
-                go.Scatter(
-                    x=[None], y=[None],
-                    mode="lines",
-                    line=dict(color="green", width=width_from_d(d)),
-                    name=f"Diameter {d}"
-                )
-            )
-    
-        # --------------------------------------------------
-        # FIGURE
-        # --------------------------------------------------
-        fig = go.Figure(
-            [edge_trace, arc_click_trace, node_trace] + legend_traces
-        )
-    
-        fig.update_layout(
-            title=f"WDN = {data_list[self.data_number]}, Total Cost = {sol['objective']:.2f}",
-            annotations=arrows,
-            hovermode="closest",
-            showlegend=True,
-            legend=dict(title="Pipe Diameter → Thickness"),
-            xaxis=dict(visible=True, zeroline=False, showgrid=True),
-            yaxis=dict(visible=True, zeroline=False, scaleanchor="x", scaleratio=1),
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor="white",
-            paper_bgcolor="white"
-        )
-    
-        # --------------------------------------------------
-        # SAVE
-        # --------------------------------------------------
-        fig.write_html(
-            f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html",
-            auto_open=False,
-            config={
-                "scrollZoom": True,
-                "toImageButtonOptions": {
-                    "format": "png",
-                    "filename": "wdn_high_quality",
-                    "height": 3500,
-                    "width": 3500,
-                    "scale": 3
-                }
-            }
-        )
-    
-        print("✔ WDN plot saved with diameter–thickness legend")
-
-    def plot_interactive_wdn6(self, solution_file, node_pos):
-    
-        import json, math
-        import plotly.graph_objects as go
-    
-        # --------------------------------------------------
-        # Load solution
-        # --------------------------------------------------
-        with open(solution_file) as f:
-            sol = json.load(f)
-    
-        def parse_key(k):
-            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
-    
-        q = {parse_key(k): v for k, v in sol["q"].items()}
-        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
-    
-        # Pipe info l[i,j,d]
-        pipe_info = {}
-        for k_str, val in sol.get("l", {}).items():
-            if val < 1e-6:
-                continue
-            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
-            pipe_info.setdefault((i, j), []).append((d, val))
-    
-        h    = {int(k): v for k, v in sol["h"].items()}
-        hmin = {int(k): v for k, v in sol["hmin"].items()}
-        D    = {int(k): v for k, v in sol["D"].items()}
-    
-        # --------------------------------------------------
-        # Compute figure size + node radius (DATA units)
-        # --------------------------------------------------
-        node_marker_size = 22
-        BASE = 1800
-    
-        xs = [p[0] for p in node_pos.values()]
-        ys = [p[1] for p in node_pos.values()]
-    
-        xmin, xmax = min(xs), max(xs)
-        ymin, ymax = min(ys), max(ys)
-    
-        data_w = xmax - xmin
-        data_h = ymax - ymin
-    
-        if data_w >= data_h:
-            fig_w = BASE
-            fig_h = int(BASE * data_h / data_w)
-        else:
-            fig_h = BASE
-            fig_w = int(BASE * data_w / data_h)
-    
-        node_radius = (node_marker_size / 2) * (data_w / fig_w)
-    
-        # --------------------------------------------------
-        # Diameter → thickness mapping
-        # --------------------------------------------------
-        arc_diameter = {}
-        diameters = set()
-    
-        for (i, j), pipes in pipe_info.items():
-            max_d = max(d for d, _ in pipes)
-            arc_diameter[(i, j)] = max_d
-            diameters.add(max_d)
-    
-        diameters = sorted(diameters)
-        min_w, max_w = 2, 10
-    
-        def width_from_d(d):
-            if len(diameters) == 1:
-                return (min_w + max_w) / 2
-            return min_w + (max_w - min_w) * (d - diameters[0]) / (diameters[-1] - diameters[0])
-    
-        # --------------------------------------------------
-        # Containers
-        # --------------------------------------------------
-        edge_traces = {}
-        arrows = []
-    
-        click_x, click_y, click_text = [], [], []
-    
-        flow_tx, flow_ty, flow_txt = [], [], []
-        pipe_tx, pipe_ty, pipe_txt = [], [], []
-    
-        # --------------------------------------------------
-        # EDGES + ARROWS
-        # --------------------------------------------------
-        for (i, j), flow in q.items():
-    
-            if i not in node_pos or j not in node_pos:
-                continue
-    
-            x0, y0 = node_pos[i]
-            x1, y1 = node_pos[j]
-    
-            # Direction handled but color SAME
-            if flow >= 0:
-                xs, ys, xe, ye = x0, y0, x1, y1
-            else:
-                xs, ys, xe, ye = x1, y1, x0, y0
-    
-            dx, dy = xe - xs, ye - ys
-            dist = math.hypot(dx, dy)
-            if dist < 1e-9:
-                continue
-    
-            sx = xs + node_radius * dx / dist
-            sy = ys + node_radius * dy / dist
-            ex = xe - node_radius * dx / dist
-            ey = ye - node_radius * dy / dist
-    
-            mx, my = (sx + ex) / 2, (sy + ey) / 2
-    
-            pipes = pipe_info.get((i, j), [])
-            pipe_hover = "<br>".join([f"D{d} : {l:.2f}" for d, l in pipes]) if pipes else "No pipe"
-            pipe_label = ", ".join([f"D{d}:{l:.1f}" for d, l in pipes])
-    
-            hover = (
-                f"<b>Arc {i} → {j}</b><br>"
-                f"Flow: {flow:.5f}<br>"
-                f"Length: {L.get((i,j),0):.2f}<br>"
-                f"<b>Pipes:</b><br>{pipe_hover}"
-            )
-    
-            click_x.append(mx)
-            click_y.append(my)
-            click_text.append(hover)
-    
-            flow_tx.append(mx)
-            flow_ty.append(my)
-            flow_txt.append(f"{flow:.3f}")
-    
-            pipe_tx.append(mx)
-            pipe_ty.append(my - 0.02 * data_h)
-            pipe_txt.append(pipe_label)
-    
-            d = arc_diameter.get((i, j), None)
-            w = width_from_d(d) if d else 2
-    
-            edge_traces.setdefault(w, {"x": [], "y": []})
-            edge_traces[w]["x"] += [sx, ex, None]
-            edge_traces[w]["y"] += [sy, ey, None]
-    
-            arrows.append(dict(
-                ax=sx, ay=sy, x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor="green"
-            ))
-    
-        # --------------------------------------------------
-        # EDGE TRACES (single color)
-        # --------------------------------------------------
-        traces = []
-        for w, d in edge_traces.items():
-            traces.append(go.Scatter(
-                x=d["x"], y=d["y"],
-                mode="lines",
-                line=dict(color="green", width=w),
-                hoverinfo="skip",
-                name=f"Pipe thickness {w:.1f}"
-            ))
-    
-        traces.append(go.Scatter(
-            x=click_x, y=click_y,
-            mode="markers",
-            marker=dict(size=0, opacity=0),
-            hoverinfo="text",
-            hovertext=click_text,
-            showlegend=False
-        ))
-    
-        # --------------------------------------------------
-        # NODES
-        # --------------------------------------------------
-        nx, ny, ntext, nlabel, ncolor = [], [], [], [], []
-    
-        hx, hy, htxt = [], [], []
-    
-        for n, (x, y) in node_pos.items():
-            nx.append(x); ny.append(y)
-            nlabel.append(str(n))
-            ntext.append(
-                f"<b>Node {n}</b><br>"
-                f"Head: {h.get(n,0):.2f}<br>"
-                f"Min Head: {hmin.get(n,0):.2f}<br>"
-                f"Demand: {D.get(n,0):.5f}"
-            )
-            ncolor.append("royalblue" if n in self.source else "skyblue")
-    
-            hx.append(x)
-            hy.append(y + 0.03 * data_h)
-            htxt.append(f"{h.get(n,0):.2f}")
-    
-        traces.append(go.Scatter(
-            x=nx, y=ny,
-            mode="markers+text",
-            text=nlabel,
-            textposition="middle center",
-            hoverinfo="text",
-            hovertext=ntext,
-            marker=dict(size=22, color=ncolor, line=dict(width=1.5, color="black")),
-            name="Nodes"
-        ))
-    
-        # --------------------------------------------------
-        # Toggleable text layers
-        # --------------------------------------------------
-        traces += [
-            go.Scatter(x=flow_tx, y=flow_ty, mode="text",
-                       text=flow_txt, name="Flow values",
-                       visible="legendonly"),
-    
-            go.Scatter(x=pipe_tx, y=pipe_ty, mode="text",
-                       text=pipe_txt, name="Pipe info",
-                       visible="legendonly"),
-    
-            go.Scatter(x=hx, y=hy, mode="text",
-                       text=htxt, name="Head values",
-                       visible="legendonly")
-        ]
-    
-        # --------------------------------------------------
-        # FIGURE
-        # --------------------------------------------------
-        fig = go.Figure(traces)
-    
-        fig.update_layout(
-            title=f"WDN = {data_list[self.data_number]}, Cost = {sol['objective']:.2f}",
-            annotations=arrows,
-            dragmode="pan",
-            hovermode="closest",
-            xaxis=dict(fixedrange=False),
-            yaxis=dict(scaleanchor="x", fixedrange=False),
-            plot_bgcolor="white",
-            paper_bgcolor="white",
-            width=fig_w,
-            height=fig_h
-        )
-    
-        fig.write_html(
-            f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html",
-            auto_open=False,
-            config={
-                "scrollZoom": True,
-                "toImageButtonOptions": {
-                    "format": "pdf",
-                    "filename": "wdn_high_quality",
-                    "height": 3000,
-                    "width": 3000,
-                    "scale": 3
-                }
-            }
-        )
-    
-        print("✔ Unified interactive WDN plot saved")
-
-    def plot_interactive_wdn7(self, solution_file, node_pos):
-    
-        import json, math
-        import plotly.graph_objects as go
-    
-        # --------------------------------------------------
-        # Load solution
-        # --------------------------------------------------
-        with open(solution_file) as f:
-            sol = json.load(f)
-    
-        def parse_key(k):
-            return tuple(map(int, k.replace("(", "").replace(")", "").split(",")))
-    
-        q = {parse_key(k): v for k, v in sol["q"].items()}
-        L = {parse_key(k): v for k, v in sol.get("L", {}).items()}
-    
-        # Pipe info l[i,j,d]
-        pipe_info = {}
-        for k_str, val in sol.get("l", {}).items():
-            if val < 1e-6:
-                continue
-            i, j, d = map(int, k_str.replace("(", "").replace(")", "").split(","))
-            pipe_info.setdefault((i, j), []).append((d, val))
-    
-        h    = {int(k): v for k, v in sol["h"].items()}
-        hmin = {int(k): v for k, v in sol["hmin"].items()}
-        D    = {int(k): v for k, v in sol["D"].items()}
-    
-        # --------------------------------------------------
-        # Compute figure size + node radius
-        # --------------------------------------------------
-        node_marker_size = 22
-        BASE = 1800
-    
-        xs = [p[0] for p in node_pos.values()]
-        ys = [p[1] for p in node_pos.values()]
-    
-        xmin, xmax = min(xs), max(xs)
-        ymin, ymax = min(ys), max(ys)
-    
-        data_w = xmax - xmin
-        data_h = ymax - ymin
-    
-        if data_w >= data_h:
-            fig_w = BASE
-            fig_h = int(BASE * data_h / data_w)
-        else:
-            fig_h = BASE
-            fig_w = int(BASE * data_w / data_h)
-    
-        node_radius = (node_marker_size / 2) * (data_w / fig_w)
-    
-        # --------------------------------------------------
-        # Diameter → thickness + color mapping
-        # --------------------------------------------------
-        arc_diameter = {}
-        diameters = []
-    
-        for (i, j), pipes in pipe_info.items():
-            max_d = max(d for d, _ in pipes)
-            arc_diameter[(i, j)] = max_d
-            diameters.append(max_d)
-    
-        if diameters:
-            d_min, d_max = min(diameters), max(diameters)
-        else:
-            d_min, d_max = 1, 1
-    
-        min_w, max_w = 2, 10
-    
-        def width_from_d(d):
-            if d_max == d_min:
-                return (min_w + max_w) / 2
-            return min_w + (max_w - min_w) * (d - d_min) / (d_max - d_min)
-    
-        # 🔵 Green intensity: light → dark
-        def color_from_d(d):
-            if d_max == d_min:
-                g = 150
-            else:
-                g = int(80 + 120 * (d - d_min) / (d_max - d_min))
-            return f"rgb(0,{g},0)"
-    
-        # --------------------------------------------------
-        # Containers
-        # --------------------------------------------------
-        edge_groups = {}  # (width, color) → lines
-        arrows = []
-    
-        click_x, click_y, click_text = [], [], []
-        flow_tx, flow_ty, flow_txt = [], [], []
-        pipe_tx, pipe_ty, pipe_txt = [], [], []
-    
-        # --------------------------------------------------
-        # EDGES + ARROWS
-        # --------------------------------------------------
-        for (i, j), flow in q.items():
-    
-            if i not in node_pos or j not in node_pos:
-                continue
-    
-            x0, y0 = node_pos[i]
-            x1, y1 = node_pos[j]
-    
-            # Direction only
-            if flow >= 0:
-                xs, ys, xe, ye = x0, y0, x1, y1
-            else:
-                xs, ys, xe, ye = x1, y1, x0, y0
-    
-            dx, dy = xe - xs, ye - ys
-            dist = math.hypot(dx, dy)
-            if dist < 1e-9:
-                continue
-    
-            sx = xs + node_radius * dx / dist
-            sy = ys + node_radius * dy / dist
-            ex = xe - node_radius * dx / dist
-            ey = ye - node_radius * dy / dist
-    
-            mx, my = (sx + ex) / 2, (sy + ey) / 2
-    
-            pipes = pipe_info.get((i, j), [])
-            pipe_hover = "<br>".join([f"D{d} : {l:.2f}" for d, l in pipes]) if pipes else "No pipe"
-            pipe_label = ", ".join([f"D{d}:{l:.1f}" for d, l in pipes])
-    
-            hover = (
-                f"<b>Arc {i} → {j}</b><br>"
-                f"Flow: {flow:.5f}<br>"
-                f"Length: {L.get((i,j),0):.2f}<br>"
-                f"<b>Pipes:</b><br>{pipe_hover}"
-            )
-    
-            click_x.append(mx)
-            click_y.append(my)
-            click_text.append(hover)
-    
-            flow_tx.append(mx)
-            flow_ty.append(my)
-            flow_txt.append(f"{flow:.3f}")
-    
-            pipe_tx.append(mx)
-            pipe_ty.append(my - 0.02 * data_h)
-            pipe_txt.append(pipe_label)
-    
-            d = arc_diameter.get((i, j), d_min)
-            w = width_from_d(d)
-            c = color_from_d(d)
-    
-            edge_groups.setdefault((w, c), {"x": [], "y": []})
-            edge_groups[(w, c)]["x"] += [sx, ex, None]
-            edge_groups[(w, c)]["y"] += [sy, ey, None]
-    
-            arrows.append(dict(
-                ax=sx, ay=sy, x=ex, y=ey,
-                xref="x", yref="y",
-                axref="x", ayref="y",
-                showarrow=True,
-                arrowhead=3,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor=c
-            ))
-    
-        # --------------------------------------------------
-        # EDGE TRACES
-        # --------------------------------------------------
-        traces = []
-        for (w, c), d in edge_groups.items():
-            traces.append(go.Scatter(
-                x=d["x"], y=d["y"],
-                mode="lines",
-                line=dict(color=c, width=w),
-                hoverinfo="skip",
-                name=f"Diameter group"
-            ))
-    
-        traces.append(go.Scatter(
-            x=click_x, y=click_y,
-            mode="markers",
-            marker=dict(size=0, opacity=0),
-            hoverinfo="text",
-            hovertext=click_text,
-            showlegend=False
-        ))
-    
-        # --------------------------------------------------
-        # NODES
-        # --------------------------------------------------
-        nx, ny, ntext, nlabel, ncolor = [], [], [], [], []
-        hx, hy, htxt = [], [], []
-    
-        for n, (x, y) in node_pos.items():
-            nx.append(x); ny.append(y)
-            nlabel.append(str(n))
-            ntext.append(
-                f"<b>Node {n}</b><br>"
-                f"Head: {h.get(n,0):.2f}<br>"
-                f"Min Head: {hmin.get(n,0):.2f}<br>"
-                f"Demand: {D.get(n,0):.5f}"
-            )
-            ncolor.append("royalblue" if n in self.source else "skyblue")
-    
-            hx.append(x)
-            hy.append(y + 0.03 * data_h)
-            htxt.append(f"{h.get(n,0):.2f}")
-    
-        traces.append(go.Scatter(
-            x=nx, y=ny,
-            mode="markers+text",
-            text=nlabel,
-            textposition="middle center",
-            hoverinfo="text",
-            hovertext=ntext,
-            marker=dict(size=22, color=ncolor, line=dict(width=1.5, color="black")),
-            name="Nodes"
-        ))
-    
-        # --------------------------------------------------
-        # Toggleable text layers
-        # --------------------------------------------------
-        traces += [
-            go.Scatter(x=flow_tx, y=flow_ty, mode="text",
-                       text=flow_txt, name="Flow values",
-                       visible="legendonly"),
-    
-            go.Scatter(x=pipe_tx, y=pipe_ty, mode="text",
-                       text=pipe_txt, name="Pipe info",
-                       visible="legendonly"),
-    
-            go.Scatter(x=hx, y=hy, mode="text",
-                       text=htxt, name="Head values",
-                       visible="legendonly")
-        ]
-    
-        # --------------------------------------------------
-        # FIGURE
-        # --------------------------------------------------
-        fig = go.Figure(traces)
-    
-        fig.update_layout(
-            title=f"WDN = {data_list[self.data_number]}, Cost = {sol['objective']:.2f}",
-            annotations=arrows,
-            dragmode="pan",
-            hovermode="closest",
-            xaxis=dict(fixedrange=False),
-            yaxis=dict(scaleanchor="x", fixedrange=False),
-            plot_bgcolor="white",
-            paper_bgcolor="white",
-            width=fig_w,
-            height=fig_h
-        )
-    
-        fig.write_html(
-            f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html",
-            auto_open=False,
-            config={
-                "scrollZoom": True,
-                "toImageButtonOptions": {
-                    "format": "pdf",
-                    "filename": "wdn_high_quality",
-                    "height": 3000,
-                    "width": 3000,
-                    "scale": 3
-                }
-            }
-        )
-    
-        print("✔ Diameter-colored WDN plot saved")
-
-    def plot_interactive_wdn(self, solution_file, node_pos):
+    def build_plot(self, solution_file, node_pos, data_number):
         # --------------------------------------------------
         # Load solution
         # --------------------------------------------------
@@ -1775,11 +305,13 @@ class WaterNetworkOptimizer:
         h    = {int(k): v for k, v in sol["h"].items()}
         hmin = {int(k): v for k, v in sol["hmin"].items()}
         D    = {int(k): v for k, v in sol["D"].items()}
-        source = sol["source"]
+        # source = sol["source"]
+        source = sol.get("source", [])
+        diameters = {int(k): v for k, v in sol["Diameters"].items()}
         # --------------------------------------------------
         # Figure scaling + node radius
         # --------------------------------------------------
-        node_marker_size = 20
+        node_marker_size = 22
         BASE = 1800
         xs = [p[0] for p in node_pos.values()]
         ys = [p[1] for p in node_pos.values()]
@@ -1795,31 +327,39 @@ class WaterNetworkOptimizer:
             fig_w = int(BASE * data_w / data_h)
         node_radius = (node_marker_size / 2) * (data_w / fig_w)
         # --------------------------------------------------
-        # Diameter → thickness + color (DISCRETE)
+        # FIXED DIAMETER ORDER FROM DICTIONARY (DETERMINISTIC)
         # --------------------------------------------------
-        arc_diameter = {}
-        # all_diams = sorted({
-        #     max(d for d, _ in pipes)
-        #     for pipes in pipe_info.values()
-        # })
-        all_diams = sorted({ d for pipes in pipe_info.values() for d, _ in pipes })
-        # Visually separated thickness levels
-        thickness_levels = [3, 6, 9, 12, 15]
-        # Distinct categorical colors
+        # Use dictionary keys as the dataset order
+        DATASET_DIAMETERS = list(diameters.keys())
+        # --------------------------------------------------
+        # VISUAL PALETTES (must cover all diameters)
+        # --------------------------------------------------
+        thickness_levels = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
         color_palette = [
-            "#1f77b4", "#ff7f0e", "#2ca02c",
-            "#d62728", "#9467bd", "#8c564b",
-            "#e377c2", "#7f7f7f", "#bcbd22",
-            "#17becf"
+            "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+            "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
+            "#bcbd22", "#17becf", "#393b79", "#637939",
+            "#8c6d31", "#843c39", "#7b4173", "#3182bd",
+            "#31a354", "#756bb1", "#636363", "#e6550d",
+            "#969696", "#6baed6"
         ]
+        assert len(DATASET_DIAMETERS) <= len(color_palette)
+        assert len(DATASET_DIAMETERS) <= len(thickness_levels)
+        # --------------------------------------------------
+        # DIAMETER → INDEX (STABLE)
+        # --------------------------------------------------
+        DIAM_INDEX = {d: i for i, d in enumerate(DATASET_DIAMETERS)}
+        # --------------------------------------------------
+        # BUILD STYLE MAP (INDEPENDENT OF SOLUTION)
+        # --------------------------------------------------
+        all_diams = {d for pipes in pipe_info.values() for d, _ in pipes}
         diam_to_style = {}
-        for i, d in enumerate(all_diams):
-            diam_to_style[d] = dict(
-                width=thickness_levels[min(i, len(thickness_levels)-1)],
-                color=color_palette[i % len(color_palette)]
-            )
-        for (i, j), pipes in pipe_info.items():
-            arc_diameter[(i, j)] = max(d for d, _ in pipes)
+        for d in all_diams:
+            idx = DIAM_INDEX[d]
+            diam_to_style[d] = {
+                "width": thickness_levels[idx],
+                "color": color_palette[idx]
+            }
         # --------------------------------------------------
         # Containers
         # --------------------------------------------------
@@ -1831,8 +371,7 @@ class WaterNetworkOptimizer:
         # --------------------------------------------------
         # EDGES (arc hover + multi-diameter coloring)
         # --------------------------------------------------
-        for (i, j), flow in q.items():
-        
+        for (i, j), flow in q.items(): 
             if i not in node_pos or j not in node_pos:
                 continue
             x0, y0 = node_pos[i]
@@ -1874,7 +413,8 @@ class WaterNetworkOptimizer:
             if total_len <= 0:
                 continue
             cur_len = 0.0
-            for d, l in pipes:
+            # for d, l in pipes:
+            for d, l in sorted(pipes, key=lambda x: x[0], reverse=True):
                 frac_s = cur_len / total_len
                 frac_e = (cur_len + l) / total_len
                 seg_sx = sx + frac_s * dx
@@ -1906,19 +446,39 @@ class WaterNetworkOptimizer:
         # Traces
         # --------------------------------------------------
         traces = []
-        for d in sorted(edge_groups.keys()):   # ← increasing order
+        # --------------------------------------------------
+        # CREATE TRACES (FIXED LEGEND ORDER)
+        # --------------------------------------------------
+        # traces = []
+        for d in DATASET_DIAMETERS:
+            if d not in edge_groups:
+                continue
             data = edge_groups[d]
             style = diam_to_style[d]
             traces.append(go.Scatter(
-                x=data["x"], y=data["y"],
+                x=data["x"],
+                y=data["y"],
                 mode="lines",
                 line=dict(
                     width=style["width"],
                     color=style["color"]
                 ),
-                name=f"Diameter D{d}",
+                name=f"Diameter D{d}: {diameters[d]} m",
                 hoverinfo="skip"
-            )) 
+            ))
+        # for d in sorted(edge_groups.keys()):   # ← increasing order
+        #     data = edge_groups[d]
+        #     style = diam_to_style[d]
+        #     traces.append(go.Scatter(
+        #         x=data["x"], y=data["y"],
+        #         mode="lines",
+        #         line=dict(
+        #             width=style["width"],
+        #             color=style["color"]
+        #         ),
+        #         name=f"Diameter D{d}: {diameters[d]} m",
+        #         hoverinfo="skip"
+        #     )) 
         traces.append(go.Scatter(
             x=click_x, y=click_y,
             mode="markers",
@@ -1930,62 +490,166 @@ class WaterNetworkOptimizer:
         # --------------------------------------------------
         # Nodes
         # --------------------------------------------------
-        nx, ny, ntext, nlabel, ncolor = [], [], [], [], []
+        nx_src, ny_src, label_src, text_src = [], [], [], []
+        nx_dem, ny_dem, label_dem, text_dem = [], [], [], []
+        hx_src, hy_src, htxt_src = [], [], []
+        hx_dem, hy_dem, htxt_dem = [], [], []
+        # -------------------------------
+        # Populate
+        # -------------------------------
         for n, (x, y) in node_pos.items():
-            nx.append(x); ny.append(y)
-            nlabel.append(str(n))
-            ntext.append(
+            hover_text = (
                 f"<b>Node {n}</b><br>"
                 f"Head: {h.get(n,0):.2f}<br>"
                 f"Min Head: {hmin.get(n,0):.2f}<br>"
                 f"Demand: {D.get(n,0):.5f}"
             )
-            ncolor.append("royalblue" if n in self.source else "skyblue")
+            if n in source:
+                nx_src.append(x); ny_src.append(y)
+                label_src.append(str(n))
+                text_src.append(hover_text)
+                hx_src.append(x)
+                hy_src.append(y + 0.03 * data_h)
+                htxt_src.append(f"{h.get(n,0):.2f}")
+            else:
+                nx_dem.append(x); ny_dem.append(y)
+                label_dem.append(str(n))
+                text_dem.append(hover_text)
+                hx_dem.append(x)
+                hy_dem.append(y + 0.03 * data_h)
+                htxt_dem.append(f"{h.get(n,0):.2f}")
+        # -------------------------------
+        # Source nodes trace
+        # -------------------------------
         traces.append(go.Scatter(
-            x=nx, y=ny,
+            x=nx_src, y=ny_src,
             mode="markers+text",
-            text=nlabel,
+            text=label_src,
             textposition="middle center",
             hoverinfo="text",
-            hovertext=ntext,
-            marker=dict(size=node_marker_size, color=ncolor, line=dict(width=1.5, color="black")),
-            name="Nodes"
+            hovertext=text_src,
+            marker=dict(
+                size=node_marker_size + 2,
+                color="royalblue",
+                symbol="circle",
+                line=dict(width=2, color="black")
+            ),
+            name="Source Nodes"
         ))
+        # -------------------------------
+        # Demand nodes trace
+        # -------------------------------
+        traces.append(go.Scatter(
+            x=nx_dem, y=ny_dem,
+            mode="markers+text",
+            text=label_dem,
+            textposition="middle center",
+            hoverinfo="text",
+            hovertext=text_dem,
+            marker=dict(
+                size=node_marker_size,
+                color="skyblue",
+                line=dict(width=1.5, color="black")
+            ),
+            name="Demand Nodes"
+        ))
+        # -------------------------------
+        # Head value annotation (optional)
+        # -------------------------------
+        # traces.append(go.Scatter(
+        #     x=hx_src + hx_dem,
+        #     y=hy_src + hy_dem,
+        #     mode="text",
+        #     # text=htxt_src + htxt_dem,
+        #     textfont=dict(size=11, color="black"),
+        #     hoverinfo="skip",
+        #     showlegend=False
+        # ))
+        # --------------------------------------------------
+        # Toggleable text layers
+        # --------------------------------------------------
+        traces += [
+            go.Scatter(x=flow_tx, y=flow_ty, mode="text",
+                       text=flow_txt, name="Flow values",
+                       visible="legendonly"),
+            go.Scatter(x=pipe_tx, y=pipe_ty, mode="text",
+                       text=pipe_txt, name="Pipe info",
+                       visible="legendonly"),
+            go.Scatter(x=hx_src, y=hy_src, mode="text",
+                       text=htxt_src, name="Source nodes head",
+                       visible="legendonly"),
+            go.Scatter(x=hx_dem, y=hy_dem, mode="text",
+                       text=htxt_dem, name="Demand node head",
+                       visible="legendonly")
+        ]
         # --------------------------------------------------
         # Figure
         # --------------------------------------------------
+        data_list = [
+            "d1_bessa",
+            "d2_shamir",
+            "d3_hanoi",
+            "d4_double_hanoi",
+            "d5_triple_hanoi",
+            "d6_newyork",
+            "d7_blacksburg",
+            "d8_fossolo_iron",
+            "d9_fossolo_poly_0",
+            "d10_fossolo_poly_1",
+            "d11_kadu",
+            "d12_pescara",
+            "d13_modena",
+            "d14_balerma"
+        ]
         fig = go.Figure(traces)
         fig.update_layout(
-            title=f"WDN = {data_list[self.data_number]}, Total Cost = {sol['objective']:.2f}",
+            # title=f"WDN = {data_list[data_number]}, Total Cost = {sol['objective']:.2f}",
+            title = f"Network: {data_list[data_number]} | Iteration: {self.iteration} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s",
             annotations=arrows,
             dragmode="pan",
             hovermode="closest",
+            # hovermode="x unified",
             autosize=False,
+            width=1900,
+            height=950,
             xaxis=dict(fixedrange=False),
             yaxis=dict(scaleanchor="x", fixedrange=False),
             plot_bgcolor="white",
             paper_bgcolor="white",
-            width=fig_w,
-            height=fig_h,
-            # margin=dict(l=20, r=20, t=50, b=20),
+            legend=dict(
+                title=dict(text="Network Elements"),
+                orientation="v",
+                x=1.02,
+                y=1,
+                bordercolor="rgba(0,0,0,0.15)",
+                borderwidth=1
+            ),
+            shapes=[
+                # Line
+                dict(
+                    type="line",
+                    x0=0.2, y0=0.3,
+                    x1=0.8, y1=0.7,
+                    line=dict(color="red", width=3)
+                ),
+                # Circle
+                dict(
+                    type="circle",
+                    x0=0.45, y0=0.45,
+                    x1=0.55, y1=0.55,
+                    line=dict(color="green", width=2),
+                    fillcolor="rgba(0,255,0,0.2)"
+                )
+            ],
         )
-        # fig.update_layout(
-        # autosize=True,
-        # dragmode="pan",
-        # hovermode="closest",
-        # plot_bgcolor="white",
-        # paper_bgcolor="white",
-        # margin=dict(l=20, r=20, t=50, b=20)
-        # )
-
         fig.write_html(
-            f"../figure/json_file/wdn_interactive_solution{self.data_number+1}.html",
+            f"../figure/json_file/d{data_number+1}/wdn_interactive_solution{self.iteration}.html",
             auto_open=False,
             config={"scrollZoom": True, 
-                    "displayModeBar": True,
                     }
         )
-        print("✔ Diameter-colored & thickness-separated WDN plot saved")
+        # network_info = f"Network: {data_list[data_number]} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s"
+        # print("✔ Diameter-colored & thickness-separated WDN plot saved")
         return fig
 
     def update_model(self):
@@ -4795,7 +3459,7 @@ class WaterNetworkOptimizer:
 
             # with self.suppress_output():
             ampl.option["solver"] = "ipopt"
-            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes max_iter = 200")   #max_iter = 1000
+            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             ampl.option["presolve_eps"] = "6.82e-14"
             ampl.option['presolve'] = 1
             with self.suppress_output():
@@ -4838,6 +3502,7 @@ class WaterNetworkOptimizer:
                         self.q1 = ampl.getVariable('q1').getValues().to_dict()
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
                     self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+                    
                     print("----------------------------------------------------------------------------------------")
                 else: 
                     print(f"{str((u, v)):<10}"
@@ -4863,6 +3528,11 @@ class WaterNetworkOptimizer:
             # print("headloss:", headloss)
 
             if improved:
+                self.export_solution_iteration(self.iteration)
+                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                node_pos = node_position[self.data_number]
+                self.build_plot(json_file, node_pos, self.data_number)
+
                 self.iteration += 1
                 self.iterate_acyclic_flows()
                 break
@@ -4963,7 +3633,7 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         self.ampl.option["solver"] = "ipopt"
-        self.ampl.set_option("ipopt_options", f"outlev = 3 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
+        self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
         # self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 halt_on_ampl_error = yes halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
         # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
         #self.ampl.set_option("ipopt_options", f"outlev = 0  bound_relax_factor=0 warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
@@ -5082,8 +3752,13 @@ class WaterNetworkOptimizer:
         self.sorted_nodes = []
         # self.visited_arc = []
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
-        self.export_solution()
-        # fig = self.plot_interactive_wdn(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number])
+        self.iteration = 0
+        self.elapsed_time = time.time() - self.start_time
+        self.export_solution(0)
+        # fig = self.(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number])
+        json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/solution_{self.data_number+1}.json"
+        node_pos = node_position[self.data_number]
+        self.build_plot(json_file, node_pos, self.data_number)
         # self.plot_interactive_wdn(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number],self.arcs,self.nodes,self.source, self.l)
 
         print("\n--------------------------Continuous Variable Branching Approach-------------------------------")
@@ -5098,7 +3773,7 @@ class WaterNetworkOptimizer:
         print("---------------------------Reverse Arc Direction Approach------------------------------------")
         self.iteration = 1
         self.visited_arc_reverse = []
-        # self.iterate_acyclic_flows() 
+        self.iterate_acyclic_flows() 
 
         # print("\n-----------------------------------Flow change in cycle Approach---------------------------")
         # self.flow_change_in_cycle_iteration = self.iteration + 1
@@ -5161,14 +3836,16 @@ class WaterNetworkOptimizer:
         print("Number of nlp problem solved:", self.number_of_nlp)
         print("Total number of iteration:", self.iteration + self.headloss_increase_iteration + self.dia_red_iteration)
         # self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
-        elapsed_time = time.time() - self.start_time
+        self.elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
         print(f"Solver_time: {solver_time:.2f} seconds")
         # print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
-        print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds")
+        print(f"Heuristic elapsed time: {self.elapsed_time:.2f} seconds")
+        self.export_solution(0)
+
         print("***********************************************************************************************\n")
         # self.launch_dashboard(fig)
-           
+
 if __name__ == "__main__":
     data_list = [
         "d1_bessa",
