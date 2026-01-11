@@ -285,7 +285,7 @@ class WaterNetworkOptimizer:
         with open(f"../figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json", "w") as f:
             json.dump(solution, f, indent=2)
 
-    def build_plot(self, solution_file, node_pos, data_number):
+    def build_plot(self, solution_file, node_pos, data_number, heuristic_approach, node_head_diff, arc_diff):
         # --------------------------------------------------
         # Load solution
         # --------------------------------------------------
@@ -336,13 +336,21 @@ class WaterNetworkOptimizer:
         # --------------------------------------------------
         thickness_levels = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
         color_palette = [
-            "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
-            "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
-            "#bcbd22", "#17becf", "#393b79", "#637939",
-            "#8c6d31", "#843c39", "#7b4173", "#3182bd",
-            "#31a354", "#756bb1", "#636363", "#e6550d",
-            "#969696", "#6baed6"
+             "#1f77b4", "#ff7f0e", "#2ca02c", "#008080",   # ← replaced red
+             "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
+             "#bcbd22", "#17becf", "#393b79", "#637939",
+             "#8c6d31", "#843c39", "#7b4173", "#3182bd",
+             "#31a354", "#756bb1", "#636363", "#e6550d",
+             "#969696", "#6baed6"
         ]
+        # color_palette = [
+        #     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+        #     "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
+        #     "#bcbd22", "#17becf", "#393b79", "#637939",
+        #     "#8c6d31", "#843c39", "#7b4173", "#3182bd",
+        #     "#31a354", "#756bb1", "#636363", "#e6550d",
+        #     "#969696", "#6baed6"
+        # ]
         assert len(DATASET_DIAMETERS) <= len(color_palette)
         assert len(DATASET_DIAMETERS) <= len(thickness_levels)
         # --------------------------------------------------
@@ -443,13 +451,9 @@ class WaterNetworkOptimizer:
                 # arrowcolor= style["color"]
             ))
         # --------------------------------------------------
-        # Traces
-        # --------------------------------------------------
-        traces = []
-        # --------------------------------------------------
         # CREATE TRACES (FIXED LEGEND ORDER)
         # --------------------------------------------------
-        # traces = []
+        traces = []
         for d in DATASET_DIAMETERS:
             if d not in edge_groups:
                 continue
@@ -466,19 +470,6 @@ class WaterNetworkOptimizer:
                 name=f"Diameter D{d}: {diameters[d]} m",
                 hoverinfo="skip"
             ))
-        # for d in sorted(edge_groups.keys()):   # ← increasing order
-        #     data = edge_groups[d]
-        #     style = diam_to_style[d]
-        #     traces.append(go.Scatter(
-        #         x=data["x"], y=data["y"],
-        #         mode="lines",
-        #         line=dict(
-        #             width=style["width"],
-        #             color=style["color"]
-        #         ),
-        #         name=f"Diameter D{d}: {diameters[d]} m",
-        #         hoverinfo="skip"
-        #     )) 
         traces.append(go.Scatter(
             x=click_x, y=click_y,
             mode="markers",
@@ -494,6 +485,10 @@ class WaterNetworkOptimizer:
         nx_dem, ny_dem, label_dem, text_dem = [], [], [], []
         hx_src, hy_src, htxt_src = [], [], []
         hx_dem, hy_dem, htxt_dem = [], [], []
+
+        hx_min, hy_min, hmin_txt = [], [], []
+        hx_demval, hy_demval, dem_txt = [], [], []
+
         # -------------------------------
         # Populate
         # -------------------------------
@@ -518,6 +513,19 @@ class WaterNetworkOptimizer:
                 hx_dem.append(x)
                 hy_dem.append(y + 0.03 * data_h)
                 htxt_dem.append(f"{h.get(n,0):.2f}")
+            # ---------------------------------
+            # Min head (below node)
+            # ---------------------------------
+            hx_min.append(x - 0.03 * data_w)
+            hy_min.append(y - 0.02 * data_h)
+            hmin_txt.append(f"{hmin.get(n,0):.2f}")
+
+            # ---------------------------------
+            # Demand (below-left)
+            # ---------------------------------
+            hx_demval.append(x)
+            hy_demval.append(y - 0.035 * data_h)
+            dem_txt.append(f"{D.get(n,0):.4f}")
         # -------------------------------
         # Source nodes trace
         # -------------------------------
@@ -529,7 +537,7 @@ class WaterNetworkOptimizer:
             hoverinfo="text",
             hovertext=text_src,
             marker=dict(
-                size=node_marker_size + 2,
+                size=node_marker_size + 4,
                 color="royalblue",
                 symbol="circle",
                 line=dict(width=2, color="black")
@@ -549,39 +557,229 @@ class WaterNetworkOptimizer:
             marker=dict(
                 size=node_marker_size,
                 color="skyblue",
-                line=dict(width=1.5, color="black")
+                line=dict(width=2, color="black")
             ),
             name="Demand Nodes"
         ))
-        # -------------------------------
-        # Head value annotation (optional)
-        # -------------------------------
-        # traces.append(go.Scatter(
-        #     x=hx_src + hx_dem,
-        #     y=hy_src + hy_dem,
-        #     mode="text",
-        #     # text=htxt_src + htxt_dem,
-        #     textfont=dict(size=11, color="black"),
-        #     hoverinfo="skip",
-        #     showlegend=False
-        # ))
+        # --------------------------------------------------
+        # Min head requirement (below node)
+        # --------------------------------------------------
+        traces.append(go.Scatter(
+            x=hx_min, y=hy_min,
+            mode="text",
+            text=hmin_txt,
+            textfont=dict(size=12, color="darkred"),
+            name="Min Head Requirement",
+            hoverinfo="skip",
+            visible="legendonly"
+        ))
+        # --------------------------------------------------
+        # Node demand (below-left)
+        # --------------------------------------------------
+        traces.append(go.Scatter(
+            x=hx_demval, y=hy_demval,
+            mode="text",
+            text=dem_txt,
+            textfont=dict(size=12, color="darkgreen"),
+            name="Node demand",
+            hoverinfo="skip",
+            visible="legendonly"
+        ))
         # --------------------------------------------------
         # Toggleable text layers
         # --------------------------------------------------
         traces += [
             go.Scatter(x=flow_tx, y=flow_ty, mode="text",
-                       text=flow_txt, name="Flow values",
-                       visible="legendonly"),
+                       text=flow_txt, name="Flow Values",
+                       # visible="legendonly"
+                       ),
             go.Scatter(x=pipe_tx, y=pipe_ty, mode="text",
-                       text=pipe_txt, name="Pipe info",
-                       visible="legendonly"),
+                       text=pipe_txt, name="Pipe Info",
+                       # visible="legendonly"
+                       ),
             go.Scatter(x=hx_src, y=hy_src, mode="text",
-                       text=htxt_src, name="Source nodes head",
-                       visible="legendonly"),
+                       text=htxt_src, name="Source Node Head",
+                       # visible="legendonly"
+                       ),
             go.Scatter(x=hx_dem, y=hy_dem, mode="text",
-                       text=htxt_dem, name="Demand node head",
-                       visible="legendonly")
-        ]
+                       text=htxt_dem, name="Demand Node Head",
+                       # visible="legendonly"
+                       )
+        ] 
+
+        # -------------------------------
+        # Difference arcs
+        # -------------------------------
+        mx, my, htxt_arc = [], [], [] 
+        for (i, j), info in arc_diff.items():
+            if i not in node_pos or j not in node_pos:
+                continue
+            x0, y0 = node_pos[i]
+            x1, y1 = node_pos[j] 
+            # Midpoint
+            xm = 0.5 * (x0 + x1)
+            ym = 0.5 * (y0 + y1)
+            txt = f"<b>Arc ({i} → {j})</b><br>"
+            if "flow" in info:
+                f = info["flow"]
+                txt += (
+                    f"Flow change<br>"
+                    f"q₁ = {f['q_sol1']}<br>"
+                    f"q₂ = {f['q_sol2']}<br>"
+                    f"Δq = {f['delta']}<br>"
+                )
+            if "pipes" in info:
+                txt += (
+                    f"Pipes changed<br>"
+                    f"sol1: {info['pipes']['sol1']}<br>"
+                    f"sol2: {info['pipes']['sol2']}"
+                )
+            mx.append(xm)
+            my.append(ym)
+            htxt_arc.append(txt)
+        traces.append(
+            go.Scatter(
+                x=mx,
+                y=my,
+                mode="markers",
+                marker=dict(
+                    size=12,
+                    color="rgba(0,0,0,0)"   # 👈 fully invisible
+                ),
+                hoverinfo="text",
+                hovertext=htxt_arc,
+                showlegend=False,
+                legendgroup="diff",
+                visible="legendonly"
+            )
+        )
+
+        arc_set = set(arc_diff.keys())
+        ax_diff, ay_diff = [], []
+        for (i, j) in arc_set:
+            if i not in node_pos or j not in node_pos:
+                continue 
+            x0, y0 = node_pos[i]
+            x1, y1 = node_pos[j] 
+            ax_diff += [x0, x1, None]
+            ay_diff += [y0, y1, None] 
+        traces.append(go.Scatter(
+            x=ax_diff, y=ay_diff,
+            mode="lines",
+            line=dict(
+                width=3,
+                color="red",
+                dash="dash"
+            ),
+            hoverinfo="text",
+            hovertext=["Arc changed"] * len(ax_diff),
+            name="Affected arcs",
+            legendgroup="diff",
+            visible="legendonly"   # 👈 OFF by default
+        ))
+
+        # -------------------------------
+        # Difference nodes
+        # -------------------------------
+        node_set = set(node_head_diff.keys())
+        dx, dy, dlabel, dtext = [], [], [], []
+        nocdx, nocdy, nocdlabel, nocdtext = [], [], [], []
+        nocsx, nocsy, nocslabel, nocstext  = [], [], [], []
+        # for n, info in node_head_diff.items():
+        for n, (x, y) in node_pos.items():
+            if n in node_set:
+                # x, y = node_pos[n]
+                dx.append(x)
+                dy.append(y)
+                dlabel.append(str(n))
+                # dtext.append(f"Node {n}<br>Head changed")
+                info = node_head_diff[n]
+                dtext.append(f"<b>Node {n}</b><br>"
+                             f"Head changed<br>"
+                             f"h₁ = {info['h_sol1']}<br>"
+                             f"h₂ = {info['h_sol2']}<br>"
+                             f"Δh = {info['delta']}")
+            else:
+                if n in source:
+                    nocsx.append(x)
+                    nocsy.append(y)
+                    nocslabel.append(str(n)) 
+                    nocstext.append(f"<b>Source Node {n}</b><br>"
+                                    f"Head fixed<br>"
+                                    f"h = {h.get(n,0):.2f}<br>"
+                                    )
+
+                else:
+                    nocdx.append(x)
+                    nocdy.append(y)
+                    nocdlabel.append(str(n))
+                    nocdtext.append(f"<b>Node {n}</b><br>"
+                             f"Head Unchanged<br>"
+                             # f"h₁ = {info['h_sol1']}<br>"
+                             f"h₂ = {h.get(n,0):.2f}<br>"
+                             # f"Δh = {info['delta']}"
+                                    )
+
+
+        traces.append(go.Scatter(
+            x=dx, y=dy,
+            mode="markers + text",
+            text=dlabel,
+            textposition='middle center',
+            marker=dict(
+                size=node_marker_size,
+                color="skyblue",
+                # color="rgba(135, 206, 235, 0.0)",   # transparent red
+                symbol="circle",
+                line=dict(width=2, color="red")
+            ),
+            hoverinfo="text",
+            hovertext=dtext,
+            name="Affected nodes",
+            legendgroup="diff",
+            legendgrouptitle=dict(text="Local solution difference"),
+            visible="legendonly"   # 👈 OFF by default
+        )) 
+        traces.append(go.Scatter(
+            x=nocdx, y=nocdy,
+            mode="markers + text",
+            text=nocdlabel,
+            textposition='middle center',
+            marker=dict(
+                size=node_marker_size,
+                color="skyblue",
+                # color="rgba(135, 206, 235, 0.0)",   # transparent red
+                symbol="circle",
+                line=dict(width=2, color="black")
+            ),
+            hoverinfo="text",
+            hovertext=nocdtext,
+            name="Unaffected nodes",
+            legendgroup="diff",
+            # legendgrouptitle=dict(text="Local solution difference"),
+            visible="legendonly"   # 👈 OFF by default
+        ))
+        traces.append(go.Scatter(
+            x=nocsx, y=nocsy,
+            mode="markers + text",
+            text=nocslabel,
+            textposition='middle center',
+            marker=dict(
+                size=node_marker_size + 4,
+                color="royalblue",
+                # color="rgba(135, 206, 235, 0.0)",   # transparent red
+                symbol="circle",
+                line=dict(width=2, color="black")
+            ),
+            hoverinfo="text",
+            hovertext=nocstext,
+            # name="Unaffected nodes",
+            legendgroup="diff",
+            # legendgrouptitle=dict(text="Local solution difference"),
+            # visible="legendonly"   # 👈 OFF by default
+            showlegend=False
+        ))
+
         # --------------------------------------------------
         # Figure
         # --------------------------------------------------
@@ -604,14 +802,14 @@ class WaterNetworkOptimizer:
         fig = go.Figure(traces)
         fig.update_layout(
             # title=f"WDN = {data_list[data_number]}, Total Cost = {sol['objective']:.2f}",
-            title = f"Network: {data_list[data_number]} | Iteration: {self.iteration} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s",
+            title = f"Network: {data_list[data_number]} | Heuristic Approach: {heuristic_approach} | Iteration: {self.iteration} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s",
             annotations=arrows,
             dragmode="pan",
             hovermode="closest",
             # hovermode="x unified",
             autosize=False,
             width=1900,
-            height=950,
+            height=1100,
             xaxis=dict(fixedrange=False),
             yaxis=dict(scaleanchor="x", fixedrange=False),
             plot_bgcolor="white",
@@ -623,24 +821,7 @@ class WaterNetworkOptimizer:
                 y=1,
                 bordercolor="rgba(0,0,0,0.15)",
                 borderwidth=1
-            ),
-            shapes=[
-                # Line
-                dict(
-                    type="line",
-                    x0=0.2, y0=0.3,
-                    x1=0.8, y1=0.7,
-                    line=dict(color="red", width=3)
-                ),
-                # Circle
-                dict(
-                    type="circle",
-                    x0=0.45, y0=0.45,
-                    x1=0.55, y1=0.55,
-                    line=dict(color="green", width=2),
-                    fillcolor="rgba(0,255,0,0.2)"
-                )
-            ],
+            )
         )
         fig.write_html(
             f"../figure/json_file/d{data_number+1}/wdn_interactive_solution{self.iteration}.html",
@@ -1299,6 +1480,72 @@ class WaterNetworkOptimizer:
 
         # print("*******************************************************************************\n")
 
+    def compare_two_local_solutions(self,
+        l1, q1, h1,
+        l2, q2, h2,
+        tol=1e-5
+    ):
+        """
+        Compare two locally optimal solutions (dictionary-based)
+        Returns:
+            node_head_diff : dict
+            arc_diff       : dict
+        """
+        # --------------------------------------------------
+        # 1. Node head differences
+        # --------------------------------------------------
+        node_head_diff = {}
+    
+        for i in h1:
+            if abs(h1.get(i, 0.0) - h2.get(i, 0.0)) > tol:
+                node_head_diff[i] = {
+                    "h_sol1": round(h1[i], 3),
+                    "h_sol2": round(h2[i], 3),
+                    "delta": round(h2[i] - h1[i], 3)
+                }
+        # --------------------------------------------------
+        # 2. Arc differences
+        # --------------------------------------------------
+        arc_diff = {}
+        arcs = set(q1.keys()) | set(q2.keys())
+        for (i, j) in arcs:
+            arc_changed = False
+            info = {}
+            # -------------------------
+            # Flow change
+            # -------------------------
+            q1_ij = q1.get((i, j), 0.0)
+            q2_ij = q2.get((i, j), 0.0)
+            if abs(q1_ij - q2_ij) > tol:
+                arc_changed = True
+                info["flow"] = {
+                    "q_sol1": round(q1_ij, 3),
+                    "q_sol2": round(q2_ij, 3),
+                    "delta": round(q2_ij - q1_ij, 3)
+                }
+            # -------------------------
+            # Pipe length / diameter structure change
+            # -------------------------
+            pipes1 = {
+                k: round(l1[(i, j, k)], 3)
+                for (ii, jj, k) in l1
+                if ii == i and jj == j and l1[(ii, jj, k)] > tol
+            }
+            pipes2 = {
+                k: round(l2[(i, j, k)], 3)
+                for (ii, jj, k) in l2
+                if ii == i and jj == j and l2[(ii, jj, k)] > tol
+            }
+            if pipes1 != pipes2:
+                arc_changed = True
+                info["pipes"] = {
+                    "sol1": pipes1,
+                    "sol2": pipes2
+                }
+            if arc_changed:
+                arc_diff[(i, j)] = info
+        return node_head_diff, arc_diff
+
     def head_increase(self):
         improved = False
         min_head_node = []
@@ -1902,7 +2149,7 @@ class WaterNetworkOptimizer:
           B) q[u,v] >= q0 + eps
         If either produces an improved solution, accept it and move to the next variable.
         """
-        print("Iteration :", self.cont_branching_iteration)
+        print("Iteration :", self.iteration)
         improved_global = False
         # collect duals from current ampl (original model)
         self.all_duals = {}
@@ -2006,23 +2253,11 @@ class WaterNetworkOptimizer:
 
                 # solve quietly and record results
                 with self.suppress_output():
-                    try:
                         ampl.solve()
-                    except Exception as e:
-                        # solver failure (e.g., infeasible or crash)
-                        self.solve_result = getattr(ampl, "solve_result", "error")
-                        self.total_cost = float('inf')
-                        solve_time = ampl.get_value('_solve_elapsed_time') if ampl.get_value('_solve_elapsed_time') is not None else 0.0
-                    else:
                         self.solve_result = ampl.solve_result
-                        # if objective is unavailable for infeasible solves, guard it
-                        try:
-                            self.total_cost = ampl.get_objective("total_cost").value()
-                        except:
-                            self.total_cost = float('inf')
+                        self.total_cost = ampl.get_objective("total_cost").value()
                         solve_time = ampl.get_value('_solve_elapsed_time')
-
-                self.solver_time += solve_time if solve_time is not None else 0.0
+                self.solver_time += solve_time
                 self.number_of_nlp += 1
 
                 # print row
@@ -2050,7 +2285,13 @@ class WaterNetworkOptimizer:
                         self.current_cost = self.total_cost
                         improved_global = True
                         improved_for_edge = True
-                        self.cont_branching_iteration += 1
+                        
+                        self.export_solution_iteration(self.iteration)
+                        json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                        node_pos = node_position[self.data_number]
+                        self.build_plot(json_file, node_pos, self.data_number)
+
+                        self.iteration += 1
 
                         # update ampl instance and solution containers
                         self.ampl = ampl
@@ -2095,10 +2336,7 @@ class WaterNetworkOptimizer:
             print("No improvement found in this pass.")
 
     def flow_change_in_cycle(self):
-        import networkx as nx
-        from amplpy import AMPL
-        import time
-        print("Iteration:",self.flow_change_in_cycle_iteration)
+        print("Iteration:",self.iteration)
         improved = False
         start_time_total = time.time()
         # ----------------------------
@@ -2124,7 +2362,6 @@ class WaterNetworkOptimizer:
         print("All cycles found:", len(basic_cycles))
         print("Visited cycles:", len(self.visited_cycles))
         print("Remaining new cycles:", len(remaining_cycles))
-
 
         print("-" * 90)
         print(f"{'Cycle':<14}{'C_Best_Sol':<14}{'New_Sol':<14}"
@@ -2227,7 +2464,6 @@ class WaterNetworkOptimizer:
                     f"{'failed':<14}{'No':<10}"
                     f"{round(time.time() - start_time_total, 2)}s")
                 continue
-            solve_time = time.time() - t0
             result = ampl.solve_result
             new_cost = ampl.get_objective("total_cost").value()
             # ----------------------------
@@ -2268,14 +2504,19 @@ class WaterNetworkOptimizer:
                     f"{result:<14}{'No':<10}"
                     f"{round(time.time() - start_time_total, 2)}s")
             if improved:
-                self.flow_change_in_cycle_iteration += 1
+                self.export_solution_iteration(self.iteration)
+                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                node_pos = node_position[self.data_number]
+                self.build_plot(json_file, node_pos, self.data_number)
+
+                self.iteration += 1
                 self.flow_change_in_cycle()
                 break
 
     def headloss_increase(self):
         improved = False
         # print("\n*********************************************************************************************")
-        print("Iteration :", self.headloss_increase_iteration)
+        print("Iteration :", self.iteration)
 
         # self.sen_score = {}
         # for (i,j) in self.arcs:
@@ -2416,7 +2657,12 @@ class WaterNetworkOptimizer:
                     f"{round(time.time() - self.start_time, 2)}s ")
 
             if improved:
-                self.headloss_increase_iteration = self.headloss_increase_iteration + 1
+                self.export_solution_iteration(self.iteration)
+                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                node_pos = node_position[self.data_number]
+                self.build_plot(json_file, node_pos, self.data_number)
+
+                self.iteration = self.iteration + 1
                 self.headloss_increase()
                 break
 
@@ -2779,7 +3025,7 @@ class WaterNetworkOptimizer:
                     f"{round(time.time() - self.start_time, 2)}s ")
             if improved:
                 self.dia_red_iteration = self.dia_red_iteration + 1
-                self.diameter_reduction()
+                self.diameter_reduction1()
                 break
 
     def diameter_reduction(self):
@@ -2803,7 +3049,7 @@ class WaterNetworkOptimizer:
                     else:
                         arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
         # print("\n*********************************************************************************************")
-        print("Iteration :",self.dia_red_iteration)
+        print("Iteration :",self.iteration)
         # self.sen_score = {}
         # for (i,j) in self.arcs:
         #     self.sen_score[i,j] = -1.852 * (self.h[i] - self.h[j])/(np.abs(self.q[i,j])**2.852)
@@ -2945,6 +3191,11 @@ class WaterNetworkOptimizer:
                         f"{(str(round(solve_time, 2)) + 's'):<12}"
                         f"{ampl.solve_result:<14}{'Yes':<10}"
                         f"{round(time.time() - self.start_time, 2)}s")
+                    node_head_diff, arc_diff = self.compare_two_local_solutions(self.l, self.q, self.h, l1, q1, h1)
+                    # print(node_head_diff)
+                    # node_set = list(node_head_diff.keys())
+                    # arc_set = list(arc_diff.keys())
+
                     self.current_cost = total_cost
                     self.ampl = ampl
                     improved = True
@@ -2995,9 +3246,14 @@ class WaterNetworkOptimizer:
             #     headloss = headloss + np.abs(h1[u] - h1[v])
             # print("headloss:", headloss)
 
-
             if improved:
-                self.dia_red_iteration = self.dia_red_iteration + 1
+                self.export_solution_iteration(self.iteration)
+                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                node_pos = node_position[self.data_number]
+                heuristic_approach = "Diameter Reduction"
+                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff)
+
+                self.iteration = self.iteration + 1
                 self.diameter_reduction()
                 break
 
@@ -3357,6 +3613,25 @@ class WaterNetworkOptimizer:
             # break
 
     def iterate_acyclic_flows(self):
+        arc_max_dia = {}
+        if self.data_number == 6:
+            self.fixarcs = self.ampl.getSet('fixarcs')
+            #print("fixarcs:",self.fixarcs)
+            for (i, j, d), val in self.l.items():
+                if (i,j) not in self.fixarcs or (j,i) not in self.fixarcs:
+                    if val > 1e-3:
+                        if (i, j) not in arc_max_dia:
+                            arc_max_dia[(i, j)] = d
+                        else:
+                            arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+        else:
+            for (i, j, d), val in self.l.items():
+                if val > 1e-3:
+                    if (i, j) not in arc_max_dia:
+                        arc_max_dia[(i, j)] = d
+                    else:
+                        arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+
         # self.network_graph = self.best_acyclic_flow.copy()
         self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
@@ -3387,19 +3662,20 @@ class WaterNetworkOptimizer:
                 dual_dict = {idx: val for idx, val in dual_dict.items() if idx in sorted_all_arcs}
                 # max_index, max_dual = max(dual_dict.items(), key=lambda kv: abs(kv[1]))
                 # print(f"  Max abs dual = {max_dual} at index {max_index}")
-        sorted_by_abs_dual = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
-        print("sorted_arcs: ",list(sorted_by_abs_dual.keys()))
+        sorted_arcs = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
+        # sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] == 1]
+        # sorted_arcs = list(sorted_arcs.keys())
+        print("sorted_arcs: ",sorted_arcs)
         # remaining_arcs = [c for c, nc in sorted_by_abs_dual if nc not in self.visited_arc_reverse]
         # print("All cycles found:", len(sorted_by_abs_dual))
         # print("Visited cycles:", len(self.visited_arc_reverse))
         # print("Remaining new cycles:", len(remaining_arcs))
 
-
         print("----------------------------------------------------------------------------------------")
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
         print("----------------------------------------------------------------------------------------")
 
-        for edge in sorted_by_abs_dual.keys():
+        for edge in sorted_arcs:
             self.visited_arc_reverse.append(edge)
             (u,v) = edge
             # self.load_model()
@@ -3478,6 +3754,10 @@ class WaterNetworkOptimizer:
                 if self.total_cost < self.current_cost:
                     # self.visited_nodes.append(node)
                     #self.visited_arc.append((v,u))
+                    node_head_diff, arc_diff = self.compare_two_local_solutions(self.l, self.q, self.h, l, q, h)
+                    # print(node_head_diff)
+                    # node_set = set(node_head_diff.keys())
+                    # arc_set = set(arc_diff.keys())
                     print(f"{str((u, v)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
                         f"{self.format_indian_number(round(self.total_cost)):<14}"
@@ -3502,7 +3782,6 @@ class WaterNetworkOptimizer:
                         self.q1 = ampl.getVariable('q1').getValues().to_dict()
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
                     self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
-                    
                     print("----------------------------------------------------------------------------------------")
                 else: 
                     print(f"{str((u, v)):<10}"
@@ -3526,12 +3805,12 @@ class WaterNetworkOptimizer:
             # for (i,j) in self.arcs:
             #     headloss = headloss + np.abs(h[i] - h[j])
             # print("headloss:", headloss)
-
             if improved:
                 self.export_solution_iteration(self.iteration)
                 json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
                 node_pos = node_position[self.data_number]
-                self.build_plot(json_file, node_pos, self.data_number)
+                heuristic_approach = "Arc Reversal"
+                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff)
 
                 self.iteration += 1
                 self.iterate_acyclic_flows()
@@ -3572,65 +3851,6 @@ class WaterNetworkOptimizer:
         print("total cost from lp rel:", ampl.get_objective("total_cost").value()) 
         return l_lp, q_lp, h_lp
 
-    def launch_dashboard(self, fig):
-        app = dash.Dash(__name__)
-        app.title = "Water Distribution Network Dashboard"
-    
-        app.layout = html.Div(
-            style={
-                "width": "100%",
-                "height": "100vh",
-                "display": "flex",
-                "flexDirection": "column"
-            },
-            children=[
-                # ---------- HEADER ----------
-                html.Div(
-                    children=[
-                        html.H3("Water Distribution Network Viewer"), 
-                        html.Div(
-                            children=[
-                                html.Label("Data Number:", style={"marginRight": "10px"}),
-                                dcc.Input(
-                                    id="data-number",
-                                    type="number",
-                                    value=self.data_number,
-                                    min=0,
-                                    step=1,
-                                    style={"width": "120px"}
-                                )
-                            ],
-                            style={"display": "flex", "alignItems": "center"}
-                        )
-                    ],
-                    style={"padding": "10px", "borderBottom": "1px solid #ddd"}
-                ),
-    
-                # ---------- GRAPH ----------
-                html.Div(
-                    children=[
-                        dcc.Graph(
-                            id="wdn-graph",
-                            # figure=self.plot_interactive_wdn(
-                            #     f"../figure/json_file/solution_{self.data_number}.json",
-                            #     node_position[self.data_number],
-                            # ),
-                            figure = fig,
-                            style={"width": "100%", "height": "100%"},
-                            config={
-                                "responsive": True,
-                                "scrollZoom": True,
-                                "displayModeBar": True
-                            }
-                        )
-                    ],
-                    style={"flex": "1", "padding": "5px"}
-                )
-            ]
-        )
-    
-        app.run(debug=True)
-
     def solve(self):
         self.ampl.option["solver"] = "ipopt"
         self.ampl.set_option("ipopt_options", f"outlev = 0 tol = 1e-9 bound_relax_factor=0  bound_push = {self.bound_push} bound_frac = {self.bound_frac} halt_on_ampl_error = yes warm_start_init_point = no expect_infeasible_problem = no")   #max_iter = 1000
@@ -3655,42 +3875,6 @@ class WaterNetworkOptimizer:
         #self.ampl.eval("display q;")
         # print("Objective:", self.total_cost)
         # print("solve_result: ",self.solve_result)
-        solve_time = self.ampl.get_value('_solve_elapsed_time')
-        self.solver_time += solve_time
-        self.number_of_nlp += 1
-
-    def solve1(self):
-        with self.suppress_output():
-            # """Solve the optimization problem."""
-            self.ampl.option["solver"] = "ipopt"
-            #print("bound_push:", self.bound_push)
-            #print("bound_frac:", self.bound_frac)
-            #self.bound_push , self.bound_frac = (0.001, 0.000001)
-            self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = no halt_on_ampl_error = yes")   #max_iter = 1000
-            # self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
-            #self.ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
-            # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = yes halt_on_ampl_error = yes "
-            self.ampl.option["presolve_eps"] = "6.82e-14"
-            self.ampl.option['presolve'] = 1
-
-            #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
-            #max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
-            #max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
-
-            #print("min_demand:", min_demand)
-            #print("max_demand:", max_demand)
-            #print("max_flow:", max_flow)
-            #d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
-            #d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
-
-            self.ampl.solve()
-            #self.ampl.eval("display q;")
-            self.solve_result = self.ampl.solve_result
-            self.total_cost = self.ampl.get_objective("total_cost").value()
-        #self.ampl.eval("display q;")
-        # print("Objective:", self.total_cost)
-        # print("solve_result: ",self.solve_result)
-        # print("eps:", epsilon)
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         self.solver_time += solve_time
         self.number_of_nlp += 1
@@ -3758,20 +3942,21 @@ class WaterNetworkOptimizer:
         # fig = self.(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number])
         json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/solution_{self.data_number+1}.json"
         node_pos = node_position[self.data_number]
-        self.build_plot(json_file, node_pos, self.data_number)
+        heuristic_approach = "Original Model"
+        self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, {}, {})
         # self.plot_interactive_wdn(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number],self.arcs,self.nodes,self.source, self.l)
 
-        print("\n--------------------------Continuous Variable Branching Approach-------------------------------")
-        self.cont_branching_iteration = 1
-        self.visited_arc_reverse = []
+        # print("\n--------------------------Continuous Variable Branching Approach-------------------------------")
+        # self.iteration = self.iteration + 1
+        # self.visited_arc_reverse = []
         # self.iterate_branching_on_q()
 
-        print("\n-----------------------------Flow change in cycle Approach---------------------------------")
-        self.flow_change_in_cycle_iteration = self.cont_branching_iteration + 1
+        # print("\n-----------------------------Flow change in cycle Approach---------------------------------")
+        # self.iteration = self.iteration + 1
         # self.flow_change_in_cycle()
 
         print("---------------------------Reverse Arc Direction Approach------------------------------------")
-        self.iteration = 1
+        self.iteration = self.iteration + 1
         self.visited_arc_reverse = []
         self.iterate_acyclic_flows() 
 
@@ -3789,15 +3974,15 @@ class WaterNetworkOptimizer:
         # self.visited_nodes = []
         # self.head_increase()
 
-        print("\n-----------------------------Headloss increase Approach------------------------------------")
-        self.headloss_increase_iteration = self.flow_change_in_cycle_iteration + 1
-        self.visited_arc = []
+        # print("\n-----------------------------Headloss increase Approach------------------------------------")
+        # self.iteration = self.iteration + 1
+        # self.visited_arc = []
         # self.headloss_increase()
 
         print("\n----------------------------Diameter Reduction Approach------------------------------------")
-        self.dia_red_iteration = self.headloss_increase_iteration + 1
+        self.iteration = self.iteration + 1
         self.visited_arc = []
-        # self.diameter_reduction()
+        self.diameter_reduction()
         # self.arc_dia_red()
 
         # print("\n--------------------------Continuous Variable Branching Approach---------------------------")
@@ -3812,12 +3997,12 @@ class WaterNetworkOptimizer:
         # self.iterate_two_arc_reversals()
 
         # print("\n-----------------------------------Max Flow Approach-----------------------------------------")
-        self.max_flow_iteration = 1
-        self.visited_arc = []
+        # self.max_flow_iteration = 1
+        # self.visited_arc = []
         # self.max_flow() 
         # print("\n-----------------------------------Head increase Approach-----------------------------------------")
-        self.head_increase_iter = 1
-        self.visited_nodes = []
+        # self.head_increase_iter = 1
+        # self.visited_nodes = []
         # self.head_increase()
         # print("\n-----------------------------------Flow change in cycle Approach-----------------------------------------")
         # self.flow_change_in_cycle_iteration = 1
@@ -3834,14 +4019,14 @@ class WaterNetworkOptimizer:
         print(f"Final best objective: {self.current_cost}")
         #self.ampl.eval("display q;")
         print("Number of nlp problem solved:", self.number_of_nlp)
-        print("Total number of iteration:", self.iteration + self.headloss_increase_iteration + self.dia_red_iteration)
+        print("Total number of iteration:", self.iteration)
         # self.constraint_violations(self.q, self.h, self.l, self.eps, "ipopt")
         self.elapsed_time = time.time() - self.start_time
         solver_time = self.solver_time
         print(f"Solver_time: {solver_time:.2f} seconds")
         # print(f"Heuristic elapsed time: {elapsed_time:.2f} seconds = {elapsed_time/60:.2f} minutes.\n")
         print(f"Heuristic elapsed time: {self.elapsed_time:.2f} seconds")
-        self.export_solution(0)
+        # self.export_solution(0)
 
         print("***********************************************************************************************\n")
         # self.launch_dashboard(fig)
