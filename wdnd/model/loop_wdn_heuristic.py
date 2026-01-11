@@ -25,6 +25,7 @@ import json
 import plotly.graph_objects as go
 import dash
 from dash import dcc, html, Input, Output
+import plotly.io as pio
 
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number, data_list):
@@ -285,7 +286,7 @@ class WaterNetworkOptimizer:
         with open(f"../figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json", "w") as f:
             json.dump(solution, f, indent=2)
 
-    def build_plot(self, solution_file, node_pos, data_number, heuristic_approach, node_head_diff, arc_diff):
+    def build_plot(self, solution_file, node_pos, data_number, heuristic_approach, node_head_diff, arc_diff, edge):
         # --------------------------------------------------
         # Load solution
         # --------------------------------------------------
@@ -343,14 +344,7 @@ class WaterNetworkOptimizer:
              "#31a354", "#756bb1", "#636363", "#e6550d",
              "#969696", "#6baed6"
         ]
-        # color_palette = [
-        #     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
-        #     "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
-        #     "#bcbd22", "#17becf", "#393b79", "#637939",
-        #     "#8c6d31", "#843c39", "#7b4173", "#3182bd",
-        #     "#31a354", "#756bb1", "#636363", "#e6550d",
-        #     "#969696", "#6baed6"
-        # ]
+
         assert len(DATASET_DIAMETERS) <= len(color_palette)
         assert len(DATASET_DIAMETERS) <= len(thickness_levels)
         # --------------------------------------------------
@@ -376,6 +370,9 @@ class WaterNetworkOptimizer:
         click_x, click_y, click_text = [], [], []
         flow_tx, flow_ty, flow_txt = [], [], []
         pipe_tx, pipe_ty, pipe_txt = [], [], []
+        shapes = []
+
+        traces = []
         # --------------------------------------------------
         # EDGES (arc hover + multi-diameter coloring)
         # --------------------------------------------------
@@ -433,10 +430,23 @@ class WaterNetworkOptimizer:
                 edge_groups.setdefault(d, {"x": [], "y": []})
                 edge_groups[d]["x"] += [seg_sx, seg_ex, None]
                 edge_groups[d]["y"] += [seg_sy, seg_ey, None]
+                # traces.append(go.Scatter(
+                # x=[seg_sx, seg_ex],
+                # y=[seg_sy, seg_ey],
+                # mode="lines",
+                # line=dict(
+                #     color=style["color"],
+                #     width=style["width"],
+                #     # cap="round"
+                # ),
+                # hoverinfo="skip",
+                # showlegend=False   # legend added separately
+                # ))
                 cur_len += l
             # --------------------------------------------------
             # Arrow (single arrow for whole arc)
             # --------------------------------------------------
+            arrow_color = "red" if (i, j) == edge else "black"
             d_arrow = max(d for d, _ in pipes)
             style = diam_to_style[d_arrow]
             arrows.append(dict(
@@ -447,13 +457,13 @@ class WaterNetworkOptimizer:
                 arrowhead=3,
                 arrowsize=2,
                 arrowwidth=1,
-                arrowcolor= "black"
+                arrowcolor= arrow_color
                 # arrowcolor= style["color"]
             ))
         # --------------------------------------------------
         # CREATE TRACES (FIXED LEGEND ORDER)
         # --------------------------------------------------
-        traces = []
+        # traces = []
         for d in DATASET_DIAMETERS:
             if d not in edge_groups:
                 continue
@@ -470,6 +480,18 @@ class WaterNetworkOptimizer:
                 name=f"Diameter D{d}: {diameters[d]} m",
                 hoverinfo="skip"
             ))
+        # for d in DATASET_DIAMETERS:
+        #     traces.append(go.Scatter(
+        #         x=[None],
+        #         y=[None],
+        #         mode="lines",
+        #         line=dict(
+        #             color=diam_to_style[d]["color"],
+        #             width=diam_to_style[d]["width"]
+        #         ),
+        #         name=f"Diameter D{d}: {diameters[d]} m"
+        #     ))
+
         traces.append(go.Scatter(
             x=click_x, y=click_y,
             mode="markers",
@@ -478,6 +500,25 @@ class WaterNetworkOptimizer:
             hovertext=click_text,
             showlegend=False
         ))
+
+        # color the revered arc or diameter reduction arc
+        i,j = edge[0], edge[1]
+        if i in node_pos and j in node_pos:
+            x0, y0 = node_pos[i]
+            x1, y1 = node_pos[j]
+
+            traces.append(go.Scatter(
+                x=[x0, x1],
+                y=[y0, y1],
+                mode="lines",
+                line=dict(
+                    color="red",
+                    width=5
+                ),
+                hoverinfo="skip",
+                showlegend=False
+            ))
+
         # --------------------------------------------------
         # Nodes
         # --------------------------------------------------
@@ -719,8 +760,6 @@ class WaterNetworkOptimizer:
                              f"h₂ = {h.get(n,0):.2f}<br>"
                              # f"Δh = {info['delta']}"
                                     )
-
-
         traces.append(go.Scatter(
             x=dx, y=dy,
             mode="markers + text",
@@ -800,9 +839,20 @@ class WaterNetworkOptimizer:
             "d14_balerma"
         ]
         fig = go.Figure(traces)
+        # fig.update_traces(line=dict(simplify=False))
         fig.update_layout(
             # title=f"WDN = {data_list[data_number]}, Total Cost = {sol['objective']:.2f}",
-            title = f"Network: {data_list[data_number]} | Heuristic Approach: {heuristic_approach} | Iteration: {self.iteration} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s",
+            title=dict(
+                text=f"Network: {data_list[data_number]} | Heuristic Approach: {heuristic_approach} | Iteration: {self.iteration} | Arc: {edge} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s",
+                font=dict(
+                    size=24,        # Increase font size here
+                    color='black',  # Optional: title color
+                    family="Arial"  # Optional: font family
+                ),
+                # x=0.5,             # Optional: center the title
+                # xanchor='center'
+            ),
+            # title = f"Network: {data_list[data_number]} | Heuristic Approach: {heuristic_approach} | Iteration: {self.iteration} | Arc: {edge} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s",
             annotations=arrows,
             dragmode="pan",
             hovermode="closest",
@@ -810,18 +860,55 @@ class WaterNetworkOptimizer:
             autosize=False,
             width=1900,
             height=1100,
-            xaxis=dict(fixedrange=False),
-            yaxis=dict(scaleanchor="x", fixedrange=False),
+            xaxis=dict(visible=True,showgrid=True,zeroline=True, fixedrange=False, showline=True,linecolor='black',mirror=True,ticks='outside',),
+            yaxis=dict(visible=True,showgrid=True,zeroline=True, scaleanchor="x", fixedrange=False, showline=True,linecolor='black',mirror=True,ticks='outside',),
+            # xaxis=dict(
+            #     scaleanchor="y",
+            #     scaleratio=1,
+            #     constrain="domain"
+            # ),
+            # yaxis=dict(
+            #     scaleanchor="x",
+            #     scaleratio=1,
+            #     constrain="domain"
+            # ),
             plot_bgcolor="white",
             paper_bgcolor="white",
             legend=dict(
-                title=dict(text="Network Elements"),
+                title=dict(
+                    text="Network Elements",
+                    font=dict(
+                        size=20,          # Bigger title
+                        family="Arial",
+                        color="black"
+                    )
+                ),
+                font=dict(
+                    size=16,              # Legend item font size
+                    family="Arial",
+                    color="black"
+                ),
                 orientation="v",
                 x=1.02,
                 y=1,
-                bordercolor="rgba(0,0,0,0.15)",
-                borderwidth=1
+                xanchor="left",
+                yanchor="top",
+                bgcolor="rgba(255,255,255,0.85)",   # Light background
+                bordercolor="rgba(0,0,0,0.3)",
+                borderwidth=2,
+                itemsizing="constant",
+                itemwidth=40
             )
+
+            # legend=dict(
+            #     title=dict(text="Network Elements"),
+            #     orientation="v",
+            #     x=1.02,
+            #     y=1,
+            #     bordercolor="rgba(0,0,0,0.15)",
+            #     borderwidth=1
+            # ),
+            # shapes=shapes
         )
         fig.write_html(
             f"../figure/json_file/d{data_number+1}/wdn_interactive_solution{self.iteration}.html",
@@ -829,6 +916,7 @@ class WaterNetworkOptimizer:
             config={"scrollZoom": True, 
                     }
         )
+        pio.write_image(fig, f"../figure/json_file/d{data_number+1}/wdn_interactive_solution{self.iteration}.pdf", format="pdf")
         # network_info = f"Network: {data_list[data_number]} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s"
         # print("✔ Diameter-colored & thickness-separated WDN plot saved")
         return fig
@@ -1499,9 +1587,9 @@ class WaterNetworkOptimizer:
         for i in h1:
             if abs(h1.get(i, 0.0) - h2.get(i, 0.0)) > tol:
                 node_head_diff[i] = {
-                    "h_sol1": round(h1[i], 3),
-                    "h_sol2": round(h2[i], 3),
-                    "delta": round(h2[i] - h1[i], 3)
+                    "h_sol1": round(h1[i], 4),
+                    "h_sol2": round(h2[i], 4),
+                    "delta": round(h2[i] - h1[i], 4)
                 }
         # --------------------------------------------------
         # 2. Arc differences
@@ -1519,20 +1607,20 @@ class WaterNetworkOptimizer:
             if abs(q1_ij - q2_ij) > tol:
                 arc_changed = True
                 info["flow"] = {
-                    "q_sol1": round(q1_ij, 3),
-                    "q_sol2": round(q2_ij, 3),
-                    "delta": round(q2_ij - q1_ij, 3)
+                    "q_sol1": round(q1_ij, 4),
+                    "q_sol2": round(q2_ij, 4),
+                    "delta": round(q2_ij - q1_ij, 4)
                 }
             # -------------------------
             # Pipe length / diameter structure change
             # -------------------------
             pipes1 = {
-                k: round(l1[(i, j, k)], 3)
+                k: round(l1[(i, j, k)], 4)
                 for (ii, jj, k) in l1
                 if ii == i and jj == j and l1[(ii, jj, k)] > tol
             }
             pipes2 = {
-                k: round(l2[(i, j, k)], 3)
+                k: round(l2[(i, j, k)], 4)
                 for (ii, jj, k) in l2
                 if ii == i and jj == j and l2[(ii, jj, k)] > tol
             }
@@ -3066,12 +3154,13 @@ class WaterNetworkOptimizer:
         # print("dual_value:", dual_dict)
         sorted_duals = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
         sorted_arcs = list(sorted_duals.keys())
-        sorted_arcs = [arc for arc in sorted_arcs if arc not in self.visited_arc]
         # print("sorted_arcs:", self.visited_arc)
         # print("\nsorted_arcs:", sorted_arcs)
         if self.data_number == 6:
             sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fixarcs]
         sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fix_arc_set]
+        sorted_all_arcs = sorted_arcs
+        sorted_arcs = [arc for arc in sorted_arcs if arc not in self.visited_arc]
         sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] != 1]
         
         # sorted_arcs = [sorted_arcs[0]]
@@ -3127,10 +3216,25 @@ class WaterNetworkOptimizer:
             # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} (omega * l[{i},{j},k] / (R[k]^1.852 * d[k]^4.87)) <= {sum(10.67 * self.l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes)}*(1-0.);")
             # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {self.C[arc_max_dia[i,j]] * self.L[i,j]};")
             
-            for k in self.pipes:
-                if k>=arc_max_dia[i,j]:
-                    ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
-            
+            # for k in self.pipes:
+            #     if k>=arc_max_dia[i,j]:
+            #         ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
+
+            ampl.eval(f"subject to con3__{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i}, {j}];")
+
+            # for (u,v) in sorted_all_arcs:
+            #     if (u,v) == (i,j):
+            #         continue
+            #     else:
+            #         ampl.eval(f"s.t. flow_neigh_{u}_{v}: {self.q[u,v] - 0.1} <= q[{u}, {v}] <= {self.q[u,v] + 0.1};")
+            #
+            # for u in self.nodes:
+            #     if u in self.source:
+            #         continue
+            #     else:
+            #         ampl.eval(f"s.t. head_neigh_{u}: {self.h[u] - 2} <= h[{u}] <= {self.h[u] + 2};")
+
+           
             # ampl.eval(f"s.t. flow_value{i}_{j}: q[{i}, {j}]>=abs({self.q[i,j]});")
             # if self.h[i] - self.h[j]>= 0:
             #     ampl.eval(f"s.t. headloss1{i}_{j}: h[{i}]- h[{j}]>={self.h[i] - self.h[j]} + 1e-0;")
@@ -3166,6 +3270,7 @@ class WaterNetworkOptimizer:
             ampl.option['solver'] = "ipopt" 
 
             ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive recalc_y = no"
             #ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes"
             #with self.suppress_output():
             ampl.option["presolve_eps"]= "7.19e-13"
@@ -3251,7 +3356,7 @@ class WaterNetworkOptimizer:
                 json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
                 node_pos = node_position[self.data_number]
                 heuristic_approach = "Diameter Reduction"
-                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff)
+                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff, edge = (i,j))
 
                 self.iteration = self.iteration + 1
                 self.diameter_reduction()
@@ -3653,13 +3758,13 @@ class WaterNetworkOptimizer:
                 else:
                     sorted_all_arcs.append((v,u))
         sorted_all_arcs = [arc for arc in sorted_all_arcs if arc not in self.fix_arc_set]
-        sorted_all_arcs = [arc for arc in sorted_all_arcs if arc not in self.visited_arc_reverse]
+        sorted_arcs = [arc for arc in sorted_all_arcs if arc not in self.visited_arc_reverse]
 
         for con_name, dual_values in self.all_duals.items():
             if con_name == "con2":
                 # print(dual_values, "\n")
                 dual_dict = dual_values.to_dict()
-                dual_dict = {idx: val for idx, val in dual_dict.items() if idx in sorted_all_arcs}
+                dual_dict = {idx: val for idx, val in dual_dict.items() if idx in sorted_arcs}
                 # max_index, max_dual = max(dual_dict.items(), key=lambda kv: abs(kv[1]))
                 # print(f"  Max abs dual = {max_dual} at index {max_index}")
         sorted_arcs = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
@@ -3722,20 +3827,34 @@ class WaterNetworkOptimizer:
             fix_arc_set = self.fix_leaf_arc_flow()
             # self.update_initial_points(self.l, self.q, self.h)
             # self.update_initial_points_with_perturbation(self.ampl, self.l, self.q, self.h) 
-            if self.q[u,v] >= 0:
-                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=0;")
+            if self.q[u,v] >= 1e-9:
+                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-9;")
             else:
-                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=0;")
+                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=1e-9;")
 
-            for (i,j) in self.visited_arc_reverse:
-                if self.q[i,j]>=0:
-                    ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i}, {j}]>=0;")
-                else:
-                    ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i}, {j}]<=0;")
+            # for (i,j) in sorted_all_arcs:
+            #     if (i,j) == (u,v):
+            #         continue
+            #     else:
+            #         ampl.eval(f"s.t. flow_neigh_{i}_{j}: {self.q[i,j] - 2} <= q[{i}, {j}] <= {self.q[i,j] + 2};")
+            #
+            # for i in self.nodes:
+            #     if i in self.source:
+            #         continue
+            #     else:
+            #         ampl.eval(f"s.t. head_neigh_{i}: {self.h[i] - 3} <= h[{i}] <= {self.h[i] + 3};")
+
+
+            # for (i,j) in self.visited_arc_reverse:
+            #     if self.q[i,j]>=0:
+            #         ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i}, {j}]>=0;")
+            #     else:
+            #         ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i}, {j}]<=0;")
 
             # with self.suppress_output():
             ampl.option["solver"] = "ipopt"
             ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive recalc_y = no"
             ampl.option["presolve_eps"] = "6.82e-14"
             ampl.option['presolve'] = 1
             with self.suppress_output():
@@ -3810,7 +3929,7 @@ class WaterNetworkOptimizer:
                 json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
                 node_pos = node_position[self.data_number]
                 heuristic_approach = "Arc Reversal"
-                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff)
+                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff, edge)
 
                 self.iteration += 1
                 self.iterate_acyclic_flows()
@@ -3943,7 +4062,7 @@ class WaterNetworkOptimizer:
         json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/solution_{self.data_number+1}.json"
         node_pos = node_position[self.data_number]
         heuristic_approach = "Original Model"
-        self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, {}, {})
+        self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, {}, {}, (0,0))
         # self.plot_interactive_wdn(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number],self.arcs,self.nodes,self.source, self.l)
 
         # print("\n--------------------------Continuous Variable Branching Approach-------------------------------")
