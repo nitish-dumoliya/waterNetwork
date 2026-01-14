@@ -99,9 +99,9 @@ subject to con2{(i,j) in arcs}:
 #		(q[i,j] * abs(q[i,j])^0.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)) = h[i] - h[j]  
 #;
 
-subject to con3{(i,j) in arcs}: 
-    sum{k in pipes} l[i,j,k] = L[i,j]
-;
+#subject to con3{(i,j) in arcs}: 
+#    sum{k in pipes} l[i,j,k] = L[i,j]
+#;
 subject to con4{(i,j) in arcs , k in pipes}: 
     l[i,j,k] <= L[i,j]
 ;
