@@ -41,6 +41,7 @@ class WaterNetworkOptimizer:
         self.best_acyclic_flow = None
         self.number_of_nlp = 0
         self.tol = 0
+        self.max_iter = 1000
 
     def load_model(self):
         """Load the model and data."""
@@ -259,7 +260,7 @@ class WaterNetworkOptimizer:
             "source": list(self.source)
         }
     
-        with open(f"../figure/json_file/d{self.data_number + 1}/solution_0.json", "w") as f:
+        with open(f"../figure/json_file/d{self.data_number + 1}/solution_{iteration}.json", "w") as f:
             json.dump(solution, f, indent=2)
 
     def export_solution_iteration(self, iteration):
@@ -905,7 +906,7 @@ class WaterNetworkOptimizer:
             config={"scrollZoom": True, 
                     }
         )
-        # pio.write_image(fig, f"../figure/json_file/d{data_number+1}/wdn_interactive_solution{self.iteration}.pdf", format="pdf")
+        pio.write_image(fig, f"../figure/json_file/d{data_number+1}/wdn_interactive_solution{self.iteration}.pdf", format="pdf")
         # network_info = f"Network: {data_list[data_number]} | Objective: {sol['objective']:.2f} | Time: {sol['solve_time']:.2f} s"
         # print("✔ Diameter-colored & thickness-separated WDN plot saved")
         return fig
@@ -957,7 +958,64 @@ class WaterNetworkOptimizer:
             remaining = ','.join([remaining[max(i - 2, 0):i] for i in range(len(remaining), 0, -2)][::-1])
             return remaining + ',' + last_three
 
-    def fix_leaf_arc_flow(self):
+    def fix_leaf_arc_flow(self, ampl):
+        graph = nx.Graph()
+        arc_set = self.ampl.getSet('arcs').to_list()  
+        graph.add_edges_from(arc_set)
+        D = self.ampl.getParameter('D').getValues().to_dict()  
+        source = self.ampl.getSet('Source').to_list()[0]
+        fixed_arcs = set()
+        Qmax = self.ampl.getParameter('Q_max').getValues().to_list()[0] 
+        D[source] = -Qmax
+        # print("\nPresolve the model for fixing the flow value in the leaf arcs")
+        # print("Source:",self.ampl.getSet('Source').to_list())
+
+        while True:
+            leaf_nodes = [node for node in graph.nodes if graph.degree[node] == 1]
+            # print("leaf_nodes:", leaf_nodes)
+            if not leaf_nodes:  
+                break
+
+            for leaf in leaf_nodes:
+                neighbor = next(graph.neighbors(leaf))
+                if (neighbor, leaf) in arc_set:
+                    edge = (neighbor, leaf)
+                    if edge not in fixed_arcs:  
+                        if leaf == source:
+                            flow_value = D[leaf]
+                            D[neighbor] = (D[neighbor]+flow_value)
+                            source = neighbor
+                        else:
+                            flow_value = D[leaf]
+                            D[neighbor] = D[neighbor] + flow_value
+                        # ampl.eval(f"s.t. fix_q_{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] = {flow_value};")
+                        # print(f"Fixing flow for arc {edge}: {flow_value}")
+                        fixed_arcs.add(edge)  
+
+                    graph.remove_node(leaf)
+                else:
+                    edge = (leaf, neighbor)
+                    if edge not in fixed_arcs:  
+                        if leaf == source:
+                            flow_value = -D[leaf]
+                            D[neighbor] = D[neighbor]-flow_value
+                            source = neighbor
+                            # ampl.eval(f"s.t. fix_q_{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] = {flow_value};")
+                        elif neighbor == source:
+                            flow_value = -D[leaf]
+                            D[neighbor] = D[neighbor] - D[leaf] 
+                            # ampl.eval(f"s.t. fix_q_{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] = {flow_value};")
+                        else:
+                            flow_value = -D[leaf]
+                            D[neighbor] += -flow_value
+                            # ampl.eval(f"s.t. fix_q_{edge[0]}_{edge[1]}: q[{edge[0]},{edge[1]}] = {flow_value};")
+                        # print(f"Fixing flow for arc {edge}: {flow_value}")
+                        fixed_arcs.add(edge)  
+                    graph.remove_node(leaf)
+        # print("All leaf arc flows have been fixed.")
+        return fixed_arcs
+
+    def fix_leaf_arc_flow1(self):
         graph = nx.Graph()
         arc_set = self.ampl.getSet('arcs').to_list()  
         graph.add_edges_from(arc_set)
@@ -2186,7 +2244,7 @@ class WaterNetworkOptimizer:
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
 
                     # update fix_arc_set to include super_source_out_arc and any leaf-fixed arcs
-                    fix_arc_set = self.fix_leaf_arc_flow()
+                    fix_arc_set = self.fix_leaf_arc_flow(self.ampl)
                     self.fix_arc_set = list(set(self.super_source_out_arc) | set(fix_arc_set))
 
                     print("----------------------------------------------------------------------------------------")
@@ -2320,7 +2378,7 @@ class WaterNetworkOptimizer:
                     ampl.eval(f"s.t. {cname}: q[{u},{v}] >= {rhs};")
 
                 # add any leaf/fix arc constraints you maintain
-                fix_arc_set = self.fix_leaf_arc_flow()
+                fix_arc_set = self.fix_leaf_arc_flow(ampl)
 
                 # configure solver & warm-start
                 ampl.option["solver"] = "ipopt"
@@ -3159,7 +3217,7 @@ class WaterNetworkOptimizer:
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
         print("----------------------------------------------------------------------------------------")
 
-        for (i,j) in sorted_arcs:
+        for (i,j) in sorted_arcs[:min(15, len(sorted_arcs))]:
             self.visited_arc.append((i,j))
             ampl = AMPL()
             ampl.reset()
@@ -3204,12 +3262,112 @@ class WaterNetworkOptimizer:
             # ampl.eval(f"subject to con3_l{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]}] <= {self.l[i,j,arc_max_dia[i,j]]} - 1e-0;"
             # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} (omega * l[{i},{j},k] / (R[k]^1.852 * d[k]^4.87)) <= {sum(10.67 * self.l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes)}*(1-0.);")
             # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {self.C[arc_max_dia[i,j]] * self.L[i,j]};")
-            
-            # for k in self.pipes:
-            #     if k>=arc_max_dia[i,j]:
-            #         ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
 
-            ampl.eval(f"subject to con3__{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i}, {j}];")
+            # fix_arc_set = self.fix_leaf_arc_flow(ampl)
+            #
+            # for (u,v) in fix_arc_set:
+            #     ampl.eval(f"s.t. fix_arc_flow_{u}_{v}: q[{u}, {v}] = {self.q[u,v]};")
+ 
+            for k in self.pipes:
+                if k>=arc_max_dia[i,j]:
+                    ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
+            # ampl.eval(f"subject to con3_{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i}, {j}];")
+
+            ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
+
+            GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
+            
+            for (u, v) in self.arcs:
+                k = arc_max_dia[u, v]
+                n = len(list(self.pipes))
+                max_k = min(n, GLOBAL_MAX)
+
+                # interior case: k-2 ... k+2
+                if 3 <= k <= max_k - 2:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+                        f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+                    )
+                # k = 2 → 1,2,3,4
+                elif k == 2 and max_k >= 4:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+                    )
+                # k = 1 → 1,2,3
+                elif k == 1 and max_k >= 3:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+                    )
+                # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
+                elif k == max_k - 1 and max_k >= 4:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
+                        f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
+                    )
+                # k = max_k → allow all up to max_k
+                elif k == max_k:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
+                    )
+
+            # for (u, v) in self.arcs:
+            #     k = arc_max_dia[u, v]
+            #     n = len(list(self.pipes))
+            #     # interior case: k-2 ... k+2
+            #     if 3 <= k <= n - 2:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+            #             f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+            #         )
+            #     # k = 2 → 1,2,3,4
+            #     elif k == 2 and n >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+            #         )
+            #     # k = 1 → 1,2,3
+            #     elif k == 1 and n >= 3:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+            #         )
+            #     # k = n-1 → n-3,n-2,n-1,n
+            #     elif k == n - 1 and n >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{n-3}] + l[{u},{v},{n-2}] + l[{u},{v},{n-1}] + l[{u},{v},{n}] = L[{u},{v}];"
+            #         )
+            #     # k = n → allow all
+            #     elif k == n:
+            #         ampl.eval(
+            #             f"s.t. dia_red_{u}_{v}: "
+            #             f"sum{{k in pipes}} l[{u},{v},k] = L[{u},{v}];"
+            #         )
+        
+            # ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
+            # for (u,v) in self.arcs:
+            #     if arc_max_dia[u,v] != 1:
+            #         if self.q[u,v] >= 0:
+            #             ampl.eval(f"s.t. flow_sign_{u}_{v}: 0 <= q[{u}, {v}] <= Q_max;")
+            #         else:
+            #             ampl.eval(f"s.t. flow_sign_{u}_{v}: -Q_max <= q[{u}, {v}] <= 0;")
+
+            # for (u,v) in self.arcs:
+            #     if (u,v) != (i,j):
+            #         if 2 <= arc_max_dia[u,v] <= len(list(self.pipes)) - 1:
+            #             # ampl.eval(f"s.t. arc_dia{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]}}} l[{i},{j},k] = L[{i},{j}];")
+            #             ampl.eval(f"s.t. arc_dia{u}_{v}: l[{u},{v},{arc_max_dia[u,v]-1}] + l[{u}, {v}, {arc_max_dia[u,v]}] + l[{u}, {v}, {arc_max_dia[u,v] + 1}] = L[{u},{v}];")
+            #         elif arc_max_dia[u,v] == len(list(self.pipes)):
+            #             ampl.eval(f"subject to dia_red_{u}_{v}: sum{{k in pipes}} l[{u},{v},k] = L[{u},{v}];")
+            #             #ampl.eval(f"s.t. arc_dia{u}_{v}: l[{u},{v},{arc_max_dia[u,v]-1}] + l[{u}, {v}, {arc_max_dia[u,v]}] = L[{u},{v}];")
+            #         elif arc_max_dia[u,v] == 1:
+            #             ampl.eval(f"s.t. arc_dia{u}_{v}: l[{u},{v},{arc_max_dia[u,v]}] + l[{u}, {v}, {arc_max_dia[u,v]} + 1] = L[{u},{v}];")
 
             # for (u,v) in sorted_all_arcs:
             #     if (u,v) == (i,j):
@@ -3223,7 +3381,6 @@ class WaterNetworkOptimizer:
             #     else:
             #         ampl.eval(f"s.t. head_neigh_{u}: {self.h[u] - 2} <= h[{u}] <= {self.h[u] + 2};")
 
-           
             # ampl.eval(f"s.t. flow_value{i}_{j}: q[{i}, {j}]>=abs({self.q[i,j]});")
             # if self.h[i] - self.h[j]>= 0:
             #     ampl.eval(f"s.t. headloss1{i}_{j}: h[{i}]- h[{j}]>={self.h[i] - self.h[j]} + 1e-0;")
@@ -3258,7 +3415,7 @@ class WaterNetworkOptimizer:
 
             ampl.option['solver'] = "ipopt" 
 
-            ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
+            ampl.option["ipopt_options"] = f"outlev = 0 max_iter = {self.max_iter} mu_init = {self.mu_init} expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive recalc_y = no"
             #ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no  bound_relax_factor=0 warm_start_init_point = yes halt_on_ampl_error = yes"
             #with self.suppress_output():
@@ -3341,11 +3498,11 @@ class WaterNetworkOptimizer:
             # print("headloss:", headloss)
 
             if improved:
-                self.export_solution_iteration(self.iteration)
-                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
-                node_pos = node_position[self.data_number]
-                heuristic_approach = "Diameter Reduction"
-                self.build_plot(json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff, edge = (i,j))
+                # self.export_solution_iteration(self.iteration)
+                # json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                # node_pos = node_position[self.data_number]
+                # heuristic_approach = "Diameter Reduction"
+                # self.build_plot(self.iteration, json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff, edge = (i,j))
 
                 self.iteration = self.iteration + 1
                 self.diameter_reduction()
@@ -3757,7 +3914,7 @@ class WaterNetworkOptimizer:
                 # max_index, max_dual = max(dual_dict.items(), key=lambda kv: abs(kv[1]))
                 # print(f"  Max abs dual = {max_dual} at index {max_index}")
         sorted_arcs = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
-        # sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] == 1]
+        sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] == 1]
         # sorted_arcs = list(sorted_arcs.keys())
         print("sorted_arcs: ",sorted_arcs)
         # remaining_arcs = [c for c, nc in sorted_by_abs_dual if nc not in self.visited_arc_reverse]
@@ -3769,9 +3926,9 @@ class WaterNetworkOptimizer:
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
         print("----------------------------------------------------------------------------------------")
 
-        for edge in sorted_arcs:
+        for edge in sorted_arcs[:min(15, len(sorted_arcs))]:
             self.visited_arc_reverse.append(edge)
-            (u,v) = edge
+            (i,j) = edge
             # self.load_model()
             ampl = AMPL()
             ampl.reset()
@@ -3813,34 +3970,112 @@ class WaterNetworkOptimizer:
 
             #self.ampl.eval(f"set inarc := {{{inarc_set}}};")
             #self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
-            fix_arc_set = self.fix_leaf_arc_flow()
+            fix_arc_set = self.fix_leaf_arc_flow(ampl)
+
+            # for (u,v) in fix_arc_set:
+            #     ampl.eval(f"s.t. fix_arc_flow_{u}_{v}: q[{u}, {v}] = {self.q[u,v]};")
             # self.update_initial_points(self.l, self.q, self.h)
             # self.update_initial_points_with_perturbation(self.ampl, self.l, self.q, self.h) 
 
-            if self.q[u,v] >= 1e-9:
-                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]<=-1e-9;")
+            if self.q[i,j] >= 0:
+                ampl.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]<=0;")
             else:
-                ampl.eval(f"s.t. flow_direction1{u}_{v}: q[{u}, {v}]>=1e-9;")
+                ampl.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]>=0;")
 
             # for (i,j) in self.arcs:
             #     if 2 <= arc_max_dia[i,j] <= len(list(self.pipes)) - 1:
             #         # ampl.eval(f"s.t. arc_dia{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]}}} l[{i},{j},k] = L[{i},{j}];")
             #         ampl.eval(f"s.t. arc_dia{i}_{j}: l[{i},{j},{arc_max_dia[i,j]-1}] + l[{i}, {j}, {arc_max_dia[i,j]}] + l[{i}, {j}, {arc_max_dia[i,j] + 1}] = L[{i},{j}];")
             #     elif arc_max_dia[i,j] == len(list(self.pipes)):
-            #         ampl.eval(f"s.t. arc_dia{i}_{j}: l[{i},{j},{arc_max_dia[i,j]-1}] + l[{i}, {j}, {arc_max_dia[i,j]}] = L[{i},{j}];")
+            #         ampl.eval(f"subject to dia_red_{i}_{j}: sum{{k in pipes}} l[{i},{j},k] = L[{i},{j}];")
+            #         #ampl.eval(f"s.t. arc_dia{i}_{j}: l[{i},{j},{arc_max_dia[i,j]-1}] + l[{i}, {j}, {arc_max_dia[i,j]}] = L[{i},{j}];")
             #     elif arc_max_dia[i,j] == 1:
             #         ampl.eval(f"s.t. arc_dia{i}_{j}: l[{i},{j},{arc_max_dia[i,j]}] + l[{i}, {j}, {arc_max_dia[i,j]} + 1] = L[{i},{j}];")
 
+            # ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
 
+            GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
+            for (u, v) in self.arcs:
+                k = arc_max_dia[u, v]
+                n = len(list(self.pipes))
+                max_k = min(n, GLOBAL_MAX)
+                # interior case: k-2 ... k+2
+                if 3 <= k <= max_k - 2:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+                        f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+                    )
+                # k = 2 → 1,2,3,4
+                elif k == 2 and max_k >= 4:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+                    )
+                # k = 1 → 1,2,3
+                elif k == 1 and max_k >= 3:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+                    )
+                # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
+                elif k == max_k - 1 and max_k >= 4:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
+                        f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
+                    )
+                # k = max_k → allow all up to max_k
+                elif k == max_k:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        # f"sum{{k in 1..{max_k}}} l[{u},{v},k] = L[{u},{v}];"
+                        f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
+                    )
 
-            # for (i,j) in sorted_all_arcs:
+            # for (u, v) in self.arcs:
+            #     k = arc_max_dia[u, v]
+            #     n = len(list(self.pipes))
+            #     # interior case: k-2 ... k+2
+            #     if 3 <= k <= n - 2:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+            #             f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+            #         )
+            #     # k = 2 → 1,2,3,4
+            #     elif k == 2 and n >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+            #         )
+            #     # k = 1 → 1,2,3
+            #     elif k == 1 and n >= 3:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+            #         )
+            #     # k = n-1 → n-3,n-2,n-1,n
+            #     elif k == n - 1 and n >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{n-3}] + l[{u},{v},{n-2}] + l[{u},{v},{n-1}] + l[{u},{v},{n}] = L[{u},{v}];"
+            #         )
+            #     # k = n → allow all
+            #     elif k == n:
+            #         ampl.eval(
+            #             f"s.t. dia_red_{u}_{v}: "
+            #             f"sum{{k in pipes}} l[{u},{v},k] = L[{u},{v}];"
+            #         )
+
+            # for (u,v) in self.arcs:
             #     if (i,j) == (u,v):
             #         continue
             #     else:
-            #         if self.q[i,j]>=1e-9:
-            #             ampl.eval(f"s.t. flow_neigh_{i}_{j}: {self.q[i,j]*0.7} <= q[{i}, {j}] <= {self.q[i,j]*1.3};")
+            #         if self.q[u,v]>=1e-9:
+            #             ampl.eval(f"s.t. flow_neigh_{u}_{v}: {self.q[u,v]*0.5} <= q[{u}, {v}] <= {self.q[u,v]*1.5};")
             #         else:
-            #             ampl.eval(f"s.t. flow_neigh_{i}_{j}: {self.q[i,j]*1.3} <= q[{i}, {j}] <= {self.q[i,j]*0.7};")
+            #             ampl.eval(f"s.t. flow_neigh_{u}_{v}: {self.q[u,v]*1.5} <= q[{u}, {v}] <= {self.q[u,v]*0.5};")
 
             #
             # for i in self.nodes:
@@ -3858,7 +4093,7 @@ class WaterNetworkOptimizer:
 
             # with self.suppress_output():
             ampl.option["solver"] = "ipopt"
-            ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+            ampl.set_option("ipopt_options", f"outlev = 0 max_iter = {self.max_iter} mu_init = {self.mu_init} expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive recalc_y = no"
             ampl.option["presolve_eps"] = "6.82e-14"
             ampl.option['presolve'] = 1
@@ -3884,7 +4119,7 @@ class WaterNetworkOptimizer:
                     # arc_set = set(arc_diff.keys())
                     no_change_arcs = [arc  for arc in self.arcs if arc not in arc_diff.keys()]
                     print("no_change_arcs: ", no_change_arcs)
-                    print(f"{str((u, v)):<10}"
+                    print(f"{str((i, j)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
                         f"{self.format_indian_number(round(self.total_cost)):<14}"
                         f"{(str(round(self.ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
@@ -3910,7 +4145,7 @@ class WaterNetworkOptimizer:
                     self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
                     print("----------------------------------------------------------------------------------------")
                 else: 
-                    print(f"{str((u, v)):<10}"
+                    print(f"{str((i, j)):<10}"
                         f"{self.format_indian_number(round(self.current_cost)):<14}"
                         f"{self.format_indian_number(round(self.total_cost)):<14}"
                         f"{(str(round(ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
@@ -3919,7 +4154,7 @@ class WaterNetworkOptimizer:
                     # ampl.eval("display q;")
             else:
                 # self.plot_graph(self.super_source_out_arc, total_cost, 0, q1, h1, self.D, (0,0), l1, self.C)
-                print(f"{str((u, v)):<10}"
+                print(f"{str((i, j)):<10}"
                     f"{self.format_indian_number(round(self.current_cost)):<14}"
                     f"{self.format_indian_number(round(self.total_cost)):<14}"
                     f"{(str(round(ampl.get_value('_solve_elapsed_time'), 2)) + 's'):<12}"
@@ -3932,11 +4167,11 @@ class WaterNetworkOptimizer:
             #     headloss = headloss + np.abs(h[i] - h[j])
             # print("headloss:", headloss)
             if improved:
-                self.export_solution_iteration(self.iteration)
-                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
-                node_pos = node_position[self.data_number]
-                heuristic_approach = "Arc Reversal"
-                self.build_plot(self.iteration, json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff, edge)
+                # self.export_solution_iteration(self.iteration)
+                # json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                # node_pos = node_position[self.data_number]
+                # heuristic_approach = "Arc Reversal"
+                # self.build_plot(self.iteration, json_file, node_pos, self.data_number, heuristic_approach, node_head_diff, arc_diff, edge)
 
                 self.iteration += 1
                 self.iterate_acyclic_flows()
@@ -4009,7 +4244,7 @@ class WaterNetworkOptimizer:
         """Main function to run the Heuristic Approach."""
         self.start_time = time.time()
         self.bound_push , self.bound_frac = (0.1, 0.1)
-        self.mu_init = 0.1
+        self.mu_init = 1e-3
         # print("NLP solve using:  smooth approximation 1, Epsilon selection using absolute error\n")
         # print("NLP solve using: smooth approximation 1, epsilon selection using relative error\n")
         # print("NLP solve using: smooth approximation 2, epsilon selection using absolute error\n")
@@ -4017,11 +4252,13 @@ class WaterNetworkOptimizer:
         print("NLP Solver: Ipopt")
         print("************************Initial Solution of Approximate WDN Design Model**********************")
         self.load_model()
-        fix_arc_set = self.fix_leaf_arc_flow()
+        fix_arc_set = self.fix_leaf_arc_flow(self.ampl)
+        # for (u,v) in fix_arc_set:
+        #     self.ampl.eval(f"s.t. fix_arc_flow_{u}_{v}: q[{u}, {v}] = {self.q[u,v]};")
         print("fix_arc_set:",fix_arc_set)
         self.super_source_out_arc = self.fix_arc_set()
         print("super_source_out_arc:", self.super_source_out_arc, "\n")
-
+        self.ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
         self.solve()
         print("Objective: ",self.total_cost)
         print("Solve_result: ",self.solve_result)
@@ -4067,12 +4304,13 @@ class WaterNetworkOptimizer:
         # self.plot_graph(fix_arc_set, self.total_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
         self.iteration = 0
         self.elapsed_time = time.time() - self.start_time
-        self.export_solution(0)
+        # [os.remove(f) for f in os.listdir(f"../figure/json_file/d{self.data_number + 1}/") if f.startswith("wdn_interactive")]
+        # self.export_solution(0)
         # # fig = self.(f"../figure/json_file/solution_{self.data_number}.json",node_position[self.data_number])
-        json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/solution_{self.data_number+1}.json"
-        node_pos = node_position[self.data_number]
-        heuristic_approach = "Original Model"
-        self.build_plot(self.iteration, json_file, node_pos, self.data_number, heuristic_approach, {}, {}, (0,0))
+        # json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+        # node_pos = node_position[self.data_number]
+        # heuristic_approach = "Original Model"
+        # self.build_plot(self.iteration, json_file, node_pos, self.data_number, heuristic_approach, {}, {}, (0,0))
 
         # print("\n--------------------------Continuous Variable Branching Approach-------------------------------")
         # self.iteration = self.iteration + 1
@@ -4087,7 +4325,7 @@ class WaterNetworkOptimizer:
         self.iteration = self.iteration + 1
         self.visited_arc_reverse = []
         self.iterate_acyclic_flows() 
-
+        
         # self.export_solution_iteration(self.iteration)
         # json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number + 1}/solution_{self.iteration}.json"
         # node_head_diff, arc_diff = self.compare_two_local_solutions(l_initial, q_initial, h_initial, self.l, self.q, self.h)
@@ -4116,9 +4354,9 @@ class WaterNetworkOptimizer:
         # self.headloss_increase()
 
         print("\n----------------------------Diameter Reduction Approach------------------------------------")
-        # self.iteration = self.iteration + 1
-        # self.visited_arc = []
-        # self.diameter_reduction()
+        self.iteration = self.iteration + 1
+        self.visited_arc = []
+        self.diameter_reduction()
         # self.arc_dia_red()
 
         # print("\n--------------------------Continuous Variable Branching Approach---------------------------")
