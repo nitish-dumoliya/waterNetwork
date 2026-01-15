@@ -2286,6 +2286,25 @@ class WaterNetworkOptimizer:
         """
         print("Iteration :", self.iteration)
         improved_global = False
+        arc_max_dia = {}
+        if self.data_number == 6:
+            self.fixarcs = self.ampl.getSet('fixarcs')
+            #print("fixarcs:",self.fixarcs)
+            for (i, j, d), val in self.l.items():
+                if (i,j) not in self.fixarcs or (j,i) not in self.fixarcs:
+                    if val > 1e-3:
+                        if (i, j) not in arc_max_dia:
+                            arc_max_dia[(i, j)] = d
+                        else:
+                            arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+        else:
+            for (i, j, d), val in self.l.items():
+                if val > 1e-3:
+                    if (i, j) not in arc_max_dia:
+                        arc_max_dia[(i, j)] = d
+                    else:
+                        arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+
         # collect duals from current ampl (original model)
         self.all_duals = {}
         for con_name, val in self.ampl.get_constraints():
@@ -2379,6 +2398,46 @@ class WaterNetworkOptimizer:
 
                 # add any leaf/fix arc constraints you maintain
                 fix_arc_set = self.fix_leaf_arc_flow(ampl)
+                GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
+                
+                for (u, v) in self.arcs:
+                    k = arc_max_dia[u, v]
+                    n = len(list(self.pipes))
+                    max_k = min(n, GLOBAL_MAX)
+
+                    # interior case: k-2 ... k+2
+                    if 3 <= k <= max_k - 2:
+                        ampl.eval(
+                            f"s.t. arc_dia_{u}_{v}: "
+                            f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+                            f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+                        )
+                    # k = 2 → 1,2,3,4
+                    elif k == 2 and max_k >= 4:
+                        ampl.eval(
+                            f"s.t. arc_dia_{u}_{v}: "
+                            f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+                        )
+                    # k = 1 → 1,2,3
+                    elif k == 1 and max_k >= 3:
+                        ampl.eval(
+                            f"s.t. arc_dia_{u}_{v}: "
+                            f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+                        )
+                    # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
+                    elif k == max_k - 1 and max_k >= 4:
+                        ampl.eval(
+                            f"s.t. arc_dia_{u}_{v}: "
+                            f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
+                            f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
+                        )
+                    # k = max_k → allow all up to max_k
+                    elif k == max_k:
+                        ampl.eval(
+                            f"s.t. arc_dia_{u}_{v}: "
+                            f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
+                        )
+
 
                 # configure solver & warm-start
                 ampl.option["solver"] = "ipopt"
@@ -2421,10 +2480,10 @@ class WaterNetworkOptimizer:
                         improved_global = True
                         improved_for_edge = True
                         
-                        self.export_solution_iteration(self.iteration)
-                        json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
-                        node_pos = node_position[self.data_number]
-                        self.build_plot(json_file, node_pos, self.data_number)
+                        # self.export_solution_iteration(self.iteration)
+                        # json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                        # node_pos = node_position[self.data_number]
+                        # self.build_plot(json_file, node_pos, self.data_number)
 
                         self.iteration += 1
 
@@ -2474,6 +2533,24 @@ class WaterNetworkOptimizer:
         print("Iteration:",self.iteration)
         improved = False
         start_time_total = time.time()
+        arc_max_dia = {}
+        if self.data_number == 6:
+            self.fixarcs = self.ampl.getset('fixarcs')
+            #print("fixarcs:",self.fixarcs)
+            for (i, j, d), val in self.l.items():
+                if (i,j) not in self.fixarcs or (j,i) not in self.fixarcs:
+                    if val > 1e-3:
+                        if (i, j) not in arc_max_dia:
+                            arc_max_dia[(i, j)] = d
+                        else:
+                            arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
+        else:
+            for (i, j, d), val in self.l.items():
+                if val > 1e-3:
+                    if (i, j) not in arc_max_dia:
+                        arc_max_dia[(i, j)] = d
+                    else:
+                        arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
         # ----------------------------
         # 1. Build undirected graph for cycle detection
         # ----------------------------
@@ -2577,6 +2654,48 @@ class WaterNetworkOptimizer:
             #         # reverse arc direction
             #         ampl.eval(f"s.t. cycle_flow_{j}_{i}: q[{j},{i}] <= {self.q[j,i] + delta};")
 
+            # ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
+
+            GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
+            
+            for (u, v) in self.arcs:
+                k = arc_max_dia[u, v]
+                n = len(list(self.pipes))
+                max_k = min(n, GLOBAL_MAX)
+
+                # interior case: k-2 ... k+2
+                if 3 <= k <= max_k - 2:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+                        f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+                    )
+                # k = 2 → 1,2,3,4
+                elif k == 2 and max_k >= 4:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+                    )
+                # k = 1 → 1,2,3
+                elif k == 1 and max_k >= 3:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+                    )
+                # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
+                elif k == max_k - 1 and max_k >= 4:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
+                        f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
+                    )
+                # k = max_k → allow all up to max_k
+                elif k == max_k:
+                    ampl.eval(
+                        f"s.t. arc_dia_{u}_{v}: "
+                        f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
+                    )
+
             # ----------------------------
             # 5. Solve
             # ----------------------------
@@ -2639,10 +2758,10 @@ class WaterNetworkOptimizer:
                     f"{result:<14}{'No':<10}"
                     f"{round(time.time() - start_time_total, 2)}s")
             if improved:
-                self.export_solution_iteration(self.iteration)
-                json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
-                node_pos = node_position[self.data_number]
-                self.build_plot(json_file, node_pos, self.data_number)
+                # self.export_solution_iteration(self.iteration)
+                # json_file = f"/home/nitishdumoliya/waterNetwork/wdnd/figure/json_file/d{self.data_number+1}/solution_{self.iteration}.json"
+                # node_pos = node_position[self.data_number]
+                # self.build_plot(json_file, node_pos, self.data_number)
 
                 self.iteration += 1
                 self.flow_change_in_cycle()
@@ -3193,31 +3312,102 @@ class WaterNetworkOptimizer:
         # edge = min(self.sen_score, key=self.sen_score.get) 
         # print("minimum sen_score:",edge, self.sen_score[edge[0], edge[1]])
 
+        # self.all_duals = {}
+        # for con_name, val in self.ampl.get_constraints():
+        #     self.all_duals[con_name] = val.getValues()
+        # sorted_arcs = []
+        # dual_dict = self.all_duals["con2"].to_dict()
+        # # print("dual_value:", dual_dict)
+        # sorted_duals = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
+        # sorted_arcs = list(sorted_duals.keys())
+        # # print("sorted_arcs:", self.visited_arc)
+        # # print("\nsorted_arcs:", sorted_arcs)
+        # if self.data_number == 6:
+        #     sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fixarcs]
+        # sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fix_arc_set]
+        # sorted_all_arcs = sorted_arcs
+        # sorted_arcs = [arc for arc in sorted_arcs if arc not in self.visited_arc]
+        # sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] != 1]
+        #
+        # # sorted_arcs = [sorted_arcs[0]]
+        # --------------------------------------------------
+        # Collect duals of all constraints
+        # --------------------------------------------------
         self.all_duals = {}
-        for con_name, val in self.ampl.get_constraints():
-            self.all_duals[con_name] = val.getValues()
-        sorted_arcs = []
-        dual_dict = self.all_duals["con2"].to_dict()
-        # print("dual_value:", dual_dict)
-        sorted_duals = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
-        sorted_arcs = list(sorted_duals.keys())
-        # print("sorted_arcs:", self.visited_arc)
-        # print("\nsorted_arcs:", sorted_arcs)
-        if self.data_number == 6:
-            sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fixarcs]
-        sorted_arcs = [arc for arc in sorted_arcs if arc not in self.fix_arc_set]
-        sorted_all_arcs = sorted_arcs
-        sorted_arcs = [arc for arc in sorted_arcs if arc not in self.visited_arc]
-        sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] != 1]
+        for con_name, con in self.ampl.get_constraints():
+            self.all_duals[con_name] = con.getValues()
         
-        # sorted_arcs = [sorted_arcs[0]]
+        # --------------------------------------------------
+        # Build candidate arc list from indegree ≥ 2 nodes
+        # --------------------------------------------------
+        sorted_all_arcs = self.arcs
+        # for node in self.indegree_2_or_more:
+        #     for (u, v) in self.network_graph.in_edges(node):
+        #         arc = (u, v) if (u, v) in self.arcs else (v, u)
+        #         sorted_all_arcs.append(arc)
+        
+        # Remove fixed and already-visited arcs
+        sorted_all_arcs = [
+            arc for arc in sorted_all_arcs
+            if arc not in self.fix_arc_set
+        ]
+        
+        sorted_arcs = [
+            arc for arc in sorted_all_arcs
+            if arc not in self.visited_arc
+        ]
+        
+        sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] != 1]
+        # --------------------------------------------------
+        # Extract duals for con2 only (restricted to sorted_arcs)
+        # --------------------------------------------------
+        dual_dict = {}
+        for con_name, dual_values in self.all_duals.items():
+            if con_name == "con2":
+                tmp = dual_values.to_dict()
+                dual_dict = {
+                    arc: val for arc, val in tmp.items()
+                    if arc in sorted_arcs
+                }
+                break   # only con2 is needed
+        
+        # --------------------------------------------------
+        # Sensitivity score computation
+        # sen_score(i,j) = - dual(i,j) * (h[i] - h[j])
+        # --------------------------------------------------
+        self.sen_score = {}
+        for (i, j), dual_val in dual_dict.items():
+            # self.sen_score[(i, j)] = -dual_val * self.q[i,j]*np.abs(self.q[i,j])**0.852 * max(10.67*self.l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes)
+            self.sen_score[(i, j)] = -dual_val * self.q[i,j]*np.abs(self.q[i,j])**0.852 * max(self.l[i,j,k] for k in self.pipes)
+            # self.sen_score[(i, j)] = -dual_val * np.abs(self.h[i] - self.h[j])
+        
+        # print("sen_score:", self.sen_score)
+        # sorted_arcs = [
+        #    arc for arc, _ in sorted(
+        #        dual_dict.items(),
+        #        key=lambda kv: abs(kv[1]),
+        #        reverse=True
+        #    )
+        # ]      
+        # --------------------------------------------------
+        # Rank arcs using sensitivity score (absolute value)
+        # --------------------------------------------------
+        sorted_arcs = [
+            arc for arc, _ in sorted(
+                self.sen_score.items(),
+                key=lambda kv: abs(kv[1]),
+                reverse=True
+            )
+        ]
+        
         print("sorted_arcs:", sorted_arcs)
         
         print("----------------------------------------------------------------------------------------")
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
         print("----------------------------------------------------------------------------------------")
 
-        for (i,j) in sorted_arcs[:min(15, len(sorted_arcs))]:
+        # for (i,j) in sorted_arcs[:min(20, len(sorted_arcs))]:
+        for (i,j) in sorted_arcs:
             self.visited_arc.append((i,j))
             ampl = AMPL()
             ampl.reset()
@@ -3271,49 +3461,53 @@ class WaterNetworkOptimizer:
             for k in self.pipes:
                 if k>=arc_max_dia[i,j]:
                     ampl.eval(f"subject to con3__{i}_{j}_{k}: l[{i},{j},{k}] = 0;")
-            # ampl.eval(f"subject to con3_{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i}, {j}];")
+            ampl.eval(f"subject to con3_{i}_{j}_{arc_max_dia[i,j]}: l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i}, {j}];")
 
-            ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
+            # ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
 
-            GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
-            
-            for (u, v) in self.arcs:
-                k = arc_max_dia[u, v]
-                n = len(list(self.pipes))
-                max_k = min(n, GLOBAL_MAX)
-
-                # interior case: k-2 ... k+2
-                if 3 <= k <= max_k - 2:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
-                        f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
-                    )
-                # k = 2 → 1,2,3,4
-                elif k == 2 and max_k >= 4:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
-                    )
-                # k = 1 → 1,2,3
-                elif k == 1 and max_k >= 3:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
-                    )
-                # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
-                elif k == max_k - 1 and max_k >= 4:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
-                        f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
-                    )
-                # k = max_k → allow all up to max_k
-                elif k == max_k:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
-                    )
+            # GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
+            # if self.data_number == 6:
+            #    arcs = [(x,y) for (x,y) in self.arcs if (x,y) not in self.fixarcs]
+            # else:
+            #     arcs = self.arcs           
+            #
+            # for (u, v) in arcs:
+            #     k = arc_max_dia[u, v]
+            #     n = len(list(self.pipes))
+            #     max_k = min(n, GLOBAL_MAX)
+            #
+            #     # interior case: k-2 ... k+2
+            #     if 3 <= k <= max_k - 2:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+            #             f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+            #         )
+            #     # k = 2 → 1,2,3,4
+            #     elif k == 2 and max_k >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+            #         )
+            #     # k = 1 → 1,2,3
+            #     elif k == 1 and max_k >= 3:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+            #         )
+            #     # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
+            #     elif k == max_k - 1 and max_k >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
+            #             f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
+            #         )
+            #     # k = max_k → allow all up to max_k
+            #     elif k == max_k:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
+            #         )
 
             # for (u, v) in self.arcs:
             #     k = arc_max_dia[u, v]
@@ -3350,7 +3544,7 @@ class WaterNetworkOptimizer:
             #             f"sum{{k in pipes}} l[{u},{v},k] = L[{u},{v}];"
             #         )
         
-            # ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
+            ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
             # for (u,v) in self.arcs:
             #     if arc_max_dia[u,v] != 1:
             #         if self.q[u,v] >= 0:
@@ -3889,34 +4083,75 @@ class WaterNetworkOptimizer:
         # print("\n*********************************************************************************************")
         print("Iteration :",self.iteration)
         improved = False
+        # --------------------------------------------------
+        # Collect duals of all constraints
+        # --------------------------------------------------
         self.all_duals = {}
-        for con_name, val in self.ampl.get_constraints():
-            # Get dual values for each constraint
-            dual_values = val.getValues()
-            self.all_duals[con_name] = dual_values
-
+        for con_name, con in self.ampl.get_constraints():
+            self.all_duals[con_name] = con.getValues()
+        
+        # --------------------------------------------------
+        # Build candidate arc list from indegree ≥ 2 nodes
+        # --------------------------------------------------
         sorted_all_arcs = []
-        for node in  self.indegree_2_or_more:
-            # print("\nNode:",node)
-            for (u,v) in self.network_graph.in_edges(node):
-                if (u,v) in self.arcs:
-                    sorted_all_arcs.append((u,v))
-                else:
-                    sorted_all_arcs.append((v,u))
-        sorted_all_arcs = [arc for arc in sorted_all_arcs if arc not in self.fix_arc_set]
-        sorted_arcs = [arc for arc in sorted_all_arcs if arc not in self.visited_arc_reverse]
-
+        for node in self.indegree_2_or_more:
+            for (u, v) in self.network_graph.in_edges(node):
+                arc = (u, v) if (u, v) in self.arcs else (v, u)
+                sorted_all_arcs.append(arc)
+        
+        # Remove fixed and already-visited arcs
+        sorted_all_arcs = [
+            arc for arc in sorted_all_arcs
+            if arc not in self.fix_arc_set
+        ]
+        
+        sorted_arcs = [
+            arc for arc in sorted_all_arcs
+            if arc not in self.visited_arc_reverse
+        ]
+        
+        # --------------------------------------------------
+        # Extract duals for con2 only (restricted to sorted_arcs)
+        # --------------------------------------------------
+        dual_dict = {}
         for con_name, dual_values in self.all_duals.items():
             if con_name == "con2":
-                # print(dual_values, "\n")
-                dual_dict = dual_values.to_dict()
-                dual_dict = {idx: val for idx, val in dual_dict.items() if idx in sorted_arcs}
-                # max_index, max_dual = max(dual_dict.items(), key=lambda kv: abs(kv[1]))
-                # print(f"  Max abs dual = {max_dual} at index {max_index}")
-        sorted_arcs = dict(sorted(dual_dict.items(), key=lambda kv: abs(kv[1]), reverse=True))
-        sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] == 1]
-        # sorted_arcs = list(sorted_arcs.keys())
-        print("sorted_arcs: ",sorted_arcs)
+                tmp = dual_values.to_dict()
+                dual_dict = {
+                    arc: val for arc, val in tmp.items()
+                    if arc in sorted_arcs
+                }
+                break   # only con2 is needed
+        
+        # --------------------------------------------------
+        # Sensitivity score computation
+        # sen_score(i,j) = - dual(i,j) * (h[i] - h[j])
+        # --------------------------------------------------
+        self.sen_score = {}
+        for (i, j), dual_val in dual_dict.items():
+            self.sen_score[(i, j)] = -dual_val * np.abs(self.h[i] - self.h[j])
+        
+        # print("sen_score:", self.sen_score)
+        
+        # --------------------------------------------------
+        # Rank arcs using sensitivity score (absolute value)
+        # --------------------------------------------------
+        # sorted_arcs = [
+        #     arc for arc, _ in sorted(
+        #         self.sen_score.items(),
+        #         key=lambda kv: abs(kv[1]),
+        #         reverse=True
+        #     )
+        # ]
+        sorted_arcs = [
+            arc for arc, _ in sorted(
+                dual_dict.items(),
+                key=lambda kv: abs(kv[1]),
+                reverse=True
+            )
+        ]       
+        print("sorted_arcs:", sorted_arcs)
+
         # remaining_arcs = [c for c, nc in sorted_by_abs_dual if nc not in self.visited_arc_reverse]
         # print("All cycles found:", len(sorted_by_abs_dual))
         # print("Visited cycles:", len(self.visited_arc_reverse))
@@ -3926,7 +4161,8 @@ class WaterNetworkOptimizer:
         print(f"{'Arc':<10}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
         print("----------------------------------------------------------------------------------------")
 
-        for edge in sorted_arcs[:min(15, len(sorted_arcs))]:
+        # for edge in sorted_arcs[:min(20, len(sorted_arcs))]:
+        for edge in sorted_arcs:
             self.visited_arc_reverse.append(edge)
             (i,j) = edge
             # self.load_model()
@@ -3970,17 +4206,17 @@ class WaterNetworkOptimizer:
 
             #self.ampl.eval(f"set inarc := {{{inarc_set}}};")
             #self.ampl.eval(f"set indegree_node := {{{set(self.indegree_2_or_more)}}};")
-            fix_arc_set = self.fix_leaf_arc_flow(ampl)
+            # fix_arc_set = self.fix_leaf_arc_flow(ampl)
 
             # for (u,v) in fix_arc_set:
             #     ampl.eval(f"s.t. fix_arc_flow_{u}_{v}: q[{u}, {v}] = {self.q[u,v]};")
             # self.update_initial_points(self.l, self.q, self.h)
             # self.update_initial_points_with_perturbation(self.ampl, self.l, self.q, self.h) 
 
-            if self.q[i,j] >= 0:
-                ampl.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]<=0;")
+            if self.q[i,j] >= 1e-9:
+                ampl.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]<=-1e-9;")
             else:
-                ampl.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]>=0;")
+                ampl.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]>=1e-9;")
 
             # for (i,j) in self.arcs:
             #     if 2 <= arc_max_dia[i,j] <= len(list(self.pipes)) - 1:
@@ -3992,46 +4228,52 @@ class WaterNetworkOptimizer:
             #     elif arc_max_dia[i,j] == 1:
             #         ampl.eval(f"s.t. arc_dia{i}_{j}: l[{i},{j},{arc_max_dia[i,j]}] + l[{i}, {j}, {arc_max_dia[i,j]} + 1] = L[{i},{j}];")
 
-            # ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
+            ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
 
-            GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
-            for (u, v) in self.arcs:
-                k = arc_max_dia[u, v]
-                n = len(list(self.pipes))
-                max_k = min(n, GLOBAL_MAX)
-                # interior case: k-2 ... k+2
-                if 3 <= k <= max_k - 2:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
-                        f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
-                    )
-                # k = 2 → 1,2,3,4
-                elif k == 2 and max_k >= 4:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
-                    )
-                # k = 1 → 1,2,3
-                elif k == 1 and max_k >= 3:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
-                    )
-                # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
-                elif k == max_k - 1 and max_k >= 4:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
-                        f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
-                    )
-                # k = max_k → allow all up to max_k
-                elif k == max_k:
-                    ampl.eval(
-                        f"s.t. arc_dia_{u}_{v}: "
-                        # f"sum{{k in 1..{max_k}}} l[{u},{v},k] = L[{u},{v}];"
-                        f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
-                    )
+            # GLOBAL_MAX = max(arc_max_dia[u, v] for (u, v) in self.arcs)
+            #
+            # if self.data_number == 6:
+            #     arcs = [(x,y) for (x,y) in self.arcs if (x,y) not in self.fixarcs]
+            # else:
+            #     arcs = self.arcs
+            #
+            # for (u, v) in arcs:
+            #     k = arc_max_dia[u, v]
+            #     n = len(list(self.pipes))
+            #     max_k = min(n, GLOBAL_MAX)
+            #     # interior case: k-2 ... k+2
+            #     if 3 <= k <= max_k - 2:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{k-2}] + l[{u},{v},{k-1}] + l[{u},{v},{k}] + "
+            #             f"l[{u},{v},{k+1}] + l[{u},{v},{k+2}] = L[{u},{v}];"
+            #         )
+            #     # k = 2 → 1,2,3,4
+            #     elif k == 2 and max_k >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] + l[{u},{v},4] = L[{u},{v}];"
+            #         )
+            #     # k = 1 → 1,2,3
+            #     elif k == 1 and max_k >= 3:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},1] + l[{u},{v},2] + l[{u},{v},3] = L[{u},{v}];"
+            #         )
+            #     # k = max_k-1 → max_k-3,max_k-2,max_k-1,max_k
+            #     elif k == max_k - 1 and max_k >= 4:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             f"l[{u},{v},{max_k-3}] + l[{u},{v},{max_k-2}] + "
+            #             f"l[{u},{v},{max_k-1}] + l[{u},{v},{max_k}] = L[{u},{v}];"
+            #         )
+            #     # k = max_k → allow all up to max_k
+            #     elif k == max_k:
+            #         ampl.eval(
+            #             f"s.t. arc_dia_{u}_{v}: "
+            #             # f"sum{{k in 1..{max_k}}} l[{u},{v},k] = L[{u},{v}];"
+            #             f"l[{u}, {v}, {k-2}] + l[{u}, {v}, {k-1}] + l[{u},{v},{k}] = L[{u},{v}];"
+            #         )
 
             # for (u, v) in self.arcs:
             #     k = arc_max_dia[u, v]
@@ -4085,11 +4327,11 @@ class WaterNetworkOptimizer:
             #         ampl.eval(f"s.t. head_neigh_{i}: {self.h[i]*0.7} <= h[{i}] <= {self.h[i]*1.3};")
 
 
-            # for (i,j) in self.visited_arc_reverse:
-            #     if self.q[i,j]>=0:
-            #         ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i}, {j}]>=0;")
+            # for (u,v) in self.visited_arc_reverse:
+            #     if self.q[u,v]>=0:
+            #         ampl.eval(f"s.t. flow_direction{u}_{v}: q[{u}, {v}]>=0;")
             #     else:
-            #         ampl.eval(f"s.t. flow_direction{i}_{j}: q[{i}, {j}]<=0;")
+            #         ampl.eval(f"s.t. flow_direction{u}_{v}: q[{u}, {v}]<=0;")
 
             # with self.suppress_output():
             ampl.option["solver"] = "ipopt"
@@ -4142,7 +4384,7 @@ class WaterNetworkOptimizer:
                     if self.data_number==5:
                         self.q1 = ampl.getVariable('q1').getValues().to_dict()
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
-                    self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
+                    # self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set)
                     print("----------------------------------------------------------------------------------------")
                 else: 
                     print(f"{str((i, j)):<10}"
