@@ -4289,10 +4289,18 @@ class WaterNetworkOptimizer:
         else:
             arcs = self.arcs
         for (u,v) in arcs:
-             if self.q[u,v]>=0:
-                 ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}: {q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
-             else:
-                 ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}:{q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+            if self.data_number == 5:
+                if self.q[u,v]>=0:
+                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q1{u}_{v}: {self.q1[u,v] - self.Delta} <= q1[{u}, {v}] <= {self.q1[u,v] + self.Delta};")
+                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q2{u}_{v}: {self.q2[u,v] - self.Delta} <= q2[{u}, {v}] <= {self.q2[u,v] + self.Delta};")
+                else:
+                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q1{u}_{v}:{self.q1[u,v] - self.Delta} <= q1[{u}, {v}] <= {self.q1[u,v] + self.Delta};")
+                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q2{u}_{v}:{self.q2[u,v] - self.Delta} <= q2[{u}, {v}] <= {self.q2[u,v] + self.Delta};")
+            else:
+                if self.q[u,v]>=0:
+                    ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}: {q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+                else:
+                    ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}:{q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
 
         # for (u,v) in self.arcs:
         #     for k in self.pipes:
