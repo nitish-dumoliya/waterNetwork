@@ -1930,9 +1930,9 @@ class WaterNetworkOptimizer:
             # else:
             #     # print(self.h[i] - self.h[j])
             #     ampl.eval(f"s.t. headloss2{i}_{j}: {self.h[i] - self.h[j]} + 1e-3 <= h[{i}]- h[{j}];")
-            ampl.eval(f"s.t. headloss1{i}_{j}: abs(h[{i}]- h[{j}])>=abs({self.h[i] - self.h[j]}) + 1e-2;")
+            ampl.eval(f"s.t. headloss1{i}_{j}: abs(h[{i}]- h[{j}])>=abs({self.h[i] - self.h[j]}) + 1;")
             # ampl.eval(f"s.t. max_head: sum{{i in nodes}} h[i] <= {sum(self.h[x] for x in self.nodes)}-1e-2;")
-            # ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {sum(self.C[k] * self.l[i,j,k] for k in self.pipes)} - 1e-2;")
+            ampl.eval(f"subject to con3_l{i}_{j}: sum {{k in pipes}} C[k]*l[{i},{j},k] <= {sum(self.C[k] * self.l[i,j,k] for k in self.pipes)} - 1e-2;")
 
             ampl.option['solver'] = "ipopt" 
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes"

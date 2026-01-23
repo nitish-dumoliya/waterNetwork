@@ -35,7 +35,7 @@ var x{arcs};
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
 #minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
-minimize total_cost : sum{(i,j) in arcs} x[i,j]  * (abs(q[i,j])^(2.852))/2.852 ; #+ sum{u in Source} E[u] * (sum{(i,u) in arcs} q[i,u] - sum{(j,u) in arcs} q[j,u]);
+minimize total_energy_cost : sum{(i,j) in arcs} x[i,j]  * (abs(q[i,j])^(2.852))/2.852 ; #+ sum{u in Source} E[u] * (sum{(i,u) in arcs} q[i,u] - sum{(j,u) in arcs} q[j,u]);
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
