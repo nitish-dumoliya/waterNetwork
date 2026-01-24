@@ -1811,6 +1811,42 @@ class WaterNetworkOptimizer:
             #                 arc_min_dia[(i, j)] = min(arc_min_dia[(i, j)], d)
 
             if self.z_star < self.current_cost:
+                ampl_feas = AMPL()
+                ampl_feas.reset()
+                if self.data_number==5:
+                    ampl_feas.read("newyork_model.mod")
+                elif self.data_number==6:
+                    ampl_feas.read("blacksburg_model.mod")
+                else:
+                    ampl_feas.read("wdnmodel_feasibility.mod")
+                ampl_feas.read_data(self.data_file)
+
+                for (x, y, k), val in self.l_star.items():
+                    ampl_feas.eval(f'let l[{x},{y},{k}] := {val};')
+                for (x, y), val in self.q_star.items():
+                    ampl_feas.eval(f'let q[{x},{y}] := {val};')
+                    if self.data_number ==5:
+                        ampl_feas.eval(f'let q1[{x},{y}] := {self.q1_star[x,y]};')
+                        ampl_feas.eval(f'let q2[{x},{y}] := {self.q2_star[x,y]};')
+                for x, val in self.h_star.items():
+                    ampl_feas.eval(f'let h[{x}] := {val};') 
+                # ampl_feas.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] <= {self.current_cost};""")
+                ampl_feas.eval("#minimize total_cost : sum{i in nodes diff Source} (-h[i] + E[i] + P[i])^2;")
+                ampl_feas.option["solver"] = "ipopt"
+                ampl_feas.set_option("ipopt_options", f"outlev = 0 max_iter = {self.max_iter} mu_init = {self.mu_init} expect_infeasible_problem = no  tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes")   #max_iter = 1000
+                ampl_feas.option["presolve_eps"] = "6.82e-14"
+                ampl_feas.option['presolve'] = 1
+                with self.suppress_output():
+                    ampl_feas.solve()
+                solve_result = ampl_feas.solve_result
+                solve_time = ampl_feas.get_value('_solve_elapsed_time')
+                print("feasibility model| solve_result:",solve_result, "solve time:", solve_time)
+                self.solver_time += solve_time
+                self.number_of_nlp += 1
+                self.l_star = ampl_feas.getVariable('l').getValues().to_dict()
+                self.q_star = ampl_feas.getVariable('q').getValues().to_dict()
+                self.h_star = ampl_feas.getVariable('h').getValues().to_dict() 
+
                 ampl = AMPL()
                 ampl.reset()
                 if self.data_number==5:
@@ -1950,12 +1986,13 @@ class WaterNetworkOptimizer:
                 if self.do_arc_reversal:
                     if self.fail_streak >= 3:
                         self.fail_streak = 0
+                        # self.visited_arc_reverse = []
                         self.iterate_acyclic_flows()
                         return
                     else:
                         self.local_solution_improvement_heuristic()
                 else:
-                    if self.Terminate or self.fail_streak>=3:
+                    if self.Terminate or self.fail_streak>=self.total_run:
                     # if self.Terminate:
                         print(self.fail_streak)
                         print("Trust-region exhausted → declaring local optimum.")
@@ -2175,7 +2212,7 @@ class WaterNetworkOptimizer:
                     # self.plot_graph(self.super_source_out_arc, self.total_cost, 0, q, h, self.D, (0,0), l, self.C)
                     self.current_cost = self.total_cost
                     improved = True
-                    self.is_improved_in_arc_reversal = False
+                    self.is_improved_in_arc_reversal = True
                     self.ampl = ampl
                     self.network_graph = self.generate_random_acyclic_from_solution(q)
                     # self.best_acyclic_flow = self.network_graph.copy()
@@ -2384,6 +2421,10 @@ class WaterNetworkOptimizer:
             m = len(abs_flows)
             # self.Delta = self.alpha_min*abs_flows[m // 2]           
             self.Delta = self.alpha*abs_flows[m//2]
+            self.alpha_min = 0.0001
+            self.alpha_shrink = 0.1
+            self.alpha_expand = 1.4 
+            self.total_run = 5
             self.local_solution_improvement_heuristic()
 
         # print("local points:", self.local_points)
