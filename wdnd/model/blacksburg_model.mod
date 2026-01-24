@@ -83,7 +83,7 @@ subject to con2_{(i,j) in fixarcs}:
 #subject to con2{(i,j) in arcs}: 
 #    2*(h[i] - h[j])  = (q1[i,j])^3 *((((q1[i,j])^2 + eps[i,j])^0.426) /((q1[i,j])^2 + 0.426*eps[i,j])) *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) + (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j])^0.426) /((q2[i,j])^2 + 0.426*eps[i,j])) * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
 
-subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];
+#subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];
 
 subject to con4{(i,j) in arcs diff fixarcs, k in pipes}: l[i,j,k] <= L[i,j];
 

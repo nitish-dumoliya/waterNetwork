@@ -85,9 +85,9 @@ subject to con2_{(i,j) in arcs}:
 #    h[i] - h[j] =  (q1[i,j]+q2[i,j])^3 *((((q1[i,j]+q2[i,j])^2 + eps[i,j])^0.426) /((q1[i,j]+q2[i,j])^2 + 0.426*eps[i,j]))  * ((10.67*L[i,j]/(R[i,j]^1.852 * exdiam[i,j]^4.87))*(sum{k in pipes}(10.67*l[i,j,k])/(R[i,j]^1.852 * d[k]^4.87)))/((10.67*L[i,j]/(R[i,j]^1.852 * exdiam[i,j]^4.87)) + (sum{k in pipes}(10.67*l[i,j,k])/(R[i,j]^1.852 * d[k]^4.87)))^1.852 
 #;
 
-subject to con3{(i,j) in arcs}: 
-    sum{k in pipes} l[i,j,k] = L[i,j]
-;
+#subject to con3{(i,j) in arcs}: 
+#    sum{k in pipes} l[i,j,k] = L[i,j]
+#;
 
 subject to con4{(i,j) in arcs , k in pipes}: 
     l[i,j,k] <= L[i,j]
