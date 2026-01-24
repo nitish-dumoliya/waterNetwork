@@ -39,6 +39,7 @@ subject to con5{i in Source}:
 #subject to con6{i in nodes diff Source}: h[i] >= (E[i] + P[i]) ;
 #subject to con6_{i in nodes diff Source}: h[i] <= max{j in Source} E[j] ;
 subject to con7{i in nodes diff Source}: h[i] >= min{j in nodes diff Source} (E[j]+P[j]);
+#subject to con7{i in nodes diff Source}: h[i] >= 0;
 #subject to con10{(i,j) in arcs}: -Q_max <= q[i,j];
 #subject to con11{(i,j) in arcs}: q[i,j] <= Q_max;
 
