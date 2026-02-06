@@ -1,4 +1,23 @@
 # print_level 5
 linear_solver ma57
-#warm_start_same_structure yes
+#linear_solver mumps
 # mehrotra_algorithm yes
+ma57_pivot_order 2
+ma57_pivtol 1e-8
+ma57_pivtolmax 1e-4
+#nlp_scaling_method   gradient-based
+#nlp_scaling_method equilibration-based  #gradient-based
+mu_strategy adaptive
+#mu_oracle probing
+# hessian_approximation limited-memory #exact
+hessian_approximation exact
+#alpha_for_y full
+alpha_for_y_tol 1e-6
+max_soc 4
+linear_system_scaling mc19
+#linear_scaling_on_demand yes
+#warm_start_init_point yes
+#warm_start_bound_push 0.1
+#warm_start_mult_bound_push 0.01
+#warm_start_slack_bound_push 0.01
+

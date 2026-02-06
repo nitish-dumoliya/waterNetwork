@@ -92,9 +92,9 @@ subject to con5{i in Source}: h[i] = E[i];
 subject to con6{i in nodes diff Source}: h[i] <= E[i] + pmax[i];
 subject to con7{i in nodes diff Source}: E[i] + P[i] <= h[i];
 
-#subject to con7{(i,j) in arcs}: -Q_max <= q[i,j];
+subject to con8{(i,j) in arcs}: -Q_max <= q[i,j];
 
-#subject to con8{(i,j) in arcs}: q[i,j] <= Q_max;
+subject to con9{(i,j) in arcs}: q[i,j] <= Q_max;
 
 #subject to con9{(i,j) in fixarcs}: q[i,j] = q1[i,j] + q2[i,j];
 

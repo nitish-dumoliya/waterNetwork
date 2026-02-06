@@ -45,12 +45,9 @@ param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var h{nodes};	            # Head
-#var eps{arcs}>=1e-12, <=1;
-#var x{arcs};
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
 minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];	
-#minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k] - sum {(i,j) in arcs} abs(h[i] - h[j]);	
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
@@ -113,7 +110,7 @@ subject to con6{i in Source}:
 ;
 subject to con7{i in nodes diff Source}: h[i] >= (E[i] + P[i]) ;
 #subject to con6_{i in nodes diff Source}: h[i] <= max{j in Source} E[j] ;
-#subject to con8{(i,j) in arcs}: 
-#   -Q_max <= q[i,j] <= Q_max
-#;
+subject to con8{(i,j) in arcs}: 
+   -Q_max <= q[i,j] <= Q_max
+;
 #*******************************************************************************************#
