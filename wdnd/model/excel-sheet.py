@@ -508,7 +508,7 @@ Heuristic_Rel_error = []
 Heuristic_Number_of_NLP = []
 Heuristic_Number_of_Iteration = []
 
-dir1 = "original_5min"
+dir1 = "original_10min"
 dir = "smooth-approx"
 dir2 = "approx2"
 # error = "absolute"

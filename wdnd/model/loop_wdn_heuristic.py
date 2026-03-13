@@ -5976,7 +5976,7 @@ class WaterNetworkOptimizer:
         # self.iteration = self.iteration + 1
         # self.visited_arc_reverse = []
         # # self.iterate_acyclic_flows_new() 
-        # self.iterate_acyclic_flows() 
+        self.iterate_acyclic_flows() 
 
         # print("\n-----------------------------------Flow change in cycle Approach---------------------------")
         # self.flow_change_in_cycle_iteration = self.iteration + 1
@@ -5985,7 +5985,7 @@ class WaterNetworkOptimizer:
         # print("\n----------------------------Diameter Reduction Approach--------------------------------------")
         # self.dia_red_iteration = 1
         # self.visited_arc = []
-        # self.diameter_reduction()
+        self.diameter_reduction()
 
         # print("\n--------------------------------Head increase Approach---------------------------------------")
         # self.dia_red_iteration = 1

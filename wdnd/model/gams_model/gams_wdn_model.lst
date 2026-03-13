@@ -1,0 +1,330 @@
+GAMS 52.5.0  9bc771bf Jan 28, 2026          LEX-LEG x86 64bit/Linux - 02/08/26 19:06:05 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  set nodes
+   2  set Source(nodes)
+   3  set pipes
+   4  ;
+   5   
+   6  alias(nodes,N,M);
+   7   
+   8  set arcs(N,M)
+   9  ;
+  10   
+  11  Parameter elevation(nodes)
+  12            D(nodes)
+  13            P(nodes)
+  14            L(N,M)
+  15            vmax(N,M)
+  16            R(pipes)
+  17            dia(pipes)
+  18            C(pipes)
+  19  ;
+  20   
+  21  Variables h(nodes)
+  22            q(N,M)
+  23            total_cost
+  24  ;
+  25   
+  26  Positive Variable length(N,M,pipes);
+  27   
+  28  Equations obj
+  29            Balance(nodes)
+  30            HydraulicHead_Flow(N,M)
+  31            length_limit(N,M)
+  32            elevation_constraint(Source)
+  33  ;
+  34   
+  35  Scalar omega / 10.67 / ;
+  36  Scalar epsilon / 1e-6 / ;
+  37   
+  38  obj.. total_cost =E= sum(arcs, sum(pipes, length(arcs,pipes)*C(pipes)));
+  39   
+  40  Balance(nodes)$(not Source(nodes))..
+  41    D(nodes) =E=  - SUM(M$arcs(nodes,M), q(nodes,M)) + SUM(N$arcs(N,nodes), q(N,nodes));
+  42   
+  43  HydraulicHead_Flow(N,M)$(arcs(N,M))..
+  44      h(N) - h(M) =E= signPower(q(N,M),1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes))**4.87) ));
+  45   
+  46  *HydraulicHead_Flow(N,M)$(arcs(N,M))..
+  47  *    h(N) - h(M) =E= sign(q(N,M)) * ((abs(q(N,M)) )**1.852)*(0.001**1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes)/1000)**4.87) ));
+  48   
+  49  *HydraulicHead_Flow(N,M)$(arcs(N,M))..
+  50  *    h(N) - h(M) =E= ((q(N,M) * abs(q(N,M)) * ((abs(q(N,M)) + 1000*epsilon)**0.852)) / (abs(q(N,M)) + 852*epsilon))*(0.001**1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes)/1000)**4.87)) );
+  51   
+  52  length_limit(N,M)$(arcs(N,M)) ..
+  53      sum(pipes, length(N,M,pipes)) =E= L(N,M);
+  54   
+  55  elevation_constraint(Source)..
+  56      h(Source) =E= elevation(Source);
+  57   
+INCLUDE    /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+  59  # Nodes
+****  $409
+**** LINE      1 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  60  set nodes / 1*7 /;
+  61   
+  62  # Arcs: startnode.endnode
+****  $409
+**** LINE      4 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  63  set arcs(N,M) /
+  64  1.2
+  65  2.3
+  66  2.6
+  67  3.5
+  68  4.5
+  69  4.6
+  70  6.7
+  71  7.5
+  72  /;
+  73   
+  74  # Source node(s)
+****  $409
+**** LINE     16 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  75  set Source(nodes) / 1 /;
+  76   
+  77  # Node elevations
+****  $409
+**** LINE     19 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  78  Parameter elevation(nodes) /
+  79  1    54
+  80  2     5
+  81  3     5
+  82  4     4
+  83  5   4.5
+  84  6   4.5
+  85  7   4.5
+  86  /;
+  87   
+  88  # Node demands
+****  $409
+**** LINE     30 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  89  Parameter D(nodes) /
+  90  1  -0.42043
+  91  2   0
+  92  3   0.04344
+  93  4   0.04029
+  94  5   0.20860
+  95  6   0.04778
+  96  7   0.08032
+  97  /;
+  98   
+  99  # Node minimum pressures
+****  $409
+**** LINE     41 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 100  Parameter P(nodes) /
+ 101  1   0
+ 102  2  25
+ 103  3  25
+ 104  4  25
+ 105  5  25
+ 106  6  25
+ 107  7  25
+ 108  /;
+ 109   
+ 110  # Node maximum pressures
+****  $409
+**** LINE     52 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 111  Parameter pmax(nodes) /
+ 112  1   0
+ 113  2   0
+ 114  3   0
+ 115  4   0
+ 116  5   0
+ 117  6   0
+ 118  7   0
+ 119  /;
+ 120   
+ 121  # Pipes
+****  $409
+**** LINE     63 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 122  set pipes / 1*10 /;
+ 123   
+ 124  # Pipe diameters in meters
+****  $409
+**** LINE     66 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 125  Parameter dia(pipes) /
+ 126  1   0.10
+ 127  2   0.15
+ 128  3   0.20
+ 129  4   0.25
+ 130  5   0.30
+ 131  6   0.35
+ 132  7   0.40
+ 133  8   0.45
+ 134  9   0.50
+ 135  10  0.60
+ 136  /;
+ 137   
+ 138  # Hazen-Williams coefficients
+****  $409
+**** LINE     80 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 139  Parameter C(pipes) /
+ 140  1   1.629
+ 141  2   4.054
+ 142  3   5.769
+ 143  4   7.769
+ 144  5   9.237
+ 145  6  11.012
+ 146  7  12.397
+ 147  8  15.501
+ 148  9  17.696
+ 149  10 23.132
+ 150  /;
+ 151   
+ 152  # Pipe roughness
+****  $409
+**** LINE     94 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 153  Parameter R(pipes) /
+ 154  1   145
+ 155  2   145
+ 156  3   145
+ 157  4   145
+ 158  5   145
+ 159  6   130
+ 160  7   130
+ 161  8   130
+ 162  9   130
+ 163  10  130
+ 164  /;
+ 165   
+ 166  # Arc lengths in meters
+****  $409
+**** LINE    108 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 167  Parameter L(arcs) /
+****                 $122,184
+**** LINE    109 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 122  One dimensional set expected
+**** 184  Domain list redefined
+ 168  1.2   2540
+ 169  2.3    350
+ 170  2.6   1020
+ 171  3.5   1710
+ 172  4.5   1430
+ 173  4.6   1140
+ 174  6.7   1410
+ 175  7.5   1710
+ 176  /;
+ 177   
+ 178  # Maximum velocity in arcs
+****  $409
+**** LINE    120 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+ 179  Parameter vmax(arcs) /
+****                    $122,184
+**** LINE    121 INCLUDE     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+**** LINE     58 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 122  One dimensional set expected
+**** 184  Domain list redefined
+ 180  1.2   3.0
+ 181  2.3   3.0
+ 182  2.6   3.0
+ 183  3.5   3.0
+ 184  4.5   3.0
+ 185  4.6   3.0
+ 186  6.7   3.0
+ 187  7.5   3.0
+ 188  /;
+ 189   
+ 190   
+ 191  Parameter Q_max;
+ 192  Q_max = sum(nodes$(not Source(nodes)), D(nodes));
+ 193   
+ 194  *dmin = smin(pipe, dia(pipe));
+ 195  *dmax = smax(pipe, dia(pipe));
+ 196   
+ 197  h.lo(nodes) = P(nodes) + elevation(nodes);
+ 198  q.up(arcs(N,M)) =  Q_max;
+ 199  q.lo(arcs(N,M)) =  -Q_max;
+ 200  length.up(N,M,pipes) =  L(N,M);
+ 201  length.lo(N,M,pipes) =  0;
+ 202   
+ 203  model gms_water_nlp / all /;
+ 204   
+ 205  Option solver = baron;
+ 206   
+ 207  Option solprint = off ;
+ 208   
+ 209  solve gms_water_nlp using DNLP min total_cost;
+****                                               $257
+**** LINE     78 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 257  Solve statement not checked because of previous errors
+ 210   
+ 211  display total_cost.l;
+****                     $141
+**** LINE     80 INPUT       /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+**** 141  Symbol declared but no values have been assigned. Check for missing
+****         data definition, assignment, data loading or implicit assignment
+****         via a solve statement. Suppress with $onImplicitAssign.
+****         A wild shot: You may have spurious commas in the explanatory
+****         text of a declaration. Check symbol reference list.
+ 212  display q.l;
+ 213  display h.l;
+ 214  display length.l;
+
+**** 19 ERROR(S)   0 WARNING(S)
+GAMS 52.5.0  9bc771bf Jan 28, 2026          LEX-LEG x86 64bit/Linux - 02/08/26 19:06:05 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  INCLVL  FILENAME
+
+     1        1 INPUT          0       0       0  /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+     2       58 INCLUDE        1      58       1  /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/d1_bessa.gmsdat
+
+
+COMPILATION TIME     =        0.003 SECONDS      3 MB  52.5.0 9bc771bf LEX-LEG
+
+
+USER: GAMS Demo, for EULA and demo limitations see   G251112+0003Cc-GEN
+      https://www.gams.com/latest/docs/UG%5FLicense.html         DC0000
+
+
+**** FILE SUMMARY
+
+Input      /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.gms
+Output     /home/nitishdumoliya/waterNetwork/wdnd/model/gams_model/gams_wdn_model.lst
+
+**** USER ERROR(S) ENCOUNTERED

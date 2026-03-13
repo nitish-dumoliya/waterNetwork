@@ -1,0 +1,131 @@
+# Nodes
+set nodes / 1*7 /;
+
+# Arcs: startnode.endnode
+set arcs(N,M) /
+1.2
+2.3
+2.6
+3.5
+4.5
+4.6
+6.7
+7.5
+/;
+
+# Source node(s)
+set Source(nodes) / 1 /;
+
+# Node elevations
+Parameter elevation(nodes) /
+1    54
+2     5
+3     5
+4     4
+5   4.5
+6   4.5
+7   4.5
+/;
+
+# Node demands
+Parameter D(nodes) /
+1  -0.42043
+2   0
+3   0.04344
+4   0.04029
+5   0.20860
+6   0.04778
+7   0.08032
+/;
+
+# Node minimum pressures
+Parameter P(nodes) /
+1   0
+2  25
+3  25
+4  25
+5  25
+6  25
+7  25
+/;
+
+# Node maximum pressures
+Parameter pmax(nodes) /
+1   0
+2   0
+3   0
+4   0
+5   0
+6   0
+7   0
+/;
+
+# Pipes
+set pipes / 1*10 /;
+
+# Pipe diameters in meters
+Parameter dia(pipes) /
+1   0.10
+2   0.15
+3   0.20
+4   0.25
+5   0.30
+6   0.35
+7   0.40
+8   0.45
+9   0.50
+10  0.60
+/;
+
+# Hazen-Williams coefficients
+Parameter C(pipes) /
+1   1.629
+2   4.054
+3   5.769
+4   7.769
+5   9.237
+6  11.012
+7  12.397
+8  15.501
+9  17.696
+10 23.132
+/;
+
+# Pipe roughness
+Parameter R(pipes) /
+1   145
+2   145
+3   145
+4   145
+5   145
+6   130
+7   130
+8   130
+9   130
+10  130
+/;
+
+# Arc lengths in meters
+Parameter L(arcs) /
+1.2   2540
+2.3    350
+2.6   1020
+3.5   1710
+4.5   1430
+4.6   1140
+6.7   1410
+7.5   1710
+/;
+
+# Maximum velocity in arcs
+Parameter vmax(arcs) /
+1.2   3.0
+2.3   3.0
+2.6   3.0
+3.5   3.0
+4.5   3.0
+4.6   3.0
+6.7   3.0
+7.5   3.0
+/;
+

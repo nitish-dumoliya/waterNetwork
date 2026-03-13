@@ -26,6 +26,7 @@ import plotly.graph_objects as go
 import dash
 from dash import dcc, html, Input, Output
 import plotly.io as pio
+from collections import Counter
 
 class WaterNetworkOptimizer:
     def __init__(self, model_file, data_file, data_number, data_list):
@@ -1576,20 +1577,11 @@ class WaterNetworkOptimizer:
             ampl_cvxnlp.eval("""param R{pipes};		   # Roughness of each commercial pipe
                                 param d_max = max{i in pipes} d[i];
                                 param d_min = min{i in pipes} d[i];
-
                                 param R_min = min{k in pipes} R[k];
                                 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
                                 param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
-                                subject to con1{j in nodes diff Source}:
-                                    sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
-                                ;
-                                #subject to con2{(i,j) in arcs}: 
-                                #    h[i] - h[j]  =  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
-                                subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];
-                                subject to con4{(i,j) in arcs , k in pipes}: 
-                                    l[i,j,k] <= L[i,j]
-                                ;
                                 """)  
+            
             # ampl_cvxnlp.eval("""param R{pipes};		   # Roughness of each commercial pipe
             #                     param d_max = max{i in pipes} d[i];
             #                     param d_min = min{i in pipes} d[i];
@@ -1666,15 +1658,15 @@ class WaterNetworkOptimizer:
         rho_prev = max(rho_curr - delta_rho, 0.0)
 
         # if self.do_arc_reversal:
-        for (x, y, k), val in l.items():
-            ampl_cvxnlp.eval(f'let l[{x},{y},{k}] := {val};')
-        for (x, y), val in q.items():
-            ampl_cvxnlp.eval(f'let q[{x},{y}] := {val};')
-            if self.data_number ==5:
-                ampl_cvxnlp.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
-                ampl_cvxnlp.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
-        for x, val in h.items():
-            ampl_cvxnlp.eval(f'let h[{x}] := {val};') 
+        # for (x, y, k), val in l.items():
+        #     ampl_cvxnlp.eval(f'let l[{x},{y},{k}] := {val};')
+        # for (x, y), val in q.items():
+        #     ampl_cvxnlp.eval(f'let q[{x},{y}] := {val};')
+        #     if self.data_number ==5:
+        #         ampl_cvxnlp.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
+        #         ampl_cvxnlp.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
+        # for x, val in h.items():
+        #     ampl_cvxnlp.eval(f'let h[{x}] := {val};') 
         # else:
         #     l_rand = {}
         #     for (u, v) in self.arcs:
@@ -1718,47 +1710,21 @@ class WaterNetworkOptimizer:
         #
         #             ampl_cvxnlp.eval(f"let h[{u}] := {cand};")
 
-        # if self.data_number==6:
-        #     ampl_cvxnlp.eval("subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
-        # else:
-        #     ampl_cvxnlp.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
-
-        # for (u), val in dual_dict.items():
-        #     ampl_cvxnlp.param["lambda"][u] = val + 1e+1
-
-        # current_duals = {}
-        # for con_name, val in ampl_cvxnlp.get_constraints():
-        #     dual_values = val.get_values()
-        #     current_duals[con_name] = dual_values
-        #
-        # for con_name, dual_values in self.all_duals.items():
-        #     if con_name in current_duals:
-        #         # print(dual_values)
-        #         ampl_cvxnlp.get_constraint(con_name).set_values(dual_values) 
-
         ampl_cvxnlp.eval("""param l_ref {arcs, pipes};""")
         ampl_cvxnlp.eval("""param q_ref {arcs};""")
         ampl_cvxnlp.eval("""param h_ref {nodes};""")
         ampl_cvxnlp.eval("""param x_ref {arcs};""")
         ampl_cvxnlp.eval("""param hessian {arcs};""")
-        
+ 
         for (u,v,k), val in l.items():
             ampl_cvxnlp.param["l_ref"][u, v, k] = val
         for (u,v), val in q.items():
             ampl_cvxnlp.param["q_ref"][u, v] = val
         for (u), val in h.items():
             ampl_cvxnlp.param["h_ref"][u] = val
-
-        # for con_name, dual_values in self.all_duals.items():
-        #     if con_name == "con2":
-        #         for (u,v), val in dual_values.to_dict().items():
-        #             ampl_cvxnlp.param["x_ref"][u, v] = val
-            # for (u,v) in self.arcs:
-            #     if con_name == f"con2{u}_{v}":
-            #         for (x,y), val in dual_values.to_dict().items():
-            #             ampl_cvxnlp.param["x_ref"][u, v] = val
-
+ 
         for (u,v) in self.arcs:
+            # print(dual_dict[u,v])
             ampl_cvxnlp.param["x_ref"][u, v] = dual_dict[u,v]
 
         # dL2dlq = {}
@@ -1773,52 +1739,83 @@ class WaterNetworkOptimizer:
             elif val<0:
                 # dL2dlq[u,v] = -1.577904/(-self.q[u,v])**0.148
                 ampl_cvxnlp.param["hessian"][u, v] = -1.577904/(-val)**0.148
-         
-        ampl_cvxnlp.eval(f"""minimize total_cost : {self.current_cost} + (sum{{(i,j) in arcs}} sum{{k in pipes}} (l[i,j,k] - l_ref[i,j,k])*C[k]) - sum{{(i,j) in arcs}} sum{{k in pipes}} (l[i,j,k] - l_ref[i,j,k])*(q[i,j] - q_ref[i,j])*(omega*1.852*(abs(q_ref[i,j])^0.852)* x_ref[i,j] / ((R[k]^1.852) * (d[k])^4.87)) - sum{{(i,j) in arcs}} sum{{k in pipes}}(0.5*omega*l_ref[i,j,k]*(hessian[i,j])*x_ref[i,j] *(q[i,j] - q_ref[i,j])^2/ ((R[k]^1.852) * (d[k])^4.87));""")
+
+        # ampl_cvxnlp.eval(f"""minimize total_cost : {self.current_cost} + (sum{{(i,j) in arcs}} sum{{k in pipes}} (d_l[i,j,k])*C[k]) - sum{{(i,j) in arcs}} sum{{k in pipes}} (d_l[i,j,k])*(d_q[i,j])*(omega*1.852*(abs(q_ref[i,j])^0.852)* x_ref[i,j] / ((R[k]^1.852) * (d[k])^4.87)) - sum{{(i,j) in arcs}} sum{{k in pipes}}(0.5*omega*l_ref[i,j,k]*(hessian[i,j])*x_ref[i,j] *(d_q[i,j])^2/ ((R[k]^1.852) * (d[k])^4.87));""")
+
+        ampl_cvxnlp.eval(f"""minimize total_cost : beta;""")
+        ampl_cvxnlp.eval(f"""s.t. con_obj: sum{{(i,j) in arcs}} sum{{k in pipes}}d_l[i,j,k]*C[k] - beta <= 0;""")
+
         # ampl_cvxnlp.eval(f"""minimize total_cost : {self.current_cost} + (sum{{(i,j) in arcs}} sum{{k in pipes}}(l[i,j,k] - l_ref[i,j,k])*C[k]);""")
 
         # if self.do_arc_reversal:
         #     (i, j) = edge
         #     if q[i,j] >= 0:
-        #         ampl_cvxnlp.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]<=0;")
+        #         ampl_cvxnlp.eval(f"s.t. flow_direction1{i}_{j}: {q[i,j]} + d_q[{i}, {j}]<=0;")
         #     else:
-        #         ampl_cvxnlp.eval(f"s.t. flow_direction1{i}_{j}: q[{i}, {j}]>=0;")
+        #         ampl_cvxnlp.eval(f"s.t. flow_direction1{i}_{j}: {q[i,j]} + d_q[{i}, {j}]>=0;")
+
+        # for v in self.nodes:
+        #     if v not in self.source:
+        #         g1 = sum(q[u,v] for u in self.nodes if (u,v) in self.arcs) - sum(q[v,u] for u in self.nodes if (v,u) in self.arcs) - self.D[v]
+        #         ampl_cvxnlp.eval(f"""s.t. con1{v}: {g1} + sum{{i in nodes : (i,{v}) in arcs }}q[i,{v}] -  sum{{i in nodes : ({v},i) in arcs}}q[{v},i] = 0;""")
+        ampl_cvxnlp.eval(f"""s.t. con1{{j in nodes diff Source}}: sum{{i in nodes : (i,j) in arcs }}q_ref[i,j] -  sum{{i in nodes : (j,i) in arcs}}q_ref[j,i] -  D[j] + sum{{i in nodes : (i,j) in arcs }}d_q[i,j] -  sum{{i in nodes : (j,i) in arcs}}d_q[j,i] = 0;""")
 
         for (u,v) in self.arcs:
-            # if (u,v) == edge:
             A_ref = sum(10.67 * l[u,v,k] / ((self.R[k]**1.852)*(self.d[k]**4.87)) for k in self.pipes)
+            g2 = h[u] - h[v] - q[u,v]*np.abs(q[u,v])**0.852 * A_ref
             q_ref_uv = q[u,v]
             ampl_cvxnlp.eval(f"""
                 s.t. con2{u}_{v}:
-                    h[{u}] - h[{v}] =
-                    {A_ref} * {q_ref_uv} * abs({q_ref_uv})^0.852
-                    + {A_ref} * 1.852 * abs({q_ref_uv})^0.852 * (q[{u},{v}] - {q_ref_uv})
-                    + {q_ref_uv} * abs({q_ref_uv})^0.852 *
+                    {g2}
+                    - {A_ref} * 1.852 * abs({q_ref_uv})^0.852 * (d_q[{u},{v}])
+                    - {q_ref_uv} * abs({q_ref_uv})^0.852 *
                       sum{{k in pipes}}
                          (omega / ((R[k]^1.852) * (d[k])^4.87))
-                         * (l[{u},{v},k] - l_ref[{u},{v},k]);
+                         * (d_l[{u},{v},k]) 
+                    + d_h[{u}] - d_h[{v}] = 0;
                 """)
+ 
+        # for (u,v) in self.arcs:
+        #     g3 = sum(l[u,v,k] for k in self.pipes) - self.L[u,v]
+        #     ampl_cvxnlp.eval(f"""s.t. con3{u}_{v}: {g3} + sum{{k in pipes}} l[{u},{v},k] = 0;""")
+        ampl_cvxnlp.eval(f"""s.t. con3{{(i,j) in arcs}}: sum{{k in pipes}} l_ref[i,j,k] - L[i,j] + sum{{k in pipes}} d_l[i,j,k] = 0;""")
+
+        # for v in self.nodes:
+        #     if v in self.source:
+        #         ampl_cvxnlp.eval(f"""s.t. con4{v}: h[{v}] = 0;""")
+        #     else:
+        #         g5 = -h[v] + self.E[v] + self.P[v]
+        #         ampl_cvxnlp.eval(f"""s.t. con5{v}: {g5} - h[{v}] <= 0;""")
+
+        ampl_cvxnlp.eval(f"""s.t. con4{{i in Source}}: d_h[i] =0;""") 
+        ampl_cvxnlp.eval(f"""s.t. con5{{j in nodes diff Source}}: -h_ref[j] + E[j] + P[j] - d_h[j] <= 0;""") 
 
         for (u,v) in self.arcs:
-        # for (u,v) in sorted_arcs[:len(sorted_arcs)-10]:
-            if self.data_number == 5:
-                if self.q[u,v]>=0:
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}: {q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q1{u}_{v}: {self.q1[u,v] - self.Delta} <= q1[{u}, {v}] <= {self.q1[u,v] + self.Delta};")
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q2{u}_{v}: {self.q2[u,v] - self.Delta} <= q2[{u}, {v}] <= {self.q2[u,v] + self.Delta};")
-                else:
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}:{q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q1{u}_{v}:{self.q1[u,v] - self.Delta} <= q1[{u}, {v}] <= {self.q1[u,v] + self.Delta};")
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_q2{u}_{v}:{self.q2[u,v] - self.Delta} <= q2[{u}, {v}] <= {self.q2[u,v] + self.Delta};")
-            else:
-                if self.q[u,v]>=0:
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}: {q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
-                else:
-                    ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}:{q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+            for k in self.pipes:
+                ampl_cvxnlp.eval(f"""s.t. con6{u}_{v}_{k}: {-l[u,v,k]} <= d_l[{u}, {v}, {k}] <= L[{u},{v}] - {l[u,v,k]};""")
+        for (u,v) in self.arcs:
+            ampl_cvxnlp.eval(f"""s.t. con7{u}_{v}: -Q_max - {q[u,v]} <= d_q[{u},{v}] <= Q_max -{q[u,v]};""")
 
-        ampl_cvxnlp.eval(f"""s.t. H_neigh_lo{{u in nodes diff Source}}: h[u] >= h_ref[u] + {rho_prev * self.eta_h} * abs(h_ref[u]);""")
-        ampl_cvxnlp.eval(f"""s.t. H_neigh_up{{u in nodes diff Source}}: h[u] <= h_ref[u] + {rho_curr * self.eta_h} * abs(h_ref[u]);""")
-        ampl_cvxnlp.eval(f"""s.t. L_TR{{(i,j) in arcs, k in pipes}}:   abs(l[i,j,k] - l_ref[i,j,k]) <= {rho_curr * self.eta_l} * L[i,j];""")
+        # for (u,v) in self.arcs:
+        # # for (u,v) in sorted_arcs[:len(sorted_arcs)-10]:
+        #     if self.data_number == 5:
+        #         if self.q[u,v]>=0:
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}: {q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_q1{u}_{v}: {self.q1[u,v] - self.Delta} <= q1[{u}, {v}] <= {self.q1[u,v] + self.Delta};")
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_q2{u}_{v}: {self.q2[u,v] - self.Delta} <= q2[{u}, {v}] <= {self.q2[u,v] + self.Delta};")
+        #         else:
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}:{q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_q1{u}_{v}:{self.q1[u,v] - self.Delta} <= q1[{u}, {v}] <= {self.q1[u,v] + self.Delta};")
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_q2{u}_{v}:{self.q2[u,v] - self.Delta} <= q2[{u}, {v}] <= {self.q2[u,v] + self.Delta};")
+        #     else:
+        #         if self.q[u,v]>=0:
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}: {q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+        #         else:
+        #             ampl_cvxnlp.eval(f"s.t. flow_neigh_{u}_{v}:{q[u,v] - self.Delta} <= q[{u}, {v}] <= {q[u,v] + self.Delta};")
+        #
+        # ampl_cvxnlp.eval(f"""s.t. H_neigh_lo{{u in nodes diff Source}}: h[u] >= h_ref[u] + {rho_prev * self.eta_h} * abs(h_ref[u]);""")
+        # ampl_cvxnlp.eval(f"""s.t. H_neigh_up{{u in nodes diff Source}}: h[u] <= h_ref[u] + {rho_curr * self.eta_h} * abs(h_ref[u]);""")
+        # ampl_cvxnlp.eval(f"""s.t. L_TR{{(i,j) in arcs, k in pipes}}:   abs(l[i,j,k] - l_ref[i,j,k]) <= {rho_curr * self.eta_l} * L[i,j];""")
 
         # ampl_cvxnlp.eval(f"""subject to con3_l_:sum {{(i,j) in arcs}} sum {{k in pipes}} C[k] * l[i,j,k] >= {self.current_cost*0.98};""")
 
@@ -1829,7 +1826,7 @@ class WaterNetworkOptimizer:
         #         ampl_cvxnlp.eval(f"""subject to TR_l_lower_{u}_{v}_{k}: l[{u},{v},{k}] >= {l[u,v,k] - self.eta_l*self.L[u,v]};""")
         #         ampl_cvxnlp.eval(f"""subject to TR_l_upper_{u}_{v}_{k}: l[{u},{v},{k}] <= {l[u,v,k] + self.eta_l*self.L[u,v]};""")
 
-        ampl_cvxnlp.option['solver'] = "snopt" 
+        ampl_cvxnlp.option['solver'] = "cplex" 
 
         ampl_cvxnlp.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = yes bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes max_iter = 500"
         ampl_cvxnlp.option["presolve_eps"]= "1.86e-7"
@@ -2154,8 +2151,7 @@ class WaterNetworkOptimizer:
             abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-4
         )
         m = len(abs_flows)
-        median_flow = abs_flows[m//2] 
- 
+        median_flow = abs_flows[m//2]  
         improved = False
         arc_max_dia = {}
         if self.data_number == 6:
@@ -2179,13 +2175,13 @@ class WaterNetworkOptimizer:
         self.all_duals = {}
         for con_name, con in self.ampl.get_constraints():
             self.all_duals[con_name] = con.getValues()
-        
+
         # Remove fixed and already-visited arcs
         sorted_all_arcs = [
             arc for arc in self.arcs
             if arc not in self.fix_arc_set
         ]
-        
+ 
         dual_dict = {}
         for con_name, dual_values in self.all_duals.items():
             if con_name == "con7":
@@ -2221,14 +2217,12 @@ class WaterNetworkOptimizer:
             if self.data_number==5:
                 self.q1_star = cvx_nlp.getVariable('q1').getValues().to_dict()
                 self.q2_star = cvx_nlp.getVariable('q2').getValues().to_dict()
-
             self.Z_original[self.number_of_nlp] = self.z_star
             if self.z_star < self.current_cost - 1e-4:
                 # self.Z_red[self.local_iteration] = self.z_star
                 l = cvx_nlp.getVariable('l').getValues().to_dict()
                 q = cvx_nlp.getVariable('q').getValues().to_dict()
-                h = cvx_nlp.getVariable('h').getValues().to_dict() 
-
+                h = cvx_nlp.getVariable('h').getValues().to_dict()
                 # if self.total_cost < self.current_cost:
                 # node_head_diff, arc_diff = self.compare_two_local_solutions(self.l, self.q, self.h, l, q, h)
                 # print(node_head_diff)
@@ -2356,6 +2350,12 @@ class WaterNetworkOptimizer:
         else:
             print("solve_result:", cvx_nlp.solve_result)
 
+    def add_dict(self, d1, d2):
+        result = d1.copy()
+        for k, v in d2.items():
+            result[k] = result.get(k, 0.0) + v
+        return result
+
     def local_solution_improvement_heuristic(self):
         # print("Iteration :",self.iteration)
         abs_flows = sorted(
@@ -2384,51 +2384,35 @@ class WaterNetworkOptimizer:
                     else:
                         arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
 
-        # self.all_duals = {}
-        # for con_name, con in self.ampl.get_constraints():
-        #     self.all_duals[con_name] = con.getValues()
         #
         # # Remove fixed and already-visited arcs
         sorted_all_arcs = [
             arc for arc in self.arcs
             if arc not in self.fix_arc_set
         ]
-        #
-        # dual_dict = {}
-        # for con_name, dual_values in self.all_duals.items():
-        #     if con_name == "con7":
-        #         tmp = dual_values.to_dict()
-        #         dual_dict = {
-        #             node: val for node, val in tmp.items()
-        #         }
-        #         break   # only con2 is needed
- 
-        cvx_nlp = self.qp_approximation(self.iteration, self.l_star, self.q_star, self.h_star, self.l, self.q, self.h, self.z_star, sorted_all_arcs, self.l_points, self.q_points, self.dual_dict, None)
+
+        cvx_nlp = self.qp_approximation(self.iteration, self.l, self.q, self.h, self.l, self.q, self.h, self.z_star, sorted_all_arcs, self.l_points, self.q_points, self.dual_dict, None)
 
         with self.suppress_output():
             cvx_nlp.solve()
 
         self.all_duals = {}
         for con_name, con in cvx_nlp.get_constraints():
-            self.all_duals[con_name] = con.getValues()
-        
+            # print(con_name)
+            # print(con)
+            self.all_duals[con_name] = con.get_values()
+
         # Remove fixed and already-visited arcs
         sorted_all_arcs = [
             arc for arc in self.arcs
             if arc not in self.fix_arc_set
         ]
-        
+
         self.dual_dict = {}
-        # for con_name, dual_values in self.all_duals.items():
-        #     if con_name == "con2":
-        #         tmp = dual_values.to_dict()
-        #         self.dual_dict = {
-        #             node: val for node, val in tmp.items()
-        #         }
-        #         break   # only con2 is needed
+
         for (u,v) in self.arcs:
-            val = list(self.all_duals[f"con2{u}_{v}"])[0][0]
-            # print(val)
+            val = self.all_duals[f"con2{u}_{v}"]
+            val = val.to_list()[0]
             self.dual_dict[u,v] = val
 
         solve_time = cvx_nlp.get_value('_solve_elapsed_time')
@@ -2449,12 +2433,12 @@ class WaterNetworkOptimizer:
             # self.z_star = sum(self.C[k] * l_star[u, v, k] for (u, v) in self.arcs for k in self.pipes)
             # z = cvx_nlp.getObjective("total_energy_cost").value()
             solve_time = cvx_nlp.get_value('_solve_elapsed_time')
-            self.l_star = cvx_nlp.getVariable('l').getValues().to_dict()
-            self.q_star = cvx_nlp.getVariable('q').getValues().to_dict()
-            self.h_star = cvx_nlp.getVariable('h').getValues().to_dict()
+            self.l_star = self.add_dict(self.l_star, cvx_nlp.getVariable('d_l').getValues().to_dict())
+            self.q_star = self.add_dict(self.q_star, cvx_nlp.getVariable('d_q').getValues().to_dict())
+            self.h_star = self.add_dict(self.h_star, cvx_nlp.getVariable('d_h').getValues().to_dict())
             if self.data_number==5:
-                self.q1_star = cvx_nlp.getVariable('q1').getValues().to_dict()
-                self.q2_star = cvx_nlp.getVariable('q2').getValues().to_dict()
+                self.q1_star = add_dict(self.q1_star, cvx_nlp.getVariable('d_q1').getValues().to_dict())
+                self.q2_star = add_dict(self.q2_star, cvx_nlp.getVariable('d_q2').getValues().to_dict())
 
             # print("-------------------NCVX NLP l Var--------------------:")
             # self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>=1e-3}: l[i,j,k];")
@@ -2466,7 +2450,7 @@ class WaterNetworkOptimizer:
             # cvx_nlp.eval("display h;")
             # cvx_nlp.eval("display {i in nodes diff Source} max(0, E[i]+P[i] - h[i]);")
 
-            # cvx_nlp.eval("display l;")
+            # cvx_nlp.eval("display d_l;")
             # self.l_points.append(self.l_star)
             # self.q_points.append(self.q_star)
 
@@ -3241,14 +3225,7 @@ class WaterNetworkOptimizer:
         # self.plot_graph(self.super_source_out_arc, self.current_cost, 0, self.q, self.h, self.D, (0,0), self.l, self.C)
         # print("\n*********************************************************************************************")
         print("Iteration :",self.iteration)
-        improved = False
-        # --------------------------------------------------
-        # Collect duals of all constraints
-        # --------------------------------------------------
-        self.all_duals = {}
-        for con_name, con in self.ampl.get_constraints():
-            self.all_duals[con_name] = con.getValues()
-        
+        improved = False        
         # --------------------------------------------------
         # Build candidate arc list from indegree ≥ 2 nodes
         # --------------------------------------------------
@@ -3257,38 +3234,35 @@ class WaterNetworkOptimizer:
             for (u, v) in self.network_graph.in_edges(node):
                 arc = (u, v) if (u, v) in self.arcs else (v, u)
                 sorted_all_arcs.append(arc)
-        
-        # Remove fixed and already-visited arcs
+         # Remove fixed and already-visited arcs
         sorted_all_arcs = [
             arc for arc in sorted_all_arcs
             if arc not in self.fix_arc_set
-        ]
-        
+        ]       
         sorted_arcs = [
-            arc for arc in sorted_all_arcs
-            if arc not in self.visited_arc_reverse
-        ]
-        
+           arc for arc in sorted_all_arcs
+           if arc not in self.visited_arc_reverse
+        ]      
         # sorted_arcs = [arc for arc in sorted_arcs if arc_max_dia[arc[0], arc[1]] == 1]
         # --------------------------------------------------
         # Extract duals for con2 only (restricted to sorted_arcs)
         # --------------------------------------------------
-        dual_dict = {}
-        for con_name, dual_values in self.all_duals.items():
-            if con_name == "con2":
-                tmp = dual_values.to_dict()
-                dual_dict = {
-                    arc: val for arc, val in tmp.items()
-                    if arc in sorted_arcs
-                }
-                break   # only con2 is needed
+        # dual_dict = {}
+        # for con_name, dual_values in self.all_duals.items():
+        #     if con_name == "con2":
+        #         tmp = dual_values.to_dict()
+        #         dual_dict = {
+        #             arc: val for arc, val in tmp.items()
+        #             if arc in sorted_arcs
+        #         }
+        #         break   # only con2 is needed
         
         # --------------------------------------------------
         # Sensitivity score computation
         # sen_score(i,j) = - dual(i,j) * (h[i] - h[j])
         # --------------------------------------------------
         self.sen_score = {}
-        for (i, j), dual_val in dual_dict.items():
+        for (i, j), dual_val in self.dual_dict.items():
             # self.sen_score[(i, j)] = -dual_val * np.abs(self.h[i] - self.h[j])
             # self.sen_score[(i, j)] = -dual_val * np.abs(self.q[i,j])
             if self.data_number==5:
@@ -3300,6 +3274,7 @@ class WaterNetworkOptimizer:
 
         # print("sen_score:", self.sen_score)
 
+        # print("sorted_arcs:", sorted_arcs)
         # --------------------------------------------------
         # Rank arcs using sensitivity score (absolute value)
         # --------------------------------------------------
@@ -3309,6 +3284,7 @@ class WaterNetworkOptimizer:
                 key=lambda kv: abs(kv[1]),
                 reverse=True
             )
+            if arc in sorted_arcs
         ]
         # sorted_arcs = [
         #     arc for arc, _ in sorted(
@@ -3317,7 +3293,8 @@ class WaterNetworkOptimizer:
         #         reverse=True
         #     )
         # ]
-        # print("sorted_arcs:", sorted_arcs)
+        
+        print("sorted_arcs:", sorted_arcs)
 
         # remaining_arcs = [c for c, nc in sorted_by_abs_dual if nc not in self.visited_arc_reverse]
         # print("All cycles found:", len(sorted_by_abs_dual))
@@ -3334,7 +3311,7 @@ class WaterNetworkOptimizer:
             (i,j) = edge
 
             self.local_improvement = True
-            cvx_nlp = self.qp_approximation(self.iteration, self.l_star, self.q_star, self.h_star, self.l, self.q, self.h, self.z_star, sorted_all_arcs, self.l_points, self.q_points, dual_dict, edge)
+            cvx_nlp = self.qp_approximation(self.iteration, self.l, self.q, self.h, self.l, self.q, self.h, self.z_star, sorted_all_arcs, self.l_points, self.q_points, self.dual_dict, edge)
             with self.suppress_output():
                 cvx_nlp.solve()
 
@@ -3342,9 +3319,9 @@ class WaterNetworkOptimizer:
             self.solver_time += solve_time
             self.number_of_nlp += 1
 
-            all_duals_reduced_model = {}
-            for con_name, con in cvx_nlp.get_constraints():
-                all_duals_reduced_model[con_name] = con.getValues()
+            # all_duals_reduced_model = {}
+            # for con_name, con in cvx_nlp.get_constraints():
+            #     all_duals_reduced_model[con_name] = con.getValues()
 
             self.z_star = cvx_nlp.getObjective("total_cost").value()
             # l_star = cvx_nlp.getVariable("l").getValues().to_dict()
@@ -3357,28 +3334,43 @@ class WaterNetworkOptimizer:
                 # self.z_star = sum(self.C[k] * l_star[u, v, k] for (u, v) in self.arcs for k in self.pipes)
                 # z = cvx_nlp.getObjective("total_energy_cost").value()
                 solve_time = cvx_nlp.get_value('_solve_elapsed_time')
-                self.l_star = cvx_nlp.getVariable('l').getValues().to_dict()
-                self.q_star = cvx_nlp.getVariable('q').getValues().to_dict()
-                self.h_star = cvx_nlp.getVariable('h').getValues().to_dict()
-                if self.data_number==5:
-                    self.q1_star = cvx_nlp.getVariable('q1').getValues().to_dict()
-                    self.q2_star = cvx_nlp.getVariable('q2').getValues().to_dict()
+                                # --------------------------------------------------
+                # Collect duals of all constraints
+                # --------------------------------------------------
+                self.all_duals = {}
+                for con_name, con in cvx_nlp.get_constraints():
+                    self.all_duals[con_name] = con.getValues()
 
-                # print("-------------------NCVX NLP l Var--------------------:")
-                # self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>=1e-3}: l[i,j,k];")
-                # self.ampl.eval("display {(i,j) in arcs: abs(q[i,j])>=0}: q[i,j];")
-                # self.ampl.eval("display h;")
-                # print("----------------Reduced NLP l Var------------------------:")
-                # cvx_nlp.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>=1e-3}: l[i,j,k];")
-                # cvx_nlp.eval("display {(i,j) in arcs: abs(q[i,j])>=0}: q[i,j];")
-                # cvx_nlp.eval("display h;")
-                # cvx_nlp.eval("display {i in nodes diff Source} max(0, E[i]+P[i] - h[i]);")
+                self.dual_dict = {}
 
-                # cvx_nlp.eval("display l;")
-                # self.l_points.append(self.l_star)
-                # self.q_points.append(self.q_star)
+                for (u,v) in self.arcs:
+                    val = self.all_duals[f"con2{u}_{v}"]
+                    val = val.to_list()[0]
+                    self.dual_dict[u,v] = val
 
-                if self.z_star < self.current_cost - 1e-4:
+                if self.z_star < 0:
+                # if self.z_star < self.current_cost - 1e-4:
+                    # self.l_star = cvx_nlp.getVariable('d_l').getValues().to_dict()
+                    # self.q_star = cvx_nlp.getVariable('d_q').getValues().to_dict()
+                    # self.h_star = cvx_nlp.getVariable('d_h').getValues().to_dict()
+                    # if self.data_number==5:
+                    #     self.q1_star = cvx_nlp.getVariable('d_q1').getValues().to_dict()
+                    #     self.q2_star = cvx_nlp.getVariable('d_q2').getValues().to_dict()
+
+                    # print("-------------------NCVX NLP l Var--------------------:")
+                    # self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>=1e-3}: l[i,j,k];")
+                    # self.ampl.eval("display {(i,j) in arcs: abs(q[i,j])>=0}: q[i,j];")
+                    # self.ampl.eval("display h;")
+                    # print("----------------Reduced NLP l Var------------------------:")
+                    # cvx_nlp.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>=1e-3}: l[i,j,k];")
+                    # cvx_nlp.eval("display {(i,j) in arcs: abs(q[i,j])>=0}: q[i,j];")
+                    # cvx_nlp.eval("display h;")
+                    # cvx_nlp.eval("display {i in nodes diff Source} max(0, E[i]+P[i] - h[i]);")
+
+                    # cvx_nlp.eval("display l;")
+                    # self.l_points.append(self.l_star)
+                    # self.q_points.append(self.q_star)
+
                     print(
                     f"QP{self.number_of_nlp:<6}"
                       f"{str((i, j)):<10}"
@@ -3399,26 +3391,26 @@ class WaterNetworkOptimizer:
                         ampl.read("wdnmodel.mod")
                     ampl.read_data(self.data_file)
 
-                    for (x, y, k), val in self.l_star.items():
+                    for (x, y, k), val in self.l.items():
                         ampl.eval(f'let l[{x},{y},{k}] := {val};')
-                    for (x, y), val in self.q_star.items():
+                    for (x, y), val in self.q.items():
                         ampl.eval(f'let q[{x},{y}] := {val};')
                         if self.data_number ==5:
                             ampl.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
                             ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
-                    for x, val in self.h_star.items():
+                    for x, val in self.h.items():
                         ampl.eval(f'let h[{x}] := {val};') 
 
-                    current_duals = {}
-                    for con_name, val in ampl.get_constraints():
-                        dual_values = val.get_values()
-                        current_duals[con_name] = dual_values
-
-                    # Initialize dual values for all constraints
-                    for con_name, dual_values in self.all_duals.items():
-                        if con_name in current_duals:
-                            # Initialize dual values for each constraint
-                            ampl.get_constraint(con_name).set_values(dual_values)               
+                    # current_duals = {}
+                    # for con_name, val in ampl.get_constraints():
+                    #     dual_values = val.get_values()
+                    #     current_duals[con_name] = dual_values
+                    #
+                    # # Initialize dual values for all constraints
+                    # for con_name, dual_values in self.all_duals.items():
+                    #     if con_name in current_duals:
+                    #         # Initialize dual values for each constraint
+                    #         ampl.get_constraint(con_name).set_values(dual_values)               
 
                     # for (i,j) in self.arcs:
                     #     if (i,j)!=(u,v):
@@ -3538,7 +3530,7 @@ class WaterNetworkOptimizer:
                             print(f"{'NLP':<5}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
                             print("----------------------------------------------------------------------------------------")
                             # self.local_solution_improvement_heuristic()
-                            self.local_solution_improvement_heuristic_new()
+                            # self.local_solution_improvement_heuristic_new()
                             # break
                         else: 
                             print(
@@ -3895,7 +3887,7 @@ class WaterNetworkOptimizer:
                     print(f"{'NLP':<5}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
                     print("----------------------------------------------------------------------------------------")
                     # self.local_solution_improvement_heuristic()
-                    self.local_solution_improvement_heuristic_new()
+                    # self.local_solution_improvement_heuristic_new()
                     # break
                 else: 
                     print(
@@ -4482,7 +4474,7 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = False
         self.local_improvement = False
         self.do_arc_reversal = True
-        self.total_run = 50
+        self.total_run = 3
 
         print(f"Iteration {self.local_iteration}" )
         print("----------------------------------------------------------------------------------------")
@@ -4490,7 +4482,7 @@ class WaterNetworkOptimizer:
         print("----------------------------------------------------------------------------------------")
 
         # self.local_solution_improvement_heuristic_new()
-        self.local_solution_improvement_heuristic()
+        # self.local_solution_improvement_heuristic()
  
         print("---------------------------Reverse Arc Direction Approach-------------------------------")
         self.iteration = self.local_iteration + 1
@@ -4499,7 +4491,7 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = True
         self.is_improved_in_arc_reversal = False
         self.do_diameter_reduction = False
-        # self.iterate_acyclic_flows_new() 
+        self.iterate_acyclic_flows_new() 
         # self.iterate_acyclic_flows()
 
         # print("---------------------------Reverse Arc Direction Approach------------------------------------")

@@ -4,14 +4,15 @@
 # heuristics/feaspump/priority = 1000000
 # heuristics/feaspump/freq = 1
 # table/heuristics/active = TRUE
-#limits/time = 3600
+limits/time = 600
 # lp/initalgorithm = b
 # lp/resolvealgorithm = b
-lp/scaling = 2
+#lp/scaling = 2
 #lp/lexdualalgo = TRUE
-#lim:gap = 1e-9
-#chk:feastol = 1e-5
-#chk:feastolrel=0
+limits/gap = 1e-9
+limits/absgap = 1e-6
+numerics/feastol = 1e-6
+#numerics/feastolrel=1e-9
 # nlp/solver = "ipopt"
 # reoptimization/enable = TRUE
 #nlpi/ipopt/priority = 1000
@@ -23,4 +24,4 @@ lp/scaling = 2
 #numerics/lpfeastolfactor = 1e-5
 # display/verblevel=5
 #numerics/epsilon = 1e-10
-
+#outlev 1 timelimit 3600 heu:settings = 0 method = p lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-6 chk:feastolrel=1e-9
