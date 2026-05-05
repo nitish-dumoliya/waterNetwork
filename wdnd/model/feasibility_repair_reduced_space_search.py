@@ -80,6 +80,8 @@ class WaterNetworkSolver:
         self.R_max = max(self.R[k] for k in self.pipes)
         self.d_min = min(self.d[k] for k in self.pipes)
         self.d_max = max(self.d[k] for k in self.pipes)
+        self.alpha_min = min(self.alpha[k] for k in self.segs)
+        self.alpha_max = max(self.alpha[k] for k in self.segs)
 
         self.y_lb = {}
         self.y_ub = {}
@@ -399,7 +401,7 @@ class WaterNetworkSolver:
             ampl.param["y"][i, j] = val
 
         ampl.option['solver'] = 'cplex'
-
+        ampl.option['presolve_eps'] = 2.04e-10 
         # ampl.option["ipopt_options"] = (
         #     "outlev=0 "
         #     "expect_infeasible_problem=no "
@@ -2582,6 +2584,311 @@ class WaterNetworkSolver:
                 self.segment_cut_based_heuristic()
                 break
 
+    def solve_restricted_model(self, q_sol, z_sol, y_sol, h_sol, seg_index):
+    
+        ampl = AMPL()
+        ampl.read("repair_feasibility_wdn.mod")
+        ampl.read_data(self.data_file)
+    
+        ampl.option["solver"] = "ipopt"
+        ampl.option["presolve_eps"] = 4.07e-09
+        ampl.option["ipopt_options"] = (
+            "outlev=0 tol=1e-9 max_iter=3000 "
+            "warm_start_init_point=yes"
+        )
+    
+        # -------------------------
+        # Parameters
+        # -------------------------
+        ampl.eval("param seg_index{(i,j) in arcs};")
+    
+        for (i, j) in self.arcs:
+            ampl.param["seg_index"][i, j] = seg_index[(i, j)]
+    
+        # -------------------------
+        # Warm start
+        # -------------------------
+        for (i, j), val in q_sol.items():
+            ampl.var["q"][i, j] = val
+        for (i, j), val in y_sol.items():
+            ampl.var["y"][i, j] = val
+        for i, val in h_sol.items():
+            ampl.var["h"][i] = val
+        for (i, j), val in z_sol.items():
+            ampl.var["z"][i, j] = val
+    
+        # -------------------------
+        # PHASE 1: relaxed structure
+        # -------------------------
+        ampl.eval("param alpha_arc{arcs};")
+        
+        for (i, j) in self.arcs:
+            ampl.param["alpha_arc"][i, j] = self.alpha[seg_index[(i, j)]]
+    
+        ampl.eval("""
+            subject to bound_y{(i,j) in arcs}:
+                y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
+    
+            subject to bound_delta_y{(i,j) in arcs}:
+                delta_y[i,j] <= alpha[seg_index[i,j]] - alpha_min;
+        """)
+    
+        # objective includes delta_y ONLY in phase 1
+        ampl.eval("""
+            minimize phase1_obj:
+                sum{(i,j) in arcs} (
+                    delta_headloss[i,j]^2 + delta_y[i,j]^2
+                );
+        """)
+    
+        ampl.solve()
+    
+        delta_y_sol = ampl.get_variable("delta_y").get_values().to_dict()
+    
+        # -------------------------
+        # PHASE 2: FIX delta_y
+        # -------------------------
+        ampl.eval("param delta_y_fix{(i,j) in arcs};")
+    
+        for (i, j) in self.arcs:
+            ampl.param["delta_y_fix"][i, j] = delta_y_sol[(i, j)]
+    
+        ampl.eval("""
+            subject to fix_delta_y{(i,j) in arcs}:
+                delta_y[i,j] = delta_y_fix[i,j];
+        """)
+    
+        # remove phase1 objective
+        ampl.eval("drop phase1_obj;")
+    
+        # -------------------------
+        # PHASE 3: continuation
+        # -------------------------
+        rho_list = [1e2, 1e4, 1e6, 1e8]
+        ampl.eval("""
+            minimize phase2_obj:
+                rho * (sum{(i,j) in arcs} (
+                    delta_headloss[i,j]^2
+                ));
+        """)    
+        for rho in rho_list:
+            ampl.param["rho"] = rho
+            for (i, j) in self.arcs:
+                ampl.param["alpha_arc"][i, j] = self.alpha[seg_index[(i, j)]] - delta_y_sol[i,j]
+    
+            ampl.solve()
+    
+            delta_head = ampl.get_variable("delta_headloss").get_values().to_dict()
+            head_inf = sum(abs(delta_head[i,j]) for (i,j) in delta_head)
+    
+            print(f"[rho={rho}] head_inf={head_inf:.3e}")
+    
+            if head_inf < 1e-8:
+                break
+    
+        # -------------------------
+        # PHASE 4: remove slack
+        # -------------------------
+        ampl.eval("drop con2;")
+    
+        ampl.eval("""
+            subject to headloss_exact{(i,j) in arcs}:
+                h[i] - h[j]
+              - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426
+                / (q[i,j]^2 + 0.426 * eps[i,j]^2))
+                * y[i,j] * L[i,j] = 0;
+        """)
+    
+        ampl.solve()
+    
+        # -------------------------
+        # Extract solution
+        # -------------------------
+        q_sol = ampl.get_variable("q").get_values().to_dict()
+        h_sol = ampl.get_variable("h").get_values().to_dict()
+        y_sol = ampl.get_variable("y").get_values().to_dict()
+        z_sol = ampl.get_variable("z").get_values().to_dict()
+    
+        cost = sum(
+            self.L[i,j] * (
+                self.slope[self.seg_index[i,j]] * y_sol[i,j]
+                + self.intercept[self.seg_index[i,j]]
+            )
+            for (i,j) in self.arcs
+        )
+    
+        print("Final feasible cost:", cost)
+    
+        return q_sol, h_sol, y_sol, z_sol
+
+    def solve_restricted_model1(self, q_sol, z_sol, y_sol, h_sol, seg_index):
+        max_iter = 10 
+        iter = 1
+        while iter<=max_iter:
+            ampl = AMPL()
+            ampl.read("repair_feasibility_wdn.mod")
+            ampl.read_data(self.data_file)
+
+            ampl.option["solver"] = "ipopt"
+            # ampl.option["ipopt_options"] = "outlev=0 tol=1e-9 max_iter=3000"
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "expect_infeasible_problem=no "
+                "bound_relax_factor=0 "
+                "bound_push=0.1 "
+                "bound_frac=0.1 "
+                "warm_start_init_point=yes "
+                "halt_on_ampl_error=yes "
+                "max_iter=3000"
+            )
+
+            # -------------------------
+            ampl.eval("""
+                param seg_index{(i,j) in arcs};
+            """)
+            ampl.eval("""
+                param y_sol{(i,j) in arcs};
+            """)
+            # ampl.eval("""
+            #     param x_sol{(i,j) in arcs} default 0;
+            # """)
+            # ampl.eval("""set 2_set := {1,2};""")
+            # ampl.eval("""var x{arcs}>=0, <=1;""")
+            # -------------------------
+            # Warm-start perturbation
+            # -------------------------
+            for (i, j), val in q_sol.items():
+                ampl.var["q"][i, j] = val
+            for (i, j), val in y_sol.items():
+                ampl.var["y"][i, j] = val
+            for i, val in h_sol.items():
+                ampl.var["h"][i] = val
+            for (i, j), val in z_sol.items():
+                ampl.var["z"][i, j] = val
+
+            # -------------------------
+            # Solve NLP
+            # -------------------------
+            for (i, j) in self.arcs:
+                ampl.param["seg_index"][i, j] = seg_index[i,j]
+                ampl.param["y_sol"][i, j] = y_sol[(i,j)]
+
+            try:
+                ampl.eval(f"""
+                    subject to bound_y_{{(i,j) in arcs}}:
+                        y[i,j]>=alpha[seg_index[i,j]]-delta_y[i,j];
+                    subject to bound_delta_y{{(i,j) in arcs}}:
+                        delta_y[i,j]<=alpha[seg_index[i,j]] - y_sol[i,j];
+                """)
+                # ampl.eval(f"""
+                #    subject to bound_cost:
+                #        sum{{(i,j) in arcs}}y[i,j]>={sum(y_sol[i,j] for (i,j) in self.arcs)};
+                # """)
+                ampl.eval(f"""
+                   subject to bound_cost:
+                       sum{{(i,j) in arcs}}z[i,j]<={self.best_cost};
+                """)
+                print("Constraints added.")
+
+            except Exception as e:
+                print(f"Failed to solve restricted model: {e}")
+
+            #with self.suppress_output():
+            ampl.solve()
+
+            if ampl.get_value("solve_result") != "solved":
+                print("Solver failed. Stopping.")
+
+            y_star_sum = sum(y_sol[i,j] for (i,j) in self.arcs)
+            # -------------------------
+            # Extract solution
+            # -------------------------
+            # obj = ampl.get_objective("total_infeasibility").value()
+            q_sol = ampl.get_variable("q").get_values().to_dict()
+            h_sol = ampl.get_variable("h").get_values().to_dict()
+            y_sol = ampl.get_variable("y").get_values().to_dict()
+            z_sol = ampl.get_variable("z").get_values().to_dict()
+            # delta_flow_balance = ampl.get_variable("delta_flow_balance").get_values().to_dict()
+            delta_headloss = ampl.get_variable("delta_headloss").get_values().to_dict()
+            delta_y = ampl.get_variable("delta_y").get_values().to_dict()
+
+            # ampl.eval("display z;")
+            # ampl.eval("display q;")
+            # ampl.eval("display h;")
+            # ampl.eval("display y;")
+            # ampl.eval("display delta_y;")
+            # ampl.eval("display delta_flow_balance;")
+            ampl.eval("display delta_headloss;")
+
+            alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+
+            tol = 1e-8
+            
+            for (u, v) in self.arcs:
+                y_val = y_sol[(u, v)]
+                active_s = None
+            
+                for k in range(len(alpha_vals) - 1):
+                    a_high = alpha_vals[k]
+                    a_low  = alpha_vals[k+1]
+            
+                    if (a_low - tol) <= y_val <= (a_high + tol):
+                        active_s = k + 1   # 1-based segment index (matches AMPL segs)
+                        break
+            
+                # fallback (numerical edge cases)
+                if active_s is None:
+                    if y_val > alpha_vals[0]:
+                        active_s = 1
+                    elif y_val < alpha_vals[-1]:
+                        active_s = len(alpha_vals) - 1
+            
+                self.seg_index[(u, v)] = active_s
+
+            print("seg_index:", self.seg_index)
+            # for (i,j) in self.arcs:
+            #     print((i,j), z_sol[i,j] - self.L[i,j]*(self.slope[self.seg_index[i,j]]*y_sol[i,j] + self.intercept[self.seg_index[i,j]]))
+
+            cost = sum(self.L[i,j]*(self.slope[self.seg_index[i,j]] * y_sol[i,j] + self.intercept[self.seg_index[i,j]]) for (i,j) in self.arcs)
+
+            # total_flow_balance_infeasibility = sum(np.abs(delta_flow_balance[i]) for i in self.nodes if i not in self.source)
+            total_headloss_infeasibility = sum(np.abs(delta_headloss[i,j]) for (i,j) in self.arcs)
+            # print("total_flow_balance_infeasibility:", total_flow_balance_infeasibility) 
+            print("total_headloss_infeasibility:", total_headloss_infeasibility) 
+            # print("total_infeasibility:", obj)
+            print("infeasible cost:", cost)
+            
+            # seg_index = ampl.getParameter('seg_index').to_dict()
+            # print(self.alpha,"\n")
+            # print("\n")
+            # for (i,j) in self.arcs:
+            #     # print(seg_index[i,j])
+            #     print(f"alpha[{i},{j}] - alpha_min:",self.alpha[seg_index[i,j]] - delta_y[i,j])
+            # print("\n")
+            # print(self.alpha)
+            # print(index)
+
+            # ampl.eval("display {(i,j) in arcs}: y[i,j], alpha[seg_index[i,j]] - delta_y[i,j];")
+            y_hat = {}
+            for (i,j) in self.arcs:
+                y_hat[i,j] = y_sol[i,j] + (delta_headloss[i,j]/(self.L[i,j]*q_sol[i,j] * np.abs(q_sol[i,j])**0.852))
+                # print(f"y_hat[{i},{j}]-alpha_min:",y_hat[i,j]-self.alpha_min)
+                if y_hat[i,j]>=self.alpha_min and y_hat[i,j]<=self.alpha_max:
+                    print(y_hat[i,j])
+                else:
+                    diff1 = self.alpha_min - y_hat[i,j]
+                    diff2 = y_hat[i,j] - self.alpha_max
+                    if diff1>=1e-8:
+                        print("diff1:",diff1)
+                    else:
+                        print("diff2:",diff2)
+
+            # y_hat_sum = sum(y_hat[i,j] for (i,j) in self.arcs)
+
+            # print("diff:",y_hat_sum-y_star_sum)
+
+        return q_sol, h_sol, y_hat, z_sol
+
     @contextlib.contextmanager
     def suppress_output(self):
         # Open devnull to suppress the output
@@ -2645,9 +2952,10 @@ class WaterNetworkSolver:
         #     save_path="piecewise_reduced_cost_envelope_arc_1_2.png"
         # )
 
-        print("\n-------------------------------- Solving Exact Reduced Model --------------------------")
+
 
         ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
+
 
         print(f"Total Cost: {cost:.8f}")
         print(f"Exact model solve time: {solve_time:.4f} sec")
@@ -2661,6 +2969,7 @@ class WaterNetworkSolver:
         self.current_cost = cost
         self.best_solution = (self.q, self.h, self.y, self.z, self.best_cost)
 
+        # self.ampl.eval("display y;")
         self.all_duals = {}
         for con_name, con in self.ampl.get_constraints():
             self.all_duals[con_name] = con.getValues()
@@ -2693,8 +3002,8 @@ class WaterNetworkSolver:
         
             self.seg_index[(u, v)] = active_s
         
+        print("seg_index:",self.seg_index)
             # print(f"arc {(u,v)} -> y = {y_val:.6f}, segment = {active_s}")
-
 
         # self.seg_index = {}
         # alpha_vals = sorted(set(self.alpha.values()), reverse=True)  # descending
@@ -2723,22 +3032,28 @@ class WaterNetworkSolver:
         # q_sol, h_sol, y_sol, z_sol, cost = best_solution 
         # print("\n Best Solution:", cost)
 
-        print("\n-------------------------------- Branch and Bound based Heuristic --------------------------")
-        self.network_graph = self.generate_random_acyclic_from_solution(q_sol)
-        self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
-        self.best_acyclic_flow = self.network_graph.copy() 
+        print("\n-------------------------------- Solve Restriced Model --------------------------")
 
-        self.iteration = 1
-        self.visited_arc_reverse = []
-        self.reversed_arcs = []
-        self.segment_cut_based_heuristic()
+        q_sol, h_sol, y_sol, z_sol = self.solve_restricted_model(self.q, self.z, self.y, self.h, self.seg_index)
+        # print(q_sol)
+        # viol_red = self.check_reduced_feasibility(q_sol, h_sol, y_sol, z_sol)
+        # print(viol_red)
+        # print("\n-------------------------------- Branch and Bound based Heuristic --------------------------")
+        # self.network_graph = self.generate_random_acyclic_from_solution(q_sol)
+        # self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
+        # self.best_acyclic_flow = self.network_graph.copy() 
+        #
+        # self.iteration = 1
+        # self.visited_arc_reverse = []
+        # self.reversed_arcs = []
+        # self.segment_cut_based_heuristic()
 
-        for (i,j) in self.arcs:
-            print((i,j), self.z[i,j] - self.L[i,j]*(self.slope[self.seg_index[i,j]]*self.y[i,j] + self.intercept[self.seg_index[i,j]]))
+        # for (i,j) in self.arcs:
+        #     print((i,j), self.z[i,j] - self.L[i,j]*(self.slope[self.seg_index[i,j]]*self.y[i,j] + self.intercept[self.seg_index[i,j]]))
 
-        print("\n-------------------------------- Solving Recover Model --------------------------")
-
-        rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(self.y)
+        # print("\n-------------------------------- Solving Recover Model --------------------------")
+        #
+        rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(y_sol)
         print(rec_result)
         print(recovered_cost)
 
@@ -2766,10 +3081,10 @@ class WaterNetworkSolver:
         # viol_org = self.check_original_feasibility(q_sol, h_sol, l_trial)
         # print(viol_org)
         #
-        print("\n-------------------- Solving Original Model with Initialize ---------------------")
-
-        orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, self.q, self.h)
-        print(f"Original warm-start NLP result = {orig_result}, final cost = {final_cost:.8f}, time = {t_orig:.2f} sec")
+        # print("\n-------------------- Solving Original Model with Initialize ---------------------")
+        #
+        # orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, self.q, self.h)
+        # print(f"Original warm-start NLP result = {orig_result}, final cost = {final_cost:.8f}, time = {t_orig:.2f} sec")
 
         # self.improve_solution_by_y_search(max_outer_iter=1,max_repair_iter=1,num_arcs_perturb=3,perturb_scale=0.03)
 
