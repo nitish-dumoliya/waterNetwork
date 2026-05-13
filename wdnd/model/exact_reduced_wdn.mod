@@ -106,6 +106,6 @@ subject to exact_cost{(i,j) in arcs, s in segs}:
 #subject to z_upper{(i,j) in arcs}:
 #    z[i,j] <= L[i,j]*(c_max + ((c_min - c_max)/(alpha_max - alpha_min))*(y[i,j] - alpha_min));
 
-#subject to con8{(i,j) in arcs}: 
-#   -Q_max <= q[i,j] <= Q_max
-#;
+subject to con8{(i,j) in arcs}: 
+   -Q_max <= q[i,j] <= Q_max
+;

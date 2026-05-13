@@ -44,8 +44,8 @@ class WaterNetworkSolver:
         # IPOPT options
         self.max_iter = 3000
         self.mu_init = 1e-2
-        self.bound_push = 0.1
-        self.bound_frac = 0.1
+        self.bound_push = 0.01
+        self.bound_frac = 0.01
 
     # ============================================================
     # READ ORIGINAL MODEL
@@ -406,9 +406,6 @@ class WaterNetworkSolver:
         #     "outlev=0 "
         #     "expect_infeasible_problem=no "
         #     "bound_relax_factor=0 "
-        #     "tol=1e-9 "
-        #     "bound_push=0.01 "
-        #     "bound_frac=0.01 "
         #     "warm_start_init_point=no "
         #     "halt_on_ampl_error=yes"
         # )
@@ -1895,6 +1892,7 @@ class WaterNetworkSolver:
         ampl = AMPL()
         # ampl.setOption('hsllib', '/usr/local/lib/libma57.so')
         ampl.read("exact_reduced_wdn.mod")
+        # ampl.read("dc_reformulation.mod")
         # ampl.read("cycle_basis_wdn.mod")
         ampl.read_data(self.data_file)
 
@@ -1924,14 +1922,11 @@ class WaterNetworkSolver:
         # ampl.option['solver'] = 'baron'
         ampl.option["ipopt_options"] = (
             "outlev=0 "
-            "expect_infeasible_problem=no "
             "bound_relax_factor=0 "
-            "tol=1e-9 "
             f"bound_push={self.bound_push} "
             f"bound_frac={self.bound_frac} "
             "warm_start_init_point=no "
             "halt_on_ampl_error=yes "
-            "max_iter=3000"
         )
 
         ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 barstats version objbound" # lsolver = conopt
@@ -2584,27 +2579,6370 @@ class WaterNetworkSolver:
                 self.segment_cut_based_heuristic()
                 break
 
+    def lagrangian_based_heuristic2(
+        self,
+        q_star,
+        h_star,
+        y_star,
+        z_star,
+        seg_index,
+        slack_penalty=1.0,
+        slack_relax=500,
+        max_outer=30,
+        top_k_fraction=0.25,
+        cost_improve_tol=1e-4,
+        segment_change_tol=2
+    ):
+        """
+        Active epigraph slack-relaxation heuristic.
+    
+        Main ideas
+        ----------
+        1. Detect active epigraph segments.
+        2. Relax only expensive active segments.
+        3. Add slack variables directly in constraints.
+        4. Penalize slacks mildly in objective.
+        5. Force IPOPT into different active-set basin.
+        6. Project relaxed solution back to exact NLP.
+        """
+    
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP = len(alpha_vals)
+    
+        # ============================================================
+        # utilities
+        # ============================================================
+    
+        def find_seg(yv):
+    
+            for k in range(NP - 1):
+    
+                if alpha_vals[k + 1] - 1e-10 <= yv <= alpha_vals[k] + 1e-10:
+                    return k + 1
+    
+            return 1 if yv > alpha_vals[0] else NP - 1
+    
+        def true_cost(y_sol, seg_sol):
+    
+            return sum(
+                self.L[i, j]
+                * (
+                    self.slope[seg_sol[i, j]] * y_sol[i, j]
+                    + self.intercept[seg_sol[i, j]]
+                )
+                for (i, j) in self.arcs
+            )
+    
+        def get_expensive_arcs(z_sol):
+    
+            arc_cost = sorted(
+                [
+                    ((i, j), z_sol[i, j])
+                    for (i, j) in self.arcs
+                ],
+                key=lambda x: -x[1]
+            )
+    
+            k = max(1, int(top_k_fraction * len(self.arcs)))
+    
+            return set(a for a, _ in arc_cost[:k])
+    
+        # ============================================================
+        # initial incumbent
+        # ============================================================
+    
+        C_star = true_cost(y_star, seg_index)
+    
+        incumbent = {
+            "q": q_star.copy(),
+            "h": h_star.copy(),
+            "y": y_star.copy(),
+            "z": z_star.copy(),
+            "seg": seg_index.copy(),
+            "cost": C_star
+        }
+    
+        best_global = incumbent.copy()
+    
+        print("\n" + "=" * 75)
+        print(" ACTIVE-CONSTRAINT SLACK RELAXATION HEURISTIC")
+        print(f" INITIAL COST = {C_star:.6f}")
+        print("=" * 75)
+    
+        stagnation = 0
+    
+        # ============================================================
+        # outer iterations
+        # ============================================================
+    
+        for outer_it in range(1, max_outer + 1):
+    
+            print(f"\nOUTER ITERATION {outer_it}")
+            print("-" * 75)
+    
+            y_inc = incumbent["y"]
+            seg_inc = incumbent["seg"]
+    
+            # ========================================================
+            # STEP 1:
+            # identify expensive arcs
+            # ========================================================
+    
+            expensive_arcs = get_expensive_arcs(incumbent["z"])
+    
+            print(f"Expensive arcs selected: {len(expensive_arcs)}")
+    
+            # ========================================================
+            # STEP 2:
+            # build relaxed NLP
+            # ========================================================
+    
+            ampl = AMPL()
+    
+            ampl.read("exact_reduced_wdn.mod")
+            ampl.read_data(self.data_file)
+    
+            ampl.option["solver"] = "ipopt"
+    
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "max_iter=3000 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+    
+            # ========================================================
+            # remove original objective
+            # ========================================================
+    
+            ampl.eval("drop total_cost;")
+    
+            # ========================================================
+            # add slack variables
+            # ========================================================
+    
+            ampl.eval("""
+                var relax_slack{arcs,segs} >= 0;
+            """)
+    
+            # ========================================================
+            # relaxed objective
+            # ========================================================
+    
+            ampl.eval(f"""
+    
+                minimize relaxed_obj:
+    
+                    sum{{(i,j) in arcs}}
+                        z[i,j]
+    
+                    +
+    
+                    {slack_penalty}
+    
+                    *
+    
+                    sum{{(i,j) in arcs, s in segs}}
+                        relax_slack[i,j,s];
+    
+            """)
+    
+            # ========================================================
+            # remove original epigraph constraints
+            # ========================================================
+    
+            ampl.eval("drop exact_cost;")
+    
+            # ========================================================
+            # rebuild epigraph constraints
+            # ========================================================
+    
+            for (i, j) in self.arcs:
+    
+                s_cur = seg_inc[(i, j)]
+    
+                for s in self.segs:
+    
+                    # ------------------------------------------------
+                    # relax only current active expensive arcs
+                    # ------------------------------------------------
+    
+                    # if (s == s_cur):
+                    if ((i, j) in expensive_arcs) and (s == s_cur):
+    
+                        ampl.eval(f"""
+    
+                            s.t. relaxed_epi_{i}_{j}_{s}:
+    
+                                z[{i},{j}]
+                                +
+                                relax_slack[{i},{j},{s}]
+    
+                                >=
+    
+                                L[{i},{j}]
+                                *
+                                (
+                                    slope[{s}] * y[{i},{j}]
+                                    +
+                                    intercept[{s}]
+                                );
+    
+                        """)
+    
+                    # ------------------------------------------------
+                    # keep all other cuts exact
+                    # ------------------------------------------------
+    
+                    else:
+    
+                        ampl.eval(f"""
+    
+                            s.t. epi_{i}_{j}_{s}:
+    
+                                z[{i},{j}]
+    
+                                >=
+    
+                                L[{i},{j}]
+                                *
+                                (
+                                    slope[{s}] * y[{i},{j}]
+                                    +
+                                    intercept[{s}]
+                                );
+    
+                        """)
+    
+            # ========================================================
+            # warm start
+            # ========================================================
+    
+            for (i, j) in self.arcs:
+    
+                ampl.var["q"][i, j] = incumbent["q"][(i, j)]
+    
+                ampl.var["y"][i, j] = incumbent["y"][(i, j)]
+    
+                ampl.var["z"][i, j] = incumbent["z"][(i, j)]
+    
+            for i in self.nodes:
+    
+                ampl.var["h"][i] = incumbent["h"][i]
+    
+            # ========================================================
+            # solve relaxed NLP
+            # ========================================================
+    
+            with self.suppress_output():
+                ampl.solve()
+    
+            status = ampl.get_value("solve_result")
+    
+            if status != "solved":
+    
+                print("Relaxed NLP failed.")
+    
+                slack_penalty *= 0.7
+    
+                continue
+    
+            # ========================================================
+            # retrieve relaxed solution
+            # ========================================================
+    
+            q_rel = ampl.get_variable("q").get_values().to_dict()
+    
+            y_rel = ampl.get_variable("y").get_values().to_dict()
+    
+            h_rel = ampl.get_variable("h").get_values().to_dict()
+    
+            z_rel = ampl.get_variable("z").get_values().to_dict()
+    
+            seg_rel = {
+                (i, j): find_seg(y_rel[(i, j)])
+                for (i, j) in self.arcs
+            }
+    
+            changed_arcs = [
+    
+                (i, j)
+    
+                for (i, j) in self.arcs
+    
+                if seg_rel[(i, j)] != seg_inc[(i, j)]
+    
+            ]
+    
+            seg_changes = len(changed_arcs)
+    
+            print(f"Segment changes = {seg_changes}")
+    
+            # ========================================================
+            # insufficient diversification
+            # ========================================================
+    
+            if seg_changes < segment_change_tol:
+    
+                slack_penalty *= 0.8
+    
+                stagnation += 1
+    
+                print("Insufficient basin escape.")
+    
+                continue
+    
+            # ========================================================
+            # STEP 3:
+            # exact NLP projection
+            # ========================================================
+    
+            ampl_ex = AMPL()
+    
+            ampl_ex.read("exact_reduced_wdn.mod")
+            ampl_ex.read_data(self.data_file)
+    
+            ampl_ex.option["solver"] = "ipopt"
+    
+            ampl_ex.option["ipopt_options"] = (
+                "outlev=0 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+    
+            # ========================================================
+            # warm start exact model
+            # ========================================================
+    
+            for (i, j) in self.arcs:
+    
+                ampl_ex.var["q"][i, j] = q_rel[(i, j)]
+    
+                ampl_ex.var["y"][i, j] = y_rel[(i, j)]
+    
+                ampl_ex.var["z"][i, j] = z_rel[(i, j)]
+    
+            for i in self.nodes:
+    
+                ampl_ex.var["h"][i] = h_rel[i]
+    
+            # ========================================================
+            # exact solve
+            # ========================================================
+    
+            with self.suppress_output():
+                ampl_ex.solve()
+    
+            status_ex = ampl_ex.get_value("solve_result")
+    
+            if status_ex != "solved":
+    
+                print("Exact projection failed.")
+    
+                slack_penalty *= 1.2
+    
+                continue
+    
+            # ========================================================
+            # retrieve exact solution
+            # ========================================================
+    
+            q_ex = ampl_ex.get_variable("q").get_values().to_dict()
+    
+            y_ex = ampl_ex.get_variable("y").get_values().to_dict()
+    
+            h_ex = ampl_ex.get_variable("h").get_values().to_dict()
+    
+            z_ex = ampl_ex.get_variable("z").get_values().to_dict()
+    
+            seg_ex = {
+                (i, j): find_seg(y_ex[(i, j)])
+                for (i, j) in self.arcs
+            }
+    
+            cost_ex = true_cost(y_ex, seg_ex)
+    
+            print(
+                f"Projected exact cost = {cost_ex:.6f} "
+                f"Best cost = {best_global['cost']:.6f}"
+            )
+    
+            # ========================================================
+            # accept/reject
+            # ========================================================
+    
+            if cost_ex < incumbent["cost"] - cost_improve_tol:
+    
+                print("*** IMPROVED LOCAL SOLUTION FOUND ***")
+    
+                incumbent = {
+                    "q": q_ex.copy(),
+                    "h": h_ex.copy(),
+                    "y": y_ex.copy(),
+                    "z": z_ex.copy(),
+                    "seg": seg_ex.copy(),
+                    "cost": cost_ex
+                }
+    
+                if cost_ex < best_global["cost"]:
+    
+                    best_global = incumbent.copy()
+    
+                slack_penalty *= 1.1
+    
+                stagnation = 0
+    
+            else:
+    
+                print("No improvement.")
+    
+                slack_penalty *= 0.9
+    
+                stagnation += 1
+    
+            # ========================================================
+            # strong diversification
+            # ========================================================
+    
+            if stagnation >= 5:
+    
+                print("Strong diversification activated.")
+    
+                slack_penalty *= 0.5
+    
+                stagnation = 0
+    
+        # ============================================================
+        # final
+        # ============================================================
+    
+        print("\n" + "=" * 75)
+        print(f" FINAL BEST COST = {best_global['cost']:.6f}")
+        print("=" * 75)
+    
+        return (
+            best_global["q"],
+            best_global["h"],
+            best_global["y"],
+            best_global["z"]
+        )
+
+
+    def bilevel_segment_optimization(
+        self,
+        q_start,
+        h_start,
+        y_start,
+        z_start,
+        seg_start,
+        max_outer_iterations=20,
+        num_structures=15,
+        modify_fraction=0.25,
+        diversification_fraction=0.40,
+        cost_improve_tol=1e-4,
+        stagnation_limit=5
+    ):
+    
+        """
+        ==============================================================
+        BILEVEL SEGMENT-BASED OPTIMIZATION
+        ==============================================================
+    
+        UPPER LEVEL:
+            Generate candidate segment structures
+    
+        LOWER LEVEL:
+            Solve exact hydraulic NLP for each structure
+    
+        ==============================================================
+    
+        """
+    
+        import copy
+        import random
+    
+        from amplpy import AMPL
+    
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+    
+        NP = len(alpha_vals)
+    
+        # ============================================================
+        # utilities
+        # ============================================================
+    
+        def find_seg(yv):
+    
+            tol = 1e-8
+    
+            active_segments = []
+    
+            for k in range(NP - 1):
+    
+                a_high = alpha_vals[k]
+                a_low  = alpha_vals[k + 1]
+    
+                # ----------------------------------------------------
+                # interior
+                # ----------------------------------------------------
+    
+                if (a_low + tol) < yv < (a_high - tol):
+    
+                    active_segments = [k + 1]
+    
+                    break
+    
+                # ----------------------------------------------------
+                # upper breakpoint
+                # ----------------------------------------------------
+    
+                elif abs(yv - a_high) <= tol:
+    
+                    if k == 0:
+                        active_segments = [1]
+                    else:
+                        active_segments = [k, k + 1]
+    
+                    break
+    
+                # ----------------------------------------------------
+                # lower breakpoint
+                # ----------------------------------------------------
+    
+                elif abs(yv - a_low) <= tol:
+    
+                    if k == NP - 2:
+                        active_segments = [k + 1]
+                    else:
+                        active_segments = [k + 1, k + 2]
+    
+                    break
+    
+            # --------------------------------------------------------
+            # safeguard
+            # --------------------------------------------------------
+    
+            if not active_segments:
+    
+                if yv > alpha_vals[0]:
+    
+                    active_segments = [1]
+    
+                elif yv < alpha_vals[-1]:
+    
+                    active_segments = [NP - 1]
+    
+                else:
+    
+                    distances = [
+                        abs(yv - alpha_vals[k])
+                        for k in range(NP)
+                    ]
+    
+                    idx = distances.index(min(distances))
+    
+                    if idx == 0:
+    
+                        active_segments = [1]
+    
+                    elif idx == NP - 1:
+    
+                        active_segments = [NP - 1]
+    
+                    else:
+    
+                        active_segments = [idx, idx + 1]
+    
+            return active_segments
+    
+        # ============================================================
+        # exact cost
+        # ============================================================
+    
+        def true_cost(y_sol, seg_sol):
+    
+            total = 0.0
+    
+            for (i, j) in self.arcs:
+    
+                s = seg_sol[(i, j)][0]
+    
+                total += (
+                    self.L[(i, j)]
+                    * (
+                        self.slope[s] * y_sol[(i, j)]
+                        + self.intercept[s]
+                    )
+                )
+    
+            return total
+    
+        # ============================================================
+        # generate candidate segment structures
+        # ============================================================
+    
+        def generate_segment_structures(current_seg, z_sol):
+    
+            candidate_structures = []
+    
+            arcs = list(self.arcs)
+    
+            # --------------------------------------------------------
+            # expensive arcs
+            # --------------------------------------------------------
+    
+            expensive_arcs = sorted(
+                arcs,
+                key=lambda a: -z_sol[a]
+            )
+    
+            for structure_id in range(num_structures):
+    
+                new_structure = copy.deepcopy(current_seg)
+    
+                # ----------------------------------------------------
+                # choose arcs to modify
+                # ----------------------------------------------------
+    
+                num_modify = max(
+                    1,
+                    int(modify_fraction * len(arcs))
+                )
+    
+                # ----------------------------------------------------
+                # mix:
+                # expensive + random
+                # ----------------------------------------------------
+    
+                expensive_count = max(1, num_modify // 2)
+    
+                expensive_subset = expensive_arcs[:expensive_count]
+    
+                remaining = [
+                    a for a in arcs
+                    if a not in expensive_subset
+                ]
+    
+                random_subset = random.sample(
+                    remaining,
+                    min(len(remaining), num_modify - expensive_count)
+                )
+    
+                arcs_to_modify = (
+                    expensive_subset + random_subset
+                )
+    
+                # ----------------------------------------------------
+                # mutate arcs
+                # ----------------------------------------------------
+    
+                for arc in arcs_to_modify:
+    
+                    current_active = current_seg[arc]
+    
+                    s_cur = current_active[0]
+    
+                    # ------------------------------------------------
+                    # diversification
+                    # ------------------------------------------------
+    
+                    if random.random() <= diversification_fraction:
+    
+                        far_candidates = [
+                            s for s in range(1, NP)
+                            if abs(s - s_cur)
+                            >= max(2, NP // 3)
+                        ]
+    
+                        if not far_candidates:
+    
+                            far_candidates = [
+                                s for s in range(1, NP)
+                                if s != s_cur
+                            ]
+    
+                        s_new = random.choice(far_candidates)
+    
+                    # ------------------------------------------------
+                    # local mutation
+                    # ------------------------------------------------
+    
+                    else:
+    
+                        step = random.choice([-1, 1])
+    
+                        s_new = s_cur + step
+    
+                        s_new = max(
+                            1,
+                            min(NP - 1, s_new)
+                        )
+    
+                    # ------------------------------------------------
+                    # breakpoint structure
+                    # ------------------------------------------------
+    
+                    if random.random() <= 0.25:
+    
+                        if s_new < NP - 1:
+    
+                            new_structure[arc] = [
+                                s_new,
+                                s_new + 1
+                            ]
+    
+                        else:
+    
+                            new_structure[arc] = [s_new]
+    
+                    else:
+    
+                        new_structure[arc] = [s_new]
+    
+                candidate_structures.append(
+                    copy.deepcopy(new_structure)
+                )
+    
+            return candidate_structures
+    
+        # ============================================================
+        # LOWER LEVEL NLP SOLVER
+        # ============================================================
+    
+        def solve_lower_level(
+            seg_structure,
+            q_warm,
+            h_warm,
+            y_warm,
+            z_warm
+        ):
+    
+            ampl = AMPL()
+    
+            ampl.read("exact_reduced_wdn.mod")
+    
+            ampl.read_data(self.data_file)
+    
+            ampl.option["solver"] = "ipopt"
+    
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "max_iter=5000 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+    
+            # ========================================================
+            # enforce segment structure
+            # ========================================================
+    
+            for (i, j) in self.arcs:
+    
+                active_set = seg_structure[(i, j)]
+    
+                # ----------------------------------------------------
+                # single segment
+                # ----------------------------------------------------
+    
+                if len(active_set) == 1:
+    
+                    s = active_set[0]
+    
+                    y_upper = alpha_vals[s - 1]
+    
+                    y_lower = alpha_vals[s]
+    
+                    ampl.eval(f"""
+    
+                        s.t. seg_lb_{i}_{j}:
+    
+                            y[{i},{j}] >= {y_lower};
+    
+                        s.t. seg_ub_{i}_{j}:
+    
+                            y[{i},{j}] <= {y_upper};
+    
+                    """)
+    
+                # ----------------------------------------------------
+                # breakpoint structure
+                # ----------------------------------------------------
+    
+                else:
+    
+                    s1 = active_set[0]
+    
+                    s2 = active_set[1]
+    
+                    y_upper = alpha_vals[min(s1, s2) - 1]
+    
+                    y_lower = alpha_vals[max(s1, s2)]
+    
+                    ampl.eval(f"""
+    
+                        s.t. seg_lb_{i}_{j}:
+    
+                            y[{i},{j}] >= {y_lower};
+    
+                        s.t. seg_ub_{i}_{j}:
+    
+                            y[{i},{j}] <= {y_upper};
+    
+                    """)
+    
+            # ========================================================
+            # warm start
+            # ========================================================
+    
+            for (i, j) in self.arcs:
+    
+                ampl.var["q"][i, j] = q_warm[(i, j)]
+    
+                ampl.var["y"][i, j] = y_warm[(i, j)]
+    
+                ampl.var["z"][i, j] = z_warm[(i, j)]
+    
+            for i in self.nodes:
+    
+                ampl.var["h"][i] = h_warm[i]
+    
+            # ========================================================
+            # solve NLP
+            # ========================================================
+    
+            with self.suppress_output():
+    
+                ampl.solve()
+    
+            status = ampl.get_value("solve_result")
+    
+            if status != "solved":
+    
+                return None
+    
+            # ========================================================
+            # retrieve solution
+            # ========================================================
+    
+            q_sol = ampl.get_variable("q").get_values().to_dict()
+    
+            y_sol = ampl.get_variable("y").get_values().to_dict()
+    
+            h_sol = ampl.get_variable("h").get_values().to_dict()
+    
+            z_sol = ampl.get_variable("z").get_values().to_dict()
+    
+            seg_sol = {
+                (i, j): find_seg(y_sol[(i, j)])
+                for (i, j) in self.arcs
+            }
+    
+            cost_sol = true_cost(y_sol, seg_sol)
+    
+            return {
+                "q": q_sol,
+                "y": y_sol,
+                "h": h_sol,
+                "z": z_sol,
+                "seg": seg_sol,
+                "cost": cost_sol
+            }
+    
+        # ============================================================
+        # INITIAL INCUMBENT
+        # ============================================================
+    
+        initial_cost = true_cost(y_start, seg_start)
+    
+        incumbent = {
+            "q": q_start.copy(),
+            "h": h_start.copy(),
+            "y": y_start.copy(),
+            "z": z_start.copy(),
+            "seg": copy.deepcopy(seg_start),
+            "cost": initial_cost
+        }
+    
+        best_global = copy.deepcopy(incumbent)
+    
+        print("\n" + "=" * 75)
+    
+        print(" BILEVEL SEGMENT-BASED OPTIMIZATION ")
+    
+        print("=" * 75)
+    
+        print(f"INITIAL COST = {initial_cost:.6f}")
+    
+        print("=" * 75)
+    
+        stagnation = 0
+    
+        # ============================================================
+        # OUTER LEVEL LOOP
+        # ============================================================
+    
+        for outer_it in range(1, max_outer_iterations + 1):
+    
+            print(f"\nOUTER ITERATION {outer_it}")
+    
+            print("-" * 75)
+    
+            # ========================================================
+            # UPPER LEVEL:
+            # generate segment structures
+            # ========================================================
+    
+            candidate_structures = generate_segment_structures(
+                incumbent["seg"],
+                incumbent["z"]
+            )
+    
+            iteration_best = None
+    
+            # ========================================================
+            # LOWER LEVEL:
+            # solve NLP for each structure
+            # ========================================================
+    
+            for idx, structure in enumerate(candidate_structures):
+    
+                print(f"Solving candidate structure {idx+1}")
+    
+                solution = solve_lower_level(
+                    structure,
+                    incumbent["q"],
+                    incumbent["h"],
+                    incumbent["y"],
+                    incumbent["z"]
+                )
+    
+                if solution is None:
+    
+                    print("NLP failed.")
+    
+                    continue
+    
+                print(
+                    f"Candidate cost = "
+                    f"{solution['cost']:.6f}"
+                )
+    
+                if (
+                    iteration_best is None
+                    or
+                    solution["cost"]
+                    < iteration_best["cost"]
+                ):
+    
+                    iteration_best = copy.deepcopy(solution)
+    
+            # ========================================================
+            # accept/reject
+            # ========================================================
+    
+            if iteration_best is None:
+    
+                print("No feasible candidate.")
+    
+                stagnation += 1
+    
+                continue
+    
+            # ========================================================
+            # improvement
+            # ========================================================
+    
+            if (
+                iteration_best["cost"]
+                <
+                incumbent["cost"] - cost_improve_tol
+            ):
+    
+                print("\n*** IMPROVED SOLUTION FOUND ***")
+    
+                incumbent = copy.deepcopy(iteration_best)
+    
+                if (
+                    incumbent["cost"]
+                    <
+                    best_global["cost"]
+                ):
+    
+                    best_global = copy.deepcopy(incumbent)
+    
+                stagnation = 0
+    
+                # ----------------------------------------------------
+                # intensification
+                # ----------------------------------------------------
+    
+                diversification_fraction *= 0.9
+    
+                modify_fraction *= 0.9
+    
+            else:
+    
+                print("\nNo improvement.")
+    
+                stagnation += 1
+    
+                # ----------------------------------------------------
+                # diversification
+                # ----------------------------------------------------
+    
+                diversification_fraction = min(
+                    0.95,
+                    diversification_fraction + 0.1
+                )
+    
+                modify_fraction = min(
+                    0.75,
+                    modify_fraction + 0.05
+                )
+    
+            print(
+                f"Current Best Cost = "
+                f"{best_global['cost']:.6f}"
+            )
+    
+            # ========================================================
+            # strong diversification
+            # ========================================================
+    
+            if stagnation >= stagnation_limit:
+    
+                print("\nSTRONG DIVERSIFICATION ACTIVATED")
+    
+                diversification_fraction = 0.95
+    
+                modify_fraction = min(
+                    0.90,
+                    modify_fraction + 0.2
+                )
+    
+                stagnation = 0
+    
+        # ============================================================
+        # FINAL
+        # ============================================================
+    
+        print("\n" + "=" * 75)
+    
+        print(
+            f"FINAL BEST COST = "
+            f"{best_global['cost']:.6f}"
+        )
+    
+        print("=" * 75)
+    
+        return (
+            best_global["q"],
+            best_global["h"],
+            best_global["y"],
+            best_global["z"]
+        )
+
+    """
+    Sequential Continuation Segment-Cut Heuristic
+    ==============================================
+    
+    Algorithm overview:
+      1. Rank arcs by dual variable magnitude
+      2. For each candidate arc, attempt sequential segment reduction: n → n-1 → n-2 → ...
+      3. Accept any feasible result; track cost improvement
+      4. If improved  → continue reducing the same arc
+      5. If feasible but no improvement → restart outer loop from updated structure
+      6. If infeasible → skip to next arc
+    """
+    
+    import copy
+    import time
+   
+    # ──────────────────────────────────────────────────────────────────────────────
+    # Main heuristic
+    # ──────────────────────────────────────────────────────────────────────────────
+    
+    def sequential_segment_cut_heuristic(
+        self,
+        max_outer_iterations=10,
+        cost_improve_tol=1e-4,
+        max_segment_reduction_per_arc=10
+    ):
+        """
+        Sequential Continuation Segment-Cut Heuristic
+        ─────────────────────────────────────────────
+        For each candidate arc (ranked by |dual|), attempts to reduce its active
+        segment index by solving a constrained NLP.  Feasible improvements are
+        greedily accepted; the outer loop restarts whenever a feasible (even
+        non-improving) update changes the problem structure.
+        """
+        from contextlib import contextmanager
+        from amplpy import AMPL
+        
+        
+        # ──────────────────────────────────────────────────────────────────────────────
+        # Formatting helpers
+        # ──────────────────────────────────────────────────────────────────────────────
+        
+        def _hline(widths, char="─", cross="┼", left="├", right="┤"):
+            return left + cross.join(char * w for w in widths) + right
+        
+        
+        def _header_line(widths, char="─", cross="┬", left="┌", right="┐"):
+            return left + cross.join(char * w for w in widths) + right
+        
+        
+        def _footer_line(widths, char="─", cross="┴", left="└", right="┘"):
+            return left + cross.join(char * w for w in widths) + right
+        
+        
+        def _row(cells, widths):
+            parts = []
+            for cell, w in zip(cells, widths):
+                text = str(cell)
+                parts.append(" " + text.ljust(w - 2) + " ")
+            return "│" + "│".join(parts) + "│"
+        
+        
+        def _center(text, width):
+            pad = width - len(text)
+            lpad = pad // 2
+            rpad = pad - lpad
+            return " " * lpad + text + " " * rpad
+        
+        
+        def print_banner(title, width=92):
+            print("\n" + "═" * width)
+            print(_center(title, width))
+            print("═" * width)
+        
+        
+        def print_section(title, width=92):
+            print("\n" + "─" * width)
+            print(f"  {title}")
+            print("─" * width)
+        
+        
+        def print_kv_table(pairs, title=None):
+            """Print a two-column key-value table."""
+            if title:
+                print(f"\n  {title}")
+            w_key = max(len(k) for k, _ in pairs) + 2
+            w_val = max(len(str(v)) for _, v in pairs) + 2
+            widths = [w_key, w_val]
+            print("  " + _header_line(widths))
+            for k, v in pairs:
+                print("  " + _row([k, v], widths))
+            print("  " + _footer_line(widths))
+        
+        
+        def print_solve_table(rows, title=None):
+            """
+            Print the per-solve results table.
+        
+            Columns:
+              Iter | Arc | Seg | Target | Result | Old cost | New cost | Δ cost | Time(s) | Cumul(s)
+            """
+            if title:
+                print(f"\n  {title}")
+        
+            headers = [
+                "Outer", "Arc", "Seg",
+                "→Tgt", "Status",
+                "Old cost", "New cost", "Δ cost",
+                "NLP #", "Time(s)", "Cumul(s)"
+            ]
+            widths = [7, 12, 5, 5, 12, 14, 14, 14, 7, 9, 9]
+        
+            print("  " + _header_line(widths))
+            print("  │" + "│".join(_center(h, w) for h, w in zip(headers, widths)) + "│")
+            print("  " + _hline(widths))
+        
+            for r in rows:
+                cells = [
+                    str(r.get("outer", "")),
+                    str(r.get("arc", "")),
+                    str(r.get("seg", "")),
+                    str(r.get("target", "")),
+                    str(r.get("status", "")),
+                    f"{r['old_cost']:.3f}" if r.get("old_cost") is not None else "—",
+                    f"{r['new_cost']:.3f}" if r.get("new_cost") is not None else "—",
+                    f"{r['delta']:+.3f}" if r.get("delta") is not None else "—",
+                    str(r.get("nlp_num", "")),
+                    f"{r['solve_time']:.2f}" if r.get("solve_time") is not None else "—",
+                    f"{r['cumul_time']:.2f}" if r.get("cumul_time") is not None else "—",
+                ]
+                print("  " + _row(cells, widths))
+        
+            print("  " + _footer_line(widths))
+        
+        
+        def print_segment_table(seg_index, changed_arcs=None, title=None):
+            """
+            Print segment assignments for all arcs.
+            Highlights arcs whose segment changed (if changed_arcs provided).
+            """
+            if title:
+                print(f"\n  {title}")
+        
+            changed_arcs = changed_arcs or set()
+            widths = [14, 12, 8]
+            print("  " + _header_line(widths))
+            print("  │" + "│".join(_center(h, w)
+                  for h, w in zip(["Arc", "Segments", "Changed"], widths)) + "│")
+            print("  " + _hline(widths))
+        
+            for arc, segs in sorted(seg_index.items()):
+                flag = "◀ YES" if arc in changed_arcs else ""
+                cells = [str(arc), str(segs), flag]
+                print("  " + _row(cells, widths))
+        
+            print("  " + _footer_line(widths))
+        
+        
+        def print_candidate_arcs_table(sorted_arcs, dual_dict, seg_index, title=None):
+            """Print ranked candidate arcs with their dual values and current segments."""
+            if title:
+                print(f"\n  {title}")
+        
+            widths = [5, 12, 12, 10]
+            print("  " + _header_line(widths))
+            print("  │" + "│".join(_center(h, w)
+                  for h, w in zip(["Rank", "Arc", "Dual |val|", "Seg"], widths)) + "│")
+            print("  " + _hline(widths))
+        
+            for rank, arc in enumerate(sorted_arcs, 1):
+                dual_val = dual_dict.get(arc, 0.0)
+                segs     = seg_index.get(arc, [])
+                cells    = [str(rank), str(arc), f"{abs(dual_val):.3f}", str(segs)]
+                print("  " + _row(cells, widths))
+        
+            if not sorted_arcs:
+                widths_total = sum(widths) + len(widths) - 1
+                print("  │" + _center("(no candidate arcs)", widths_total) + "│")
+        
+            print("  " + _footer_line(widths))
+    
+ 
+        # ── alpha breakpoints ────────────────────────────────────────────────────
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP  = len(alpha_vals)
+        tol = 1e-8
+    
+        # ── global timing ────────────────────────────────────────────────────────
+        heuristic_start = time.time()
+    
+        # ── log accumulator for the solve table ─────────────────────────────────
+        solve_log = []
+    
+        # ── NLP counter (may already be initialised on self) ────────────────────
+        if not hasattr(self, "number_of_nlp"):
+            self.number_of_nlp = 0
+    
+        # =========================================================================
+        # Helper: segment index
+        # =========================================================================
+        def compute_segment_index(y_sol):
+            """Return {arc: [segment_indices]} for every arc."""
+            seg_index = {}
+    
+            for (u, v) in self.arcs:
+                y_val           = y_sol[(u, v)]
+                active_segments = []
+    
+                for k in range(len(alpha_vals) - 1):
+                    a_high = alpha_vals[k]
+                    a_low  = alpha_vals[k + 1]
+    
+                    if (a_low + tol) < y_val < (a_high - tol):
+                        # strictly interior to segment k+1
+                        active_segments = [k + 1]
+                        break
+    
+                    elif abs(y_val - a_high) <= tol:
+                        # on upper breakpoint
+                        active_segments = [1] if k == 0 else [k, k + 1]
+                        break
+    
+                    elif abs(y_val - a_low) <= tol:
+                        # on lower breakpoint
+                        active_segments = (
+                            [k + 1] if k == len(alpha_vals) - 2
+                            else [k + 1, k + 2]
+                        )
+                        break
+    
+                # safeguard: y outside the alpha range or no match found
+                if not active_segments:
+                    if y_val > alpha_vals[0]:
+                        active_segments = [1]
+                    elif y_val < alpha_vals[-1]:
+                        active_segments = [NP - 1]
+                    else:
+                        distances = [abs(y_val - alpha_vals[k]) for k in range(NP)]
+                        idx = distances.index(min(distances))
+                        if idx == 0:
+                            active_segments = [1]
+                        elif idx == NP - 1:
+                            active_segments = [NP - 1]
+                        else:
+                            active_segments = [idx, idx + 1]
+    
+                seg_index[(u, v)] = active_segments
+    
+            return seg_index
+    
+        # =========================================================================
+        # Helper: true piecewise-linear cost
+        # =========================================================================
+        def compute_true_cost(y_sol, seg_sol):
+            return sum(
+                self.L[(i, j)] * (
+                    self.slope[seg_sol[(i, j)][0]] * y_sol[(i, j)]
+                    + self.intercept[seg_sol[(i, j)][0]]
+                )
+                for (i, j) in self.arcs
+            )
+    
+        # =========================================================================
+        # Helper: warm-start and solve a single NLP
+        # =========================================================================
+        def build_and_solve_nlp(i, j, target_seg):
+            """
+            Construct the AMPL model with current warm-start values and a
+            segment-cut constraint on arc (i,j), then solve with IPOPT.
+    
+            Returns (ampl_instance, solve_result, solve_time)
+            """
+            ampl = AMPL()
+            ampl.reset()
+    
+            # load model
+            model_map = {5: "newyork_model.mod", 6: "blacksburg_model.mod"}
+            ampl.read(model_map.get(self.data_number, "exact_reduced_wdn.mod"))
+            ampl.read_data(self.data_file)
+    
+            # warm-start primal variables
+            for (u, v), val in self.y.items():
+                ampl.eval(f"let y[{u},{v}] := {val};")
+    
+            for (u, v), val in self.q.items():
+                ampl.eval(f"let q[{u},{v}] := {val};")
+                if self.data_number == 5:
+                    ampl.eval(f"let q1[{u},{v}] := {self.q1[u, v]};")
+                    ampl.eval(f"let q2[{u},{v}] := {self.q2[u, v]};")
+    
+            for u, val in self.h.items():
+                ampl.eval(f"let h[{u}] := {val};")
+    
+            for (u, v), val in self.z.items():
+                ampl.eval(f"let z[{u},{v}] := {val};")
+
+            # warm-start duals
+            # current_duals = {
+            #     name: con.get_values()
+            #     for name, con in ampl.get_constraints()
+            # }
+            # for con_name, dual_values in self.all_duals.items():
+            #     if con_name in current_duals:
+            #         ampl.get_constraint(con_name).set_values(dual_values)
+
+            # segment-cut constraint
+            ampl.eval(f"""
+                s.t. seg_cut_lower:
+                      # {self.y[i,j]} <= y[{i},{j}];
+                    alpha[{target_seg}] <= y[{i},{j}];
+            """)
+
+            # solver options
+            ampl.option["solver"] = "ipopt"
+            ampl.set_option(
+                "ipopt_options",
+                "outlev=0 bound_relax_factor=0 warm_start_init_point=yes"
+            )
+            ampl.option["presolve_eps"] = "6.82e-14"
+            ampl.option["presolve"]     = 1
+
+            with self.suppress_output():
+                ampl.solve()
+            self.all_duals = {}
+            for con_name, con in ampl.get_constraints():
+                self.all_duals[con_name] = con.getValues()
+
+
+            solve_time = ampl.get_value("_solve_elapsed_time")
+            return ampl, ampl.solve_result, solve_time
+
+        # =========================================================================
+        # Initialisation
+        # =========================================================================
+        self.seg_index   = compute_segment_index(self.y)
+        self.current_cost = compute_true_cost(self.y, self.seg_index)
+
+        best_solution = {
+            "q":    copy.deepcopy(self.q),
+            "h":    copy.deepcopy(self.h),
+            "y":    copy.deepcopy(self.y),
+            "z":    copy.deepcopy(self.z),
+            "seg":  copy.deepcopy(self.seg_index),
+            "cost": self.current_cost,
+        }
+
+        print_banner("SEQUENTIAL CONTINUATION SEGMENT-CUT HEURISTIC")
+        print_kv_table([
+            ("Initial cost",      f"{self.current_cost:.6f}"),
+            ("Max outer iters",   str(max_outer_iterations)),
+            ("Improve tolerance", str(cost_improve_tol)),
+            ("Max seg reductions", str(max_segment_reduction_per_arc)),
+            # ("Alpha breakpoints", (alpha_vals)),
+            ("Total arcs",        str(len(self.arcs))),
+        ], title="Configuration")
+
+        print_segment_table(self.seg_index, title="Initial segment assignments")
+
+        outer_it             = 0
+        restart_global_search = True
+
+        # =========================================================================
+        # OUTER LOOP
+        # =========================================================================
+        while restart_global_search and outer_it < max_outer_iterations:
+            outer_it             += 1
+            restart_global_search = False
+
+            print_section(f"OUTER ITERATION {outer_it}")
+
+            # ── candidate arcs (max segment ≥ 2) ─────────────────────────────────
+            candidate_arcs = [
+                (i, j) for (i, j) in self.sorted_arcs
+                if max(self.seg_index[i, j]) >= 2 
+                if (i,j) not in self.visited_arc_reverse
+            ]
+
+            # ── extract duals for candidate arcs ─────────────────────────────────
+            dual_dict = {}
+            
+            for con_name, dual_values in self.all_duals.items():
+                if con_name == "con2":
+                    tmp       = dual_values.to_dict()
+                    dual_dict = {arc: val for arc, val in tmp.items()
+                                 if arc in candidate_arcs}
+                    break
+
+            sorted_arcs = sorted(
+                dual_dict, key=lambda a: abs(dual_dict[a]), reverse=False
+            )
+
+            print_candidate_arcs_table(
+                sorted_arcs, dual_dict, self.seg_index,
+                title=f"Candidate arcs (outer iter {outer_it})"
+            )
+
+            # ── iterate over arcs ─────────────────────────────────────────────────
+            for (i, j) in sorted_arcs:
+
+                print_section(f"Arc ({i},{j})  —  initial seg = {self.seg_index[(i,j)]}")
+
+                self.visited_arc_reverse.append((i, j))
+                current_seg       = self.seg_index[(i, j)][0]
+                reduction_counter = 0
+
+                if current_seg <= 1:
+                    print("  ⊘  Already at minimum segment — skipping.")
+                    continue
+
+                # ── CONTINUATION LOOP ─────────────────────────────────────────────
+                # while (current_seg > 1 ):
+                # while (current_seg > 1 and reduction_counter < max_segment_reduction_per_arc):
+
+                target_seg        = current_seg - 1
+                reduction_counter += 1
+                iter_start         = time.time()
+
+                # ── solve NLP ─────────────────────────────────────────────────
+                ampl_inst, solve_result, solve_time = build_and_solve_nlp(i, j, target_seg)
+                self.number_of_nlp += 1
+                cumul_time          = time.time() - heuristic_start
+
+                # ── parse solution ────────────────────────────────────────────
+                if solve_result == "solved":
+                    y_new    = ampl_inst.getVariable("y").getValues().to_dict()
+                    q_new    = ampl_inst.getVariable("q").getValues().to_dict()
+                    h_new    = ampl_inst.getVariable("h").getValues().to_dict()
+                    z_new    = ampl_inst.getVariable("z").getValues().to_dict()
+                    seg_new  = compute_segment_index(y_new)
+                    new_cost = compute_true_cost(y_new, seg_new)
+                    achieved = seg_new[(i, j)][0]
+                    delta    = new_cost - self.current_cost
+                    status   = "IMPROVED" if delta < -cost_improve_tol else "feasible"
+                else:
+                    new_cost = None
+                    achieved = None
+                    delta    = None
+                    status   = "infeasible"
+
+                # ── log row ───────────────────────────────────────────────────
+                solve_log.append({
+                    "outer":       outer_it,
+                    "arc":         f"({i},{j})",
+                    "seg":         current_seg,
+                    "target":      target_seg,
+                    "status":      status,
+                    "old_cost":    self.current_cost,
+                    "new_cost":    new_cost,
+                    "delta":       delta,
+                    "nlp_num":     self.number_of_nlp,
+                    "solve_time":  solve_time,
+                    "cumul_time":  cumul_time,
+                })
+
+                # ── display running solve table ───────────────────────────────
+                print_solve_table([solve_log[-1]], title="  Latest solve")
+
+                # ── infeasible: stop this arc ─────────────────────────────────
+                if solve_result != "solved":
+                    print("  ✗  NLP infeasible — moving to next arc.")
+                    break
+
+                # ── always accept feasible structure ─────────────────────────
+                prev_seg_index   = copy.deepcopy(self.seg_index)
+                self.ampl        = ampl_inst
+                self.y           = copy.deepcopy(y_new)
+                self.q           = copy.deepcopy(q_new)
+                self.h           = copy.deepcopy(h_new)
+                self.z           = copy.deepcopy(z_new)
+                self.seg_index   = copy.deepcopy(seg_new)
+                self.network_graph = self.generate_random_acyclic_from_solution(q_new)
+
+                # show what changed in segments
+                changed_arcs = {
+                    arc for arc in self.arcs
+                    if self.seg_index[arc] != prev_seg_index[arc]
+                }
+                # print_segment_table(
+                #     self.seg_index,
+                #     changed_arcs=changed_arcs,
+                #     title=f"  Updated segments after seg {current_seg}→{target_seg}"
+                # )
+
+                # ── improved ─────────────────────────────────────────────────
+                if delta < -cost_improve_tol:
+                    print(f"  ★  IMPROVEMENT  {self.current_cost:.6f} → {new_cost:.6f}"
+                          f"  (Δ = {delta:+.6f})")
+                    self.current_cost = new_cost
+                    best_solution = {
+                        "q":    copy.deepcopy(q_new),
+                        "h":    copy.deepcopy(h_new),
+                        "y":    copy.deepcopy(y_new),
+                        "z":    copy.deepcopy(z_new),
+                        "seg":  copy.deepcopy(seg_new),
+                        "cost": new_cost,
+                    }
+                    current_seg = achieved    # continue on same arc
+                    restart_global_search = True
+                    # continue
+                    # break
+
+                # ── feasible but not improving ────────────────────────────────
+                # print("  ↺  Feasible but no improvement — restarting outer loop.")
+                # break
+
+                # ── restart outer loop if flagged ─────────────────────────────────
+                if restart_global_search:
+                    break
+
+        # =========================================================================
+        # Summary
+        # =========================================================================
+        total_time = time.time() - heuristic_start
+
+        print_banner("FINAL RESULTS")
+        print_kv_table([
+            ("Best cost",         f"{best_solution['cost']:.3f}"),
+            ("Initial cost",      f"{solve_log[0]['old_cost']:.3f}" if solve_log else "—"),
+            ("Total improvement", f"{best_solution['cost'] - (solve_log[0]['old_cost'] if solve_log else best_solution['cost']):+.6f}"),
+            ("Outer iterations",  str(outer_it)),
+            ("NLP solves",        str(self.number_of_nlp)),
+            ("Total wall time",   f"{total_time:.2f}s"),
+        ], title="Summary statistics")
+
+        if solve_log:
+            print_solve_table(solve_log, title="Complete solve history")
+
+        # print_segment_table(best_solution["seg"], title="Best solution — segment assignments")
+
+        return (
+            best_solution["q"],
+            best_solution["h"],
+            best_solution["y"],
+            best_solution["z"],
+        )
+
+
+    def lagrangian_based_heuristic(
+        self,
+        q_star,
+        h_star,
+        y_star,
+        z_star,
+        seg_index,
+        theta=0.05,
+        max_outer=20,
+        top_k_fraction=0.25,
+        distance_weight=5.0,
+        cost_improve_tol=1e-4,
+        segment_change_tol=2
+    ):
+    
+        """
+        Active-set dual perturbation heuristic
+        with multi-active breakpoint segments.
+        """
+    
+        from amplpy import AMPL
+    
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+    
+        NP = len(alpha_vals)
+    
+        # ============================================================
+        # utilities
+        # ============================================================
+    
+        def find_seg(yv):
+    
+            tol = 1e-8
+    
+            active_segments = []
+    
+            for k in range(NP - 1):
+    
+                a_high = alpha_vals[k]
+                a_low = alpha_vals[k + 1]
+    
+                # ----------------------------------------------------
+                # interior
+                # ----------------------------------------------------
+    
+                if (a_low + tol) < yv < (a_high - tol):
+    
+                    active_segments = [k + 1]
+                    break
+    
+                # ----------------------------------------------------
+                # upper breakpoint
+                # ----------------------------------------------------
+    
+                elif abs(yv - a_high) <= tol:
+    
+                    if k == 0:
+                        active_segments = [1]
+                    else:
+                        active_segments = [k, k + 1]
+    
+                    break
+    
+                # ----------------------------------------------------
+                # lower breakpoint
+                # ----------------------------------------------------
+    
+                elif abs(yv - a_low) <= tol:
+    
+                    if k == NP - 2:
+                        active_segments = [k + 1]
+                    else:
+                        active_segments = [k + 1, k + 2]
+    
+                    break
+    
+            # --------------------------------------------------------
+            # safeguard
+            # --------------------------------------------------------
+    
+            if not active_segments:
+    
+                if yv > alpha_vals[0]:
+    
+                    active_segments = [1]
+    
+                elif yv < alpha_vals[-1]:
+    
+                    active_segments = [NP - 1]
+    
+                else:
+    
+                    distances = [
+                        abs(yv - alpha_vals[k])
+                        for k in range(NP)
+                    ]
+    
+                    idx = distances.index(min(distances))
+    
+                    if idx == 0:
+                        active_segments = [1]
+    
+                    elif idx == NP - 1:
+                        active_segments = [NP - 1]
+    
+                    else:
+                        active_segments = [idx, idx + 1]
+    
+            return active_segments
+    
+        # ============================================================
+        # exact cost
+        # ============================================================
+    
+        def true_cost(y_sol, seg_sol):
+    
+            total = 0.0
+    
+            for (i, j) in self.arcs:
+    
+                s = seg_sol[(i, j)][0]
+    
+                total += (
+                    self.L[(i, j)]
+                    * (
+                        self.slope[s] * y_sol[(i, j)]
+                        + self.intercept[s]
+                    )
+                )
+    
+            return total
+    
+        # ============================================================
+        # expensive arcs
+        # ============================================================
+    
+        def get_expensive_arcs(z_sol):
+    
+            arc_cost = sorted(
+                [
+                    ((i, j), z_sol[(i, j)])
+                    for (i, j) in self.arcs
+                ],
+                key=lambda x: -x[1]
+            )
+    
+            k = max(1, int(top_k_fraction * len(self.arcs)))
+    
+            return set(a for a, _ in arc_cost[:k])
+    
+        # ============================================================
+        # initial incumbent
+        # ============================================================
+    
+        C_star = true_cost(y_star, seg_index)
+    
+        incumbent = {
+            "q": q_star.copy(),
+            "h": h_star.copy(),
+            "y": y_star.copy(),
+            "z": z_star.copy(),
+            "seg": seg_index.copy(),
+            "cost": C_star
+        }
+    
+        best_global = incumbent.copy()
+    
+        # ============================================================
+        # initialize vartheta
+        # ============================================================
+    
+        vartheta = {}
+    
+        for (i, j) in self.arcs:
+    
+            active_set = seg_index[(i, j)]
+    
+            mass = 1.0 / len(active_set)
+    
+            for s in range(1, NP):
+    
+                if s in active_set:
+                    vartheta[(i, j, s)] = mass
+                else:
+                    vartheta[(i, j, s)] = 0.0
+    
+        print("\n" + "=" * 75)
+        print(" ACTIVE-SET LAGRANGIAN ESCAPE HEURISTIC")
+        print(f" INITIAL COST = {C_star:.6f}")
+        print("=" * 75)
+    
+        stagnation = 0
+    
+        # ============================================================
+        # OUTER ITERATIONS
+        # ============================================================
+    
+        for outer_it in range(1, max_outer + 1):
+    
+            print(f"\nOUTER ITERATION {outer_it}")
+            print("-" * 75)
+    
+            y_inc = incumbent["y"]
+            seg_inc = incumbent["seg"]
+    
+            # ========================================================
+            # STEP 1:
+            # expensive arcs
+            # ========================================================
+    
+            expensive_arcs = get_expensive_arcs(incumbent["z"])
+    
+            print("Theta value:", theta)
+            print(f"Expensive arcs selected: {len(expensive_arcs)}")
+    
+            # ========================================================
+            # STEP 2:
+            # update dual multipliers
+            # ========================================================
+    
+            vartheta_new = {}
+    
+            for (i, j) in self.arcs:
+    
+                active_set = seg_inc[(i, j)]
+    
+                # ----------------------------------------------------
+                # initialize
+                # ----------------------------------------------------
+    
+                for s in range(1, NP):
+    
+                    vartheta_new[(i, j, s)] = 0.0
+    
+                # ----------------------------------------------------
+                # current mass
+                # ----------------------------------------------------
+    
+                mass_cur = 1.0 / len(active_set)
+    
+                # ----------------------------------------------------
+                # neighboring cheaper segments
+                # ----------------------------------------------------
+    
+                target_set = set()
+    
+                for s_cur in active_set:
+    
+                    if s_cur > 1:
+                        target_set.add(s_cur - 1)
+                    else:
+                        target_set.add(1)
+    
+                target_set = list(target_set)
+    
+                mass_target = theta / len(target_set)
+    
+                # ----------------------------------------------------
+                # retain current mass
+                # ----------------------------------------------------
+    
+                for s_cur in active_set:
+    
+                    vartheta_new[(i, j, s_cur)] += (
+                        (1.0 - theta) * mass_cur
+                    )
+    
+                # ----------------------------------------------------
+                # transfer perturbation mass
+                # ----------------------------------------------------
+    
+                for s_tar in target_set:
+    
+                    vartheta_new[(i, j, s_tar)] += mass_target
+    
+            vartheta = vartheta_new
+    
+            # ========================================================
+            # STEP 3:
+            # construct coefficients
+            # ========================================================
+    
+            coef_z = {}
+            coef_y = {}
+            const_term = {}
+    
+            for (i, j) in self.arcs:
+    
+                coef_z[(i, j)] = 1.0
+                coef_y[(i, j)] = 0.0
+                const_term[(i, j)] = 0.0
+    
+                for s in range(1, NP):
+    
+                    v = vartheta[(i, j, s)]
+    
+                    coef_z[(i, j)] -= v
+    
+                    coef_y[(i, j)] += (
+                        v
+                        * self.L[(i, j)]
+                        * self.slope[s]
+                    )
+    
+                    const_term[(i, j)] += (
+                        v
+                        * self.L[(i, j)]
+                        * self.intercept[s]
+                    )
+    
+            # ========================================================
+            # STEP 4:
+            # solve relaxed NLP
+            # ========================================================
+    
+            ampl = AMPL()
+    
+            ampl.read("exact_reduced_wdn.mod")
+            ampl.read_data(self.data_file)
+    
+            ampl.option["solver"] = "ipopt"
+    
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+    
+            ampl.eval("""
+    
+                param coef_z{arcs};
+                param coef_y{arcs};
+                param const_term{arcs};
+    
+                param y_ref{arcs};
+                param distance_weight default 1;
+    
+                drop total_cost;
+    
+                minimize relaxed_obj:
+    
+                    sum{(i,j) in arcs}
+                    (
+                        coef_z[i,j] * z[i,j]
+                        + coef_y[i,j] * y[i,j]
+                        + const_term[i,j]
+                    );
+            """)
+    
+            ampl.param["distance_weight"] = distance_weight
+    
+            for (i, j) in self.arcs:
+    
+                ampl.param["coef_z"][i, j] = coef_z[(i, j)]
+                ampl.param["coef_y"][i, j] = coef_y[(i, j)]
+                ampl.param["const_term"][i, j] = const_term[(i, j)]
+    
+                ampl.param["y_ref"][i, j] = y_inc[(i, j)]
+    
+            # ========================================================
+            # warm start
+            # ========================================================
+    
+            for (i, j) in self.arcs:
+    
+                ampl.var["q"][i, j] = incumbent["q"][(i, j)]
+                ampl.var["y"][i, j] = incumbent["y"][(i, j)]
+                ampl.var["z"][i, j] = incumbent["z"][(i, j)]
+    
+            for i in self.nodes:
+    
+                ampl.var["h"][i] = incumbent["h"][i]
+    
+            # ========================================================
+            # relax epigraph constraints
+            # ========================================================
+    
+            ampl.eval("drop exact_cost;")
+    
+            for (i, j) in self.arcs:
+    
+                active_set = seg_inc[(i, j)]
+    
+                relaxed_set = set(active_set)
+    
+                # ----------------------------------------------------
+                # also relax neighboring cheaper segments
+                # ----------------------------------------------------
+    
+                for s_cur in active_set:
+    
+                    if s_cur > 1:
+                        relaxed_set.add(s_cur - 1)
+    
+                # ----------------------------------------------------
+                # keep remaining constraints
+                # ----------------------------------------------------
+    
+                for s in self.segs:
+    
+                    if s not in relaxed_set:
+    
+                        ampl.eval(f"""
+                            s.t. epigraph_{i}_{j}_{s}:
+    
+                                z[{i},{j}]
+                                >=
+                                L[{i},{j}] *
+                                (
+                                    slope[{s}] * y[{i},{j}]
+                                    + intercept[{s}]
+                                );
+                        """)
+    
+            # ========================================================
+            # solve relaxed NLP
+            # ========================================================
+    
+            with self.suppress_output():
+                ampl.solve()
+    
+            status = ampl.get_value("solve_result")
+    
+            if status != "solved":
+    
+                print("Relaxed NLP failed.")
+    
+                theta = min(0.95, 1.5 * theta)
+    
+                continue
+    
+            # ========================================================
+            # retrieve relaxed solution
+            # ========================================================
+    
+            q_rel = ampl.get_variable("q").get_values().to_dict()
+    
+            y_rel = ampl.get_variable("y").get_values().to_dict()
+    
+            h_rel = ampl.get_variable("h").get_values().to_dict()
+    
+            z_rel = ampl.get_variable("z").get_values().to_dict()
+    
+            seg_rel = {
+                (i, j): find_seg(y_rel[(i, j)])
+                for (i, j) in self.arcs
+            }
+    
+            C_relaxed_model = true_cost(y_rel, seg_rel)
+    
+            # ========================================================
+            # segment changes
+            # ========================================================
+    
+            changed_arcs = [
+                (i, j)
+                for (i, j) in self.arcs
+                if set(seg_rel[(i, j)]) != set(seg_inc[(i, j)])
+            ]
+    
+            seg_changes = len(changed_arcs)
+    
+            print(f"Segment changes = {seg_changes}")
+    
+            print("Relaxed model objective value:", C_relaxed_model)
+    
+            # ========================================================
+            # insufficient escape
+            # ========================================================
+    
+            if seg_changes < segment_change_tol:
+    
+                theta = min(0.95, theta + 0.1)
+    
+                distance_weight *= 1.2
+    
+                stagnation += 1
+    
+                print("Insufficient basin escape.")
+    
+                continue
+    
+            # ========================================================
+            # STEP 5:
+            # exact NLP projection
+            # ========================================================
+    
+            ampl_ex = AMPL()
+    
+            ampl_ex.read("exact_reduced_wdn.mod")
+            ampl_ex.read_data(self.data_file)
+    
+            ampl_ex.option["solver"] = "ipopt"
+    
+            ampl_ex.option["ipopt_options"] = (
+                "outlev=0 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+    
+            # --------------------------------------------------------
+            # warm start
+            # --------------------------------------------------------
+    
+            for (i, j) in self.arcs:
+    
+                ampl_ex.var["q"][i, j] = q_rel[(i, j)]
+                ampl_ex.var["y"][i, j] = y_rel[(i, j)]
+                ampl_ex.var["z"][i, j] = z_rel[(i, j)]
+    
+            for i in self.nodes:
+    
+                ampl_ex.var["h"][i] = h_rel[i]
+    
+            # ========================================================
+            # exact solve
+            # ========================================================
+    
+            with self.suppress_output():
+                ampl_ex.solve()
+    
+            status_ex = ampl_ex.get_value("solve_result")
+    
+            if status_ex != "solved":
+    
+                print("Exact projection failed.")
+    
+                theta *= 0.7
+    
+                continue
+    
+            # ========================================================
+            # retrieve exact solution
+            # ========================================================
+    
+            q_ex = ampl_ex.get_variable("q").get_values().to_dict()
+    
+            y_ex = ampl_ex.get_variable("y").get_values().to_dict()
+    
+            h_ex = ampl_ex.get_variable("h").get_values().to_dict()
+    
+            z_ex = ampl_ex.get_variable("z").get_values().to_dict()
+    
+            seg_ex = {
+                (i, j): find_seg(y_ex[(i, j)])
+                for (i, j) in self.arcs
+            }
+    
+            cost_ex = true_cost(y_ex, seg_ex)
+    
+            print(
+                f"Projected exact cost = {cost_ex:.6f} "
+                f"Best cost = {best_global['cost']:.6f}"
+            )
+    
+            # ========================================================
+            # STEP 6:
+            # accept/reject
+            # ========================================================
+    
+            if cost_ex < incumbent["cost"] - cost_improve_tol:
+    
+                print("*** IMPROVED LOCAL SOLUTION FOUND ***")
+    
+                incumbent = {
+                    "q": q_ex.copy(),
+                    "h": h_ex.copy(),
+                    "y": y_ex.copy(),
+                    "z": z_ex.copy(),
+                    "seg": seg_ex.copy(),
+                    "cost": cost_ex
+                }
+    
+                if cost_ex < best_global["cost"]:
+    
+                    best_global = incumbent.copy()
+    
+                theta = max(0.15, 0.5 * theta)
+    
+                distance_weight *= 0.8
+    
+                stagnation = 0
+    
+            else:
+    
+                print("No improvement.")
+    
+                theta = min(0.95, theta + 0.05)
+    
+                distance_weight *= 1.1
+    
+                stagnation += 1
+    
+            # ========================================================
+            # diversification
+            # ========================================================
+    
+            if stagnation >= 5:
+    
+                print("Strong diversification activated.")
+    
+                theta = min(0.95, theta + 0.25)
+    
+                distance_weight *= 1.5
+    
+                stagnation = 0
+    
+        # ============================================================
+        # FINAL
+        # ============================================================
+    
+        print("\n" + "=" * 75)
+    
+        print(f" FINAL BEST COST = {best_global['cost']:.6f}")
+    
+        print("=" * 75)
+    
+        return (
+            best_global["q"],
+            best_global["h"],
+            best_global["y"],
+            best_global["z"]
+        )
+
+
+    def lagrangian_based_heuristic3(
+        self,
+        q_star,
+        h_star,
+        y_star,
+        z_star,
+        seg_index,
+        theta=0.0001,
+        max_outer=30,
+        top_k_fraction=0.25,
+        distance_weight=5.0,
+        cost_improve_tol=1e-4,
+        segment_change_tol=2
+    ):
+        """
+        Active-set dual perturbation heuristic.
+
+        Main ideas:
+        ----------
+        1. Relax currently active epigraph planes.
+        2. Penalize staying near previous basin.
+        3. Push only expensive arcs.
+        4. Encourage neighboring cheaper segments.
+        5. Adaptive theta update.
+        6. Exact NLP projection.
+        """
+
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP = len(alpha_vals)
+
+        # ============================================================
+        # utilities
+        # ============================================================
+
+        def find_seg(yv):
+            for k in range(NP - 1):
+                if alpha_vals[k + 1] - 1e-10 <= yv <= alpha_vals[k] + 1e-10:
+                    return k + 1
+            return 1 if yv > alpha_vals[0] else NP - 1
+
+        def true_cost(y_sol, seg_sol):
+            return sum(
+                self.L[i, j]
+                * (
+                    self.slope[seg_sol[i, j]] * y_sol[i, j]
+                    + self.intercept[seg_sol[i, j]]
+                )
+                for (i, j) in self.arcs
+            )
+
+        def get_expensive_arcs(z_sol):
+            arc_cost = sorted(
+                [
+                    ((i, j), z_sol[i, j])
+                    for (i, j) in self.arcs
+                ],
+                key=lambda x: -x[1]
+            )
+
+            k = max(1, int(top_k_fraction * len(self.arcs)))
+
+            return set(a for a, _ in arc_cost[:k])
+
+        # ============================================================
+        # initial incumbent
+        # ============================================================
+
+        C_star = true_cost(y_star, seg_index)
+
+        incumbent = {
+            "q": q_star.copy(),
+            "h": h_star.copy(),
+            "y": y_star.copy(),
+            "z": z_star.copy(),
+            "seg": seg_index.copy(),
+            "cost": C_star
+        }
+
+        best_global = incumbent.copy()
+
+        # ============================================================
+        # initialize vartheta multipliers
+        # ============================================================
+
+        vartheta = {}
+
+        for (i, j) in self.arcs:
+            for s in range(1, NP):
+                vartheta[(i, j, s)] = (
+                    1.0 if s == seg_index[(i, j)] else 0.0
+                )
+
+        print("\n" + "=" * 75)
+        print(f" ACTIVE-SET LAGRANGIAN ESCAPE HEURISTIC")
+        print(f" INITIAL COST = {C_star:.6f}")
+        print("=" * 75)
+
+        stagnation = 0
+
+        # ============================================================
+        # outer iterations
+        # ============================================================
+
+        for outer_it in range(1, max_outer + 1):
+
+            print(f"\nOUTER ITERATION {outer_it}")
+            print("-" * 75)
+
+            y_inc = incumbent["y"]
+            seg_inc = incumbent["seg"]
+
+            # ========================================================
+            # STEP 1:
+            # identify expensive arcs
+            # ========================================================
+
+            expensive_arcs = get_expensive_arcs(incumbent["z"])
+            print("Theta value:", theta)
+            print(f"Expensive arcs selected: {len(expensive_arcs)}")
+
+            # ========================================================
+            # STEP 2:
+            # update dual multipliers
+            # ========================================================
+
+            vartheta_new = {}
+
+            for (i, j) in self.arcs:
+
+                s_cur = seg_inc[(i, j)]
+
+                # initialize all multipliers to zero
+                for s in range(1, NP):
+                    vartheta_new[(i, j, s)] = 0.0
+
+                if s_cur==1:
+                    vartheta_new[(i,j,s_cur)] = 1
+                    continue
+                # ----------------------------------------------------
+                # only perturb expensive arcs
+                # ----------------------------------------------------
+
+                # if (i, j) not in expensive_arcs:
+                #
+                #     vartheta_new[(i, j, s_cur)] = 1.0
+                #     continue
+
+                # ----------------------------------------------------
+                # choose neighboring cheaper segment
+                # ----------------------------------------------------
+
+                s_target = min(NP - 1, s_cur - 1)
+
+                # ----------------------------------------------------
+                # transfer mass from current active segment
+                # to neighboring cheaper segment
+                # ----------------------------------------------------
+
+                vartheta_new[(i, j, s_cur)] = 1.0 - theta
+                vartheta_new[(i, j, s_target)] = theta
+
+            vartheta = vartheta_new
+            # print("vartheta:",vartheta)
+            # ========================================================
+            # STEP 3:
+            # construct modified objective coefficients
+            # ========================================================
+
+            coef_z = {}
+            coef_y = {}
+            const_term = {}
+
+            for (i, j) in self.arcs:
+
+                coef_z[(i, j)] = 1.0
+
+                coef_y[(i, j)] = 0.0
+
+                const_term[(i, j)] = 0.0
+
+                for s in range(1, NP):
+
+                    v = vartheta[(i, j, s)]
+
+                    coef_z[(i, j)] -= v
+
+                    coef_y[(i, j)] += (
+                        v
+                        * self.L[(i, j)]
+                        * self.slope[s]
+                    )
+
+                    const_term[(i, j)] += (
+                        v
+                        * self.L[(i, j)]
+                        * self.intercept[s]
+                    )
+
+            # ========================================================
+            # STEP 4:
+            # solve relaxed NLP
+            # ========================================================
+
+            ampl = AMPL()
+
+            ampl.read("exact_reduced_wdn.mod")
+            ampl.read_data(self.data_file)
+
+            ampl.option["solver"] = "ipopt"
+
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "max_iter=3000 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+
+            ampl.eval("""
+                param coef_z{arcs};
+                param coef_y{arcs};
+                param const_term{arcs};
+
+                param y_ref{arcs};
+                param distance_weight default 1;
+
+                drop total_cost;
+
+                minimize relaxed_obj:
+
+                    sum{(i,j) in arcs}
+                    (
+                        coef_z[i,j] * z[i,j]
+                        + coef_y[i,j] * y[i,j]
+                        + const_term[i,j]
+                    )
+
+                    # - distance_weight *
+                    # sum{(i,j) in arcs}
+                    # (y[i,j] - y_ref[i,j])^2
+                    ;
+            """)
+
+            ampl.param["distance_weight"] = distance_weight
+
+            for (i, j) in self.arcs:
+
+                ampl.param["coef_z"][i, j] = coef_z[(i, j)]
+                ampl.param["coef_y"][i, j] = coef_y[(i, j)]
+                ampl.param["const_term"][i, j] = const_term[(i, j)]
+
+                ampl.param["y_ref"][i, j] = y_inc[(i, j)]
+
+            # ========================================================
+            # warm start
+            # ========================================================
+
+            for (i, j) in self.arcs:
+
+                ampl.var["q"][i, j] = incumbent["q"][(i, j)]
+                ampl.var["y"][i, j] = incumbent["y"][(i, j)]
+                ampl.var["z"][i, j] = incumbent["z"][(i, j)]
+
+            for i in self.nodes:
+                ampl.var["h"][i] = incumbent["h"][i]
+
+            # ========================================================
+            # relax currently active epigraph constraints
+            # ========================================================
+
+            ampl.eval("drop exact_cost;")
+
+            # for (i, j) in self.arcs:
+            #
+            #     s_cur = seg_inc[(i, j)]
+            #
+            #     for s in self.segs:
+            #
+            #         if s != s_cur:
+            #
+            #             ampl.eval(f"""
+            #                 s.t. epigraph_{i}_{j}_{s}:
+            #                     z[{i},{j}]
+            #                     >=
+            #                     L[{i},{j}] *
+            #                     (
+            #                         slope[{s}] * y[{i},{j}]
+            #                         + intercept[{s}]
+            #                     );
+            #             """)
+
+            for (i, j) in self.arcs:
+            
+                s_cur = seg_inc[(i, j)]
+            
+                if s_cur == 1:
+                    relaxed_set = {s_cur}
+                else:
+                    s_target = s_cur - 1
+                    relaxed_set = {s_cur, s_target}
+            
+                for s in self.segs:
+            
+                    # KEEP only non-relaxed constraints
+                    if s not in relaxed_set:
+            
+                        ampl.eval(f"""
+                            s.t. epigraph_{i}_{j}_{s}:
+                                z[{i},{j}]
+                                >=
+                                L[{i},{j}] *
+                                (
+                                    slope[{s}] * y[{i},{j}]
+                                    + intercept[{s}]
+                                );
+                        """)
+            # ========================================================
+            # solve relaxed NLP
+            # ========================================================
+
+            with self.suppress_output():
+                ampl.solve()
+
+            status = ampl.get_value("solve_result")
+
+            if status != "solved":
+
+                print("Relaxed NLP failed.")
+
+                theta = min(0.95, 1.5 * theta)
+
+                continue
+
+            # ========================================================
+            # retrieve solution
+            # ========================================================
+
+            q_rel = ampl.get_variable("q").get_values().to_dict()
+            y_rel = ampl.get_variable("y").get_values().to_dict()
+            h_rel = ampl.get_variable("h").get_values().to_dict()
+            z_rel = ampl.get_variable("z").get_values().to_dict()
+
+            seg_rel = {
+                (i, j): find_seg(y_rel[(i, j)])
+                for (i, j) in self.arcs
+            }
+
+            C_relaxed_model = true_cost(y_rel, seg_rel)
+            # ampl.eval("display y;")
+            # ampl.eval("display exact_cost.dual;")
+            # for (i, j) in self.arcs:
+            #     s_cur = seg_inc[(i, j)]
+            #     for s in self.segs:
+            #         if s != s_cur:
+            #             ampl.eval(f"""display epigraph_{i}_{j}_{s}.dual;""")
+            # ========================================================
+            # measure segment changes
+            # ========================================================
+
+            changed_arcs = [
+                (i, j)
+                for (i, j) in self.arcs
+                if seg_rel[(i, j)] != seg_inc[(i, j)]
+            ]
+
+            seg_changes = len(changed_arcs)
+
+            print(f"Segment changes = {seg_changes}")
+            print(f"Relaxed model objective value:",C_relaxed_model)
+            # ========================================================
+            # if insufficient changes => stronger push
+            # ========================================================
+
+            if seg_changes < segment_change_tol:
+
+                theta = min(0.95, theta + 0.1)
+
+                distance_weight *= 1.2
+
+                stagnation += 1
+
+                print("Insufficient basin escape.")
+
+                continue
+
+            # ========================================================
+            # STEP 5:
+            # exact NLP projection
+            # ========================================================
+
+            ampl_ex = AMPL()
+
+            ampl_ex.read("exact_reduced_wdn.mod")
+            ampl_ex.read_data(self.data_file)
+
+            ampl_ex.option["solver"] = "ipopt"
+
+            ampl_ex.option["ipopt_options"] = (
+                "outlev=0 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+
+            # --------------------------------------------------------
+            # warm start from relaxed solution
+            # --------------------------------------------------------
+
+            for (i, j) in self.arcs:
+
+                ampl_ex.var["q"][i, j] = q_rel[(i, j)]
+                ampl_ex.var["y"][i, j] = y_rel[(i, j)]
+                ampl_ex.var["z"][i, j] = z_rel[(i, j)]
+
+            for i in self.nodes:
+                ampl_ex.var["h"][i] = h_rel[i]
+
+            # ========================================================
+            # exact solve
+            # ========================================================
+
+            with self.suppress_output():
+                ampl_ex.solve()
+
+            status_ex = ampl_ex.get_value("solve_result")
+
+            if status_ex != "solved":
+
+                print("Exact projection failed.")
+
+                theta *= 0.7
+
+                continue
+
+            # ========================================================
+            # retrieve exact solution
+            # ========================================================
+
+            q_ex = ampl_ex.get_variable("q").get_values().to_dict()
+
+            y_ex = ampl_ex.get_variable("y").get_values().to_dict()
+
+            h_ex = ampl_ex.get_variable("h").get_values().to_dict()
+
+            z_ex = ampl_ex.get_variable("z").get_values().to_dict()
+
+            seg_ex = {
+                (i, j): find_seg(y_ex[(i, j)])
+                for (i, j) in self.arcs
+            }
+
+            cost_ex = true_cost(y_ex, seg_ex)
+
+            print(f"Projected exact cost = {cost_ex:.6f} Best cost = {best_global["cost"]}")
+
+            # ========================================================
+            # STEP 6:
+            # accept/reject
+            # ========================================================
+
+            if cost_ex < incumbent["cost"] - cost_improve_tol:
+
+                print(f"*** IMPROVED LOCAL SOLUTION FOUND ***")
+
+                incumbent = {
+                    "q": q_ex.copy(),
+                    "h": h_ex.copy(),
+                    "y": y_ex.copy(),
+                    "z": z_ex.copy(),
+                    "seg": seg_ex.copy(),
+                    "cost": cost_ex
+                }
+
+                if cost_ex < best_global["cost"]:
+
+                    best_global = incumbent.copy()
+
+                # ----------------------------------------------------
+                # reset perturbation after improvement
+                # ----------------------------------------------------
+
+                theta = max(0.15, 0.5 * theta)
+
+                distance_weight *= 0.8
+
+                stagnation = 0
+
+            else:
+
+                print("No improvement.")
+
+                theta = min(0.95, theta + 0.05)
+
+                distance_weight *= 1.1
+
+                stagnation += 1
+
+            # ========================================================
+            # diversification
+            # ========================================================
+
+            if stagnation >= 5:
+
+                print("Strong diversification activated.")
+
+                theta = min(0.95, theta + 0.25)
+
+                distance_weight *= 1.5
+
+                stagnation = 0
+
+        # ============================================================
+        # final
+        # ============================================================
+
+        print("\n" + "=" * 75)
+        print(f" FINAL BEST COST = {best_global['cost']:.6f}")
+        print("=" * 75)
+
+        return (
+            best_global["q"],
+            best_global["h"],
+            best_global["y"],
+            best_global["z"]
+        )
+
+    def lagrangian_based_heuristic1(self,q_star, h_star, y_star, z_star, seg_index, strategy='shift', theta=0.4, max_outer=30):
+        """
+        Update dual of active epigraph constraints of previous local solution
+        and re-solve relaxed model to find different local solution.
+        """
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP         = len(alpha_vals)
+
+        def find_seg(yv):
+            for k in range(NP-1):
+                if alpha_vals[k+1]-1e-10 <= yv <= alpha_vals[k]+1e-10:
+                    return k+1
+            return 1 if yv > alpha_vals[0] else NP-1
+
+        def true_cost(y_sol, seg_index):
+            return sum(
+                self.L[i,j]*(self.slope[seg_index[i,j]]*y_sol[i,j] + self.intercept[seg_index[i,j]])
+                for (i,j) in self.arcs
+            )
+        # print("seg_index",seg_index) 
+        C_star    = true_cost(y_star, seg_index)
+        # C_star = sum(self.L[(i,j)] * (self.slope[seg_index[i,j]] * y_sol[(i,j)]+ self.intercept[seg_index[(i,j)]]) for (i,j) in self.arcs)
+
+        incumbent = {
+            "q": q_star.copy(), "h": h_star.copy(),
+            "y": y_star.copy(), "z": z_star.copy(),
+            "seg": seg_index.copy(), "cost": C_star
+        }
+
+        # ── initialise vartheta at current KKT solution ──
+        # vartheta[i,j,s] = 1 if s == s*_ij, else 0
+        vartheta = {}
+        for (i,j) in self.arcs:
+            for s in range(1, NP):
+                vartheta[(i,j,s)] = 1.0 if s == seg_index[(i,j)] else 0.0
+        print(f"\n{'='*65}")
+        print(f" DUAL UPDATE SEARCH  |  C* = {C_star:.4f}")
+        print(f"{'='*65}")
+        for it in range(1, max_outer+1):
+            y_inc  = incumbent["y"]
+            seg_inc= incumbent["seg"]
+            # ══════════════════════════════════════════════════
+            # STEP 1: compute update direction for each arc
+            # ══════════════════════════════════════════════════
+            vartheta_new = {}
+            for (i,j) in self.arcs:
+                s_cur = seg_inc[(i,j)]
+                yv    = y_inc[(i,j)]
+                if strategy == 'shift':
+                    # transfer theta from s* to s*+1 (cheaper segment)
+                    s_next = min(NP-1, s_cur + 1)
+                    for s in range(1, NP):
+                        vartheta_new[(i,j,s)] = 0.0
+                    vartheta_new[(i,j,s_cur)]  = 1.0 - theta
+                    vartheta_new[(i,j,s_next)] = theta
+
+            # update vartheta
+            vartheta = vartheta_new
+            # ══════════════════════════════════════════════════
+            # STEP 2: compute modified objective coefficients
+            # ══════════════════════════════════════════════════
+            # Modified obj:
+            # min sum z_ij + sum_{ij,s in I_ij} vartheta*_ijs * (L*(m_s*y+b_s) - z_ij)
+            #
+            # = min sum z_ij * (1 - sum_{s in I_ij} vartheta*_ijs)
+            #     + sum_{ij,s in I_ij} vartheta*_ijs * L_ij * m_s * y_ij
+            #     + constant terms (b_s contributions)
+            #
+            # Coefficients:
+            #   coef_z[i,j]   = 1 - sum_s vartheta*_ijs
+            #   coef_y[i,j]   = sum_s vartheta*_ijs * L_ij * m_s
+            #   constant      = sum_s vartheta*_ijs * L_ij * b_s
+
+            coef_z   = {}
+            coef_y   = {}
+            constant = {}
+
+            for (i,j) in self.arcs:
+                s_cur = seg_inc[(i,j)]
+                I_ij  = {s_cur}   # active segment set
+
+                sum_vartheta = sum(vartheta[(i,j,s)] for s in I_ij)
+                coef_z[(i,j)] = 1.0 - sum_vartheta
+
+                coef_y[(i,j)] = sum(
+                    vartheta[(i,j,s)] * self.L[(i,j)] * self.slope[s]
+                    for s in I_ij
+                )
+
+                constant[(i,j)] = sum(
+                    vartheta[(i,j,s)] * self.L[(i,j)] * self.intercept[s]
+                    for s in I_ij
+                )
+
+            # ══════════════════════════════════════════════════
+            # STEP 3: build and solve relaxed NLP
+            # ══════════════════════════════════════════════════
+            ampl = AMPL()
+            ampl.read("exact_reduced_wdn.mod")
+            ampl.read_data(self.data_file)
+            ampl.option["solver"] = "ipopt"
+            ampl.option["ipopt_options"] = (
+                "outlev=0 max_iter=2000 "
+                "warm_start_init_point=yes "
+            )
+
+            # ampl.eval("""param seg_index{arcs};""")
+
+            # declare modified objective parameters
+            ampl.eval("""
+                param coef_z{arcs};
+                param coef_y{arcs};
+                param const_term{arcs};
+                param seg_index{arcs};
+                param theta default 1;
+                drop total_cost;
+                minimize relaxed_obj:
+                    sum{(i,j) in arcs} (
+                        coef_z[i,j] * z[i,j]
+                      + coef_y[i,j] * y[i,j]
+                      + const_term[i,j]
+                    );
+                # minimize relaxed_obj:
+                #     sum{(i,j) in arcs} (
+                #         z[i,j]
+                #       + theta*(slope[seg_index[i,j]] * y[i,j]
+                #       + intercept[seg_index[i,j]]-z[i,j])
+                #     );
+            """)
+
+            for (i,j) in self.arcs:
+                ampl.param["seg_index"][i,j] = seg_inc[(i,j)]
+            
+            ampl.param["theta"] = theta
+
+            for (i,j) in self.arcs:
+                ampl.param["coef_z"][i,j]    = coef_z[(i,j)]
+                ampl.param["coef_y"][i,j]    = coef_y[(i,j)]
+                ampl.param["const_term"][i,j]= constant[(i,j)]
+
+            # warm start from incumbent
+            for (i,j) in self.arcs:
+                ampl.var["q"][i,j] = incumbent["q"][(i,j)]
+                ampl.var["y"][i,j] = incumbent["y"][(i,j)]
+                ampl.var["z"][i,j] = incumbent["z"][(i,j)]
+            for i in self.nodes:
+                ampl.var["h"][i] = incumbent["h"][i]
+
+            ampl.eval("drop exact_cost;")
+            for (i,j) in self.arcs:
+                for s in self.segs:
+                    if s != seg_inc[i,j]:
+                        ampl.eval(f"s.t. epigraph_{i}_{j}_{s}: z[{i},{j}] >= L[{i},{j}]*(slope[{s}] * y[{i},{j}] + intercept[{s}]);")
+
+            with self.suppress_output():
+                ampl.solve()
+
+            status = ampl.get_value("solve_result")
+
+            if status != "solved":
+                print(f"[{it:02d}] solver failed — adjusting theta")
+                theta = min(1.0, theta * 1.5)
+                continue
+
+            q_new  = ampl.get_variable("q").get_values().to_dict()
+            y_new  = ampl.get_variable("y").get_values().to_dict()
+            h_new  = ampl.get_variable("h").get_values().to_dict()
+            z_new  = ampl.get_variable("z").get_values().to_dict()
+
+            seg_new = {(i,j): find_seg(y_new[(i,j)]) for (i,j) in self.arcs}
+            seg_changes = sum(
+                1 for (i,j) in self.arcs
+                if seg_new[(i,j)] != seg_inc[(i,j)]
+            )
+
+            # ══════════════════════════════════════════════════
+            # STEP 4: check stationarity perturbation
+            # ══════════════════════════════════════════════════
+            # Verify the perturbation shifted the equilibrium
+            print(f"\n[{it:02d}] strategy={strategy}  theta={theta:.3f}")
+            print(f"      Segment changes: {seg_changes} arcs")
+
+            # for (i,j) in self.arcs:
+            #     if seg_new[(i,j)] != seg_inc[(i,j)]:
+            #         print(f"        arc ({i},{j}): "
+            #               f"seg {seg_inc[(i,j)]} -> {seg_new[(i,j)]}  "
+            #               f"y: {y_inc[(i,j)]:.6f} -> {y_new[(i,j)]:.6f}")
+
+            # ══════════════════════════════════════════════════
+            # STEP 5: exact NLP re-solve if segment changed
+            # ══════════════════════════════════════════════════
+            if seg_changes > 0:
+                ampl_ex = AMPL()
+                ampl_ex.read("exact_reduced_wdn.mod")
+                ampl_ex.read_data(self.data_file)
+                ampl_ex.option["solver"] = "ipopt"
+                ampl_ex.option["ipopt_options"] = (
+                    "outlev=0 max_iter=3000 "
+                    "warm_start_init_point=yes "
+                )
+
+                for (i,j) in self.arcs:
+                    ampl_ex.var["q"][i,j] = q_new[(i,j)]
+                    ampl_ex.var["y"][i,j] = y_new[(i,j)]
+                    ampl_ex.var["z"][i,j] = z_new[(i,j)]
+                for i in self.nodes:
+                    ampl_ex.var["h"][i] = h_new[i]
+                with self.suppress_output():
+                    ampl_ex.solve()
+
+                if ampl_ex.get_value("solve_result") == "solved":
+                    q_ex  = ampl_ex.get_variable("q").get_values().to_dict()
+                    y_ex  = ampl_ex.get_variable("y").get_values().to_dict()
+                    h_ex  = ampl_ex.get_variable("h").get_values().to_dict()
+                    z_ex  = ampl_ex.get_variable("z").get_values().to_dict()
+                    seg_ex= {(i,j): find_seg(y_ex[(i,j)]) for (i,j) in self.arcs}
+                    cost_ex = true_cost(y_ex, seg_ex)
+
+                    print(f"      Exact NLP cost: {cost_ex:.4f}  "
+                          f"(incumbent: {incumbent['cost']:.4f})")
+
+                    if cost_ex < incumbent["cost"] - 1e-4:
+                        print(f"      *** IMPROVED: {cost_ex:.4f} ***")
+                        incumbent = {
+                            "q": q_ex.copy(), "h": h_ex.copy(),
+                            "y": y_ex.copy(), "z": z_ex.copy(),
+                            "seg": seg_ex.copy(), "cost": cost_ex
+                        }
+                        # reset vartheta at new solution
+                        for (i,j) in self.arcs:
+                            for s in range(1, NP):
+                                vartheta[(i,j,s)] = (
+                                    1.0 if s == seg_ex[(i,j)] else 0.0
+                                )
+                        theta = 0.5   # reset theta after improvement
+                    else:
+                        # no improvement — increase theta to push harder
+                        theta = min(1.0, theta + 0.1)
+            else:
+                # no segment change — need stronger perturbation
+                theta = min(1.0, theta + 0.15)
+                print(f"      No segment change — theta increased to {theta:.3f}")
+
+        print(f"\n{'='*65}")
+        print(f" FINAL BEST COST: {incumbent['cost']:.4f}")
+        print(f"{'='*65}")
+
+        return (incumbent["q"], incumbent["h"],
+                incumbent["y"], incumbent["z"])
+
+
+
+    def update_dual_and_resolve(self,q_star, h_star, y_star, z_star, seg_index, strategy='shift', theta=0.4, max_outer=30):
+        """
+        Update vartheta* (dual of active epigraph constraints)
+        and re-solve relaxed model to find different local solution.
+
+        Parameters
+        ----------
+        strategy : 'shift'     — transfer weight theta to adjacent segment
+                   'subgrad'   — subgradient update on all segments
+                   'target'    — directly assign weight to cheapest segment
+        theta    : weight transfer amount (for 'shift' strategy)
+        """
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP         = len(alpha_vals)
+
+        def find_seg(yv):
+            for k in range(NP-1):
+                if alpha_vals[k+1]-1e-10 <= yv <= alpha_vals[k]+1e-10:
+                    return k+1
+            return 1 if yv > alpha_vals[0] else NP-1
+
+        def true_cost(y_sol, seg_index):
+            return sum(
+                self.L[i,j]*(self.slope[seg_index[i,j]]*y_sol[i,j] + self.intercept[seg_index[i,j]])
+                for (i,j) in self.arcs
+            )
+        # print("seg_index",seg_index) 
+        C_star    = true_cost(y_star, seg_index)
+        # C_star = sum(self.L[(i,j)] * (self.slope[seg_index[i,j]] * y_sol[(i,j)]+ self.intercept[seg_index[(i,j)]]) for (i,j) in self.arcs)
+
+        incumbent = {
+            "q": q_star.copy(), "h": h_star.copy(),
+            "y": y_star.copy(), "z": z_star.copy(),
+            "seg": seg_index.copy(), "cost": C_star
+        }
+
+        # ── initialise vartheta at current KKT solution ──
+        # vartheta[i,j,s] = 1 if s == s*_ij, else 0
+        vartheta = {}
+        for (i,j) in self.arcs:
+            for s in range(1, NP):
+                vartheta[(i,j,s)] = 1.0 if s == seg_index[(i,j)] else 0.0
+        print(f"\n{'='*65}")
+        print(f" DUAL UPDATE SEARCH  |  C* = {C_star:.4f}")
+        print(f"{'='*65}")
+        for it in range(1, max_outer+1):
+            y_inc  = incumbent["y"]
+            seg_inc= incumbent["seg"]
+            # ══════════════════════════════════════════════════
+            # STEP 1: compute update direction for each arc
+            # ══════════════════════════════════════════════════
+            vartheta_new = {}
+            for (i,j) in self.arcs:
+                s_cur = seg_inc[(i,j)]
+                yv    = y_inc[(i,j)]
+                if strategy == 'shift':
+                    # transfer theta from s* to s*+1 (cheaper segment)
+                    s_next = min(NP-1, s_cur + 1)
+                    for s in range(1, NP):
+                        vartheta_new[(i,j,s)] = 0.0
+                    vartheta_new[(i,j,s_cur)]  = 1.0 - theta
+                    vartheta_new[(i,j,s_next)] = theta
+                elif strategy == 'subgrad':
+                    # subgradient: g_ijs = L*(m_s*y + b_s) - z
+                    z_cur = self.slope[s_cur]*yv + self.intercept[s_cur]
+                    alpha_step = 0.5 / np.sqrt(it)
+                    raw = {}
+                    for s in range(1, NP):
+                        g_ijs = (self.slope[s]*yv + self.intercept[s]) - z_cur
+                        raw[(i,j,s)] = max(0.0, vartheta[(i,j,s)] + alpha_step*g_ijs)
+                    # normalise to sum = 1
+                    total = sum(raw.values()) + 1e-12
+                    for s in range(1, NP):
+                        vartheta_new[(i,j,s)] = raw[(i,j,s)] / total
+                elif strategy == 'target':
+                    # find segment with lowest cost at current y*
+                    # (excluding current active segment)
+                    best_s    = s_cur
+                    best_cost = float('inf')
+                    for s in range(1, NP):
+                        if s == s_cur:
+                            continue
+                        c_s = self.slope[s]*yv + self.intercept[s]
+                        if c_s < best_cost:
+                            best_cost = c_s
+                            best_s    = s
+                    for s in range(1, NP):
+                        vartheta_new[(i,j,s)] = 0.0
+                    vartheta_new[(i,j,best_s)] = 1.0
+            # update vartheta
+            vartheta = vartheta_new
+            # ══════════════════════════════════════════════════
+            # STEP 2: compute modified objective coefficients
+            # ══════════════════════════════════════════════════
+            # Modified obj:
+            # min sum z_ij + sum_{ij,s in I_ij} vartheta*_ijs * (L*(m_s*y+b_s) - z_ij)
+            #
+            # = min sum z_ij * (1 - sum_{s in I_ij} vartheta*_ijs)
+            #     + sum_{ij,s in I_ij} vartheta*_ijs * L_ij * m_s * y_ij
+            #     + constant terms (b_s contributions)
+            #
+            # Coefficients:
+            #   coef_z[i,j]   = 1 - sum_s vartheta*_ijs
+            #   coef_y[i,j]   = sum_s vartheta*_ijs * L_ij * m_s
+            #   constant      = sum_s vartheta*_ijs * L_ij * b_s
+
+            coef_z   = {}
+            coef_y   = {}
+            constant = {}
+
+            for (i,j) in self.arcs:
+                s_cur = seg_inc[(i,j)]
+                I_ij  = {s_cur}   # active segment set
+
+                sum_vartheta = sum(vartheta[(i,j,s)] for s in I_ij)
+                coef_z[(i,j)] = 1.0 - sum_vartheta
+
+                coef_y[(i,j)] = sum(
+                    vartheta[(i,j,s)] * self.L[(i,j)] * self.slope[s]
+                    for s in I_ij
+                )
+
+                constant[(i,j)] = sum(
+                    vartheta[(i,j,s)] * self.L[(i,j)] * self.intercept[s]
+                    for s in I_ij
+                )
+
+            # ══════════════════════════════════════════════════
+            # STEP 3: build and solve relaxed NLP
+            # ══════════════════════════════════════════════════
+            ampl = AMPL()
+            ampl.read("exact_reduced_wdn.mod")
+            ampl.read_data(self.data_file)
+            ampl.option["solver"] = "ipopt"
+            ampl.option["ipopt_options"] = (
+                "outlev=0 max_iter=2000 "
+                "warm_start_init_point=yes "
+                "bound_relax_factor=0 "
+            )
+
+            # ampl.eval("""param seg_index{arcs};""")
+
+            # declare modified objective parameters
+            ampl.eval("""
+                param coef_z{arcs};
+                param coef_y{arcs};
+                param const_term{arcs};
+                param seg_index{arcs};
+                param theta default 1;
+                drop total_cost;
+                minimize relaxed_obj:
+                    sum{(i,j) in arcs} (
+                        coef_z[i,j] * z[i,j]
+                      + coef_y[i,j] * y[i,j]
+                      + const_term[i,j]
+                    );
+                # minimize relaxed_obj:
+                #     sum{(i,j) in arcs} (
+                #         z[i,j]
+                #       + theta*(slope[seg_index[i,j]] * y[i,j]
+                #       + intercept[seg_index[i,j]]-z[i,j])
+                #     );
+            """)
+            for (i,j) in self.arcs:
+                ampl.param["seg_index"][i,j] = seg_inc[(i,j)]
+            
+            ampl.param["theta"] = theta
+
+            for (i,j) in self.arcs:
+                ampl.param["coef_z"][i,j]    = coef_z[(i,j)]
+                ampl.param["coef_y"][i,j]    = coef_y[(i,j)]
+                ampl.param["const_term"][i,j]= constant[(i,j)]
+
+            # warm start from incumbent
+            for (i,j) in self.arcs:
+                ampl.var["q"][i,j] = incumbent["q"][(i,j)]
+                ampl.var["y"][i,j] = incumbent["y"][(i,j)]
+                ampl.var["z"][i,j] = incumbent["z"][(i,j)]
+            for i in self.nodes:
+                ampl.var["h"][i] = incumbent["h"][i]
+
+            ampl.eval("drop exact_cost;")
+            # for (i,j) in self.arcs:
+            #     for s in self.segs:
+            #         if s != seg_inc[i,j]:
+            #             ampl.eval(f"s.t. epigraph_{i}_{j}_{s}: z[{i},{j}] >= L[{i},{j}]*(slope[{s}] * y[{i},{j}] + intercept[{s}]);")
+
+            with self.suppress_output():
+                ampl.solve()
+
+            status = ampl.get_value("solve_result")
+
+            if status != "solved":
+                print(f"[{it:02d}] solver failed — adjusting theta")
+                theta = min(1.0, theta * 1.5)
+                continue
+
+            q_new  = ampl.get_variable("q").get_values().to_dict()
+            y_new  = ampl.get_variable("y").get_values().to_dict()
+            h_new  = ampl.get_variable("h").get_values().to_dict()
+            z_new  = ampl.get_variable("z").get_values().to_dict()
+
+            seg_new = {(i,j): find_seg(y_new[(i,j)]) for (i,j) in self.arcs}
+            seg_changes = sum(
+                1 for (i,j) in self.arcs
+                if seg_new[(i,j)] != seg_inc[(i,j)]
+            )
+
+            # ══════════════════════════════════════════════════
+            # STEP 4: check stationarity perturbation
+            # ══════════════════════════════════════════════════
+            # Verify the perturbation shifted the equilibrium
+            print(f"\n[{it:02d}] strategy={strategy}  theta={theta:.3f}")
+            print(f"      Segment changes: {seg_changes} arcs")
+
+            # for (i,j) in self.arcs:
+            #     if seg_new[(i,j)] != seg_inc[(i,j)]:
+            #         print(f"        arc ({i},{j}): "
+            #               f"seg {seg_inc[(i,j)]} -> {seg_new[(i,j)]}  "
+            #               f"y: {y_inc[(i,j)]:.6f} -> {y_new[(i,j)]:.6f}")
+
+            # ══════════════════════════════════════════════════
+            # STEP 5: exact NLP re-solve if segment changed
+            # ══════════════════════════════════════════════════
+            if seg_changes > 0:
+                ampl_ex = AMPL()
+                ampl_ex.read("exact_reduced_wdn.mod")
+                ampl_ex.read_data(self.data_file)
+                ampl_ex.option["solver"] = "ipopt"
+                ampl_ex.option["ipopt_options"] = (
+                    "outlev=0 max_iter=3000 "
+                    "warm_start_init_point=yes "
+                    "bound_relax_factor=0 "
+                )
+
+                for (i,j) in self.arcs:
+                    ampl_ex.var["q"][i,j] = q_new[(i,j)]
+                    ampl_ex.var["y"][i,j] = y_new[(i,j)]
+                    ampl_ex.var["z"][i,j] = z_new[(i,j)]
+                for i in self.nodes:
+                    ampl_ex.var["h"][i] = h_new[i]
+                with self.suppress_output():
+                    ampl_ex.solve()
+
+                if ampl_ex.get_value("solve_result") == "solved":
+                    q_ex  = ampl_ex.get_variable("q").get_values().to_dict()
+                    y_ex  = ampl_ex.get_variable("y").get_values().to_dict()
+                    h_ex  = ampl_ex.get_variable("h").get_values().to_dict()
+                    z_ex  = ampl_ex.get_variable("z").get_values().to_dict()
+                    seg_ex= {(i,j): find_seg(y_ex[(i,j)]) for (i,j) in self.arcs}
+                    cost_ex = true_cost(y_ex, seg_ex)
+
+                    print(f"      Exact NLP cost: {cost_ex:.4f}  "
+                          f"(incumbent: {incumbent['cost']:.4f})")
+
+                    if cost_ex < incumbent["cost"] - 1e-4:
+                        print(f"      *** IMPROVED: {cost_ex:.4f} ***")
+                        incumbent = {
+                            "q": q_ex.copy(), "h": h_ex.copy(),
+                            "y": y_ex.copy(), "z": z_ex.copy(),
+                            "seg": seg_ex.copy(), "cost": cost_ex
+                        }
+                        # reset vartheta at new solution
+                        for (i,j) in self.arcs:
+                            for s in range(1, NP):
+                                vartheta[(i,j,s)] = (
+                                    1.0 if s == seg_ex[(i,j)] else 0.0
+                                )
+                        theta = 0.5   # reset theta after improvement
+                    else:
+                        # no improvement — increase theta to push harder
+                        theta = min(1.0, theta + 0.1)
+            else:
+                # no segment change — need stronger perturbation
+                theta = min(1.0, theta + 0.15)
+                print(f"      No segment change — theta increased to {theta:.3f}")
+
+        print(f"\n{'='*65}")
+        print(f" FINAL BEST COST: {incumbent['cost']:.4f}")
+        print(f"{'='*65}")
+
+        return (incumbent["q"], incumbent["h"],
+                incumbent["y"], incumbent["z"])
+
+    def escape_and_project(
+        self,
+        q_loc,
+        h_loc,
+        y_loc,
+        z_loc,
+        seg_index_loc,
+        max_outer_iter=1,
+        infeas_tol=1e-5,
+        proj_tol=1e-6,
+        cost_margin=1e-3
+    ):
+        """
+        ------------------------------------------------------------
+        MULTI-BASIN FEASIBILITY ESCAPE ALGORITHM
+        ------------------------------------------------------------
+        PHASE A:
+            Infeasibility detection model
+            -> pushes solution outside current basin
+            -> enforces reduced cost
+        PHASE B:
+            Projection model
+            -> projects infeasible point to feasible manifold
+            -> preserves reduced cost
+            -> avoids convergence to same local point
+        PHASE C:
+            Exact NLP solve
+            -> obtains improved local solution
+        ------------------------------------------------------------
+        """
+        best_cost = sum(
+            z_loc[i, j]
+            for (i, j) in self.arcs
+        )
+        incumbent = {
+            "q": q_loc.copy(),
+            "h": h_loc.copy(),
+            "y": y_loc.copy(),
+            "z": z_loc.copy(),
+            "cost": best_cost
+        }
+        alpha_vals = sorted(
+            set(self.alpha.values()),
+            reverse=True
+        )
+        print("\n===================================================")
+        print(" MULTI-BASIN ESCAPE ALGORITHM ")
+        print("===================================================")
+        for OUTER in range(1, max_outer_iter + 1):
+            print("\n---------------------------------------------------")
+            print(f" OUTER ITERATION : {OUTER}")
+            print("---------------------------------------------------")
+            target_cost = incumbent["cost"] - 0.00001*incumbent["cost"]
+            # =========================================================
+            # =========================================================
+            # PHASE A:
+            # INFEASIBILITY DETECTION MODEL
+            # =========================================================
+            # =========================================================
+            ampl = AMPL()
+            ampl.read("repair_feasibility_wdn.mod")
+            ampl.read_data(self.data_file)
+            ampl.option["solver"] = "ipopt"
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "bound_relax_factor=0 "
+                "warm_start_init_point=yes "
+                f"bound_push={self.bound_push} "
+                f"bound_frac={self.bound_frac} "
+            )
+            # ---------------------------------------------------------
+            # PARAMETERS
+            # ---------------------------------------------------------
+            ampl.eval("param alpha_arc{arcs};")
+            ampl.eval("param y_ref{arcs};")
+            for (i, j) in self.arcs:
+                ampl.param["alpha_arc"][i, j] = self.alpha[seg_index_loc[i,j]]
+                ampl.param["y_ref"][i, j] = incumbent["y"][i, j]
+            # ---------------------------------------------------------
+            # WARM START
+            # ---------------------------------------------------------
+            for (i, j), val in incumbent["q"].items():
+                ampl.var["q"][i, j] = val
+            for (i, j), val in incumbent["y"].items():
+                ampl.var["y"][i, j] = val
+            for i, val in incumbent["h"].items():
+                ampl.var["h"][i] = val
+            for (i, j), val in incumbent["z"].items():
+                ampl.var["z"][i, j] = val
+            # ---------------------------------------------------------
+            # OBJECTIVE
+            # ---------------------------------------------------------
+            ampl.eval("""
+            minimize infeasibility_detection:
+                  1e-1 * sum{(i,j) in arcs}
+                        delta_headloss[i,j]^2
+                + 1e-1 * sum{(i,j) in arcs}
+                        delta_y[i,j]^2
+                - 1e-1 * sum{(i,j) in arcs}
+                        (y[i,j] - y_ref[i,j])^2;
+            """)
+            # ---------------------------------------------------------
+            # REDUCED COST CONSTRAINT
+            # ---------------------------------------------------------
+            ampl.eval(f"""
+            subject to reduced_cost:
+                sum{{(i,j) in arcs}} z[i,j]
+                <= {target_cost};
+            """)
+            ampl.eval("""
+                subject to bound_y{(i,j) in arcs}:
+                    y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
+            """)
+            # ---------------------------------------------------------
+            # ESCAPE CUT
+            # ---------------------------------------------------------
+            factors = []
+            for (i, j) in self.arcs:
+                s = seg_index_loc[(i, j)]
+                a_up = alpha_vals[s - 1]
+                a_lo = alpha_vals[s]
+                factors.append(
+                    f"(({a_up} - y[{i},{j}])"
+                    f"*(y[{i},{j}] - {a_lo}))"
+                )
+            product_expr = " * ".join(factors)
+            # ampl.eval(f"""
+            #
+            # subject to escape_cut:
+            #     {product_expr} <= 0;
+            #
+            # """)
+            # ---------------------------------------------------------
+            # SOLVE INFEASIBILITY MODEL
+            # ---------------------------------------------------------
+            print("\nSolving infeasibility detection model ...")
+            with self.suppress_output():
+                ampl.solve()
+            solve_status = ampl.get_value("solve_result")
+            if solve_status != "solved":
+                print("Infeasibility model failed.")
+                continue
+            q_inf = ampl.get_variable(
+                "q"
+            ).get_values().to_dict()
+            y_inf = ampl.get_variable(
+                "y"
+            ).get_values().to_dict()
+            h_inf = ampl.get_variable(
+                "h"
+            ).get_values().to_dict()
+            z_inf = ampl.get_variable(
+                "z"
+            ).get_values().to_dict()
+            delta_head = ampl.get_variable(
+                "delta_headloss"
+            ).get_values().to_dict()
+            delta_y = ampl.get_variable(
+                "delta_y"
+            ).get_values().to_dict()
+            head_inf = max(
+                abs(delta_head[i, j])
+                for (i, j) in self.arcs
+            )
+            y_inf_norm = max(
+                abs(delta_y[i, j])
+                for (i, j) in self.arcs
+            )
+            det_cost = sum(
+                z_inf[i, j]
+                for (i, j) in self.arcs
+            )
+            print(
+                f"Detection infeasibility = "
+                f"{head_inf + y_inf_norm:.3e}"
+            )
+            print(
+                f"Detection cost = {det_cost:.4f}"
+            )
+            # =========================================================
+            # =========================================================
+            # PHASE B:
+            # PROJECTION TO FEASIBLE REGION
+            # =========================================================
+            # =========================================================
+            ampl2 = AMPL()
+            ampl2.read("exact_reduced_wdn.mod")
+            ampl2.read_data(self.data_file)
+            ampl2.option["solver"] = "ipopt"
+            ampl2.option["ipopt_options"] = (
+                "outlev=0 "
+                "max_iter=3000 "
+                "bound_relax_factor=0 "
+                "warm_start_init_point=yes "
+                f"bound_push={self.bound_push} "
+                f"bound_frac={self.bound_frac} "
+
+            )
+            # ---------------------------------------------------------
+            # WARM START FROM INFEASIBLE POINT
+            # ---------------------------------------------------------
+            for (i, j), val in q_inf.items():
+                ampl2.var["q"][i, j] = val
+            for (i, j), val in y_inf.items():
+                ampl2.var["y"][i, j] = val
+            for i, val in h_inf.items():
+                ampl2.var["h"][i] = val
+            for (i, j), val in z_inf.items():
+                ampl2.var["z"][i, j] = val
+            # ---------------------------------------------------------
+            # STAY AWAY FROM PREVIOUS LOCAL SOLUTION
+            # ---------------------------------------------------------
+            ampl2.eval("""
+            param y_prev{arcs};
+
+            param y_inf{arcs};
+            param z_inf{arcs};
+            param q_inf{arcs};
+            param h_inf{nodes};
+            """)
+            for (i, j) in self.arcs:
+                ampl2.param["y_prev"][i, j] = incumbent["y"][i, j]
+                ampl2.param["y_inf"][i, j] = y_inf[i, j]
+                ampl2.param["q_inf"][i, j] = q_inf[i, j]
+                ampl2.param["z_inf"][i, j] = z_inf[i, j]
+            for i in self.nodes:
+                ampl2.param["h_inf"][i] = h_inf[i]
+
+            ampl2.eval("drop total_cost;")
+            ampl2.eval("""
+            minimize projection_obj:
+                  sum{(i,j) in arcs} (z[i,j] + (z[i,j] - z_inf[i,j])^2 + (y[i,j] - y_inf[i,j])^2 + (q[i,j] - q_inf[i,j])^2) + sum{i in nodes} (h[i] - h_inf[i])^2;
+            """)
+            # ampl2.eval(f"""
+            # subject to reduced_cost_proj:
+            #     sum{{(i,j) in arcs}} z[i,j]
+            #     <= {target_cost};
+            # """)
+            # ---------------------------------------------------------
+            # SOLVE PROJECTION MODEL
+            # ---------------------------------------------------------
+            print("\nProjecting to feasible region ...")
+            with self.suppress_output():
+                ampl2.solve()
+            solve_status = ampl2.get_value(
+                "solve_result"
+            )
+            if solve_status != "solved":
+                print("Projection failed.")
+                continue
+            else:
+                print("Optimal Solution Found")
+            q_proj = ampl2.get_variable(
+                "q"
+            ).get_values().to_dict()
+            y_proj = ampl2.get_variable(
+                "y"
+            ).get_values().to_dict()
+            h_proj = ampl2.get_variable(
+                "h"
+            ).get_values().to_dict()
+            z_proj = ampl2.get_variable(
+                "z"
+            ).get_values().to_dict()
+            proj_cost = sum(
+                z_proj[i, j]
+                for (i, j) in self.arcs
+            )
+            print(
+                f"Projected feasible cost = "
+                f"{proj_cost:.4f}"
+            )
+            # =========================================================
+            # =========================================================
+            # PHASE C:
+            # EXACT LOCAL NLP
+            # =========================================================
+            # =========================================================
+            ampl3 = AMPL()
+            ampl3.read("exact_reduced_wdn.mod")
+            ampl3.read_data(self.data_file)
+            ampl3.option["solver"] = "ipopt"
+            ampl3.option["ipopt_options"] = (
+                "outlev=0 "
+                "bound_relax_factor=0 "
+                "warm_start_init_point=yes "
+                f"bound_push={self.bound_push} "
+                f"bound_frac={self.bound_frac} "
+
+            )
+            # ---------------------------------------------------------
+            # WARM START
+            # ---------------------------------------------------------
+            for (i, j), val in q_proj.items():
+                ampl3.var["q"][i, j] = val
+            for (i, j), val in y_proj.items():
+                ampl3.var["y"][i, j] = val
+            for i, val in h_proj.items():
+                ampl3.var["h"][i] = val
+            for (i, j), val in z_proj.items():
+                ampl3.var["z"][i, j] = val
+
+            print("\nSolving exact NLP ...")
+
+            with self.suppress_output():
+                ampl3.solve()
+
+            solve_status = ampl3.get_value(
+                "solve_result"
+            )
+            if solve_status != "solved":
+                print("Exact NLP failed.")
+                continue
+            q_new = ampl3.get_variable(
+                "q"
+            ).get_values().to_dict()
+            y_new = ampl3.get_variable(
+                "y"
+            ).get_values().to_dict()
+            h_new = ampl3.get_variable(
+                "h"
+            ).get_values().to_dict()
+            z_new = ampl3.get_variable(
+                "z"
+            ).get_values().to_dict()
+            new_cost = sum(
+                z_new[i, j]
+                for (i, j) in self.arcs
+            )
+            print(
+                f"New local solution cost = "
+                f"{new_cost:.4f}"
+            )
+            # =========================================================
+            # ACCEPT IMPROVED SOLUTION
+            # =========================================================
+            if new_cost < incumbent["cost"] - 1e-6:
+                print("\nImproved local solution found.")
+                incumbent = {
+                    "q": q_new.copy(),
+                    "h": h_new.copy(),
+                    "y": y_new.copy(),
+                    "z": z_new.copy(),
+                    "cost": new_cost
+                }
+                # ---------------------------------------------
+                # UPDATE SEGMENTS
+                # ---------------------------------------------
+                for (i, j) in self.arcs:
+                    yv = y_new[i, j]
+                    for k in range(
+                        len(alpha_vals) - 1
+                    ):
+                        if (
+                            alpha_vals[k + 1]
+                            <= yv
+                            <= alpha_vals[k]
+                        ):
+                            seg_index_loc[(i, j)] = k + 1
+                            break
+                q_sol, h_sol, y_sol, z_sol = self.escape_and_project(q_new, h_new, y_new, z_new, seg_index_loc)
+            else:
+                print(
+                    "\nNo improving feasible basin found."
+                )
+                break
+        print("\n===================================================")
+        print(" FINAL BEST COST :", incumbent["cost"])
+        print("===================================================")
+        
+        return (
+            incumbent["q"],
+            incumbent["h"],
+            incumbent["y"],
+            incumbent["z"]
+        )
+
     def solve_restricted_model(self, q_sol, z_sol, y_sol, h_sol, seg_index):
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP         = len(alpha_vals)
+    
+        # ── build ONE persistent AMPL instance ──
+        ampl = AMPL()
+        ampl.read("exact_reduced_wdn.mod")
+        ampl.read_data(self.data_file)
+        ampl.option["solver"] = "ipopt"
+    
+        # ── declare parametric bounds and cost target ──
+        ampl.eval("""
+            param y_lb{arcs} default alpha_min;
+            param y_ub{arcs} default alpha_max;
+            param cost_target;
+    
+            subject to local_lb{(i,j) in arcs}:
+                y[i,j] >= y_lb[i,j];
+            subject to local_ub{(i,j) in arcs}:
+                y[i,j] <= y_ub[i,j];
+            subject to cost_cut:
+                sum{(i,j) in arcs} z[i,j] <= cost_target;
+        """)
+
+        # ── tracking ──
+        best_cost    = self.best_cost
+        best_q       = q_sol.copy()
+        best_y       = y_sol.copy()
+        best_h       = h_sol.copy()
+        best_z       = z_sol.copy()
+        best_seg     = seg_index.copy()
+    
+        seg_cur      = seg_index.copy()
+        y_cur        = y_sol.copy()
+        q_cur        = q_sol.copy()
+        h_cur        = h_sol.copy()
+        z_cur        = z_sol.copy()
+    
+        no_improve   = 0
+        radius       = 1          # segment window half-width
+        MAX_RADIUS   = 2
+        MAX_ITER     = 60
+        MAX_NO_IMP   = 8
+        FEAS_TOL     = 1e-6
+    
+        print(f"\n{'iter':>4}  {'status':<12}  {'head_inf':>10}  "
+              f"{'cost':>12}  {'best':>12}  {'radius':>6}")
+    
+        for it in range(1, MAX_ITER + 1):
+    
+            # ── set local branching window around current segments ──
+            for (i,j) in self.arcs:
+                s    = seg_cur[(i,j)]
+                s_lo = max(1,    s - radius)
+                s_hi = min(NP-1, s + radius)
+                ampl.param["y_lb"][i,j] = alpha_vals[s_hi]     # lower y
+                ampl.param["y_ub"][i,j] = alpha_vals[s_lo - 1] # upper y
+    
+            # ── set cost target slightly below current best ──
+            ampl.param["cost_target"] = best_cost - 1e-3
+    
+            # ── warm start from current point ──
+            ampl.option["ipopt_options"] = (
+                "outlev=0 tol=1e-8 max_iter=800 "
+                "warm_start_init_point=yes "
+            )
+            for (i,j) in self.arcs:
+                ampl.var["q"][i,j] = q_cur[(i,j)]
+                ampl.var["y"][i,j] = max(
+                    ampl.param["y_lb"][i,j],
+                    min(ampl.param["y_ub"][i,j], y_cur[(i,j)])
+                )
+            for i in self.nodes:
+                ampl.var["h"][i] = h_cur[i]
+            for (i,j) in self.arcs:
+                ampl.var["z"][i,j] = z_cur[(i,j)]
+    
+            with self.suppress_output():
+                ampl.solve()
+    
+            status = ampl.get_value("solve_result")
+    
+            q_it = ampl.get_variable("q").get_values().to_dict()
+            y_it = ampl.get_variable("y").get_values().to_dict()
+            h_it = ampl.get_variable("h").get_values().to_dict()
+            z_it = ampl.get_variable("z").get_values().to_dict()
+
+            # ── compute exact headloss residual ──
+            def f_hw(q, eps):
+                return q**3*(q**2+eps**2)**0.426/(q**2+0.426*eps**2)
+    
+            head_inf = max(
+                abs(h_it[i] - h_it[j]
+                    - f_hw(q_it[(i,j)], self.eps[(i,j)])
+                    * y_it[(i,j)] * self.L[(i,j)])
+                for (i,j) in self.arcs
+            )
+    
+            # ── compute cost from PL envelope ──
+            seg_it = {}
+            for (i,j) in self.arcs:
+               yv = y_sol[(i,j)]
+               for k in range(len(alpha_vals)-1):
+                   if (
+                       alpha_vals[k+1]
+                       <= yv
+                       <= alpha_vals[k]
+                   ):
+                       seg_it[(i,j)] = k+1
+                       break
+
+            cost_it = sum(
+                self.L[(i,j)] * (
+                    self.slope[seg_it[i,j]] * y_it[(i,j)]
+                    + self.intercept[seg_it[(i,j)]]
+                )
+                for (i,j) in self.arcs
+            )
+    
+            feasible = (status == "solved") and (head_inf <= FEAS_TOL)
+    
+            print(f"{it:>4}  {status:<12}  {head_inf:>10.3e}  "
+                  f"{cost_it:>12.4f}  {best_cost:>12.4f}  {radius:>6}")
+    
+            # ── update best if improved feasible solution found ──
+            if feasible and cost_it < best_cost - 1e-4:
+                best_cost = cost_it
+                best_q    = q_it.copy()
+                best_y    = y_it.copy()
+                best_h    = h_it.copy()
+                best_z    = z_it.copy()
+                best_seg  = seg_it.copy()
+                no_improve = 0
+                radius     = 1   # reset radius after improvement
+                print(f"  *** Improved: {cost_it:.4f} ***")
+    
+                # update current point to best
+                q_cur   = q_it.copy()
+                y_cur   = y_it.copy()
+                h_cur   = h_it.copy()
+                z_cur   = z_it.copy()
+                seg_cur = seg_it.copy()
+    
+            else:
+                no_improve += 1
+    
+                # ── adaptive response to no improvement ──
+                if status == "solved" and head_inf <= FEAS_TOL:
+                    # feasible but not cheaper — try expanding radius
+                    radius = min(MAX_RADIUS, radius + 1)
+                    # update current point even if not better cost
+                    q_cur   = q_it.copy()
+                    y_cur   = y_it.copy()
+                    h_cur   = h_it.copy()
+                    z_cur   = z_it.copy()
+                    seg_cur = seg_it.copy()
+    
+                elif status != "solved":
+                    # infeasible — use Newton correction and stay at current
+                    for (i,j) in self.arcs:
+                        qv    = q_it[(i,j)]
+                        if abs(qv) < 1e-8:
+                            continue
+                        phi   = f_hw(qv, self.eps[(i,j)])
+                        resid = (h_it[i] - h_it[j]
+                                 - phi * y_it[(i,j)] * self.L[(i,j)])
+                        step  = resid / (phi * self.L[(i,j)] + 1e-12)
+                        # move y in correction direction, stay in window
+                        y_new = y_cur[(i,j)] + 0.3 * step
+                        lb    = ampl.param["y_lb"][i,j]
+                        ub    = ampl.param["y_ub"][i,j]
+                        y_cur[(i,j)] = max(lb, min(ub, y_new))
+    
+                if no_improve >= MAX_NO_IMP:
+                    if radius < MAX_RADIUS:
+                        # try wider window before giving up
+                        radius += 1
+                        no_improve = 0
+                        print(f"  Expanding radius to {radius}")
+                    else:
+                        print(f"  No improvement after {MAX_NO_IMP} iters. Stopping.")
+                        break
+
+        # ════════════════════════════════════════════════════════════
+        # FINAL EXACT SOLVE of original NLP from best point found
+        # ════════════════════════════════════════════════════════════
+        print("\n--- Final exact solve of original NLP ---")
+    
+        ampl_final = AMPL()
+        ampl_final.read("exact_reduced_wdn.mod")   # original model, no extra constraints
+        ampl_final.read_data(self.data_file)
+        ampl_final.option["solver"] = "ipopt"
+        ampl_final.option["ipopt_options"] = (
+            "outlev=0 tol=1e-9 max_iter=3000 "
+            "warm_start_init_point=yes "
+        )
+    
+        # warm start from best point
+        for (i,j) in self.arcs:
+            ampl_final.var["q"][i,j] = best_q[(i,j)]
+            ampl_final.var["y"][i,j] = best_y[(i,j)]
+            ampl_final.var["z"][i,j] = best_z[(i,j)]
+        for i in self.nodes:
+            ampl_final.var["h"][i] = best_h[i]
+    
+        with self.suppress_output():
+            ampl_final.solve()
+    
+        final_status = ampl_final.get_value("solve_result")
+    
+        q_f = ampl_final.get_variable("q").get_values().to_dict()
+        y_f = ampl_final.get_variable("y").get_values().to_dict()
+        h_f = ampl_final.get_variable("h").get_values().to_dict()
+        z_f = ampl_final.get_variable("z").get_values().to_dict()
+    
+        # final segment index
+        for (i,j) in self.arcs:
+           yv = y_sol[(i,j)]
+           for k in range(len(alpha_vals)-1):
+               if (
+                   alpha_vals[k+1]
+                   <= yv
+                   <= alpha_vals[k]
+               ):
+                   seg_index[(i,j)] = k+1
+                   break
+
+        # for (i,j) in self.arcs:
+        #     yv = y_f[(i,j)]
+        #     for k in range(NP - 1):
+        #         if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+        #             seg_index[(i,j)] = k + 1
+        #             break
+    
+        final_cost = sum(z_f.values())
+        final_hl   = max(
+            abs(h_f[i] - h_f[j]
+                - f_hw(q_f[(i,j)], self.eps[(i,j)])
+                * y_f[(i,j)] * self.L[(i,j)])
+            for (i,j) in self.arcs
+        )
+    
+        print(f"  Final status:      {final_status}")
+        print(f"  Final cost:        {final_cost:.6f}")
+        print(f"  Final headloss inf:{final_hl:.3e}")
+        print(f"  Improvement over C*: {self.best_cost - final_cost:.4f}")
+    
+        return q_f, h_f, y_f, z_f
+
+    def solve_restricted_model7(
+        self,
+        q_sol,
+        z_sol,
+        y_sol,
+        h_sol,
+        seg_index
+    ):
+    
+        import random
+        import numpy as np
+    
+        # ============================================================
+        # PARAMETERS
+        # ============================================================
+        MAX_ITER = 80
+    
+        FEAS_TOL = 1e-6
+    
+        MAX_CRITICAL_ARCS = 3
+    
+        LOCAL_BRANCH_RADIUS = 1
+    
+        MAX_NO_IMPROVE = 8
+    
+        TRUST_REGION = 0.03 * (
+            self.alpha_max - self.alpha_min
+        )
+    
+        # ============================================================
+        # INITIALIZATION
+        # ============================================================
+        alpha_vals = sorted(
+            set(self.alpha.values()),
+            reverse=True
+        )
+    
+        best_local_cost = float("inf")
+    
+        best_q = q_sol.copy()
+        best_y = y_sol.copy()
+        best_h = h_sol.copy()
+        best_z = z_sol.copy()
+    
+        no_improve_counter = 0
+    
+        # ============================================================
+        # MAIN LOOP
+        # ============================================================
+        print(
+            "\niter    head_inf      "
+            "critical_arcs      "
+            "cost"
+        )
+    
+        for it in range(1, MAX_ITER + 1):
+    
+            # ========================================================
+            # BUILD NLP MODEL
+            # ========================================================
+            ampl = AMPL()
+    
+            ampl.read("exact_reduced_wdn.mod")
+    
+            ampl.read_data(self.data_file)
+    
+            ampl.option["solver"] = "ipopt"
+    
+            ampl.option["ipopt_options"] = (
+                "outlev=0 "
+                "tol=1e-7 "
+                "acceptable_tol=1e-5 "
+                "max_iter=500 "
+                "mu_strategy=adaptive "
+                "warm_start_init_point=yes "
+                "bound_push=1e-3 "
+                "bound_frac=1e-3 "
+                "nlp_scaling_method=gradient-based "
+                "print_level=0 "
+            )
+    
+            # ========================================================
+            # WARM START
+            # ========================================================
+            for (i,j), val in q_sol.items():
+                ampl.var["q"][i,j] = val
+    
+            for (i,j), val in y_sol.items():
+                ampl.var["y"][i,j] = val
+    
+            for i, val in h_sol.items():
+                ampl.var["h"][i] = val
+    
+            for (i,j), val in z_sol.items():
+                ampl.var["z"][i,j] = val
+    
+            # ========================================================
+            # LOCAL BRANCHING RESTRICTION
+            # ========================================================
+            ampl.eval("""
+                param y_lb{arcs};
+                param y_ub{arcs};
+            """)
+    
+            for (i,j) in self.arcs:
+    
+                s = seg_index[(i,j)]
+    
+                s_lo = max(
+                    1,
+                    s - LOCAL_BRANCH_RADIUS
+                )
+    
+                s_up = min(
+                    len(alpha_vals)-1,
+                    s + LOCAL_BRANCH_RADIUS
+                )
+    
+                y_lb = alpha_vals[s_up]
+                y_ub = alpha_vals[s_lo-1]
+    
+                ampl.param["y_lb"][i,j] = y_lb
+                ampl.param["y_ub"][i,j] = y_ub
+    
+            ampl.eval("""
+    
+                subject to local_branch_lb{(i,j) in arcs}:
+                    y[i,j] >= y_lb[i,j];
+    
+                subject to local_branch_ub{(i,j) in arcs}:
+                    y[i,j] <= y_ub[i,j];
+            """)
+    
+            # ========================================================
+            # COST CUT
+            # ========================================================
+            ampl.eval(f"""
+    
+                subject to cost_cut:
+    
+                    sum{{(i,j) in arcs}} z[i,j]
+    
+                    <= {self.best_cost - 1e-5};
+    
+            """)
+    
+            # ========================================================
+            # SOLVE NLP
+            # ========================================================
+            with self.suppress_output():
+                ampl.solve()
+    
+            solve_status = ampl.get_value(
+                "solve_result"
+            )
+    
+            if solve_status != "solved":
+    
+                no_improve_counter += 1
+    
+                if no_improve_counter >= MAX_NO_IMPROVE:
+                    break
+    
+                continue
+    
+            # ========================================================
+            # EXTRACT SOLUTION
+            # ========================================================
+            q_sol = ampl.get_variable(
+                "q"
+            ).get_values().to_dict()
+    
+            y_sol = ampl.get_variable(
+                "y"
+            ).get_values().to_dict()
+    
+            h_sol = ampl.get_variable(
+                "h"
+            ).get_values().to_dict()
+    
+            z_sol = ampl.get_variable(
+                "z"
+            ).get_values().to_dict()
+    
+            # ========================================================
+            # COMPUTE HEADLOSS VIOLATION
+            # ========================================================
+            delta_head = {}
+    
+            for (i,j) in self.arcs:
+    
+                qv = q_sol[(i,j)]
+    
+                phi = (
+                    qv**3
+                    * (qv**2 + self.eps[i,j]**2)**0.426
+                ) / (
+                    qv**2
+                    + 0.426*self.eps[i,j]**2
+                )
+    
+                delta = (
+                    h_sol[i]
+                    - h_sol[j]
+                    - phi
+                    * y_sol[(i,j)]
+                    * self.L[i,j]
+                )
+    
+                delta_head[(i,j)] = delta
+    
+            head_inf = max(
+                abs(delta_head[a])
+                for a in self.arcs
+            )
+    
+            # ========================================================
+            # UPDATE ACTIVE SEGMENTS
+            # ========================================================
+            for (i,j) in self.arcs:
+    
+                yv = y_sol[(i,j)]
+    
+                for k in range(len(alpha_vals)-1):
+    
+                    if (
+                        alpha_vals[k+1]
+                        <= yv
+                        <= alpha_vals[k]
+                    ):
+    
+                        seg_index[(i,j)] = k+1
+                        break
+    
+            # ========================================================
+            # COST
+            # ========================================================
+            cost = sum(
+                self.L[i,j] * (
+                    self.slope[seg_index[(i,j)]]
+                    * y_sol[(i,j)]
+                    +
+                    self.intercept[
+                        seg_index[(i,j)]
+                    ]
+                )
+                for (i,j) in self.arcs
+            )
+    
+            print(
+                f"{it:03d}      "
+                f"{head_inf:.3e}      "
+                f"{MAX_CRITICAL_ARCS}      "
+                f"{cost:.2f}"
+            )
+    
+            # ========================================================
+            # STORE BEST SOLUTION
+            # ========================================================
+            if (
+                head_inf <= FEAS_TOL
+                and
+                cost < best_local_cost
+            ):
+    
+                best_local_cost = cost
+    
+                best_q = q_sol.copy()
+                best_y = y_sol.copy()
+                best_h = h_sol.copy()
+                best_z = z_sol.copy()
+    
+                no_improve_counter = 0
+    
+                print(
+                    f"\nImproved feasible solution:"
+                    f" {cost:.2f}"
+                )
+    
+            else:
+    
+                no_improve_counter += 1
+    
+            # ========================================================
+            # TERMINATION
+            # ========================================================
+            if no_improve_counter >= MAX_NO_IMPROVE:
+    
+                print(
+                    "\nNo improvement."
+                )
+    
+                break
+    
+            # ========================================================
+            # SENSITIVITY RANKING
+            # ========================================================
+            ranked_arcs = []
+    
+            for (i,j) in self.arcs:
+    
+                qv = q_sol[(i,j)]
+    
+                phi = abs(
+                    (
+                        qv**3
+                        * (qv**2 + self.eps[i,j]**2)**0.426
+                    ) / (
+                        qv**2
+                        + 0.426*self.eps[i,j]**2
+                    )
+                )
+    
+                sensitivity = max(
+                    1e-8,
+                    phi * self.L[i,j]
+                )
+    
+                score = abs(
+                    delta_head[(i,j)]
+                ) / sensitivity
+    
+                ranked_arcs.append(
+                    (
+                        score,
+                        (i,j)
+                    )
+                )
+    
+            ranked_arcs.sort(reverse=True)
+    
+            critical_arcs = [
+                arc
+                for _, arc in ranked_arcs[
+                    :MAX_CRITICAL_ARCS
+                ]
+            ]
+    
+            # ========================================================
+            # ANALYTICAL FEASIBILITY CORRECTION
+            # ========================================================
+            for (i,j) in critical_arcs:
+    
+                qv = q_sol[(i,j)]
+    
+                if abs(qv) <= 1e-8:
+                    continue
+    
+                phi = (
+                    qv**3
+                    * (qv**2 + self.eps[i,j]**2)**0.426
+                ) / (
+                    qv**2
+                    + 0.426*self.eps[i,j]**2
+                )
+    
+                step = (
+                    delta_head[(i,j)]
+                    / (
+                        phi
+                        * self.L[i,j]
+                    )
+                )
+    
+                y_new = (
+                    y_sol[(i,j)]
+                    + 0.25 * step
+                )
+    
+                # ====================================================
+                # TRUST REGION
+                # ====================================================
+                y_new = max(
+                    y_sol[(i,j)] - TRUST_REGION,
+                    min(
+                        y_sol[(i,j)] + TRUST_REGION,
+                        y_new
+                    )
+                )
+    
+                # ====================================================
+                # RANDOM PERTURBATION
+                # ====================================================
+                if no_improve_counter >= 4:
+    
+                    perturb = np.random.uniform(
+                        -0.02,
+                        0.02
+                    ) * (
+                        self.alpha_max
+                        - self.alpha_min
+                    )
+    
+                    y_new += perturb
+    
+                # ====================================================
+                # CLIP GLOBAL BOUNDS
+                # ====================================================
+                y_new = max(
+                    self.alpha_min,
+                    min(
+                        self.alpha_max,
+                        y_new
+                    )
+                )
+    
+                y_sol[(i,j)] = y_new
+    
+            # ========================================================
+            # RANDOM SEGMENT JUMP
+            # ========================================================
+            if no_improve_counter >= 5:
+    
+                jump_arc = random.choice(
+                    critical_arcs
+                )
+    
+                s = seg_index[jump_arc]
+    
+                direction = random.choice(
+                    [-1, 1]
+                )
+    
+                s_new = max(
+                    1,
+                    min(
+                        len(alpha_vals)-1,
+                        s + direction
+                    )
+                )
+    
+                seg_index[jump_arc] = s_new
+    
+                y_sol[jump_arc] = 0.5 * (
+                    alpha_vals[s_new-1]
+                    +
+                    alpha_vals[s_new]
+                )
+    
+                print(
+                    f"Jump arc {jump_arc} "
+                    f"segment {s}->{s_new}"
+                )
+    
+        # ============================================================
+        # FINAL EXACT SOLVE
+        # ============================================================
+        print(
+            "\n------------- FINAL EXACT SOLVE -------------"
+        )
+    
+        ampl = AMPL()
+    
+        ampl.read("exact_reduced_wdn.mod")
+    
+        ampl.read_data(self.data_file)
+    
+        ampl.option["solver"] = "ipopt"
+    
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "tol=1e-8 "
+            "acceptable_tol=1e-6 "
+            "max_iter=3000 "
+            "mu_strategy=adaptive "
+            "warm_start_init_point=yes "
+            "bound_push=1e-4 "
+            "bound_frac=1e-4 "
+        )
+    
+        # ============================================================
+        # WARM START BEST SOLUTION
+        # ============================================================
+        for (i,j), val in best_q.items():
+            ampl.var["q"][i,j] = val
+    
+        for (i,j), val in best_y.items():
+            ampl.var["y"][i,j] = val
+    
+        for i, val in best_h.items():
+            ampl.var["h"][i] = val
+    
+        for (i,j), val in best_z.items():
+            ampl.var["z"][i,j] = val
+    
+        with self.suppress_output():
+            ampl.solve()
+    
+        q_sol = ampl.get_variable(
+            "q"
+        ).get_values().to_dict()
+    
+        y_sol = ampl.get_variable(
+            "y"
+        ).get_values().to_dict()
+    
+        h_sol = ampl.get_variable(
+            "h"
+        ).get_values().to_dict()
+    
+        z_sol = ampl.get_variable(
+            "z"
+        ).get_values().to_dict()
+    
+        final_cost = sum(
+            z_sol[i,j]
+            for (i,j) in self.arcs
+        )
+    
+        print(
+            "\nFinal feasible cost:",
+            final_cost
+        )
+    
+        return (
+            q_sol,
+            h_sol,
+            y_sol,
+            z_sol
+        )
+
+    def solve_restricted_model6(
+        self,
+        q_sol,
+        z_sol,
+        y_sol,
+        h_sol,
+        seg_index
+    ):
+    
+        # ============================================================
+        # INITIALIZATION
+        # ============================================================
+        ampl = AMPL()
+    
+        ampl.read("repair_feasibility_wdn.mod")
+        ampl.read_data(self.data_file)
+    
+        ampl.option["solver"] = "ipopt"
+    
+        ampl.option["presolve_eps"] = 1e-7
+    
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "max_iter=2000 "
+            "warm_start_init_point=yes "
+            "print_level=0 "
+        )
+    
+        # ============================================================
+        # PARAMETERS
+        # ============================================================
+        ampl.eval("""
+            param seg_index{arcs};
+            param alpha_arc{arcs};
+            param y_ref{arcs};
+            param w_head{arcs} >= 1 default 1;
+        """)
+    
+        for (i,j) in self.arcs:
+    
+            ampl.param["seg_index"][i,j] = seg_index[(i,j)]
+    
+            ampl.param["alpha_arc"][i,j] = \
+                self.alpha[seg_index[(i,j)]]
+    
+            ampl.param["y_ref"][i,j] = y_sol[(i,j)]
+    
+            ampl.param["w_head"][i,j] = 1.0
+    
+        # ============================================================
+        # WARM START
+        # ============================================================
+        for (i,j), val in q_sol.items():
+            ampl.var["q"][i,j] = val
+    
+        for (i,j), val in y_sol.items():
+            ampl.var["y"][i,j] = val
+    
+        for i, val in h_sol.items():
+            ampl.var["h"][i] = val
+    
+        for (i,j), val in z_sol.items():
+            ampl.var["z"][i,j] = val
+    
+        # ============================================================
+        # OBJECTIVE
+        # ============================================================
+        ampl.eval("""
+    
+            minimize restoration_obj:
+    
+                if mode = 1 then
+    
+                    sum{(i,j) in arcs}
+                        w_head[i,j]
+                        * delta_headloss[i,j]^2
+    
+                    + 1e-4 * sum{(i,j) in arcs}
+                        delta_y[i,j]^2
+    
+                    - 1e-5 * sum{(i,j) in arcs}
+                        (y[i,j] - y_ref[i,j])^2
+    
+                else
+    
+                    sum{(i,j) in arcs}
+                        z[i,j]
+    
+                    + 1e-2 * sum{(i,j) in arcs}
+                        delta_y[i,j]^2;
+        """)
+    
+        # ============================================================
+        # COST LIMIT
+        # ============================================================
+        ampl.eval(f"""
+            subject to bound_cost:
+    
+                sum{{(i,j) in arcs}} z[i,j]
+                <= {self.best_cost - 1e-5};
+        """)
+    
+        # ============================================================
+        # SEGMENT ESCAPE CUT
+        # ============================================================
+        alpha_vals = sorted(
+            set(self.alpha.values()),
+            reverse=True
+        )
+    
+        factors = []
+    
+        eps_break = 1e-5
+    
+        for (i,j) in self.arcs:
+    
+            s = seg_index[(i,j)]
+    
+            a_up = alpha_vals[s-1]
+            a_lo = alpha_vals[s]
+    
+            yv = y_sol[(i,j)]
+    
+            # ----------------------------------------
+            # If on breakpoint
+            # ----------------------------------------
+            if (
+                abs(yv - a_up) <= 1e-10
+                or
+                abs(yv - a_lo) <= 1e-10
+            ):
+    
+                factors.append(
+                    f"((y[{i},{j}] - ({a_lo} - {eps_break}))"
+                    f"*(({a_lo} - {eps_break}) - y[{i},{j}]))"
+                )
+    
+            # ----------------------------------------
+            # Interior of segment
+            # ----------------------------------------
+            else:
+    
+                factors.append(
+                    f"(({a_up} - y[{i},{j}])"
+                    f"*(y[{i},{j}] - {a_lo}))"
+                )
+    
+        product_expr = " * ".join(factors)
+    
+        ampl.eval(f"""
+            subject to segment_escape:
+                {product_expr} <= 0;
+        """)
+    
+        # ============================================================
+        # ITERATIVE RESTORATION
+        # ============================================================
+        max_iter = 200
+    
+        tol_head = 1e-6
+        tol_y    = 1e-6
+    
+        lambda_k = 0.20
+    
+        prev_merit = 1e20
+    
+        stagnation_counter = 0
+    
+        print(
+            "\niter  phase      "
+            "head_inf      "
+            "delta_y_inf      "
+            "cost"
+        )
+    
+        for it in range(1, max_iter + 1):
+    
+            # ========================================================
+            # PHASE 1 : FEASIBILITY RESTORATION
+            # ========================================================
+            ampl.param["mode"] = 1
+    
+            for (i,j) in self.arcs:
+    
+                ampl.var["delta_headloss"][i,j] = 0.0
+    
+            with self.suppress_output():
+                ampl.solve()
+    
+            solve_status = ampl.get_value("solve_result")
+    
+            if solve_status != "solved":
+    
+                print(f"\nRestoration NLP failed at iter {it}")
+                break
+    
+            # ========================================================
+            # EXTRACT SOLUTION
+            # ========================================================
+            q_sol = ampl.get_variable(
+                "q"
+            ).get_values().to_dict()
+    
+            y_sol = ampl.get_variable(
+                "y"
+            ).get_values().to_dict()
+    
+            h_sol = ampl.get_variable(
+                "h"
+            ).get_values().to_dict()
+    
+            z_sol = ampl.get_variable(
+                "z"
+            ).get_values().to_dict()
+    
+            delta_head = ampl.get_variable(
+                "delta_headloss"
+            ).get_values().to_dict()
+    
+            # ========================================================
+            # INFEASIBILITY
+            # ========================================================
+            head_inf = max(
+                abs(delta_head[i,j])
+                for (i,j) in self.arcs
+            )
+    
+            # ========================================================
+            # UPDATE ACTIVE SEGMENTS
+            # ========================================================
+            for (i,j) in self.arcs:
+    
+                yv = y_sol[(i,j)]
+    
+                for k in range(len(alpha_vals)-1):
+    
+                    if (
+                        alpha_vals[k+1]
+                        <= yv
+                        <= alpha_vals[k]
+                    ):
+    
+                        seg_index[(i,j)] = k+1
+                        break
+    
+            # ========================================================
+            # COMPUTE COST
+            # ========================================================
+            cost = sum(
+                self.L[i,j] * (
+                    self.slope[seg_index[(i,j)]]
+                    * y_sol[(i,j)]
+                    +
+                    self.intercept[seg_index[(i,j)]]
+                )
+                for (i,j) in self.arcs
+            )
+    
+            print(
+                f"{it:03d}   restore   "
+                f"{head_inf:.3e}   "
+                f"{0.0:.3e}   "
+                f"{cost:.2f}"
+            )
+    
+            # ========================================================
+            # FEASIBLE
+            # ========================================================
+            if head_inf <= tol_head:
+    
+                print("\nRestoration feasible.")
+                break
+    
+            # ========================================================
+            # COMPUTE IMPROVED FEASIBILITY DIRECTION
+            # ========================================================
+            y_corr = {}
+    
+            for (i,j) in self.arcs:
+    
+                qv = q_sol[(i,j)]
+    
+                if abs(qv) <= 1e-8:
+    
+                    y_corr[(i,j)] = y_sol[(i,j)]
+                    continue
+    
+                phi = (
+                    qv**3
+                    * (qv**2 + self.eps[i,j]**2)**0.426
+                ) / (
+                    qv**2
+                    + 0.426*self.eps[i,j]**2
+                )
+    
+                # ----------------------------------------
+                # Newton-like correction
+                # ----------------------------------------
+                step = (
+                    delta_head[(i,j)]
+                    / (phi * self.L[i,j])
+                )
+    
+                y_new = (
+                    y_sol[(i,j)]
+                    + lambda_k * step
+                )
+    
+                # ----------------------------------------
+                # Trust region
+                # ----------------------------------------
+                max_move = 0.03 * (
+                    self.alpha_max
+                    - self.alpha_min
+                )
+    
+                y_new = max(
+                    y_sol[(i,j)] - max_move,
+                    min(
+                        y_sol[(i,j)] + max_move,
+                        y_new
+                    )
+                )
+    
+                # ----------------------------------------
+                # Random perturbation
+                # ----------------------------------------
+                if stagnation_counter >= 4:
+    
+                    perturb = np.random.uniform(
+                        -0.01,
+                        0.01
+                    ) * (
+                        self.alpha_max
+                        - self.alpha_min
+                    )
+    
+                    y_new += perturb
+    
+                # ----------------------------------------
+                # Global bounds
+                # ----------------------------------------
+                y_new = max(
+                    self.alpha_min,
+                    min(self.alpha_max, y_new)
+                )
+    
+                y_corr[(i,j)] = y_new
+    
+            # ========================================================
+            # UPDATE ACTIVE SEGMENTS
+            # ========================================================
+            for (i,j) in self.arcs:
+    
+                yv = y_corr[(i,j)]
+    
+                for k in range(len(alpha_vals)-1):
+    
+                    if (
+                        alpha_vals[k+1]
+                        <= yv
+                        <= alpha_vals[k]
+                    ):
+    
+                        seg_index[(i,j)] = k+1
+                        break
+    
+            # ========================================================
+            # UPDATE PARAMETERS
+            # ========================================================
+            for (i,j) in self.arcs:
+    
+                ampl.param["alpha_arc"][i,j] = \
+                    y_corr[(i,j)]
+    
+                ampl.param["seg_index"][i,j] = \
+                    seg_index[(i,j)]
+    
+            # ========================================================
+            # PHASE 2 : EXACT PROJECTION
+            # ========================================================
+            ampl.param["mode"] = 2
+    
+            for (i,j) in self.arcs:
+    
+                ampl.var["delta_y"][i,j] = 0.0
+    
+            with self.suppress_output():
+                ampl.solve()
+    
+            solve_status = ampl.get_value(
+                "solve_result"
+            )
+    
+            if solve_status != "solved":
+    
+                lambda_k = max(
+                    0.05,
+                    0.5 * lambda_k
+                )
+    
+                stagnation_counter += 1
+    
+                continue
+    
+            # ========================================================
+            # EXTRACT PROJECTED POINT
+            # ========================================================
+            q_sol = ampl.get_variable(
+                "q"
+            ).get_values().to_dict()
+    
+            y_sol = ampl.get_variable(
+                "y"
+            ).get_values().to_dict()
+    
+            h_sol = ampl.get_variable(
+                "h"
+            ).get_values().to_dict()
+    
+            z_sol = ampl.get_variable(
+                "z"
+            ).get_values().to_dict()
+    
+            delta_y = ampl.get_variable(
+                "delta_y"
+            ).get_values().to_dict()
+    
+            delta_y_inf = max(
+                abs(delta_y[i,j])
+                for (i,j) in self.arcs
+            )
+    
+            # ========================================================
+            # UPDATE SEGMENTS
+            # ========================================================
+            for (i,j) in self.arcs:
+    
+                yv = y_sol[(i,j)]
+    
+                for k in range(len(alpha_vals)-1):
+    
+                    if (
+                        alpha_vals[k+1]
+                        <= yv
+                        <= alpha_vals[k]
+                    ):
+    
+                        seg_index[(i,j)] = k+1
+                        break
+    
+            # ========================================================
+            # UPDATE PARAMETERS
+            # ========================================================
+            for (i,j) in self.arcs:
+    
+                ampl.param["alpha_arc"][i,j] = \
+                    y_sol[(i,j)]
+    
+                ampl.param["seg_index"][i,j] = \
+                    seg_index[(i,j)]
+    
+            # ========================================================
+            # COMPUTE COST
+            # ========================================================
+            cost = sum(
+                self.L[i,j] * (
+                    self.slope[seg_index[(i,j)]]
+                    * y_sol[(i,j)]
+                    +
+                    self.intercept[seg_index[(i,j)]]
+                )
+                for (i,j) in self.arcs
+            )
+    
+            print(
+                f"{it:03d}   project   "
+                f"{0.0:.3e}   "
+                f"{delta_y_inf:.3e}   "
+                f"{cost:.2f}"
+            )
+    
+            # ========================================================
+            # MERIT FUNCTION
+            # ========================================================
+            merit = head_inf + delta_y_inf
+    
+            if merit < prev_merit:
+    
+                lambda_k = min(
+                    0.50,
+                    1.10 * lambda_k
+                )
+    
+                stagnation_counter = 0
+    
+            else:
+    
+                lambda_k = max(
+                    0.05,
+                    0.50 * lambda_k
+                )
+    
+                stagnation_counter += 1
+    
+            prev_merit = merit
+    
+            # ========================================================
+            # TERMINATION
+            # ========================================================
+            if (
+                head_inf <= tol_head
+                and
+                delta_y_inf <= tol_y
+            ):
+    
+                print("\nFeasible point found.")
+                break
+    
+        # ============================================================
+        # FINAL EXACT NLP
+        # ============================================================
+        print(
+            "\n---------------- FINAL EXACT NLP ----------------"
+        )
+    
+        ampl = AMPL()
+    
+        ampl.read("exact_reduced_wdn.mod")
+    
+        ampl.read_data(self.data_file)
+    
+        ampl.option["solver"] = "ipopt"
+    
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "tol=1e-8 "
+            "max_iter=3000 "
+            "mu_strategy=adaptive "
+            "bound_relax_factor=0 "
+            "warm_start_init_point=yes "
+            "halt_on_ampl_error=yes "
+        )
+    
+        # ============================================================
+        # WARM START
+        # ============================================================
+        for (i,j), val in q_sol.items():
+            ampl.var["q"][i,j] = val
+    
+        for (i,j), val in y_sol.items():
+            ampl.var["y"][i,j] = val
+    
+        for i, val in h_sol.items():
+            ampl.var["h"][i] = val
+    
+        for (i,j), val in z_sol.items():
+            ampl.var["z"][i,j] = val
+    
+        with self.suppress_output():
+            ampl.solve()
+    
+        # ============================================================
+        # EXTRACT FINAL SOLUTION
+        # ============================================================
+        q_sol = ampl.get_variable(
+            "q"
+        ).get_values().to_dict()
+    
+        y_sol = ampl.get_variable(
+            "y"
+        ).get_values().to_dict()
+    
+        h_sol = ampl.get_variable(
+            "h"
+        ).get_values().to_dict()
+    
+        z_sol = ampl.get_variable(
+            "z"
+        ).get_values().to_dict()
+    
+        final_cost = sum(
+            z_sol[i,j]
+            for (i,j) in self.arcs
+        )
+    
+        print(
+            "\nFinal feasible cost:",
+            final_cost
+        )
+    
+        print(
+            "Best cost:",
+            self.best_cost
+        )
+    
+        print(
+            "\n------------- Exit Feasibility Restoration -------------\n"
+        )
+    
+        return (
+            q_sol,
+            h_sol,
+            y_sol,
+            z_sol
+        )
+
+    def solve_restricted_model5(
+        self,
+        q_sol,
+        z_sol,
+        y_sol,
+        h_sol,
+        seg_index
+    ):
+        ampl = AMPL()
+        ampl.read("repair_feasibility_wdn.mod")
+        ampl.read_data(self.data_file)
+        # =========================================================
+        # IPOPT OPTIONS
+        # =========================================================
+        ampl.option["solver"] = "ipopt"
+        ampl.option["presolve_eps"] = 9.43e-7
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "max_iter=1000 "
+            "warm_start_init_point=yes "
+        )
+        # ampl.option["presolve_eps"] = 9.99e-05
+        # =========================================================
+        # PARAMETERS
+        # =========================================================
+        ampl.eval("param seg_index{arcs};")
+        ampl.eval("param alpha_arc{arcs};")
+        ampl.eval("param y_ref{arcs};")
+        ampl.eval("param w_head{arcs} >= 1 default 1;")
+        # ampl.eval("param mode integer default 1;")
+        for (i,j) in self.arcs:
+            ampl.param["seg_index"][i,j] = seg_index[i,j]
+            ampl.param["alpha_arc"][i,j] = self.alpha[seg_index[i,j]]
+            ampl.param["y_ref"][i,j] = y_sol[i,j]
+            ampl.param["w_head"][i,j] = 1.0
+        # =========================================================
+        # WARM START
+        # =========================================================
+        for (i,j), val in q_sol.items():
+            ampl.var["q"][i,j] = val
+        for (i,j), val in y_sol.items():
+            ampl.var["y"][i,j] = val
+        for i, val in h_sol.items():
+            ampl.var["h"][i] = val
+        for (i,j), val in z_sol.items():
+            ampl.var["z"][i,j] = val
+        # =========================================================
+        # COST LIMIT
+        # =========================================================
+        ampl.eval("""
+            minimize restoration_obj:
+                if mode = 1 then
+                    sum{(i,j) in arcs}
+                        w_head[i,j] * delta_headloss[i,j]^2
+                    - 0 * sum{(i,j) in arcs}
+                        (y[i,j] - y_ref[i,j])^2
+                else
+                    sum{(i,j) in arcs} (z[i,j] + delta_y[i,j]^2) 
+                    - 1 * sum{(i,j) in arcs}
+                        (y[i,j] - y_ref[i,j])^2;
+
+            subject to bound_y{(i,j) in arcs}:
+                y[i,j] >=
+                    if mode = 1 then 
+                        alpha_arc[i,j]
+                    else 
+                        alpha_arc[i,j] - delta_y[i,j];
+        """)
+        ampl.eval(f"""
+            subject to bound_cost:
+                sum{{(i,j) in arcs}} z[i,j]
+                <= {self.best_cost} - 1e-5;
+        """)
+        # =========================================================
+        # SEGMENT ESCAPE CUT
+        # =========================================================
+        # alpha_vals = sorted(
+        #     set(self.alpha.values()),
+        #     reverse=True
+        # )
+        # factors = []
+        # for (i,j) in self.arcs:
+        #     s = seg_index[(i,j)]
+        #     a_up = alpha_vals[s-1]
+        #     a_lo = alpha_vals[s]
+        #     factors.append(
+        #         f"(({a_up}-y[{i},{j}])"
+        #         f"*(y[{i},{j}]-{a_lo}))"
+        #     )
+        # product_expr = " * ".join(factors)
+        # ampl.eval(f"""
+        #     subject to segment_escape:
+        #         {product_expr} <= 0;
+        # """)
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        # factors = []
+        # for (i,j) in self.arcs:
+        #     s = seg_index[(i,j)]
+        #     a_up = alpha_vals[s-1]
+        #     a_lo = alpha_vals[s]
+        #     yv = y_sol[(i,j)]
+        #     eps_break = 1e-4
+        #     # if on breakpoint
+        #     if abs(yv - a_up) <= 1e-8 or abs(yv - a_lo) <= 1e-8:
+        #         factors.append(
+        #             f"((y[{i},{j}] - ({a_lo} - {eps_break}))"
+        #             f"*(({a_lo} - {eps_break}) - y[{i},{j}]))"
+        #         )
+        #     else:
+        #         factors.append(
+        #             f"(({a_up} - y[{i},{j}])"
+        #             f"*(y[{i},{j}] - {a_lo}))"
+        #         )
+        # product_expr = " * ".join(factors)
+        # ampl.eval(f"""
+        #     subject to segment_escape:
+        #         {product_expr} <= 0;
+        # """)
+        # =========================================================
+        # FEASIBILITY RESTORATION LOOP
+        # =========================================================
+        max_iter = 400
+        tol = 1e-6
+        lambda_k = 0.25
+        prev_inf = 1e20
+        print(
+            "\niter  phase     "
+            "head_inf    "
+            "delta_y_inf    "
+            "cost"
+        )
+        for it in range(1, max_iter+1):
+            # =====================================================
+            # PHASE 1: RESTORATION
+            # =====================================================
+            ampl.param["mode"] = 1
+            
+            for (i,j) in self.arcs:
+                ampl.var["delta_headloss"][i,j] = 0
+
+            with self.suppress_output():
+                ampl.solve()
+            solve_status = ampl.get_value("solve_result")
+            if solve_status != "solved":
+                print(f"\nRestoration failed at iter {it}")
+                break
+            q_sol = ampl.get_variable(
+                "q"
+            ).get_values().to_dict()
+            y_sol = ampl.get_variable(
+                "y"
+            ).get_values().to_dict()
+            h_sol = ampl.get_variable(
+                "h"
+            ).get_values().to_dict()
+            z_sol = ampl.get_variable(
+                "z"
+            ).get_values().to_dict()
+            delta_head = ampl.get_variable(
+                "delta_headloss"
+            ).get_values().to_dict()
+            # ampl.eval("display delta_headloss;")
+            # =====================================================
+            # INFEASIBILITY
+            # =====================================================
+            head_inf = max(
+                abs(delta_head[i,j])
+                for (i,j) in self.arcs
+            )
+            # =====================================================
+            # UPDATE SEGMENTS
+            # =====================================================
+            for (i,j) in self.arcs:
+               yv = y_sol[i,j]
+               for k in range(len(alpha_vals)-1):
+                   if (
+                       alpha_vals[k+1]
+                       <= yv
+                       <= alpha_vals[k]
+                   ):
+                       seg_index[(i,j)] = k+1
+                       break
+            # =====================================================
+            # COST
+            # =====================================================
+            cost = sum(
+                self.L[i,j] * (
+                    self.slope[seg_index[i,j]]
+                    * y_sol[i,j]
+                    + self.intercept[seg_index[i,j]]
+                )
+                for (i,j) in self.arcs
+            )
+            print(
+                f"{it:03d}   restore   "
+                f"{head_inf:.3e}   "
+                f"{0.0:.3e}   "
+                f"{cost:.2f}"
+            )
+            # =====================================================
+            # FEASIBLE
+            # =====================================================
+            if head_inf <= tol:
+                print("\nFeasible point restored.")
+                break
+            # =====================================================
+            # FEASIBILITY DIRECTION
+            # =====================================================
+            y_corr = {}
+            for (i,j) in self.arcs:
+                q = q_sol[i,j]
+                if abs(q) <= 1e-8:
+                    y_corr[i,j] = y_sol[i,j]
+                    continue
+                phi = (
+                    q**3
+                    * (q**2 + self.eps[i,j]**2)**0.426
+                ) / (
+                    q**2 + 0.426*self.eps[i,j]**2
+                )
+                step = (
+                    delta_head[i,j]
+                    / (phi * self.L[i,j])
+                )
+                y_new = y_sol[i,j] + lambda_k * step
+                # TRUST REGION
+                max_step = 0.03 * (
+                    self.alpha_max - self.alpha_min
+                )
+                y_new = max(
+                    y_sol[i,j] - max_step,
+                    min(y_sol[i,j] + max_step, y_new)
+                )
+                # GLOBAL BOUNDS
+                y_new = max(
+                    self.alpha_min,
+                    min(self.alpha_max, y_new)
+                )
+                y_corr[i,j] = y_new
+            # =====================================================
+            # UPDATE SEGMENTS
+            # =====================================================
+            for (i,j) in self.arcs:
+                yv = y_corr[i,j]
+                for k in range(len(alpha_vals)-1):
+                    if (
+                        alpha_vals[k+1]
+                        <= yv
+                        <= alpha_vals[k]
+                    ):
+                        seg_index[(i,j)] = k+1
+                        break
+            # =====================================================
+            # UPDATE PARAMETERS
+            # =====================================================
+            for (i,j) in self.arcs:
+                ampl.param["alpha_arc"][i,j] = y_corr[i,j]
+                ampl.param["seg_index"][i,j] = seg_index[(i,j)]
+            # =====================================================
+            # PHASE 2: EXACT PROJECTION
+            # =====================================================
+            ampl.param["mode"] = 2
+            
+            for (i,j) in self.arcs:
+                ampl.var["delta_y"][i,j] = 0 
+            with self.suppress_output():
+                ampl.solve()
+            solve_status = ampl.get_value("solve_result")
+            if solve_status != "solved":
+                lambda_k *= 0.5
+                # continue
+            # =====================================================
+            # ADAPTIVE STEP
+            # =====================================================
+            if head_inf < prev_inf:
+                lambda_k = min(0.5, 1.1*lambda_k)
+            else:
+                lambda_k = max(0.05, 0.5*lambda_k)
+            prev_inf = head_inf
+
+            q_sol = ampl.get_variable(
+                "q"
+            ).get_values().to_dict()
+            y_sol = ampl.get_variable(
+                "y"
+            ).get_values().to_dict()
+            h_sol = ampl.get_variable(
+                "h"
+            ).get_values().to_dict()
+            z_sol = ampl.get_variable(
+                "z"
+            ).get_values().to_dict()
+
+            delta_y = ampl.get_variable(
+                "delta_y"
+            ).get_values().to_dict()
+            # ampl.eval("display delta_y;")
+            # =====================================================
+            # INFEASIBILITY
+            # =====================================================
+            delta_y_inf = max(
+                abs(delta_y[i,j])
+                for (i,j) in self.arcs
+            ) 
+            # =====================================================
+            # FEASIBLE
+            # =====================================================
+            if delta_y_inf <= tol:
+                print("\nFeasible point restored.")
+                break
+            for (i,j) in self.arcs:
+                yv = y_sol[i,j]
+                for k in range(len(alpha_vals)-1):
+                    if (
+                        alpha_vals[k+1]
+                        <= yv
+                        <= alpha_vals[k]
+                    ):
+                        seg_index[(i,j)] = k+1
+                        break
+            # =====================================================
+            # UPDATE PARAMETERS
+            # =====================================================
+            for (i,j) in self.arcs:
+                ampl.param["alpha_arc"][i,j] = y_sol[i,j]
+                ampl.param["seg_index"][i,j] = seg_index[(i,j)]
+            print(
+                f"{it:03d}   project   "
+                f"{0.0:.3e}   "
+                f"{delta_y_inf:.3e}   "
+                f"{cost:.2f}"
+            )
+        # =========================================================
+        # FINAL EXACT NLP
+        # =========================================================
+        # ampl.param["mode"] = 2
+        # ampl.solve()
+        print("------------------------------FINAL EXACT NLP---------------------------------")
+        ampl = AMPL()
+        ampl.read("exact_reduced_wdn.mod")
+        ampl.read_data(self.data_file)
+
+        ampl.option["solver"] = "ipopt"
+        # ampl.option["ipopt_options"] = "outlev=0 tol=1e-9 max_iter=3000"
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "expect_infeasible_problem=no "
+            "bound_relax_factor=0 "
+            "bound_push=0.1 "
+            "bound_frac=0.1 "
+            "warm_start_init_point=yes "
+            "halt_on_ampl_error=yes "
+            "max_iter=3000"
+        )
+
+        # -------------------------
+        # Storage
+        # -------------------------
+        # Warm-start perturbation
+        # -------------------------
+        for (i, j), val in q_sol.items():
+            ampl.var["q"][i, j] = val
+        for (i, j), val in y_sol.items():
+            ampl.var["y"][i, j] = val
+        for i, val in h_sol.items():
+            ampl.var["h"][i] = val
+        for (i, j), val in z_sol.items():
+            ampl.var["z"][i, j] = val
+
+        ampl.solve()
+        # ampl.eval("display total_cost;")
+ 
+        q_sol = ampl.get_variable(
+            "q"
+        ).get_values().to_dict()
+        y_sol = ampl.get_variable(
+            "y"
+        ).get_values().to_dict()
+        h_sol = ampl.get_variable(
+            "h"
+        ).get_values().to_dict()
+        z_sol = ampl.get_variable(
+            "z"
+        ).get_values().to_dict()
+
+        final_cost = sum(
+            z_sol[i,j]
+            for (i,j) in self.arcs
+        )
+        print(
+            "\nFinal feasible cost:",
+            final_cost
+        )
+        print("Best cost:", self.best_cost)
+        print("\n-----------------Exit the Feasibility Restoration Phase------------\n")
+        return (
+            q_sol,
+            h_sol,
+            y_sol,
+            z_sol
+        )
+
+    def solve_restricted_model5(self, q_sol, z_sol, y_sol, h_sol, seg_index):
     
         ampl = AMPL()
         ampl.read("repair_feasibility_wdn.mod")
         ampl.read_data(self.data_file)
     
         ampl.option["solver"] = "ipopt"
-        ampl.option["presolve_eps"] = 4.07e-09
+        ampl.option["presolve_eps"] = 1e-8
         ampl.option["ipopt_options"] = (
-            "outlev=0 tol=1e-9 max_iter=3000 "
-            "warm_start_init_point=yes"
+            "outlev=0 "
+            "max_iter=2000 "
+            # "tol=1e-7 "
+            "warm_start_init_point=yes "
+            # "mu_strategy=adaptive "
         )
     
+        # ============================================================
+        # PARAMETERS
+        # ============================================================
+        ampl.eval("param seg_index{arcs};")
+        ampl.eval("param alpha_arc{arcs};")
+        ampl.eval("param y_ref{arcs};")
+        ampl.eval("param w_head{arcs} >= 1 default 1;")
+    
+        for (i,j) in self.arcs:
+            ampl.param["seg_index"][i,j] = seg_index[i,j]
+            ampl.param["alpha_arc"][i,j] = self.alpha[seg_index[i,j]]
+            ampl.param["y_ref"][i,j] = y_sol[i,j]
+            ampl.param["w_head"][i,j] = 1.0
+    
+        # ============================================================
+        # WARM START
+        # ============================================================
+        for (i,j), val in q_sol.items():
+            ampl.var["q"][i,j] = val
+    
+        for (i,j), val in y_sol.items():
+            ampl.var["y"][i,j] = val
+    
+        for i,val in h_sol.items():
+            ampl.var["h"][i] = val
+    
+        for (i,j), val in z_sol.items():
+            ampl.var["z"][i,j] = val
+    
+        # ============================================================
+        # FEASIBILITY RESTORATION MODEL
+        # ============================================================
+        ampl.eval("""
+    
+            # minimize restoration_obj:
+            #
+            #     sum{(i,j) in arcs}
+            #         w_head[i,j] * delta_headloss[i,j]^2
+            #
+            #     + 1e-2 * sum{(i,j) in arcs}
+            #         delta_y[i,j]^2
+            #
+            #     - 1e-3 * sum{(i,j) in arcs}
+            #         (y[i,j] - y_ref[i,j])^2;
+            param mode integer default 1;
+
+            minimize restoration_obj:
+
+            if mode = 1 then
+
+                sum{(i,j) in arcs}
+                    delta_headloss[i,j]^2
+
+                + 1e-4 * sum{(i,j) in arcs}
+                    delta_y[i,j]^2
+
+                - 1e-5 * sum{(i,j) in arcs}
+                    (y[i,j] - alpha_arc[i,j])^2
+
+            else
+
+                sum{(i,j) in arcs}
+                    z[i,j];
+        """)
+    
+        # ampl.eval("""
+        #
+        #     subject to bound_y{(i,j) in arcs}:
+        #         y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
+        #
+        # """)
+    
+        ampl.eval(f"""
+    
+            subject to bound_cost:
+                sum{{(i,j) in arcs}} z[i,j]
+                <= {self.best_cost};
+    
+        """)
+    
+        # ============================================================
+        # SEGMENT ESCAPE CUT
+        # ============================================================
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+    
+        factors = []
+    
+        for (i,j) in self.arcs:
+    
+            s = seg_index[(i,j)]
+    
+            a_up = alpha_vals[s-1]
+            a_lo = alpha_vals[s]
+    
+            yv = y_sol[(i,j)]
+    
+            eps_break = 1e-4
+    
+            # if on breakpoint
+            if abs(yv - a_up) <= 1e-8 or abs(yv - a_lo) <= 1e-8:
+    
+                factors.append(
+                    f"((y[{i},{j}] - ({a_lo} - {eps_break}))"
+                    f"*(({a_lo} - {eps_break}) - y[{i},{j}]))"
+                )
+    
+            else:
+    
+                factors.append(
+                    f"(({a_up} - y[{i},{j}])"
+                    f"*(y[{i},{j}] - {a_lo}))"
+                )
+    
+        product_expr = " * ".join(factors)
+    
+        ampl.eval(f"""
+            subject to segment_escape:
+                {product_expr} <= 0;
+        """)
+    
+        # ============================================================
+        # ITERATIVE FEASIBILITY JUMP
+        # ============================================================
+        max_iter = 100
+        tol = 1e-6
+        
+        lambda_k = 0.3
+        
+        print("\niter    phase      head_inf       cost")
+        
+        for it in range(1, max_iter+1):
+        
+            # =====================================================
+            # PHASE 1: RESTORATION NLP
+            # =====================================================
+        
+            ampl.param["mode"] = 1
+            ampl.eval(f"""
+                subject to con2_{it}{{(i,j) in arcs}}:
+                    h[i] - h[j] - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426 * eps[i,j]^2)) * y[i,j] * L[i,j] = delta_headloss[i,j];
+
+                subject to bound_y_{it}{{(i,j) in arcs}}:
+                    y[i,j] >= alpha_arc[i,j];
+            """)
+        
+            with self.suppress_output():
+                ampl.solve()
+        
+            q_sol = ampl.get_variable("q").get_values().to_dict()
+            y_sol = ampl.get_variable("y").get_values().to_dict()
+            h_sol = ampl.get_variable("h").get_values().to_dict()
+            z_sol = ampl.get_variable("z").get_values().to_dict()
+        
+            delta_head = ampl.get_variable(
+                "delta_headloss"
+            ).get_values().to_dict()
+        
+            head_inf = max(
+                abs(delta_head[i,j])
+                for (i,j) in self.arcs
+            )
+         
+            alpha_vals = sorted(
+                set(self.alpha.values()),
+                reverse=True
+            )
+        
+            for (i,j) in self.arcs:
+        
+                yv = y_sol[i,j]
+        
+                for k in range(len(alpha_vals)-1):
+        
+                    if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+        
+                        seg_index[(i,j)] = k+1
+                        break
+
+            cost = sum(
+                self.L[i,j] * (
+                    self.slope[seg_index[i,j]] * y_sol[i,j]
+                    + self.intercept[seg_index[i,j]]
+                )
+                for (i,j) in self.arcs
+            )
+        
+            print(
+                f"{it:03d}    restore    "
+                f"{head_inf:.3e}    "
+                f"{cost:.2f}"
+            )
+        
+            # =====================================================
+            # CONVERGED
+            # =====================================================
+        
+            if head_inf <= tol:
+        
+                print("\nFeasible solution restored.")
+                break
+        
+            # =====================================================
+            # COMPUTE FEASIBILITY DIRECTION
+            # =====================================================
+        
+            y_corr = {}
+        
+            for (i,j) in self.arcs:
+        
+                q = q_sol[i,j]
+        
+                if abs(q) <= 1e-8:
+        
+                    y_corr[i,j] = y_sol[i,j]
+                    continue
+        
+                phi = (
+                    q**3
+                    * (q**2 + self.eps[i,j]**2)**0.426
+                ) / (
+                    q**2 + 0.426*self.eps[i,j]**2
+                )
+        
+                step = (
+                    delta_head[i,j]
+                    / (phi * self.L[i,j])
+                )
+        
+                y_new = y_sol[i,j] + lambda_k * step
+        
+                # trust region
+                max_move = 0.05 * (
+                    self.alpha_max - self.alpha_min
+                )
+        
+                y_new = max(
+                    y_sol[i,j] - max_move,
+                    min(y_sol[i,j] + max_move, y_new)
+                )
+        
+                y_new = max(
+                    self.alpha_min,
+                    min(self.alpha_max, y_new)
+                )
+        
+                y_corr[i,j] = y_new
+        
+            # =====================================================
+            # UPDATE SEGMENTS
+            # =====================================================
+        
+            alpha_vals = sorted(
+                set(self.alpha.values()),
+                reverse=True
+            )
+        
+            for (i,j) in self.arcs:
+        
+                yv = y_corr[i,j]
+        
+                for k in range(len(alpha_vals)-1):
+        
+                    if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+        
+                        seg_index[(i,j)] = k+1
+                        break
+        
+            # =====================================================
+            # UPDATE PARAMETERS
+            # =====================================================
+        
+            for (i,j) in self.arcs:
+                ampl.param["alpha_arc"][i,j] = y_corr[i,j]
+        
+            # =====================================================
+            # PHASE 2: EXACT PROJECTION NLP
+            # =====================================================
+        
+            ampl.param["mode"] = 2
+            ampl.eval(f"drop bound_y_{it};")
+            ampl.eval(f"drop con2_{it};")
+            ampl.eval(f"""
+                subject to con2_new_{it}{{(i,j) in arcs}}:
+                    h[i] - h[j] - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426 * eps[i,j]^2)) * y[i,j] * L[i,j] = 0;
+
+                subject to bound_y_new_{it}{{(i,j) in arcs}}:
+                    y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
+            """) 
+
+            with self.suppress_output():
+                ampl.solve()
+             
+            ampl.eval(f"drop bound_y_new_{it};")
+            ampl.eval(f"drop con2_new_{it};")
+            # ampl.eval("""
+            #     subject to con2{(i,j) in arcs}:
+            #         h[i] - h[j] - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426 * eps[i,j]^2)) * y[i,j] * L[i,j] = delta_headloss[i,j];
+            #
+            #     subject to bound_y_new{(i,j) in arcs}:
+            #         y[i,j] >= alpha_arc[i,j];
+            # """)
+            q_sol = ampl.get_variable("q").get_values().to_dict()
+            y_sol = ampl.get_variable("y").get_values().to_dict()
+            h_sol = ampl.get_variable("h").get_values().to_dict()
+            z_sol = ampl.get_variable("z").get_values().to_dict()
+        
+            cost = sum(
+                self.L[i,j] * (
+                    self.slope[seg_index[i,j]] * y_sol[i,j]
+                    + self.intercept[seg_index[i,j]]
+                )
+                for (i,j) in self.arcs
+            )
+        
+            print(
+                f"{it:03d}    project    "
+                f"{0.0:.3e}    "
+                f"{cost:.2f}"
+            )
+
+        # max_iter = 500
+        # tol = 1e-5
+        #
+        # stagnation_counter = 0
+        # prev_inf = 1e20
+        #
+        # lambda_k = 0.2
+        #
+        # print("\niter   head_inf     dy_inf      total_inf      cost")
+        #
+        # for it in range(1, max_iter+1):
+        #
+        #     # ========================================================
+        #     # SOLVE RESTORATION NLP
+        #     # ========================================================
+        #     with self.suppress_output():
+        #         ampl.solve()
+        #
+        #     # ========================================================
+        #     # EXTRACT SOLUTION
+        #     # ========================================================
+        #     q_sol = ampl.get_variable("q").get_values().to_dict()
+        #     y_sol = ampl.get_variable("y").get_values().to_dict()
+        #     h_sol = ampl.get_variable("h").get_values().to_dict()
+        #     z_sol = ampl.get_variable("z").get_values().to_dict()
+        #
+        #     delta_head = ampl.get_variable(
+        #         "delta_headloss"
+        #     ).get_values().to_dict()
+        #
+        #     delta_y = ampl.get_variable(
+        #         "delta_y"
+        #     ).get_values().to_dict()
+        #
+        #     # ========================================================
+        #     # INFEASIBILITY
+        #     # ========================================================
+        #     head_inf = max(
+        #         abs(delta_head[i,j]) for (i,j) in self.arcs
+        #     )
+        #
+        #     dy_inf = max(
+        #         abs(delta_y[i,j]) for (i,j) in self.arcs
+        #     )
+        #
+        #     total_inf = head_inf + dy_inf
+        #
+        #     # ========================================================
+        #     # COMPUTE COST
+        #     # ========================================================
+        #     cost = sum(
+        #         self.L[i,j] * (
+        #             self.slope[seg_index[i,j]] * y_sol[i,j]
+        #             + self.intercept[seg_index[i,j]]
+        #         )
+        #         for (i,j) in self.arcs
+        #     )
+        #
+        #     print(
+        #         f"{it:02d}   "
+        #         f"{head_inf:.2e}   "
+        #         f"{dy_inf:.2e}   "
+        #         f"{total_inf:.2e}   "
+        #         f"{cost:.2f}"
+        #     )
+        #
+        #     # ========================================================
+        #     # CONVERGENCE
+        #     # ========================================================
+        #     if total_inf <= tol:
+        #
+        #         print("\nFeasible point restored.")
+        #         break
+        #
+        #     # ========================================================
+        #     # STAGNATION DETECTION
+        #     # ========================================================
+        #     rel_improve = abs(prev_inf - total_inf) / max(1.0, prev_inf)
+        #
+        #     if rel_improve < 1e-3:
+        #         stagnation_counter += 1
+        #     else:
+        #         stagnation_counter = 0
+        #
+        #     prev_inf = total_inf
+        #
+        #     # ========================================================
+        #     # ADAPTIVE WEIGHTS
+        #     # ========================================================
+        #     for (i,j) in self.arcs:
+        #
+        #         w = ampl.param["w_head"][i,j]
+        #
+        #         if abs(delta_head[i,j]) > 1e-3:
+        #             ampl.param["w_head"][i,j] = min(1e6, 1.5*w)
+        #
+        #     # ========================================================
+        #     # COMPUTE FEASIBILITY DIRECTION
+        #     # ========================================================
+        #     y_corr = {}
+        #
+        #     for (i,j) in self.arcs:
+        #
+        #         q = q_sol[i,j]
+        #
+        #         if abs(q) <= 1e-8:
+        #
+        #             y_corr[i,j] = y_sol[i,j]
+        #             continue
+        #
+        #         phi = (
+        #             q**3
+        #             * (q**2 + self.eps[i,j]**2)**0.426
+        #         ) / (
+        #             q**2 + 0.426*self.eps[i,j]**2
+        #         )
+        #
+        #         correction = (
+        #             delta_head[i,j]
+        #             / (phi * self.L[i,j])
+        #         )
+        #
+        #         # damped correction
+        #         y_new = (
+        #             (1-lambda_k)*y_sol[i,j]
+        #             + lambda_k*(y_sol[i,j] + correction)
+        #         )
+        #
+        #         # random perturbation if stagnating
+        #         if stagnation_counter >= 3:
+        #
+        #             perturb = np.random.uniform(
+        #                 -0.02,
+        #                 0.02
+        #             ) * (self.alpha_max - self.alpha_min)
+        #
+        #             y_new += perturb
+        #
+        #         y_new = max(
+        #             self.alpha_min,
+        #             min(self.alpha_max, y_new)
+        #         )
+        #
+        #         y_corr[i,j] = y_new
+        #
+        #     # ========================================================
+        #     # UPDATE SEGMENTS
+        #     # ========================================================
+        #     for (i,j) in self.arcs:
+        #
+        #         yv = y_corr[i,j]
+        #
+        #         for k in range(len(alpha_vals)-1):
+        #
+        #             if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+        #
+        #                 seg_index[(i,j)] = k+1
+        #                 break
+        #
+        #     # ========================================================
+        #     # UPDATE PARAMETERS
+        #     # ========================================================
+        #     for (i,j) in self.arcs:
+        #
+        #         ampl.param["alpha_arc"][i,j] = y_corr[i,j]
+        #         ampl.param["seg_index"][i,j] = seg_index[(i,j)]
+        #         # ampl.param["y_ref"][i,j] = y_sol[i,j]
+        #
+        #     # ========================================================
+        #     # ADAPTIVE STEP SIZE
+        #     # ========================================================
+        #     if stagnation_counter >= 3:
+        #         lambda_k = max(0.05, 0.5*lambda_k)
+        #     else:
+        #         lambda_k = min(0.5, 1.1*lambda_k)
+    
+        # ============================================================
+        # FINAL EXACT NLP
+        # ============================================================
+        print("\n--- Exact Feasible Solve ---")
+    
+        ampl.eval("drop con2;")
+        ampl.eval("drop restoration_obj;")
+    
+        ampl.eval("""
+    
+            minimize total_cost:
+                sum{(i,j) in arcs} z[i,j];
+    
+            subject to headloss_exact{(i,j) in arcs}:
+    
+                h[i] - h[j]
+    
+                - (
+    
+                    q[i,j]^3
+                    * (q[i,j]^2 + eps[i,j]^2)^0.426
+    
+                    / (q[i,j]^2 + 0.426*eps[i,j]^2)
+    
+                ) * y[i,j] * L[i,j]
+    
+                = 0;
+    
+        """)
+    
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "warm_start_init_point=yes "
+        )
+    
+        ampl.solve()
+    
+        q_sol = ampl.get_variable("q").get_values().to_dict()
+        y_sol = ampl.get_variable("y").get_values().to_dict()
+        h_sol = ampl.get_variable("h").get_values().to_dict()
+        z_sol = ampl.get_variable("z").get_values().to_dict()
+    
+        final_cost = ampl.get_objective(
+            "total_cost"
+        ).value()
+    
+        print("\nFinal feasible cost:", final_cost)
+    
+        return q_sol, h_sol, y_sol, z_sol
+
+    def solve_restricted_model3(self, q_sol, z_sol, y_sol, h_sol, seg_index):
+
+        ampl = AMPL()
+        ampl.read("repair_feasibility_wdn.mod")
+        ampl.read_data(self.data_file)
+
+        ampl.option["solver"] = "ipopt"
+        ampl.option["ipopt_options"] = (
+            "outlev=0 max_iter=3000 warm_start_init_point=no"
+        )
+
         # -------------------------
         # Parameters
         # -------------------------
         ampl.eval("param seg_index{(i,j) in arcs};")
+        ampl.eval("param optimal_seg_index{(i,j) in arcs};")
+        ampl.eval("param alpha_arc{arcs};")
+        ampl.eval("param y_sol{arcs};")
+        
+        for (i,j) in self.arcs:
+            ampl.param["seg_index"][i, j] = seg_index[(i, j)]
+            ampl.param["optimal_seg_index"][i, j] = seg_index[(i, j)]
+            ampl.param["y_sol"][i, j] = y_sol[i,j]
+        
+        ampl.eval("""set fixed_arcs within {i in nodes, j in nodes: i != j};""")
+        ampl.get_set("fixed_arcs").set_values(self.fixed_arcs)
+
+        # -------------------------
+        # Warm start
+        # -------------------------
+        # for (i, j), val in q_sol.items():
+        #     ampl.var["q"][i, j] = val
+        # for (i, j), val in y_sol.items():
+        #     ampl.var["y"][i, j] = val
+        # for i, val in h_sol.items():
+        #     ampl.var["h"][i] = val
+        # for (i, j), val in z_sol.items():
+        #     ampl.var["z"][i, j] = val
+
+        # -------------------------
+        # Relaxed constraints
+        # -------------------------
+        ampl.eval(f"""
+            minimize infeas_obj:
+                    sum{{(i,j) in arcs}} (delta_headloss[i,j]^2 + delta_y[i,j]^2 - 0.0*(y[i,j] - y_sol[i,j])^2 + 0.0*z[i,j]);
+
+            subject to bound_y{{(i,j) in arcs diff fixed_arcs}}:
+                y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
+            
+            subject to fix_y{{(i,j) in fixed_arcs}}:
+                y[i,j] >= y_sol[i,j];
+
+            subject to bound_delta_y{{(i,j) in arcs diff fixed_arcs}}:
+                delta_y[i,j] <= max(0, alpha[seg_index[i,j]] - alpha_min);
+        """)
+
+        # ampl.eval(f"""
+        #     subject to bound_cost:
+        #         sum{{(i,j) in arcs}} z[i,j] <= {self.best_cost};
+        # """)
+
+        d_min = float('inf')
+        for (i,j) in self.arcs:
+            s      = seg_index[(i,j)]        # active segment index
+            a_up   = self.alpha[s]                # alpha_s   (upper, larger value)
+            a_lo   = self.alpha[s+1]              # alpha_{s+1} (lower, smaller value)
+            y_val  = y_sol[(i,j)]
+            # if y_sol[i,j]>a_lo:
+            dist_to_upper = (a_up - y_val)     # >= 0
+            dist_to_lower = (y_val - a_lo)     # >= 0
+            d_ij   = min(dist_to_upper, dist_to_lower)
+            if d_ij >= 0.001:
+                d_min  = min(d_min, d_ij)
+                # print("d_min:",d_min)
+
+        rhs = d_min ** 2
+        # ampl.eval(f"""
+        #     subject to pwl_cut:
+        #         sum{{(i,j) in arcs}} (y[i,j] - y_sol[i,j])^2 >= {rhs};
+        # """)
+
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        factors = []
+        delta = 1e-4
+        for (i,j) in self.arcs:
+            s    = seg_index[(i,j)]
+            a_up = alpha_vals[s-1]
+            a_lo = alpha_vals[s]
+
+            # factor > 0 iff y[i,j] is strictly inside segment s
+            # factor <= 0 iff y[i,j] has left segment s
+            if y_sol[i,j]>=self.alpha[s+1]+1e-4:
+                factors.append(
+                    f"(({a_up} - y[{i},{j}]) * "
+                    f"(y[{i},{j}] - {a_lo}))"
+                )
+            else:
+                factors.append(
+                    f"(({a_up - delta} - y[{i},{j}]) * "
+                    f"(y[{i},{j}] - {a_up + delta}))"
+                )
+
+        product = " * ".join(factors)
+        ampl.eval(f"""
+            subject to segment_escape_{1}:
+                {product} <= 0;
+        """)
+        print(f"  Segment escape constraint {1} added")
+
+        # -------------------------
+        # Iterative restoration
+        # -------------------------
+        max_iter = 30
+        tol = 1e-4
+
+        lambda_k = 0.5        # damping
+        lambda_min = 1e-3
+        lambda_max = 1.0
+
+        prev_inf = 1e20
+        log_fmt = "[{:02d}] {:.1e} {:.1e} {:.1e} {:.1e} {}"
+        print("iter head_inf delta_y_inf total_inf lambda cost")
+
+        for it in range(1, max_iter+1):
+            if it == 1:
+                for (i, j) in self.arcs:
+                    if (i,j) not in self.fixed_arcs:
+                        ampl.param["alpha_arc"][i, j] = self.alpha[seg_index[i,j]]
+                    else:
+                        ampl.param["alpha_arc"][i, j] = y_sol[i,j]
+
+            else:
+                for (i, j) in self.arcs:
+                    ampl.param["alpha_arc"][i, j] = y_corr[i,j]
+                    ampl.param["seg_index"][i, j] = seg_index[(i, j)]
+                    # ampl.param["y_sol"][i, j] = y_sol[i,j]
+                    # ampl.eval("drop bound_delta_y;")
+                    # ampl.eval("""
+                    #     subject to bound_y_new{(i,j) in arcs}:
+                    #         y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
+                    # """)
+
+            with self.suppress_output():
+                ampl.solve()
+
+            q_sol = ampl.get_variable("q").get_values().to_dict()
+            y_sol = ampl.get_variable("y").get_values().to_dict()
+            h_sol = ampl.get_variable("h").get_values().to_dict()
+            z_sol = ampl.get_variable("z").get_values().to_dict()
+
+            delta_head = ampl.get_variable("delta_headloss").get_values().to_dict()
+            delta_y_sol = ampl.get_variable("delta_y").get_values().to_dict()
+            # delta_y_minus = ampl.get_variable("delta_y_minus").get_values().to_dict()
+
+            # for (i,j) in self.arcs: 
+            #     print(f"delta_y[{i},{j}]:", delta_y_sol[i,j])
+            #     print(f"delta_headloss[{i},{j}]:", delta_head[i,j])
+
+            # ampl.eval("display y;")
+            # ampl.eval("display seg_index;")
+            # ampl.eval("display delta_y;")
+            # ampl.eval("display delta_headloss;")
+            #     print(f"delta_y_minus[{i},{j}]:", delta_y_minus[i,j])
+            # -------------------------
+            # Infeasibility metrics
+            # -------------------------
+            head_inf = max(abs(delta_head[i,j]) for (i,j) in delta_head)
+            dy_inf   = max(abs(delta_y_sol[i,j]) for (i,j) in delta_y_sol)
+
+            total_inf = head_inf + dy_inf
+
+            alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+
+            for (i,j) in self.arcs:
+                yv = y_sol[i,j]
+                for k in range(len(alpha_vals)-1):
+                    if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+                        seg_index[(i,j)] = k+1
+                        break
+            cost = sum(
+               self.L[i,j] * (
+                   self.slope[seg_index[i,j]] * y_sol[i,j]
+                   + self.intercept[seg_index[i,j]]
+               )
+               for (i,j) in self.arcs
+            )
+
+            print(log_fmt.format(it, head_inf, dy_inf, total_inf, lambda_k, self.format_indian_number(round(cost))))
+            # ampl.eval("display delta_headloss;")
+            # -------------------------
+            # Convergence check
+            # -------------------------
+            if total_inf < tol:
+                print("Converged")
+                break
+
+            # -------------------------
+            # Compute correction
+            # -------------------------
+            y_corr = {}
+
+            for (i,j) in self.arcs:
+
+                q = q_sol[i,j]
+
+                # avoid division issues
+                if abs(q) < 1e-8:
+                    y_corr[i,j] = y_sol[i,j]
+                    continue
+
+                phi = (q**3 * (q**2 + self.eps[i,j]**2)**0.426) / \
+                      (q**2 + 0.426 * self.eps[i,j]**2)
+
+                dy = delta_head[i,j] / (phi * self.L[i,j])
+
+                # damped update
+                # y_new = y_sol[i,j] + lambda_k * dy
+                y_new = y_sol[i,j] + dy
+
+                # trust region (important)
+                # max_step = 0.2 * (self.alpha_max - self.alpha_min)
+                # y_new = max(y_sol[i,j] - max_step,
+                #             min(y_sol[i,j] + max_step, y_new))
+
+                # clip bounds
+                y_corr[i,j] = min(self.alpha_max,
+                                 max(self.alpha_min, y_new))
+
+            # -------------------------
+            # Accept / reject step
+            # -------------------------
+            if total_inf < prev_inf:
+                lambda_k = min(lambda_max, 1.2 * lambda_k)
+            else:
+                lambda_k = max(lambda_min, 0.5 * lambda_k)
+
+            prev_inf = total_inf
+
+            # -------------------------
+            # Update AMPL parameters
+            # -------------------------
+            # for (i,j) in self.arcs:
+            #     ampl.param["alpha_arc"][i,j] = y_corr[i,j]
+
+            # -------------------------
+            # Update segment index
+            # -------------------------
+            alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+
+            for (i,j) in self.arcs:
+                yv = y_corr[i,j]
+                for k in range(len(alpha_vals)-1):
+                    if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+                        seg_index[(i,j)] = k+1
+                        break
+
+        # -------------------------
+        # Final exact solve
+        # -------------------------
+        print("\n--- Final exact solve ---")
+
+        # ampl.eval("drop con2;")
+        # ampl.eval("drop infeas_obj;")
+
+        # ampl.eval("""
+        #     # minimize total_cost: sum{(i,j) in arcs} z[i,j];
+        #
+        #     subject to headloss_exact{(i,j) in arcs}:
+        #         h[i] - h[j]
+        #       - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426
+        #         / (q[i,j]^2 + 0.426 * eps[i,j]^2))
+        #         * y[i,j] * L[i,j] = 0;
+        # """)
+
+        # ampl.solve()
+        #
+        # q_sol = ampl.get_variable("q").get_values().to_dict()
+        # h_sol = ampl.get_variable("h").get_values().to_dict()
+        # y_sol = ampl.get_variable("y").get_values().to_dict()
+        # z_sol = ampl.get_variable("z").get_values().to_dict()
+        #
+        # alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        #
+        # for (i,j) in self.arcs:
+        #     yv = y_sol[i,j]
+        #     for k in range(len(alpha_vals)-1):
+        #         if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+        #             seg_index[(i,j)] = k+1
+        #             break
+        #
+        # cost = sum(
+        #        self.L[i,j] * (
+        #            self.slope[seg_index[i,j]] * y_sol[i,j]
+        #            + self.intercept[seg_index[i,j]]
+        #        )
+        #        for (i,j) in self.arcs
+        #     ) 
+        #
+        # print("Feasible solution obtained.")
+        print("Final cost:", cost) 
+
+        ampl = AMPL()
+        ampl.read("exact_reduced_wdn.mod")
+        ampl.read_data(self.data_file)
+
+        ampl.option["solver"] = "ipopt"
+        # ampl.option["ipopt_options"] = "outlev=0 tol=1e-9 max_iter=3000"
+        ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "expect_infeasible_problem=no "
+            "bound_relax_factor=0 "
+            "bound_push=0.1 "
+            "bound_frac=0.1 "
+            "warm_start_init_point=yes "
+            "halt_on_ampl_error=yes "
+            "max_iter=3000"
+        )
+
+        # -------------------------
+        # Storage
+        # -------------------------
+        # Warm-start perturbation
+        # -------------------------
+        for (i, j), val in q_sol.items():
+            ampl.var["q"][i, j] = val
+        for (i, j), val in y_sol.items():
+            ampl.var["y"][i, j] = val
+        for i, val in h_sol.items():
+            ampl.var["h"][i] = val
+        for (i, j), val in z_sol.items():
+            ampl.var["z"][i, j] = val
+
+        ampl.solve()
+        print("Best cost:", self.best_cost)
+        ampl.eval("display total_cost;")
+ 
+        print("\n-----------------Exit the Feasibility Restoration Phase------------\n")
+        return q_sol, h_sol, y_sol, z_sol
+
+
+    def solve_restricted_model2(self, q_sol, z_sol, y_sol, h_sol, seg_index):
     
+        ampl = AMPL()
+        ampl.read("repair_feasibility_wdn.mod")
+        ampl.read_data(self.data_file)
+    
+        ampl.option["solver"] = "ipopt"
+        ampl.option["presolve_eps"] = 1.2e-08
+        ampl.option["ipopt_options"] = (
+            "outlev=0 max_iter=3000 "
+            "warm_start_init_point=yes"
+        )
+
+        # -------------------------
+        # Parameters
+        # -------------------------
+        ampl.eval("param seg_index{(i,j) in arcs};")
+
         for (i, j) in self.arcs:
             ampl.param["seg_index"][i, j] = seg_index[(i, j)]
-    
+
         # -------------------------
         # Warm start
         # -------------------------
@@ -2616,81 +8954,172 @@ class WaterNetworkSolver:
             ampl.var["h"][i] = val
         for (i, j), val in z_sol.items():
             ampl.var["z"][i, j] = val
-    
+
         # -------------------------
         # PHASE 1: relaxed structure
         # -------------------------
         ampl.eval("param alpha_arc{arcs};")
-        
+        ampl.eval("param y_sol{arcs};")
+
         for (i, j) in self.arcs:
             ampl.param["alpha_arc"][i, j] = self.alpha[seg_index[(i, j)]]
-    
+            ampl.param["y_sol"][i, j] = y_sol[i,j]
+
         ampl.eval("""
             subject to bound_y{(i,j) in arcs}:
                 y[i,j] >= alpha_arc[i,j] - delta_y[i,j];
-    
+
             subject to bound_delta_y{(i,j) in arcs}:
-                delta_y[i,j] <= alpha[seg_index[i,j]] - alpha_min;
+                delta_y[i,j] <= max(0, alpha[seg_index[i,j]] - y_sol[i,j]);
         """)
-    
+
         # objective includes delta_y ONLY in phase 1
-        ampl.eval("""
-            minimize phase1_obj:
-                sum{(i,j) in arcs} (
-                    delta_headloss[i,j]^2 + delta_y[i,j]^2
-                );
+        # ampl.eval("""
+        #     minimize phase1_obj:
+        #         sum{(i,j) in arcs} (
+        #             delta_headloss[i,j]^2 + delta_y[i,j]^2
+        #         );
+        # """)
+        ampl.eval(f"""
+           subject to bound_cost:
+               sum{{(i,j) in arcs}}z[i,j]<={self.best_cost};
         """)
-    
         ampl.solve()
-    
-        delta_y_sol = ampl.get_variable("delta_y").get_values().to_dict()
-    
+
+        y_sol = ampl.get_variable("y").get_values().to_dict()
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+
+        for (i,j) in self.arcs:
+            yv = y_sol[i,j]
+            for k in range(len(alpha_vals)-1):
+                if alpha_vals[k+1] <= yv <= alpha_vals[k]:
+                    seg_index[(i,j)] = k+1
+                    break
+
+        cost = sum(
+           self.L[i,j] * (
+               self.slope[seg_index[i,j]] * y_sol[i,j]
+               + self.intercept[seg_index[i,j]]
+           )
+           for (i,j) in self.arcs
+        )
+        print("cost:", cost)
+        # delta_y_sol = ampl.get_variable("delta_y").get_values().to_dict()
+        # delta_headloss_sol = ampl.get_variable("delta_headloss").get_values().to_dict()
+        # for (i,j) in delta_headloss_sol:
+        #     print(f"delta_y[{i},{j}]:", delta_y_sol[i,j])
+        #     print(f"delta_headloss[{i},{j}]:", delta_headloss_sol[i,j],"\n")
+
         # -------------------------
         # PHASE 2: FIX delta_y
         # -------------------------
-        ampl.eval("param delta_y_fix{(i,j) in arcs};")
-    
-        for (i, j) in self.arcs:
-            ampl.param["delta_y_fix"][i, j] = delta_y_sol[(i, j)]
-    
-        ampl.eval("""
-            subject to fix_delta_y{(i,j) in arcs}:
-                delta_y[i,j] = delta_y_fix[i,j];
-        """)
-    
+        # ampl.eval("param delta_y_fix{(i,j) in arcs};")
+
+        # for (i, j) in self.arcs:
+        #     ampl.param["delta_y_fix"][i, j] = delta_y_sol[(i, j)]
+
+        # ampl.eval("""
+        #     subject to fix_delta_y{(i,j) in arcs}:
+        #         delta_y[i,j] = delta_y_fix[i,j];
+        # """)
+
         # remove phase1 objective
-        ampl.eval("drop phase1_obj;")
-    
+        # ampl.eval("drop phase1_obj;")
+
         # -------------------------
         # PHASE 3: continuation
         # -------------------------
         rho_list = [1e2, 1e4, 1e6, 1e8]
-        ampl.eval("""
-            minimize phase2_obj:
-                rho * (sum{(i,j) in arcs} (
-                    delta_headloss[i,j]^2
-                ));
-        """)    
-        for rho in rho_list:
-            ampl.param["rho"] = rho
-            for (i, j) in self.arcs:
-                ampl.param["alpha_arc"][i, j] = self.alpha[seg_index[(i, j)]] - delta_y_sol[i,j]
-    
-            ampl.solve()
-    
+        # ampl.eval("""
+        #     minimize phase2_obj:
+        #         rho * (sum{(i,j) in arcs} (
+        #             delta_headloss[i,j]^2 + delta_y[i,j]^2
+        #         ));
+        # """)
+        max_iter = 10 
+        iter = 1
+        total_inf = 1e+5 
+        while total_inf>=1e-5:
+            print(f"\n--------------------------------iter:", iter,"---------------------------------")
+            # ampl.param["rho"] = rho
+            # for (i, j) in self.arcs:
+            #     ampl.param["alpha_arc"][i, j] = self.alpha[seg_index[(i, j)]] - delta_y_sol[i,j]
+            #
+            if iter>=2:
+                for (i,j) in self.arcs:
+                    ampl.param["alpha_arc"][i,j] = y_corr[i,j]
+                    ampl.param["seg_index"][i, j] = seg_index[(i, j)]
+                    ampl.param["y_sol"][i, j] = y_sol[i,j]
+
+            with self.suppress_output():
+                ampl.solve()
+
+            q_sol = ampl.get_variable("q").get_values().to_dict()
+            y_sol = ampl.get_variable("y").get_values().to_dict()
+            h_sol = ampl.get_variable("h").get_values().to_dict()
+            z_sol = ampl.get_variable("z").get_values().to_dict()
+            delta_y_sol = ampl.get_variable("delta_y").get_values().to_dict()
             delta_head = ampl.get_variable("delta_headloss").get_values().to_dict()
+
             head_inf = sum(abs(delta_head[i,j]) for (i,j) in delta_head)
-    
-            print(f"[rho={rho}] head_inf={head_inf:.3e}")
-    
-            if head_inf < 1e-8:
-                break
-    
+            delta_y_inf = sum(abs(delta_y_sol[i,j]) for (i,j) in delta_y_sol)
+
+            # for (i,j) in delta_head:
+            #     print(f"delta_headloss[{i},{j}]:", delta_head[i,j],"\n")
+
+            max_delta_head_inf = max(delta_head[i,j] for (i,j) in delta_head)
+            max_delta_y_inf = max(delta_y_sol[i,j] for (i,j) in delta_y_sol)
+            total_inf = np.abs(max_delta_head_inf) + np.abs(max_delta_y_inf)
+
+            print(f"[iter={iter}] head_inf={head_inf:.3e} delta_y_inf={delta_y_inf:.3e} total_inf={total_inf:.3e}")
+
+            # if total_inf < 1e-8:
+            #     break
+
+            y_corr = {}
+            for (i,j) in self.arcs:
+                phi = (q_sol[i,j]**3 * (q_sol[i,j]**2 + self.eps[i,j]**2)**0.426) / \
+                      (q_sol[i,j]**2 + 0.426 * self.eps[i,j]**2)
+            
+                y_corr[i,j] = y_sol[i,j] + delta_head[i,j] / (phi * self.L[i,j])
+
+                y_corr[i,j] = min(self.alpha_max, max(self.alpha_min, y_corr[i,j]))
+
+            alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+
+            tol = 1e-8
+            
+            for (u, v) in self.arcs:
+                y_val = y_corr[(u, v)]
+                active_s = None
+            
+                for k in range(len(alpha_vals) - 1):
+                    a_high = alpha_vals[k]
+                    a_low  = alpha_vals[k+1]
+            
+                    if (a_low - tol) <= y_val <= (a_high + tol):
+                        active_s = k + 1   # 1-based segment index (matches AMPL segs)
+                        break
+            
+                # fallback (numerical edge cases)
+                if active_s is None:
+                    if y_val > alpha_vals[0]:
+                        active_s = 1
+                    elif y_val < alpha_vals[-1]:
+                        active_s = len(alpha_vals) - 1
+            
+                seg_index[(u, v)] = active_s
+
+            iter += 1
         # -------------------------
         # PHASE 4: remove slack
         # -------------------------
+        print("\n---------------------------Solve without slack-----------------------")
         ampl.eval("drop con2;")
-    
+        # ampl.eval("drop bound_y;")
+        ampl.eval("drop infeas_obj;")
+        ampl.eval("minimize total_cost:sum{(i,j) in arcs} z[i,j];")
+
         ampl.eval("""
             subject to headloss_exact{(i,j) in arcs}:
                 h[i] - h[j]
@@ -2698,9 +9127,10 @@ class WaterNetworkSolver:
                 / (q[i,j]^2 + 0.426 * eps[i,j]^2))
                 * y[i,j] * L[i,j] = 0;
         """)
-    
+
+        #with self.suppress_output():
         ampl.solve()
-    
+
         # -------------------------
         # Extract solution
         # -------------------------
@@ -2708,7 +9138,34 @@ class WaterNetworkSolver:
         h_sol = ampl.get_variable("h").get_values().to_dict()
         y_sol = ampl.get_variable("y").get_values().to_dict()
         z_sol = ampl.get_variable("z").get_values().to_dict()
-    
+        # delta_y_sol = ampl.get_variable("delta_y").get_values().to_dict()
+        # delta_head = ampl.get_variable("delta_headloss").get_values().to_dict()
+
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+
+        tol = 1e-8
+        
+        for (u, v) in self.arcs:
+            y_val = y_sol[(u, v)]
+            active_s = None
+        
+            for k in range(len(alpha_vals) - 1):
+                a_high = alpha_vals[k]
+                a_low  = alpha_vals[k+1]
+        
+                if (a_low - tol) <= y_val <= (a_high + tol):
+                    active_s = k + 1   # 1-based segment index (matches AMPL segs)
+                    break
+        
+            # fallback (numerical edge cases)
+            if active_s is None:
+                if y_val > alpha_vals[0]:
+                    active_s = 1
+                elif y_val < alpha_vals[-1]:
+                    active_s = len(alpha_vals) - 1
+        
+            self.seg_index[(u, v)] = active_s
+
         cost = sum(
             self.L[i,j] * (
                 self.slope[self.seg_index[i,j]] * y_sol[i,j]
@@ -2716,9 +9173,15 @@ class WaterNetworkSolver:
             )
             for (i,j) in self.arcs
         )
-    
+
         print("Final feasible cost:", cost)
-    
+
+        ampl.eval("display y;")
+
+        ampl.eval("display delta_headloss;")
+        ampl.eval("display delta_y;")
+        print("\n-----------------Exit the Feasibility Restoration Phase------------")
+
         return q_sol, h_sol, y_sol, z_sol
 
     def solve_restricted_model1(self, q_sol, z_sol, y_sol, h_sol, seg_index):
@@ -2922,6 +9385,7 @@ class WaterNetworkSolver:
             arc for arc in self.arcs
             if arc not in self.fix_arc_set
         ]
+        # self.fixed_arcs = self.sorted_arcs
         # self.cycles = self.cycle_basis() 
         # print("sorted_arcs:", self.sorted_arcs)
 
@@ -2960,6 +9424,8 @@ class WaterNetworkSolver:
         print(f"Total Cost: {cost:.8f}")
         print(f"Exact model solve time: {solve_time:.4f} sec")
         # ampl.eval("display exact_cost.dual;")
+        # ampl.eval("display flow_balance.dual;")
+        # ampl.eval("display h;")
         self.ampl = ampl
         self.q = q_sol
         self.h = h_sol
@@ -2974,37 +9440,115 @@ class WaterNetworkSolver:
         for con_name, con in self.ampl.get_constraints():
             self.all_duals[con_name] = con.getValues()
 
+        # self.seg_index = {}
+        # # Sort alpha values in descending order
+        # alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        # tol = 1e-8
+        # for (u, v) in self.arcs:
+        #     y_val = self.y[(u, v)]
+        #     active_s = None
+        #     for k in range(len(alpha_vals) - 1):
+        #         a_high = alpha_vals[k]
+        #         a_low  = alpha_vals[k+1]
+        #         if (a_low - tol) <= y_val <= (a_high + tol):
+        #             active_s = k + 1   # 1-based segment index (matches AMPL segs)
+        #             break
+        #     # fallback (numerical edge cases)
+        #     # if active_s is None:
+        #     #     if y_val > alpha_vals[0]:
+        #     #         active_s = 1
+        #     #     elif y_val < alpha_vals[-1]:
+        #     #         active_s = len(alpha_vals) - 1
+        #
+        #     self.seg_index[(u, v)] = active_s
+        # print("seg_index:",self.seg_index) 
+        # print("seg_index:",self.seg_index)
+
         self.seg_index = {}
         
-        # Sort alpha values in descending order
+        # descending alpha breakpoints
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
         
         tol = 1e-8
         
         for (u, v) in self.arcs:
+        
             y_val = self.y[(u, v)]
-            active_s = None
+        
+            active_segments = []
         
             for k in range(len(alpha_vals) - 1):
-                a_high = alpha_vals[k]
-                a_low  = alpha_vals[k+1]
         
-                if (a_low - tol) <= y_val <= (a_high + tol):
-                    active_s = k + 1   # 1-based segment index (matches AMPL segs)
+                a_high = alpha_vals[k]
+                a_low  = alpha_vals[k + 1]
+        
+                # --------------------------------------------------------
+                # interior of segment
+                # --------------------------------------------------------
+                if (a_low + tol) < y_val < (a_high - tol):
+        
+                    active_segments = [k + 1]
                     break
         
-            # fallback (numerical edge cases)
-            if active_s is None:
+                # --------------------------------------------------------
+                # breakpoint at upper boundary
+                # shared by segment k and k-1
+                # --------------------------------------------------------
+                elif abs(y_val - a_high) <= tol:
+        
+                    if k == 0:
+                        active_segments = [1]
+                    else:
+                        active_segments = [k, k + 1]
+        
+                    break
+        
+                # --------------------------------------------------------
+                # breakpoint at lower boundary
+                # shared by segment k and k+1
+                # --------------------------------------------------------
+                elif abs(y_val - a_low) <= tol:
+        
+                    if k == len(alpha_vals) - 2:
+                        active_segments = [k + 1]
+                    else:
+                        active_segments = [k + 1, k + 2]
+        
+                    break
+        
+            # ------------------------------------------------------------
+            # fallback
+            # ------------------------------------------------------------
+            if not active_segments:
+        
                 if y_val > alpha_vals[0]:
-                    active_s = 1
+                    active_segments = [1]
+        
                 elif y_val < alpha_vals[-1]:
-                    active_s = len(alpha_vals) - 1
+                    active_segments = [len(alpha_vals) - 1]
         
-            self.seg_index[(u, v)] = active_s
+                else:
+                    # numerical safeguard
+                    distances = [
+                        abs(y_val - alpha_vals[k])
+                        for k in range(len(alpha_vals))
+                    ]
         
-        print("seg_index:",self.seg_index)
-            # print(f"arc {(u,v)} -> y = {y_val:.6f}, segment = {active_s}")
+                    idx = distances.index(min(distances))
+        
+                    if idx == 0:
+                        active_segments = [1]
+        
+                    elif idx == len(alpha_vals) - 1:
+                        active_segments = [len(alpha_vals) - 1]
+        
+                    else:
+                        active_segments = [idx, idx + 1]
+        
+            self.seg_index[(u, v)] = active_segments
 
+            # print(f"arc {(u,v)} -> y = {y_val:.6f}, segment = {active_s}")
+        print(self.seg_index)
         # self.seg_index = {}
         # alpha_vals = sorted(set(self.alpha.values()), reverse=True)  # descending
         # print("alpha:",self.alpha)
@@ -3026,36 +9570,51 @@ class WaterNetworkSolver:
         #     self.seg_index[(u, v)] = active_s
             # print(f"arc {(u,v)} -> active segment: {active_s}, dual={dual}") 
 
+        print("\n-------------------------------- Segment Cut using Lagrangian Relaxation Based Heuristic --------------------------")
+        best_global = {
+            "q": q_sol.copy(), "h": h_sol.copy(),
+            "y": y_sol.copy(), "z": z_sol.copy(),
+            "seg": self.seg_index.copy(), "cost": self.best_cost
+        }
+
+        # best_global = incumbent.copy()
+        # best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.update_dual_and_resolve(q_sol, h_sol, y_sol, z_sol, self.seg_index, strategy = "shift")
+        # best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.lagrangian_based_heuristic(q_sol, h_sol, y_sol, z_sol, self.seg_index)
+                
         # print("\n-------------------------------- Segment Cut Based Heuristic --------------------------")
 
         # best_solution = self.solve_with_boundary_pushing_cut(z_sol, y_sol, h_sol) 
+
         # q_sol, h_sol, y_sol, z_sol, cost = best_solution 
         # print("\n Best Solution:", cost)
 
         print("\n-------------------------------- Solve Restriced Model --------------------------")
 
-        q_sol, h_sol, y_sol, z_sol = self.solve_restricted_model(self.q, self.z, self.y, self.h, self.seg_index)
+        # q_sol, h_sol, y_sol, z_sol = self.solve_restricted_model(self.q, self.z, self.y, self.h, self.seg_index)
+        # q_sol, h_sol, y_sol, z_sol = self.escape_and_project(self.q, self.h, self.y, self.z, self.seg_index)
+
         # print(q_sol)
         # viol_red = self.check_reduced_feasibility(q_sol, h_sol, y_sol, z_sol)
         # print(viol_red)
-        # print("\n-------------------------------- Branch and Bound based Heuristic --------------------------")
-        # self.network_graph = self.generate_random_acyclic_from_solution(q_sol)
-        # self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
-        # self.best_acyclic_flow = self.network_graph.copy() 
+        print("\n-------------------------------- Branch and Bound based Heuristic --------------------------")
+        self.network_graph = self.generate_random_acyclic_from_solution(q_sol)
+        self.indegree_2_or_more = [node for node, indeg in self.network_graph.in_degree() if indeg >= 2]
+        self.best_acyclic_flow = self.network_graph.copy() 
         #
-        # self.iteration = 1
-        # self.visited_arc_reverse = []
-        # self.reversed_arcs = []
+        self.iteration = 1
+        self.visited_arc_reverse = []
+        self.reversed_arcs = []
         # self.segment_cut_based_heuristic()
 
+        best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.sequential_segment_cut_heuristic()
         # for (i,j) in self.arcs:
         #     print((i,j), self.z[i,j] - self.L[i,j]*(self.slope[self.seg_index[i,j]]*self.y[i,j] + self.intercept[self.seg_index[i,j]]))
 
         # print("\n-------------------------------- Solving Recover Model --------------------------")
         #
-        rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(y_sol)
-        print(rec_result)
-        print(recovered_cost)
+        # rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
+        # print(rec_result)
+        # print(recovered_cost)
 
         # print(l_trial)
         # for (i,j) in self.arcs:
