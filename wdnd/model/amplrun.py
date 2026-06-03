@@ -6,15 +6,17 @@ import contextlib
 import os
 import numpy as np
 import math
+import subprocess, os, tempfile
 
 class WaterNetworkSolver:
-    def __init__(self, model_file, solver_name, data_file, data_number):
-        self.model_file = model_file
-        self.solver_name = solver_name
+    def __init__(self, solver_name, data_file, data_number):
+        # self.model_file = model_file
         self.data_file = data_file
         self.data_number = data_number
+
+        self.solver_name = solver_name
         self.ampl = AMPL()
-        self.ampl.setOption('hsllib', '/usr/local/lib/libma57.so')        
+        # self.ampl.setOption('hsllib', '/usr/local/lib/libma57.so')        
         # To store solutions
         self.q_init = {}
         self.h_init = {}
@@ -25,9 +27,19 @@ class WaterNetworkSolver:
         self.eps = {}
 
     def read_model_and_data(self):
+        if self.data_number == 5:
+            self.model_file = "newyork_model.mod"
+        elif self.data_number == 6:
+            self.model_file = "blacksburg_model.mod"
+        else:
+            self.model_file = "wdnmodel.mod"
+
+        print("WDN Model Name:", self.model_file)
+
         self.ampl.reset()
         self.ampl.read(self.model_file)
         self.ampl.read_data(self.data_file)
+
 
         self.nodes = self.ampl.getSet('nodes')
         self.source = self.ampl.getSet('Source')
@@ -42,13 +54,13 @@ class WaterNetworkSolver:
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
 
-        n_vars = self.ampl.getValue("_nvars")
-        n_cons = self.ampl.getValue("_ncons")
+        # n_vars = self.ampl.getValue("_nvars")
+        # n_cons = self.ampl.getValue("_ncons")
         # n_nl_cons = self.ampl.getValue("_snl")
         # n_nl_obj  = self.ampl.getValue("_nlobj")
 
-        print("Variables:", n_vars)
-        print("Constraints:", n_cons)
+        # print("Variables:", n_vars)
+        # print("Constraints:", n_cons)
         # print("Nonlinear constraints:", n_nl_cons)
         # print("Nonlinear objective:", n_nl_obj)
 
@@ -68,6 +80,477 @@ class WaterNetworkSolver:
         return epsilon
 
     def constraint_violations(self, q_values, h_values, l_values, epsilon, solver):
+        """
+        Compute and report all constraint violations for the current solution.
+    
+        Constraints checked:
+            con1: Flow balance at non-source nodes
+            con2: Head-loss (original vs. approximated)
+            con3: Pipe length summation per arc
+            con4: Individual pipe segment length upper bound
+            con5: Source node head equality
+            con6: Minimum pressure head at demand nodes
+        """
+        total_absolute_constraint_violation = 0.0
+    
+        # ------------------------------------------------------------------
+        # Constraint 1: Flow balance at non-source nodes
+        # ------------------------------------------------------------------
+        con1_gap = {}
+    
+        if self.data_number == 5:
+            q1 = self.ampl.get_variable('q1').get_values().to_dict()
+            q2 = self.ampl.get_variable('q2').get_values().to_dict()
+    
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                incoming = sum(q1[j, i] + q2[j, i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing = sum(q1[i, j] + q2[i, j] for j in self.nodes if (i, j) in self.arcs)
+                violation = (incoming - outgoing) - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+        else:
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                incoming = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
+                violation = (incoming - outgoing) - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 2: Head-loss constraint (original vs. approximated)
+        # ------------------------------------------------------------------
+        con2_original_gap = {}
+        con2_approx_gap = {}
+        absolute_violations = {}
+        relative_violations = {}
+    
+        con2_original_violation = 0.0
+        con2_approx_violation = 0.0
+        con2_absolute_constraint_violation = 0.0
+        con2_relative_constraint_violation = 0.0
+    
+        def _alpha_rhs(i, j):
+            """Weighted head-loss resistance coefficient for arc (i, j)."""
+            return sum(
+                10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * (self.d[k] ** 4.87))
+                for k in self.pipes
+            )
+    
+        def _original_rhs(q, alpha):
+            return q * (abs(q) ** 0.852) * alpha
+    
+        def _approx_rhs(q, eps, alpha):
+            return (q**3 * ((q**2 + eps**2) ** 0.426) / (q**2 + 0.426 * eps**2)) * alpha
+    
+        def _record_con2(key, lhs, orig_rhs, apprx_rhs):
+            """Update all con2 tracking dictionaries and running totals."""
+
+            nonlocal con2_original_violation, con2_approx_violation
+            nonlocal con2_absolute_constraint_violation, con2_relative_constraint_violation
+            nonlocal total_absolute_constraint_violation
+
+            con2_original_gap[key] = lhs - orig_rhs
+            con2_approx_gap[key]   = lhs - apprx_rhs
+    
+            abs_viol = orig_rhs - apprx_rhs
+            rel_viol = abs_viol / (orig_rhs + 1e-14)
+    
+            absolute_violations[key] = abs_viol
+            relative_violations[key] = rel_viol
+    
+            con2_original_violation            += abs(lhs - orig_rhs)
+            con2_approx_violation              += abs(lhs - apprx_rhs)
+            con2_absolute_constraint_violation += abs(abs_viol)
+            con2_relative_constraint_violation += abs(rel_viol)
+            total_absolute_constraint_violation += abs(lhs - apprx_rhs)
+    
+        if self.data_number == 5:
+            self.exdiam = self.ampl.getParameter('exdiam').to_dict()
+    
+            for (i, j) in q1.keys():
+                lhs = 2 * (h_values[i] - h_values[j])
+                alpha = sum(
+                    10.67 * l_values[i, j, k] / ((self.R[i, j] ** 1.852) * (self.d[k] ** 4.87))
+                    for k in self.pipes
+                )
+                hl_coeff = 10.67 * self.L[i, j] / (self.R[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87)
+    
+                orig_rhs = (
+                    q1[i, j] * (abs(q1[i, j]) ** 0.852) * hl_coeff
+                    + q2[i, j] * (abs(q2[i, j]) ** 0.852) * alpha
+                )
+                apprx_rhs = (
+                    _approx_rhs(q1[i, j], epsilon[i, j], hl_coeff)
+                    + _approx_rhs(q2[i, j], epsilon[i, j], alpha)
+                )
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        elif self.data_number == 6:
+            self.fixarcs  = self.ampl.getSet('fixarcs')
+            self.fix_r    = self.ampl.getParameter('fix_r').to_dict()
+            self.exdiam   = self.ampl.getParameter('fixdiam').to_dict()
+    
+            # Variable arcs
+            for (i, j) in self.arcs:
+                if (i, j) in self.fixarcs:
+                    continue
+                lhs      = h_values[i] - h_values[j]
+                alpha    = _alpha_rhs(i, j)
+                orig_rhs = _original_rhs(q_values[i, j], alpha)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], alpha)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+            # Fixed-diameter arcs
+            for (i, j) in self.fixarcs:
+                lhs = h_values[i] - h_values[j]
+                hl_coeff = 10.67 * self.L[i, j] / (self.fix_r[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87)
+                orig_rhs  = _original_rhs(q_values[i, j], hl_coeff)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], hl_coeff)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        else:
+            for (i, j) in q_values:
+                lhs       = h_values[i] - h_values[j]
+                alpha     = _alpha_rhs(i, j)
+                orig_rhs  = _original_rhs(q_values[i, j], alpha)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], alpha)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        # ------------------------------------------------------------------
+        # Constraint 3: Pipe lengths must sum to arc length
+        # ------------------------------------------------------------------
+        con3_gap = {}
+        arcs_to_check = (
+            [(i, j) for (i, j) in self.arcs if (i, j) not in self.fixarcs]
+            if self.data_number == 6
+            else list(self.arcs)
+        )
+        for (i, j) in arcs_to_check:
+            violation = sum(l_values[i, j, k] for k in self.pipes) - self.L[i, j]
+            con3_gap[f"{i},{j}"] = violation
+            total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 4: Individual pipe segment ≤ arc length
+        # ------------------------------------------------------------------
+        con4_gap = {}
+        for (i, j) in self.arcs:
+            for k in self.pipes:
+                violation = max(0.0, l_values[i, j, k] - self.L[i, j])
+                con4_gap[f"{i},{j},{k}"] = violation
+                total_absolute_constraint_violation += violation
+    
+        # ------------------------------------------------------------------
+        # Constraint 5: Source node head equality
+        # ------------------------------------------------------------------
+        con5_gap = {}
+        for j in self.source:
+            violation = h_values[j] - self.E[j]
+            con5_gap[str(j)] = violation
+            total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 6: Minimum pressure head at demand nodes
+        # ------------------------------------------------------------------
+        con6_gap = {}
+        for j in self.nodes:
+            if j in self.source:
+                continue
+            violation = max(0.0, self.E[j] + self.P[j] - h_values[j])
+            con6_gap[str(j)] = violation
+            total_absolute_constraint_violation += violation
+    
+        # ------------------------------------------------------------------
+        # Reporting
+        # ------------------------------------------------------------------
+        separator = "*" * 79
+    
+        # print(f"\n{separator}")
+        # print("CONSTRAINT VIOLATIONS\n")
+        #
+        # table_data = (
+        #     [(k, f"{v:.8f}") for k, v in con1_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con2_approx_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con3_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con4_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con5_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con6_gap.items()]
+        # )
+        # print(tabulate(table_data, headers=["Constraint ID", "Violation"], tablefmt="grid"))
+        print(f"\nTotal absolute constraint violation: {total_absolute_constraint_violation:.2e}")
+    
+        print(f"\n{separator}")
+        print("HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION\n")
+    
+        table_data = []
+        for key, rel_viol in relative_violations.items():
+            i_str, j_str = key.split(',')
+            i, j = int(i_str), int(j_str)
+            table_data.append([
+                key,
+                q_values[i, j],
+                f"{con2_original_gap[key]:.2e}",
+                f"{con2_approx_gap[key]:.2e}",
+                f"{absolute_violations[key]:.2e}",
+                f"{rel_viol:.2e}",
+            ])
+    
+        headers = [
+            "Arc (i,j)",
+            "Flow",
+            "Original Violation",
+            "Approx Violation",
+            "Absolute Diff",
+            "Relative Diff",
+        ]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print(f"\nSum of original head-loss violation : {con2_original_violation:.2e}")
+        print(f"Sum of approx  head-loss violation  : {con2_approx_violation:.2e}")
+        print(f"Sum of absolute diff (orig vs approx): {con2_absolute_constraint_violation:.2e}")
+        print(f"Sum of relative diff (orig vs approx): {con2_relative_constraint_violation:.2e}")
+        print(f"\n{separator}\n")
+
+
+    def constraint_violations2(self, q_values, h_values, l_values, epsilon, solver):
+        """
+        Compute and report all constraint violations for the current solution.
+    
+        Constraints checked:
+            con1: Flow balance at non-source nodes
+            con2: Head-loss (original vs. approximated)
+            con3: Pipe length summation per arc
+            con4: Individual pipe segment length upper bound
+            con5: Source node head equality
+            con6: Minimum pressure head at demand nodes
+        """
+        total_absolute_constraint_violation = 0.0
+    
+        # ------------------------------------------------------------------
+        # Constraint 1: Flow balance at non-source nodes
+        # ------------------------------------------------------------------
+        con1_gap = {}
+    
+        if self.data_number == 5:
+            q1 = self.ampl.get_variable('q1').get_values().to_dict()
+            q2 = self.ampl.get_variable('q2').get_values().to_dict()
+    
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                incoming = sum(q1[j, i] + q2[j, i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing = sum(q1[i, j] + q2[i, j] for j in self.nodes if (i, j) in self.arcs)
+                violation = (incoming - outgoing) - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+        else:
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                incoming = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
+                violation = (incoming - outgoing) - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 2: Head-loss constraint (original vs. approximated)
+        # ------------------------------------------------------------------
+        con2_original_gap = {}
+        con2_approx_gap = {}
+        absolute_violations = {}
+        relative_violations = {}
+    
+        con2_original_violation = 0.0
+        con2_approx_violation = 0.0
+        con2_absolute_constraint_violation = 0.0
+        con2_relative_constraint_violation = 0.0
+    
+        def _alpha_rhs(i, j):
+            """Weighted head-loss resistance coefficient for arc (i, j)."""
+            return sum(
+                10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * (self.d[k] ** 4.87))
+                for k in self.pipes
+            )
+    
+        def _original_rhs(q, alpha):
+            return q * (abs(q) ** 0.852) * alpha
+    
+        def _approx_rhs(q, eps, alpha):
+            return (q**3 * ((q**2 + eps**2) ** 0.426) / (q**2 + 0.426 * eps**2)) * alpha
+    
+        def _record_con2(key, lhs, orig_rhs, apprx_rhs):
+            """Update all con2 tracking dictionaries and running totals."""
+
+            nonlocal con2_original_violation, con2_approx_violation
+            nonlocal con2_absolute_constraint_violation, con2_relative_constraint_violation
+            nonlocal total_absolute_constraint_violation
+
+            con2_original_gap[key] = lhs - orig_rhs
+            con2_approx_gap[key]   = lhs - apprx_rhs
+    
+            abs_viol = orig_rhs - apprx_rhs
+            rel_viol = abs_viol / (orig_rhs + 1e-14)
+    
+            absolute_violations[key] = abs_viol
+            relative_violations[key] = rel_viol
+    
+            con2_original_violation            += abs(lhs - orig_rhs)
+            con2_approx_violation              += abs(lhs - apprx_rhs)
+            con2_absolute_constraint_violation += abs(abs_viol)
+            con2_relative_constraint_violation += abs(rel_viol)
+            total_absolute_constraint_violation += abs(lhs - apprx_rhs)
+    
+        if self.data_number == 5:
+            self.exdiam = self.ampl.getParameter('exdiam').to_dict()
+    
+            for (i, j) in q1.keys():
+                lhs = 2 * (h_values[i] - h_values[j])
+                alpha = sum(
+                    10.67 * l_values[i, j, k] / ((self.R[i, j] ** 1.852) * (self.d[k] ** 4.87))
+                    for k in self.pipes
+                )
+                hl_coeff = 10.67 * self.L[i, j] / (self.R[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87)
+    
+                orig_rhs = (
+                    q1[i, j] * (abs(q1[i, j]) ** 0.852) * hl_coeff
+                    + q2[i, j] * (abs(q2[i, j]) ** 0.852) * alpha
+                )
+                apprx_rhs = (
+                    _approx_rhs(q1[i, j], epsilon[i, j], hl_coeff)
+                    + _approx_rhs(q2[i, j], epsilon[i, j], alpha)
+                )
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        elif self.data_number == 6:
+            self.fixarcs  = self.ampl.getSet('fixarcs')
+            self.fix_r    = self.ampl.getParameter('fix_r').to_dict()
+            self.exdiam   = self.ampl.getParameter('fixdiam').to_dict()
+    
+            # Variable arcs
+            for (i, j) in self.arcs:
+                if (i, j) in self.fixarcs:
+                    continue
+                lhs      = h_values[i] - h_values[j]
+                alpha    = _alpha_rhs(i, j)
+                orig_rhs = _original_rhs(q_values[i, j], alpha)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], alpha)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+            # Fixed-diameter arcs
+            for (i, j) in self.fixarcs:
+                lhs = h_values[i] - h_values[j]
+                hl_coeff = 10.67 * self.L[i, j] / (self.fix_r[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87)
+                orig_rhs  = _original_rhs(q_values[i, j], hl_coeff)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], hl_coeff)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        else:
+            for (i, j) in q_values:
+                lhs       = h_values[i] - h_values[j]
+                alpha     = _alpha_rhs(i, j)
+                orig_rhs  = _original_rhs(q_values[i, j], alpha)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], alpha)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        # ------------------------------------------------------------------
+        # Constraint 3: Pipe lengths must sum to arc length
+        # ------------------------------------------------------------------
+        con3_gap = {}
+        arcs_to_check = (
+            [(i, j) for (i, j) in self.arcs if (i, j) not in self.fixarcs]
+            if self.data_number == 6
+            else list(self.arcs)
+        )
+        for (i, j) in arcs_to_check:
+            violation = sum(l_values[i, j, k] for k in self.pipes) - self.L[i, j]
+            con3_gap[f"{i},{j}"] = violation
+            total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 4: Individual pipe segment ≤ arc length
+        # ------------------------------------------------------------------
+        con4_gap = {}
+        for (i, j) in self.arcs:
+            for k in self.pipes:
+                violation = max(0.0, l_values[i, j, k] - self.L[i, j])
+                con4_gap[f"{i},{j},{k}"] = violation
+                total_absolute_constraint_violation += violation
+    
+        # ------------------------------------------------------------------
+        # Constraint 5: Source node head equality
+        # ------------------------------------------------------------------
+        con5_gap = {}
+        for j in self.source:
+            violation = h_values[j] - self.E[j]
+            con5_gap[str(j)] = violation
+            total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 6: Minimum pressure head at demand nodes
+        # ------------------------------------------------------------------
+        con6_gap = {}
+        for j in self.nodes:
+            if j in self.source:
+                continue
+            violation = max(0.0, self.E[j] + self.P[j] - h_values[j])
+            con6_gap[str(j)] = violation
+            total_absolute_constraint_violation += violation
+    
+        # ------------------------------------------------------------------
+        # Reporting
+        # ------------------------------------------------------------------
+        separator = "*" * 79
+    
+        # print(f"\n{separator}")
+        # print("CONSTRAINT VIOLATIONS\n")
+        #
+        # table_data = (
+        #     [(k, f"{v:.8f}") for k, v in con1_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con2_approx_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con3_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con4_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con5_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con6_gap.items()]
+        # )
+        # print(tabulate(table_data, headers=["Constraint ID", "Violation"], tablefmt="grid"))
+        print(f"\nTotal absolute constraint violation: {total_absolute_constraint_violation:.2e}")
+    
+        print(f"\n{separator}")
+        print("HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION\n")
+    
+        table_data = []
+        for key, rel_viol in relative_violations.items():
+            i_str, j_str = key.split(',')
+            i, j = int(i_str), int(j_str)
+            table_data.append([
+                key,
+                q_values[i, j],
+                f"{con2_original_gap[key]:.2e}",
+                f"{con2_approx_gap[key]:.2e}",
+                f"{absolute_violations[key]:.2e}",
+                f"{rel_viol:.2e}",
+            ])
+    
+        headers = [
+            "Arc (i,j)",
+            "Flow",
+            "Original Violation",
+            "Approx Violation",
+            "Absolute Diff",
+            "Relative Diff",
+        ]
+        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print(f"\nSum of original head-loss violation : {con2_original_violation:.2e}")
+        print(f"Sum of approx  head-loss violation  : {con2_approx_violation:.2e}")
+        print(f"Sum of absolute diff (orig vs approx): {con2_absolute_constraint_violation:.2e}")
+        print(f"Sum of relative diff (orig vs approx): {con2_relative_constraint_violation:.2e}")
+        print(f"\n{separator}\n")
+
+    def constraint_violations2(self, q_values, h_values, l_values, epsilon, solver):
         total_absolute_constraint_violation = 0
         total_relative_constraint_violation = 0
 
@@ -398,104 +881,48 @@ class WaterNetworkSolver:
 
 
 
-    def solve_ipopt(self):
-        """
-        First solve with IPOPT to get a good starting point.
-        """
-        print(f"\n-------------------------------- Solving with IPOPT --------------------------")
-        self.ampl.option['solver'] = 'ipopt' 
-        # self.ampl.option["ipopt_options"] = "outlev = 0  bound_push = 0.01 bound_frac = 0.01" 
-        self.ampl.option["ipopt_options"] = "outlev = 1 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 constr_viol_tol = 1e-9 acceptable_constr_viol_tol = 1e-9 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
-        # self.ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 tol = 1e-10 constr_viol_tol = 1e-10 acceptable_constr_viol_tol = 1e-10 honor_original_bounds = yes acceptable_tol = 1e-10 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+    def solve_original_model_without_init(self):
+        print(f"\n-------------------------------- Solving with {self.solver_name} --------------------------")
+        self.ampl.option['solver'] = sys.argv[1]
+        self.ampl.option["ipopt_options"] = "outlev = 5 expect_infeasible_problem = no bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
 
-        # self.ampl.option["ipopt_options"] = (
-        #     "outlev=0 "
-        #     "expect_infeasible_problem=yes "
-        #     "bound_relax_factor=1e-8 "  # small relaxation to avoid eps slightly below lower bound
-        #     "tol=1e-8 "
-        #     "constr_viol_tol=1e-8 "
-        #     "acceptable_constr_viol_tol=1e-8 "
-        #     "honor_original_bounds=yes "
-        #     "acceptable_tol=1e-8 "
-        #     "bound_push=1e-8 "
-        #     "bound_frac=1e-8 "
-        #     "warm_start_init_point=no "
-        #     "halt_on_ampl_error=yes"
-        # )
-        self.ampl.option["presolve_eps"] = "8.53e-15"
+        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 bonmin.num_resolve_at_root = 10 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 5"
+        # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level = 5 outlev = 4 option_file_name = ipopt.opt"
 
-        #min_demand = self.ampl.getParameter('D_min').getValues().to_list()[0]
-        #max_demand = self.ampl.getParameter('D_max').getValues().to_list()[0]
-        #max_flow = self.ampl.getParameter('Q_max').getValues().to_list()[0]
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 600 warmstart = 0 method = 1  mipgapabs = 1e-6 mipgap = 1e-9 barconvtol = 1e-9 sol:chk:feastol = 1e-5 sol:chk:feastolrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-6 mipgap = 1e-6 alg:feastol = 1e-6 pre:feastol = 1e-6 pre:feastolrel = 1e-9 chk:feastol = 1e-6 chk:feastolrel = 1e-9  mip:heurfrac = 0.05" 
+        # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
 
-        #print("min_demand:", min_demand)
-        #print("max_demand:", max_demand)
-        #print("max_flow:", max_flow)
-        #d_max = self.ampl.getParameter('d_max').getValues().to_list()[0]
-        #d_min = self.ampl.getParameter('d_min').getValues().to_list()[0]
-        #max_L = max(self.L[i,j] for (i,j) in self.arcs)
-        #R_min = min(self.R[k] for k in self.pipes)
-        #MaxK = 10.67 / ((R_min ** 1.852) * ((d_min) ** 4.87))
+        # self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
+        self.ampl.option["baron_options"]= "optfile = optfile version objbound wantsol = 2 outlev = 2 barstats" # lsolver = conopt
+        #self.ampl.option["baron_options"]= "optfile = optfile" # lsolver = conopt
+        self.ampl.option["scip_options"] = "param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        # self.ampl.option["scip_options"] = "outlev 1 timelimit 3600 heu:settings = 0 method = p lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-6 chk:feastolrel=1e-9 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        # self.ampl.option["scip_options"] = "outlev  1 "
+        self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-6 opttol = 1e-6 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
+        #self.ampl.option["conopt_options"]= "outlev = 4"
+        self.ampl.option["presolve"] = "1"
+        self.ampl.option["presolve_eps"] = "8.53e-15" 
 
-        #epsilon = (10**(-6)/(0.07508*MaxK))**(1/0.926)
-        #epsilon = (10**(-6)/(0.04001571*MaxK))**(1/1.852)
-        #epsilon = self.compute_adaptive_eps(min_demand/1000)
-        #epsilon = 1e-5
-
-        #print("eps:", epsilon,"\n")
-
-
-        #eps = ampl.getParameter('eps').to_list()
-        #for (i,j) in eps.items():
-        #eps[i,j].setValue(epsilon)
-        #self.ampl.eval(f"subject to eps_selection{{(i,j) in arcs}}: eps[i,j] = {epsilon};")
-
-
-        print("Ipopt solver outputs: \n")
+        print(f"{sys.argv[1]} solver outputs:")
+        print("---------------------\n")
         self.ampl.solve()
         # self.ampl.eval('write gsol "warmstart.sol";')
 
         total_cost = self.ampl.getObjective("total_cost").value()
-        print("total_cost:", total_cost, "\n")
-
-        #l_init = self.ampl.getVariable('l').getValues().to_dict()
-        #q_init = self.ampl.getVariable('q').getValues().to_dict()
-        #h_init = self.ampl.getVariable('h').getValues().to_dict()
-        # eps = self.ampl.getParameter('eps').getValues().to_dict()
-        #eps = self.ampl.getVariable('eps').getValues().to_dict()
-
-        #print(l_init)
-        #print(q_init)
-        #print(h_init)
-
-        #print("eps:",eps, "\n")
+        # print("total_cost:", total_cost, "\n")
 
         print("*******************************************************************************\n")
-        #print("Print the decision variables value:\n")
-        #ampl.eval("display l;")
-        #ampl.eval("display q;")
-        # self.ampl.eval("display eps;")
-
         self.q = self.ampl.get_variable('q').get_values().to_dict()
         self.h = self.ampl.get_variable('h').get_values().to_dict()
         self.l = self.ampl.get_variable('l').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
-        # self.eps = self.ampl.get_variable('eps').get_values().to_dict()
-        #self.ampl.eval("display eps;")
-        self.ampl.eval("display q;")
-        # self.ampl.eval("display h;")
-        # self.ampl.eval("display q1;")
-        # self.ampl.eval("display q2;")
-        self.ampl.eval("display l;")
-        self.ampl.eval("display eps;")
-        # self.ampl.eval("display dvar;")
-        # print("eps: ", self.eps[next(iter(self.eps))])
-        for (i,j) in self.arcs:
-            if np.abs(self.q[i,j]) <=1e-3:
-                print(f"q[{i},{j}]:",self.q[i,j])
-        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
 
-        #self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
+        print(self.q)
+        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+        # self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
         #ampl.eval("display con1.body;")
         #ampl.eval("display con2.body;")
         #ampl.eval("display con3.body;")
@@ -508,8 +935,8 @@ class WaterNetworkSolver:
         solve_time = self.ampl.get_value('_solve_elapsed_time')
         total_cost = self.ampl.getObjective("total_cost").value()
 
-        print(f"Total cost using ipopt:", total_cost)
-        print(f"IPOPT solve time: {solve_time:.2f} seconds")
+        print(f"Total cost using {sys.argv[1]}:", total_cost)
+        print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
 
         # Extract solutions
         self.q_init = self.ampl.get_variable('q').get_values().to_dict()
@@ -519,16 +946,6 @@ class WaterNetworkSolver:
         if self.data_number ==5:
             self.q1_init = self.ampl.get_variable('q1').get_values().to_dict()
             self.q2_init = self.ampl.get_variable('q2').get_values().to_dict()
-        # Save initial points
-        #for idx in q_sol.keys():
-        #    self.q_init[idx] = q_sol[idx]
-        #for idx in h_sol.keys():
-        #    self.h_init[idx] = h_sol[idx]
-        #for idx in l_sol.keys():
-        #    self.l_init[idx] = l_sol[idx]
-        #for idx in eps_sol.keys():
-        #    self.eps_init[idx] = eps_sol[idx]
-
         print("*******************************************************************************\n")
 
     @contextlib.contextmanager
@@ -546,67 +963,6 @@ class WaterNetworkSolver:
                 # Restore original stdout and stderr
                 sys.stdout = old_stdout
                 sys.stderr = old_stderr
-
-
-    def reduced_diameter(self):
-        arc_max_dia = {}
-        for (i, j, d), val in self.l.items():
-            if val > 1e-6:
-                if (i, j) not in arc_max_dia:
-                    arc_max_dia[(i, j)] = d
-                else:
-                    arc_max_dia[(i, j)] = max(arc_max_dia[(i, j)], d)
-        print(arc_max_dia)
-        sorted_arcs = sorted(list(self.arcs), key=lambda arc: abs(self.q[arc if arc in self.arcs else (arc[1], arc[0])]), reverse=True)
-        print(sorted_arcs)
-        for (i,j) in sorted_arcs:
-            print("arc:",(i,j))
-            ampl = AMPL()
-            ampl.reset()
-            ampl.read("reduced_wdnmodel.mod")
-            ampl.read_data(self.data_file)
-            #ampl.set['arc_max_dia'] = arc_max_dia
-            new_arcs = [arc for arc in self.arcs if arc != (i, j)]
-            ampl.eval(f"set new_arcs := {{{set(new_arcs)}}};")
-
-            #for (x, y, k), val in self.l.items():
-            #    ampl.eval(f'let l[{x},{y},{k}] := {val};')
-            #for (x, y), val in self.q.items():
-            #    ampl.eval(f'let q[{x},{y}] := {val};')
-            #for x, val in self.h.items():
-            #    ampl.eval(f'let h[{x}] := {val};')
-            #self.ampl.eval(f"subject to flow_2_4: q[2,4] >= 0;")
-            #self.ampl.eval(f"subject to flow_3_5: q[3,5] >= 0;")
-            #self.ampl.eval(f"subject to flow_4_5: q[4,5] >= 0;")
-            ampl.eval(f"subject to flow_4_6: q[4,6] >= 0;")
-            #ampl.eval(f"subject to flow_6_7: q[6,7] <= 0;")
-
-            #ampl.eval(f"subject to flow_7_5: q[5,7] <= 0;")
-            #ampl.eval(f"subject to flow_7_5: h[7] - h[5] <= 0;")
-            ampl.eval(f"subject to con3{{(i,j) in new_arcs}}: sum{{k in pipes}} l[i,j,k] = L[i,j];")
-            ampl.eval(f"subject to con3_{i}_{j}: sum{{k in pipes: k <=  {arc_max_dia[i,j]-1}}} l[{i},{j},k] = L[{i},{j}];")
-            #ampl.eval(f"subject to con3_{i}_{j}: l[{i},{j},{arc_max_dia[i,j]-2}] + l[{i},{j},{arc_max_dia[i,j]-1}] = L[{i},{j}];")
-
-            #ampl.eval(f"subject to con2{{(i,j) in new_arcs}}: h[i] - h[j]  = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j])^0.426) /((q[i,j])^2 + 0.426*eps[i,j]))  * sum{{k in pipes}} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));")
-            #ampl.eval(f"subject to con2_{i}_{j}: h[{i}] - h[{j}]  = (q[{i},{j}])^3 *((((q[{i},{j}])^2 + eps[{i},{j}])^0.426) /((q[{i},{j}])^2 + 0.426*eps[{i},{j}]))  * sum{{k in pipes: k <= {arc_max_dia[i,j]-1}}} (omega * l[{i},{j},k] / ( (R[k]^1.852) * (d[k])^4.87));")
-
-            ampl.option['solver'] = "ipopt" 
-            ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = yes bound_relax_factor=0 bound_push = 0.001 bound_frac = 0.001 warm_start_init_point = yes halt_on_ampl_error = yes "
-            with self.suppress_output():
-                ampl.solve()
-
-            # l = ampl.getVariable('l').getValues().to_dict()
-            q = ampl.getVariable('q').getValues().to_dict()
-            h = ampl.getVariable('h').getValues().to_dict()
-            total_cost = ampl.getObjective("total_cost").value()
-            if ampl.solve_result == "solved":
-                print(f"Total cost using ipopt:", total_cost)
-                if total_cost < self.total_cost:
-                    print(f"New optimal solution:", total_cost)
-                    self.total_cost = total_cost
-                    ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
-
-        print("best optimal solution:", self.total_cost)
 
     def second_solve(self,model_file, solver_name):
         print(f"\n-------------------------------- Solving with {self.solver_name} --------------------------")
@@ -1002,26 +1358,402 @@ class WaterNetworkSolver:
 
         print(f"\nAt source node '{source}': shifted dual = {duals[source] + shift} (should equal H_source = {H_source})")
 
+    def solve_reduced_model(self):
+        import os, subprocess, tempfile, time
+    
+        print(f"\n-------------------------------- Solving Reduced Model using {self.solver_name} --------------------------")
+    
+        if self.data_number == 5:
+            self.model_file = "newyork_epigraph_model.mod"
+        elif self.data_number == 6:
+            self.model_file = "blacksburg_epigraph_model.mod"
+        else:
+            self.model_file = "exact_reduced_wdn.mod"
+        print("WDN Model Name:", self.model_file)
+    
+        self.ampl.reset()
+        self.ampl.read(self.model_file)
+        self.ampl.read_data(self.data_file)
+    
+        self.ampl.option['solver'] = self.solver_name
+        self.ampl.option["presolve"] = "0"
+        self.ampl.option["presolve_eps"] = "8.53e-15"
+    
+        self.ampl.option["ipopt_options"] = "outlev=5 expect_infeasible_problem=no bound_relax_factor=0 bound_push=0.01 bound_frac=0.01 warm_start_init_point=no halt_on_ampl_error=yes"
+        self.ampl.option["gurobi_options"] = "outlev=1 outlev_mp=1 presolve=1 aggregate=1 timelimit=600 alg:numericfocus=1 obbt=0 pre:scale=1 method=2 nodemethod=1 nonconvex=2 mipfocus=1 nlpheur=1 varbranch=0 mipgapabs=1e-6 mipgap=1e-9 alg:feastol=1e-6 pre:feastol=1e-6 pre:feastolrel=1e-9 chk:feastol=1e-6 chk:feastolrel=1e-9 mip:heurfrac=0.05"
+        self.ampl.option["baron_options"] = "optfile=optfile version objbound wantsol=2 outlev=2 barstats"
+        self.ampl.option["scip_options"] = "param:read=scip.set"
+        self.ampl.option["knitro_options"] = "maxtime_real=600 outlev=4 opttol_abs=1e-6 opttol=1e-9 feastol_abs=1e-6 feastol=1e-9 ms_enable=1 ms_maxsolves=10"
+    
+        # ── BONMIN: subprocess path ──────────────────────────────────────────────
+        if self.solver_name == 'bonmin':
+            tmpdir  = tempfile.mkdtemp()
+            stub    = os.path.join(tmpdir, 'bonmin_prob')
+            nl_file  = stub + '.nl'
+            sol_file = stub + '.sol'
+            opt_file = os.path.join(tmpdir, 'bonmin.opt')
+    
+            # write .nl file
+            self.ampl.eval(f"option presolve 0; write g{stub};")
+            if not os.path.exists(nl_file):
+                raise RuntimeError(f"NL file not written: {nl_file}")
+            print(f"NL file written ({os.path.getsize(nl_file)} bytes)")
+    
+            # write bonmin options file
+            with open(opt_file, 'w') as f:
+                f.write(
+                    "bonmin.bb_log_level 1\n"
+                    "bonmin.nlp_log_level 2\n"
+                    "bonmin.num_resolve_at_root 10\n"
+                    "bonmin.time_limit 600\n"
+                    "bonmin.nlp_log_at_root 5\n"
+                    "tol 1e-9\n"
+                    "bound_relax_factor 0\n"
+                    "bound_push 0.1\n"
+                    "bound_frac 0.1\n"
+                    "warm_start_init_point no\n"
+                    "expect_infeasible_problem no\n"
+                    "linear_solver mumps\n"
+                )
+    
+            bonmin_exe = os.path.expanduser('~/bonmin_new2/bin/bonmin')
+            env = os.environ.copy()
+            env['LD_LIBRARY_PATH'] = (
+                os.path.expanduser('~/bonmin_new2/lib') + ':' +
+                os.path.expanduser('~/local/lib') + ':' +
+                env.get('LD_LIBRARY_PATH', '')
+            )
+    
+            print("Running bonmin...")
+            t0 = time.time()
+            proc = subprocess.run(
+                [bonmin_exe, stub],
+                capture_output=True, text=True,
+                cwd=tmpdir, env=env
+            )
+            solve_time = time.time() - t0
+            print(proc.stdout[-3000:])
+            if proc.stderr:
+                print("STDERR:", proc.stderr[-300:])
+    
+            if not os.path.exists(sol_file):
+                raise RuntimeError(f"No .sol file produced. Return code: {proc.returncode}")
+    
+            print(f"Sol file: {os.path.getsize(sol_file)} bytes")
+    
+            # debug: print raw sol file
+            with open(sol_file) as f:
+                print("=== RAW SOL ===\n", f.read()[:1000])
+    
+            # read solution back into AMPL
+            self.ampl.eval(f"solution '{sol_file}';")
+            self.ampl.eval("display total_cost;")
+    
+            self.objective = self.ampl.getObjective("total_cost").value()
+            print(f"Total cost using bonmin: {self.objective}")
+            print(f"bonmin solve time: {solve_time:.2f} seconds")
+    
+        # ── ALL OTHER SOLVERS ────────────────────────────────────────────────────
+        else:
+            self.ampl.solve()
+            solve_time = self.ampl.get_value('_solve_elapsed_time')
+            self.objective = self.ampl.getObjective("total_cost").value()
+            print(f"Total cost using {self.solver_name}: {self.objective}")
+            print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
+    
+        # ── EXTRACT SOLUTION VARIABLES (all solvers) ─────────────────────────────
+        self.q   = self.ampl.get_variable('q').get_values().to_dict()
+        self.h   = self.ampl.get_variable('h').get_values().to_dict()
+        self.y   = self.ampl.get_variable('y').get_values().to_dict()
+    
+        self.nodes  = self.ampl.getSet('nodes')
+        self.source = self.ampl.getSet('Source')
+        self.arcs   = self.ampl.getSet('arcs')
+        self.pipes  = self.ampl.getSet('pipes')
+    
+        self.L   = self.ampl.getParameter('L').to_dict()
+        self.D   = self.ampl.getParameter('D').to_dict()
+        self.C   = self.ampl.getParameter('C').to_dict()
+        self.P   = self.ampl.getParameter('P').to_dict()
+        self.R   = self.ampl.getParameter('R').to_dict()
+        self.E   = self.ampl.getParameter('E').to_dict()
+        self.d   = self.ampl.getParameter('d').to_dict()
+        self.eps = self.ampl.getParameter('eps').to_dict()
+
+
+    def solve_reduced_model1(self):
+        print(f"\n-------------------------------- Solving Reduced Model using {self.solver_name} --------------------------")
+
+        if self.data_number == 5:
+            self.model_file = "newyork_epigraph_model.mod"
+        elif self.data_number == 6:
+            self.model_file = "blacksburg_epigraph_model.mod"
+        else:
+            self.model_file = "exact_reduced_wdn.mod"
+        print("WDN Model Name:", self.model_file)
+
+        self.ampl.reset()
+        self.ampl.read(self.model_file)
+        self.ampl.read_data(self.data_file)
+
+        self.ampl.option['solver'] = self.solver_name
+
+        self.ampl.option["ipopt_options"] = "outlev = 5 expect_infeasible_problem = no bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+
+        # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 warm_start_init_point = no bonmin.num_resolve_at_root = 10 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01 bonmin.time_limit = 600 print_user_options = yes outlev = 1 bonmin.nlp_log_at_root = 5 linear_solver = ma57 outlev = 0 print_level = 0"
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 600 warmstart = 0 method = 1  mipgapabs = 1e-6 mipgap = 1e-9 barconvtol = 1e-9 sol:chk:feastol = 1e-5 sol:chk:feastolrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-6 mipgap = 1e-9 alg:feastol = 1e-6 pre:feastol = 1e-6 pre:feastolrel = 1e-9 chk:feastol = 1e-6 chk:feastolrel = 1e-9  mip:heurfrac = 0.05" 
+        # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+        #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
+
+        # self.ampl.option["baron_options"]= "maxtime = 3600  outlev = 2 version objbound wantsol = 2 iisfind = 4 threads = 8 epsr = 1e-9" # lsolver = conopt
+        self.ampl.option["baron_options"]= "optfile = optfile version objbound wantsol = 2 outlev = 2 barstats" # lsolver = conopt
+        # self.ampl.option["baron_options"]=  "lsolver = snopt"
+        self.ampl.option["scip_options"] = "param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        # self.ampl.option["scip_options"] = "outlev 1 timelimit 3600 heu:settings = 0 method = p lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-6 chk:feastolrel=1e-9 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
+        # self.ampl.option["scip_options"] = "outlev  1 "
+        self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-6 opttol = 1e-9 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
+        #self.ampl.option["conopt_options"]= "outlev = 4"
+        self.ampl.option["presolve"] = "0"
+        self.ampl.option["presolve_eps"] = "8.53e-15" 
+
+        # with self.suppress_output():
+        self.ampl.solve()
+
+
+
+        self.q = self.ampl.get_variable('q').get_values().to_dict()
+        self.h = self.ampl.get_variable('h').get_values().to_dict()
+        self.y = self.ampl.get_variable('y').get_values().to_dict()
+        
+        self.nodes = self.ampl.getSet('nodes')
+        self.source = self.ampl.getSet('Source')
+        self.arcs = self.ampl.getSet('arcs')
+        self.pipes = self.ampl.getSet('pipes')
+
+        self.L = self.ampl.getParameter('L').to_dict()
+        self.D = self.ampl.getParameter('D').to_dict()
+        self.C = self.ampl.getParameter('C').to_dict()
+        self.P = self.ampl.getParameter('P').to_dict()
+        self.R = self.ampl.getParameter('R').to_dict()
+        self.E = self.ampl.getParameter('E').to_dict()
+        self.d = self.ampl.getParameter('d').to_dict()
+        self.eps = self.ampl.getParameter('eps').to_dict()
+
+
+        solve_time = self.ampl.get_value('_solve_elapsed_time')
+        self.objective = self.ampl.getObjective("total_cost").value()
+
+        print(f"Total cost using {self.solver_name}:", self.objective)
+        # self.ampl.eval("display sum{(i,j) in arcs, k in pipes} l[i,j,k]*C[k];")
+        print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
+        
+        # Add this right after self.ampl.solve()
+        self.ampl.eval("display total_cost;")
+        self.ampl.eval("display {(i,j) in arcs} z[i,j];")
+        self.ampl.eval("display {(i,j) in arcs} y[i,j];")
+        
+        sol_file = stub + '.sol'
+
+        # Add this right after subprocess.run in your solve_reduced_model
+        with open(sol_file) as f:
+            content = f.read()
+        print("=== RAW SOL FILE ===")
+        print(content)
+        print("=== SOL FILE SIZE:", os.path.getsize(sol_file), "bytes ===")
+        # return self.objective, solve_time
+
+    def solve_recover_model(self):
+        print(f"\n-------------------------------- Solving Recover Model using cplex --------------------------")
+
+        if self.data_number == 5:
+            self.model_file = "recover_newyork_model.mod"
+        elif self.data_number == 6:
+            self.model_file = "recover_blacksburg_model.mod"
+        else:
+            self.model_file = "recover_wdnmodel.mod"
+
+
+        ampl = AMPL()
+        ampl.reset()
+        ampl.read(self.model_file)
+        ampl.read_data(self.data_file)
+       
+        for (u, v), val in self.y.items():
+            ampl.param["y"][u, v] = val
+    
+        ampl.option['solver'] = "cplex"
+
+        ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes "
+
+        ampl.option["presolve"] = "1"
+        ampl.option["presolve_eps"] = "8.53e-15" 
+        #with self.suppress_output():
+        ampl.solve()
+
+        # self.q = self.ampl.get_variable('q').get_values().to_dict()
+        # self.h = self.ampl.get_variable('h').get_values().to_dict()
+        self.l = ampl.get_variable('l').get_values().to_dict()
+
+        # for (u,v) in self.arcs:
+        #     for k in self.pipes:
+        #         if self.l[u,v,k]>=0.0001:
+        #             print(f"l[{u},{v},{k}]:", self.l[u,v,k])
+
+        solve_time = ampl.get_value('_solve_elapsed_time')
+        self.total_cost = ampl.getObjective("total_cost").value()
+
+        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+
+        print(f"Total Cost:", self.total_cost)
+        # self.ampl.eval("display sum{(i,j) in arcs, k in pipes} l[i,j,k]*C[k];")
+        print(f"cplex solve time: {solve_time:.2f} seconds")
+
+        # return self.total_cost, solve_time
+
+    def solve_original_model_with_init(self):
+        # print(f"\n-------------------------------- Solving Recover Model using {self.solver_name} --------------------------")
+
+        ampl = AMPL()
+        ampl.reset()
+        ampl.read("wdnmodel.mod")
+        ampl.read_data(self.data_file)
+       
+        # for (u, v), val in self.y.items():
+        #     ampl.param["y"][u, v] = val
+ 
+        for (i, j, k), val in self.l.items():
+           ampl.eval(f'let l[{i},{j},{k}] := {val};')
+        for (i, j), val in self.q.items():
+           ampl.eval(f'let q[{i},{j}] := {val};')
+           if self.data_number ==5:
+               ampl.eval(f'let q1[{i},{j}] := {self.q1[i,j]};')
+               ampl.eval(f'let q2[{i},{j}] := {self.q2[i,j]};')
+        for i, val in self.h.items():
+           ampl.eval(f'let h[{i}] := {val};')
+        
+        if self.data_number == 6:
+            ampl.eval("subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
+        else:
+            ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
+    
+        # ampl.option['solver'] = "ipopt"
+        ampl.option['solver'] = "~/build/bin/ipopt"
+
+        ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = yes halt_on_ampl_error = yes "
+
+        ampl.option["presolve"] = "1"
+        ampl.option["presolve_eps"] = "8.53e-15" 
+        with self.suppress_output():
+            ampl.solve()
+
+        self.q = self.ampl.get_variable('q').get_values().to_dict()
+        self.h = self.ampl.get_variable('h').get_values().to_dict()
+        self.l = ampl.get_variable('l').get_values().to_dict()
+
+        # for (u,v) in self.arcs:
+        #     for k in self.pipes:
+        #         if self.l[u,v,k]>=0.0001:
+        #             print(f"l[{u},{v},{k}]:", self.l[u,v,k])
+
+        solve_time = ampl.get_value('_solve_elapsed_time')
+        self.total_cost = ampl.getObjective("total_cost").value()
+
+        # print(f"Total Cost:", self.total_cost)
+        # self.ampl.eval("display sum{(i,j) in arcs, k in pipes} l[i,j,k]*C[k];")
+        # print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
+
+        return self.total_cost, solve_time
+
+    def plot_value_function_for_arc(self, arc, n_points=300):
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from scipy.optimize import linprog
+
+        (u, v) = arc
+        Lij = self.L[(u, v)]
+
+        pipes = list(self.pipes)
+    
+        alpha = {
+            k: 10.67 / (self.R[k]**1.852 * self.d[k]**4.87)
+            for k in pipes
+        }
+    
+        alpha_vals = np.array([alpha[k] for k in pipes])
+        cost_vals  = np.array([self.C[k] for k in pipes])
+    
+        y_min = Lij * np.min(alpha_vals)
+        y_max = Lij * np.max(alpha_vals)
+    
+        y_grid = np.linspace(y_min, y_max, n_points)
+        z_vals = []
+    
+        for y in y_grid:
+            c = cost_vals
+            A_eq = np.vstack([alpha_vals, np.ones(len(pipes))])
+            b_eq = np.array([y, Lij])
+            bounds = [(0, None) for _ in pipes]
+    
+            res = linprog(c=c, A_eq=A_eq, b_eq=b_eq, bounds=bounds, method="highs")
+    
+            if res.success:
+                z_vals.append(res.fun)
+            else:
+                z_vals.append(np.nan)
+    
+        plt.figure(figsize=(8,5))
+        plt.plot(y_grid, z_vals, lw=2)
+        plt.xlabel(r"$y_{ij}$")
+        plt.ylabel(r"$Z_{ij}(y_{ij})$")
+        plt.title(f"Objective Function Graph for Arc ({u},{v})")
+        plt.savefig(f"value_function_arc_{u}_{v}.png", dpi=300, bbox_inches="tight")
+        plt.grid(True)
+        plt.show()
+    
+        return y_grid, z_vals
+
+    def solve_reduced_recover_original(self):
+        self.K = {arc: min(self.C[k]*self.R[k]**1.852 * self.d[k]**4.87/10.67 for k in self.pipes) for arc in self.arcs}
+
+        total_iteration = 10
+        iter = 1
+
+        print(f"{'Iter':<6}{'Reduced Obj':<20}{'Reduced Time':<18}{'Recover Obj':<20}{'Recover Time':<18}{'Orig Obj':<20}{'Orig Time':<18}")
+        print("-" * 95)
+
+        while iter <= total_iteration:
+            # Solve reduced model
+            reduced_obj, reduced_time = self.solve_reduced_model()
+            # Solve recover model
+            recover_obj, recover_time = self.solve_recover_model()
+            # Solve original model
+            original_model_obj, original_model_time = self.solve_original_model_with_init()
+            print(
+                f"{iter:<6}"
+                f"{reduced_obj:<20.8f}"
+                f"{reduced_time:<18.4f}"
+                f"{recover_obj:<20.8f}"
+                f"{recover_time:<18.4f}"
+                f"{original_model_obj:<20.8f}"
+                f"{original_model_time:<18.4f}"
+            )
+            for (u, v), val in self.y.items():
+                # print(f"y[{u},{v}]:",self.y[u,v])
+                self.K[u, v] = sum(self.C[k]*self.l[u,v,k] for k in self.pipes)/(sum(10.67*self.l[u,v,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes))
+                # print(f"K[{u},{v}]:",self.K[u,v], "\n")
+
+            iter += 1
 
     def run(self):
-        # self.read_model_and_data()
-        # First solve: IPOPT
-        # self.solve_ipopt()
-        if self.data_number==5:
-            model_file = "newyork_model.mod"
-        elif self.data_number==6:
-            model_file = "blacksburg_model.mod"
-        else:
-            model_file = sys.argv[1]
-            print(model_file)
-        # Second solve: self.solver_name
-        # self.second_solve(model_file, "ipopt")
-        self.second_solve(self.model_file, self.solver_name)
-        # self.reduced_diameter()
-        #self.solve_content_model()
-if __name__ == "__main__":
-    model = sys.argv[1]
+        self.read_model_and_data()
+        self.solve_original_model_without_init()
 
+        # self.solve_reduced_model()
+        # self.solve_recover_model()
+
+if __name__ == "__main__":
     data_list = [
         "d1_bessa",
         "d2_shamir",
@@ -1040,23 +1772,23 @@ if __name__ == "__main__":
     ]
 
     # Select the data number here (0 to 18)
-    data_number = int(sys.argv[3]) -1
+    data_number = int(sys.argv[2]) -1
     data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{data_list[(data_number)]}.dat"
     #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/data/minlplib_data/{data_list1[(data_number)]}.dat"
     #print("Water Network:", f"{data_list[(data_number)]}.dat")
-    print("Water Network:", f"{sys.argv[3]}")
+    print("Water Network:", f"{sys.argv[2]}")
 
     # print("Results of actual Hazen--Williams headloss constraint\n")
     # print("Results smooth approximation 1 of Hazen--Williams headloss constraint using absolute error\n")
     # print("Results smooth approximation 1 of Hazen--Williams headloss constraint using relative error\n")
     # print("Results smooth approximation 2 of Hazen--Williams headloss constraint using absolute error\n")
-    print("Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error\n")
+    # print("Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error\n")
 
-    print("*******************************************************************************")
+    print("***********************************************************************************************")
 
-    solver = sys.argv[2] 
+    solver = sys.argv[1] 
 
-    solver_instance = WaterNetworkSolver(model, solver, data, data_number)
+    solver_instance = WaterNetworkSolver(solver, data, data_number)
     solver_instance.run()

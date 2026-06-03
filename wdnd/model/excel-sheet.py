@@ -135,10 +135,18 @@ def BaronInstanceOutput(instance, output):
     # Extract total relative constraint violation
     output_content = output.read() 
 
-    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
-    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
-
+    # violation_match_con = re.search(r'Total absolute constraints violation: \s*([\d.eE+-]+)', output_content)
+    # violation_match_abs = re.search(r'Sum of absolute diff (orig vs approx): \s*([\d.eE+-]+)', output_content)
+    # violation_match_rel = re.search(r'Sum of relative diff (orig vs approx): \s*([\d.eE+-]+)', output_content)
+    violation_match_con = re.search(r'Total absolute constraint violation:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_orig = re.search(r'Sum of original head-loss violation\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_approx = re.search(r'Sum of approx\s+head-loss violation\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_abs = re.search(r'Sum of absolute diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_rel = re.search(r'Sum of relative diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output_content)
     # Regular expression to find the lower bound
     lower_bound = re.search(r"lower bound\s*=\s*([0-9.]+)", output_content)
     
@@ -228,11 +236,20 @@ def GurobiInstanceOutput(instance, output):
             print(f"Warning: Could not convert solver time '{time_match.group(1)}' to float.")
    
     # Extract total relative constraint violation
-    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output)
-    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output)
+    # violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output)
+    # violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output)
+    # violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output)
     #print(violation_match)
+    violation_match_con = re.search(r'Total absolute constraint violation:\s*([\d.eE+-]+)',output)
     
+    violation_match_orig = re.search(r'Sum of original head-loss violation\s*:\s*([\d.eE+-]+)',output)
+    
+    violation_match_approx = re.search(r'Sum of approx\s+head-loss violation\s*:\s*([\d.eE+-]+)',output)
+    
+    violation_match_abs = re.search(r'Sum of absolute diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output)
+    
+    violation_match_rel = re.search(r'Sum of relative diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output)   
+
     violation_con = None
     if violation_match_con:
         try:
@@ -302,11 +319,20 @@ def SCIPInstanceOutput(instance, output):
         solver_time = 3600
  
     # Extract total relative constraint violation
-    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output)
-    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output)
+    # violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output)
+    # violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output)
+    # violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output)
     #print(violation_match)
+    violation_match_con = re.search(r'Total absolute constraint violation:\s*([\d.eE+-]+)',output)
     
+    violation_match_orig = re.search(r'Sum of original head-loss violation\s*:\s*([\d.eE+-]+)',output)
+    
+    violation_match_approx = re.search(r'Sum of approx\s+head-loss violation\s*:\s*([\d.eE+-]+)',output)
+    
+    violation_match_abs = re.search(r'Sum of absolute diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output)
+    
+    violation_match_rel = re.search(r'Sum of relative diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output)
+
     violation_con = None
     if violation_match_con:
         try:
@@ -349,10 +375,20 @@ def IpoptInstanceOutput(instance, output):
     output_content = output.read()  # Read the entire output content
 
     # Extract total relative constraint violation
-    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
-    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    # violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
+    # violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    # violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
     #
+    violation_match_con = re.search(r'Total absolute constraint violation:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_orig = re.search(r'Sum of original head-loss violation\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_approx = re.search(r'Sum of approx\s+head-loss violation\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_abs = re.search(r'Sum of absolute diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_rel = re.search(r'Sum of relative diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output_content)
+
     violation_con = float(violation_match_con.group(1)) if violation_match_con else None
     violation_abs = float(violation_match_abs.group(1)) if violation_match_abs else None
     violation_rel = float(violation_match_rel.group(1)) if violation_match_rel else None
@@ -406,10 +442,20 @@ def BonminInstanceOutput(instance, output):
 def HeuristicInstanceOutput(instance, output):    
     output_content = output.read() 
     # Extract total relative constraint violation
-    violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
-    violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
-    violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    # violation_match_con = re.search(r'Sum of constraints violation:\s*([\d.eE+-]+)', output_content)
+    # violation_match_abs = re.search(r'Con2 sum of absolute violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
+    # violation_match_rel = re.search(r'Con2 sum of relative violation between original function and approximate function:\s*([\d.eE+-]+)', output_content)
     #
+    violation_match_con = re.search(r'Total absolute constraint violation:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_orig = re.search(r'Sum of original head-loss violation\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_approx = re.search(r'Sum of approx\s+head-loss violation\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_abs = re.search(r'Sum of absolute diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output_content)
+    
+    violation_match_rel = re.search(r'Sum of relative diff\s*\(orig vs approx\)\s*:\s*([\d.eE+-]+)',output_content)
+
     violation_con = float(violation_match_con.group(1)) if violation_match_con else None
     violation_abs = float(violation_match_abs.group(1)) if violation_match_abs else None
     violation_rel = float(violation_match_rel.group(1)) if violation_match_rel else None
@@ -431,7 +477,7 @@ def HeuristicInstanceOutput(instance, output):
     # find, time = find_float(file_data, "Total CPU secs in IPOPT", time)
     Objective = 0
     find, Objective = find_float(file_data, "Final best objective:", Objective)
-    find, time = find_float(file_data, "Heuristic elapsed time:", time)
+    find, time = find_float(file_data, "Total elapsed time:", time)
     number_of_nlp = 0
     find, number_of_nlp = find_float(file_data, "Number of nlp problem solved:", number_of_nlp)
     number_of_iteration = 0
@@ -508,6 +554,8 @@ Heuristic_Rel_error = []
 Heuristic_Number_of_NLP = []
 Heuristic_Number_of_Iteration = []
 
+#dir0 = "epigraph_model_output"
+dir0 = "europt"
 dir1 = "original_10min"
 dir = "smooth-approx"
 dir2 = "approx2"
@@ -516,7 +564,7 @@ error = "relative"
 
 print("******************************Results of Initial Ipopt Solve Result ************************************")
 for ins in data_list:
-    with open(f"../europt/ipopt_out/{dir2}/{error}/{ins}.ipopt_out") as output:
+    with open(f"../{dir0}/ipopt_out/{dir2}/{error}/{ins}.ipopt_out") as output:
         print("Model Name:",ins)
         out = output
         obj, time, violation_con,violation_abs, violation_rel = IpoptInstanceOutput(ins,out)
@@ -537,7 +585,7 @@ for ins in data_list:
 print("******************************Results of Baron Solver ************************************")
 
 for ins in data_list:
-    with open(f"../europt/baron_out/{dir1}/{ins}.baron_out") as output:
+    with open(f"../{dir0}/baron_out/{dir1}/{ins}.baron_out") as output:
         print("Model Name:",ins)
         out = output
         obj, lower_bound, time, violation_con,violation_abs, violation_rel= BaronInstanceOutput(ins,out)
@@ -559,7 +607,7 @@ for ins in data_list:
 print("**********************Results of GUROBI Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/gurobi_out/{dir1}/{ins}.gurobi_out") as output:
+    with open(f"../{dir0}/gurobi_out/{dir1}/{ins}.gurobi_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, best_bound, time, violation_con,violation_abs, violation_rel = GurobiInstanceOutput(ins,output)
@@ -580,7 +628,7 @@ for ins in data_list:
 print("**********************Results of SCIP Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/scip_out/{dir1}/{ins}.scip_out") as output:
+    with open(f"../{dir0}/scip_out/{dir1}/{ins}.scip_out") as output:
         print("Model Name:",ins)
         output = output.read()
         obj, dual_bound, time, violation_con,violation_abs, violation_rel = SCIPInstanceOutput(ins,output)
@@ -617,7 +665,7 @@ for ins in data_list:
 print("**********************Results of Knitro Solver *********************************")
  
 for ins in data_list:
-    with open(f"../europt/knitro_out/{dir1}/{ins}.knitro_out") as output:
+    with open(f"../{dir0}/knitro_out/{dir1}/{ins}.knitro_out") as output:
         print("Model Name:",ins)
         obj, time = KnitroInstanceOutput(ins,output)
         print("Objective :",obj)
@@ -629,7 +677,7 @@ for ins in data_list:
 print("**********************Results of BONMIN Solver *********************************")
 
 for ins in data_list:
-    with open(f"../europt/bonmin_out/{dir2}/{error}/{ins}.bonmin_out") as output:
+    with open(f"../{dir0}/bonmin_out/{dir2}/{error}/{ins}.bonmin_out") as output:
         print("Model Name:",ins)
         obj, time = BonminInstanceOutput(ins,output)
         # print("Objective :",obj)
@@ -653,7 +701,7 @@ for ins in data_list:
 print("**********************Results of Heuristic *********************************")
 
 for ins in data_list:
-    with open(f"../europt/heuristic_out/{dir2}/{error}/{ins}.heuristic_out") as output:
+    with open(f"../{dir0}/heuristic_out/{dir2}/{error}/{ins}.heuristic_out") as output:
         print("Model Name:",ins)
         obj, time, violation_con,violation_abs, violation_rel, nlp, iter = HeuristicInstanceOutput(ins,output)
         print("Objective :",obj)

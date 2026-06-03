@@ -16,6 +16,10 @@ param R{pipes};		   # Roughness of each commercial pipe
 param omega := 10.67;  # SI Unit Constant for Hazen Williams Equation
 param vmax{arcs} default (sum {k in nodes diff Source} D[k])/((3.14/4)*(d[1])^2);
 param p:= 1.852;
+
+param alpha{k in pipes} :=
+    omega / (R[k]^1.852 * d[k]^4.87);
+
 param Q_max = sum{k in nodes diff Source} D[k];
 param D_min = min{i in nodes diff Source} D[i];
 param D_max = max{i in nodes diff Source} D[i];
@@ -28,6 +32,7 @@ param b := - (5/4)*delta**(p-3) - (1/4)*(p-1)*p*delta**(p-3) - (5/4)*p*delta**(p
 param c := (3/8)*delta**(p-5) + (1/8)*(p-1)*p*delta**(p-5) - (3/8)*p*delta**(p-5);
 
 param R_min = min{k in pipes} R[k];
+param R_max = max{k in pipes} R[k];
 
 param MaxK{(i,j) in arcs} := omega * L[i,j] / (R_min^1.852 * d_min^4.87);
 #param eps{arcs};
@@ -51,7 +56,7 @@ minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
-    sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
+    sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] -  D[j] = 0
 ;
 
 # hazen-Williams Constraint 
@@ -60,8 +65,8 @@ subject to con1{j in nodes diff Source}:
 
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs}: 
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    h[i] - h[j]  =  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
+     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
+    #h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)) = 0;
     #(h[i] - h[j])  =  q[i,j] * ((q[i,j]^2 + eps[i,j]^2))^0.426 * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + 0.574 * eps[i,j]^2) / (q[i,j]^2 + eps[i,j]^2)^0.574) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + eps[i,j]^2)^0.426 - (0.426 * eps[i,j]^2 / (q[i,j]^2 + eps[i,j]^2)^0.574)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
@@ -96,21 +101,23 @@ subject to con2{(i,j) in arcs}:
 #		(q[i,j] * abs(q[i,j])^0.852) * sum{k in pipes} omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87)) = h[i] - h[j]  
 #;
 
-#subject to con3{(i,j) in arcs}: 
-#    sum{k in pipes} l[i,j,k] = L[i,j]
-#;
-subject to con4{(i,j) in arcs , k in pipes}: 
-    l[i,j,k] <= L[i,j]
+subject to con3{(i,j) in arcs}: 
+    sum{k in pipes} l[i,j,k] = L[i,j]
 ;
+subject to con4{(i,j) in arcs , k in pipes}: 
+    l[i,j,k] - L[i,j] <= 0
+;
+
 #subject to con5{(i,j) in arcs , k in pipes}: 
 #    l[i,j,k] >= 0
 #;
+
 subject to con6{i in Source}: 
-    h[i] = E[i]
+    h[i] - E[i] = 0
 ;
-subject to con7{i in nodes diff Source}: h[i] >= (E[i] + P[i]) ;
+subject to con7{i in nodes diff Source}: -h[i] + (E[i] + P[i]) <= 0;
 #subject to con6_{i in nodes diff Source}: h[i] <= max{j in Source} E[j] ;
-#subject to con8{(i,j) in arcs}: 
-#   -Q_max <= q[i,j] <= Q_max
-#;
+subject to con8{(i,j) in arcs}: 
+   -Q_max <= q[i,j] <= Q_max
+;
 #*******************************************************************************************#

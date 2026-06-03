@@ -42,6 +42,7 @@ param alpha_min := min{k in pipes} alpha[k];
 param alpha_max := max{k in pipes} alpha[k];
 
 param R_min = min{k in pipes} R[k];
+param R_max = max{k in pipes} R[k];
 param d_min = min{k in pipes} d[k];
 param c_min = min{k in pipes} C[k];
 param c_max = max{k in pipes} C[k];
@@ -68,8 +69,8 @@ param intercept{s in segs} :=
 # =========================
 var q{arcs};
 var h{nodes};
-var y{arcs}>=alpha_min,<=alpha_max;
-var z{arcs};
+var y{arcs};
+var z{arcs}>=0;
 
 # =========================
 # OBJECTIVE
@@ -81,21 +82,21 @@ minimize total_cost:sum{(i,j) in arcs} z[i,j];
 # CONSTRAINTS
 # =========================
 
-subject to flow_balance{j in nodes diff Source}:
+subject to con1{j in nodes diff Source}:
     sum{i in nodes : (i,j) in arcs} q[i,j] - sum{i in nodes : (j,i) in arcs} q[j,i] - D[j] = 0;
 
 subject to con2{(i,j) in arcs}:
 #    h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * y[i,j] * L[i,j] = 0;
     h[i] - h[j] - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426 * eps[i,j]^2)) * y[i,j] * L[i,j] = 0;
 
-subject to source_head{i in Source}:
+subject to con6{i in Source}:
     h[i] - E[i] = 0;
 
-subject to min_pressure{i in nodes diff Source}:
-    h[i] >= E[i] + P[i];
+subject to con7{i in nodes diff Source}:
+    -h[i] + E[i] + P[i] <=0 ;
 
 subject to exact_cost{(i,j) in arcs, s in segs}:
-    z[i,j] >= L[i,j]*(slope[s] * y[i,j] + intercept[s]);
+   L[i,j]*(slope[s] * y[i,j] + intercept[s]) - z[i,j] <= 0 ;
 
 #subject to z_bounds_l{(i,j) in arcs}:
 #    c_min*L[i,j] <= z[i,j] ;
@@ -105,6 +106,12 @@ subject to exact_cost{(i,j) in arcs, s in segs}:
 
 #subject to z_upper{(i,j) in arcs}:
 #    z[i,j] <= L[i,j]*(c_max + ((c_min - c_max)/(alpha_max - alpha_min))*(y[i,j] - alpha_min));
+
+subject to y_bounds_l{(i,j) in arcs}:
+    alpha_min - y[i,j]<= 0 ;
+
+subject to y_bounds_r{(i,j) in arcs}:
+    y[i,j] - alpha_max <= 0;
 
 subject to con8{(i,j) in arcs}: 
    -Q_max <= q[i,j] <= Q_max

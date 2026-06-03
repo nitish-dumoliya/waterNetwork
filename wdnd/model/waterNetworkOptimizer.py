@@ -10,6 +10,8 @@ Dependencies:
 """
 
 # ── Standard Library ──────────────────────────────────────────────────────────
+
+from __future__ import annotations
 import contextlib
 import copy
 import json
@@ -47,7 +49,15 @@ from jax import jacfwd, jacrev
 # ── Local ─────────────────────────────────────────────────────────────────────
 from network_layout import node_position
 
+from typing import Tuple
+from typing import List
 
+
+    
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Tuple
+    
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # Constants
 # ══════════════════════════════════════════════════════════════════════════════
@@ -77,7 +87,6 @@ DEFAULT_BOUND_FRAC = 1e-1
 DEFAULT_MU_INIT = 1e-2
 PRESOLVE_EPS_MAIN = "6.82e-14"
 PRESOLVE_EPS_LP = "7.19e-7"
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 # WaterNetworkOptimizer
@@ -135,15 +144,15 @@ class WaterNetworkOptimizer:
         self.mu_init = DEFAULT_MU_INIT
 
         # Trust-region / neighbourhood parameters
-        self.alpha_shrink = 0.1
+        self.alpha_shrink = 0.2
         self.alpha_q_min = 0.2
         self.alpha_expand = 1.2
         self.alpha_q = self.alpha_q_min
 
         self.eta_l_min = 0.2
         self.eta_h_min = 0.2
-        self.eta_l_expend = 1.5
-        self.eta_h_expend = 1.5
+        self.eta_l_expand = 1.5
+        self.eta_h_expand = 1.5
         self.eta_l = self.eta_l_min
         self.eta_h = self.eta_h_min
 
@@ -160,6 +169,11 @@ class WaterNetworkOptimizer:
         self.delta = 0.1
         self.p = 1.852
         self.omega = 10.67
+        
+        self.alpha_y_min = 0.1
+        self.eta_z_min = 0.1
+        self.alpha_y = self.alpha_y_min
+        self.eta_z = self.eta_z_min
 
     # ── Model Loading ─────────────────────────────────────────────────────────
 
@@ -188,8 +202,10 @@ class WaterNetworkOptimizer:
         self.eps = self.ampl.getParameter("eps").to_dict()
  
         self.alpha = self.ampl.get_parameter("alpha").get_values().to_dict()
-        self.R_min = min(self.R[k] for k in self.pipes)
-        self.R_max = max(self.R[k] for k in self.pipes)
+        self.R_min = min(self.ampl.get_parameter("R_min").get_values().to_list())
+        self.R_max = min(self.ampl.get_parameter("R_max").get_values().to_list())
+        # self.R_min = min(self.R[k] for k in self.pipes)
+        # self.R_max = max(self.R[k] for k in self.pipes)
         self.d_min = min(self.d[k] for k in self.pipes)
         self.d_max = max(self.d[k] for k in self.pipes)
 
@@ -648,8 +664,242 @@ class WaterNetworkOptimizer:
         plt.show()
 
     # ── Constraint Violation Reporting ────────────────────────────────────────
+    def constraint_violations(self, q_values, h_values, l_values, epsilon):
+        """
+        Compute and report all constraint violations for the current solution.
+    
+        Constraints checked:
+            con1: Flow balance at non-source nodes
+            con2: Head-loss (original vs. approximated)
+            con3: Pipe length summation per arc
+            con4: Individual pipe segment length upper bound
+            con5: Source node head equality
+            con6: Minimum pressure head at demand nodes
+        """
+        total_absolute_constraint_violation = 0.0
+    
+        # ------------------------------------------------------------------
+        # Constraint 1: Flow balance at non-source nodes
+        # ------------------------------------------------------------------
+        con1_gap = {}
+    
+        if self.data_number == 5:
+            q1 = self.ampl.get_variable('q1').get_values().to_dict()
+            q2 = self.ampl.get_variable('q2').get_values().to_dict()
+    
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                incoming = sum(q1[j, i] + q2[j, i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing = sum(q1[i, j] + q2[i, j] for j in self.nodes if (i, j) in self.arcs)
+                violation = (incoming - outgoing) - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+        else:
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                incoming = sum(q_values[j, i] for j in self.nodes if (j, i) in self.arcs)
+                outgoing = sum(q_values[i, j] for j in self.nodes if (i, j) in self.arcs)
+                violation = (incoming - outgoing) - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 2: Head-loss constraint (original vs. approximated)
+        # ------------------------------------------------------------------
+        con2_original_gap = {}
+        con2_approx_gap = {}
+        absolute_violations = {}
+        relative_violations = {}
+    
+        con2_original_violation = 0.0
+        con2_approx_violation = 0.0
+        con2_absolute_constraint_violation = 0.0
+        con2_relative_constraint_violation = 0.0
+    
+        def _alpha_rhs(i, j):
+            """Weighted head-loss resistance coefficient for arc (i, j)."""
+            return sum(
+                10.67 * l_values[i, j, k] / ((self.R[k] ** 1.852) * (self.d[k] ** 4.87))
+                for k in self.pipes
+            )
+    
+        def _original_rhs(q, alpha):
+            return q * (abs(q) ** 0.852) * alpha
+    
+        def _approx_rhs(q, eps, alpha):
+            return (q**3 * ((q**2 + eps**2) ** 0.426) / (q**2 + 0.426 * eps**2)) * alpha
+    
+        def _record_con2(key, lhs, orig_rhs, apprx_rhs):
+            """Update all con2 tracking dictionaries and running totals."""
 
-    def constraint_violations(
+            nonlocal con2_original_violation, con2_approx_violation
+            nonlocal con2_absolute_constraint_violation, con2_relative_constraint_violation
+            nonlocal total_absolute_constraint_violation
+
+            con2_original_gap[key] = lhs - orig_rhs
+            con2_approx_gap[key]   = lhs - apprx_rhs
+    
+            abs_viol = orig_rhs - apprx_rhs
+            rel_viol = abs_viol / (orig_rhs + 1e-14)
+    
+            absolute_violations[key] = abs_viol
+            relative_violations[key] = rel_viol
+    
+            con2_original_violation            += abs(lhs - orig_rhs)
+            con2_approx_violation              += abs(lhs - apprx_rhs)
+            con2_absolute_constraint_violation += abs(abs_viol)
+            con2_relative_constraint_violation += abs(rel_viol)
+            total_absolute_constraint_violation += abs(lhs - apprx_rhs)
+    
+        if self.data_number == 5:
+            self.exdiam = self.ampl.getParameter('exdiam').to_dict()
+    
+            for (i, j) in q1.keys():
+                lhs = 2 * (h_values[i] - h_values[j])
+                alpha = sum(
+                    10.67 * l_values[i, j, k] / ((self.R[i, j] ** 1.852) * (self.d[k] ** 4.87))
+                    for k in self.pipes
+                )
+                hl_coeff = 10.67 * self.L[i, j] / (self.R[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87)
+    
+                orig_rhs = (
+                    q1[i, j] * (abs(q1[i, j]) ** 0.852) * hl_coeff
+                    + q2[i, j] * (abs(q2[i, j]) ** 0.852) * alpha
+                )
+                apprx_rhs = (
+                    _approx_rhs(q1[i, j], epsilon[i, j], hl_coeff)
+                    + _approx_rhs(q2[i, j], epsilon[i, j], alpha)
+                )
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        elif self.data_number == 6:
+            self.fixarcs  = self.ampl.getSet('fixarcs')
+            self.fix_r    = self.ampl.getParameter('fix_r').to_dict()
+            self.exdiam   = self.ampl.getParameter('fixdiam').to_dict()
+    
+            # Variable arcs
+            for (i, j) in self.arcs:
+                if (i, j) in self.fixarcs:
+                    continue
+                lhs      = h_values[i] - h_values[j]
+                alpha    = _alpha_rhs(i, j)
+                orig_rhs = _original_rhs(q_values[i, j], alpha)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], alpha)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+            # Fixed-diameter arcs
+            for (i, j) in self.fixarcs:
+                lhs = h_values[i] - h_values[j]
+                hl_coeff = 10.67 * self.L[i, j] / (self.fix_r[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87)
+                orig_rhs  = _original_rhs(q_values[i, j], hl_coeff)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], hl_coeff)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        else:
+            for (i, j) in q_values:
+                lhs       = h_values[i] - h_values[j]
+                alpha     = _alpha_rhs(i, j)
+                orig_rhs  = _original_rhs(q_values[i, j], alpha)
+                apprx_rhs = _approx_rhs(q_values[i, j], epsilon[i, j], alpha)
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        # ------------------------------------------------------------------
+        # Constraint 3: Pipe lengths must sum to arc length
+        # ------------------------------------------------------------------
+        con3_gap = {}
+        arcs_to_check = (
+            [(i, j) for (i, j) in self.arcs if (i, j) not in self.fixarcs]
+            if self.data_number == 6
+            else list(self.arcs)
+        )
+        for (i, j) in arcs_to_check:
+            violation = sum(l_values[i, j, k] for k in self.pipes) - self.L[i, j]
+            con3_gap[f"{i},{j}"] = violation
+            total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 4: Individual pipe segment ≤ arc length
+        # ------------------------------------------------------------------
+        con4_gap = {}
+        for (i, j) in self.arcs:
+            for k in self.pipes:
+                violation = max(0.0, l_values[i, j, k] - self.L[i, j])
+                con4_gap[f"{i},{j},{k}"] = violation
+                total_absolute_constraint_violation += violation
+    
+        # ------------------------------------------------------------------
+        # Constraint 5: Source node head equality
+        # ------------------------------------------------------------------
+        con5_gap = {}
+        for j in self.source:
+            violation = h_values[j] - self.E[j]
+            con5_gap[str(j)] = violation
+            total_absolute_constraint_violation += abs(violation)
+    
+        # ------------------------------------------------------------------
+        # Constraint 6: Minimum pressure head at demand nodes
+        # ------------------------------------------------------------------
+        con6_gap = {}
+        for j in self.nodes:
+            if j in self.source:
+                continue
+            violation = max(0.0, self.E[j] + self.P[j] - h_values[j])
+            con6_gap[str(j)] = violation
+            total_absolute_constraint_violation += violation
+    
+        # ------------------------------------------------------------------
+        # Reporting
+        # ------------------------------------------------------------------
+        separator = "*" * 79
+    
+        # print(f"\n{separator}")
+        # print("CONSTRAINT VIOLATIONS\n")
+        #
+        # table_data = (
+        #     [(k, f"{v:.8f}") for k, v in con1_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con2_approx_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con3_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con4_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con5_gap.items()]
+        #     + [(k, f"{v:.8f}") for k, v in con6_gap.items()]
+        # )
+        # print(tabulate(table_data, headers=["Constraint ID", "Violation"], tablefmt="grid"))
+        print(f"\nTotal absolute constraint violation: {total_absolute_constraint_violation:.2e}")
+    
+        print(f"\n{separator}")
+        print("HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION\n")
+    
+        table_data = []
+        for key, rel_viol in relative_violations.items():
+            i_str, j_str = key.split(',')
+            i, j = int(i_str), int(j_str)
+            table_data.append([
+                key,
+                q_values[i, j],
+                f"{con2_original_gap[key]:.2e}",
+                f"{con2_approx_gap[key]:.2e}",
+                f"{absolute_violations[key]:.2e}",
+                f"{rel_viol:.2e}",
+            ])
+    
+        headers = [
+            "Arc (i,j)",
+            "Flow",
+            "Original Violation",
+            "Approx Violation",
+            "Absolute Diff",
+            "Relative Diff",
+        ]
+        # print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        print(f"\nSum of original head-loss violation : {con2_original_violation:.2e}")
+        print(f"Sum of approx  head-loss violation  : {con2_approx_violation:.2e}")
+        print(f"Sum of absolute diff (orig vs approx): {con2_absolute_constraint_violation:.2e}")
+        print(f"Sum of relative diff (orig vs approx): {con2_relative_constraint_violation:.2e}")
+        print(f"\n{separator}\n")
+
+    def constraint_violations3(
         self,
         q_values: dict,
         h_values: dict,
@@ -1226,7 +1476,8 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         """Solve the initial NLP relaxation."""
-        self.ampl.option["solver"] = "ipopt"
+        # self.ampl.option["solver"] = "ipopt"
+        self.ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
         self.ampl.set_option(
             "ipopt_options",
             f"outlev = 1 bound_relax_factor = 0 "
@@ -1563,9 +1814,9 @@ class WaterNetworkOptimizer:
             "outlev=0 "
             "bound_relax_factor=0 "
             "warm_start_init_point=yes "
-            # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
-            # "warm_start_bound_push=1e-9 "
-            # "warm_start_mult_bound_push=1e-9 "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            "warm_start_bound_push=1e-9 "
+            "warm_start_mult_bound_push=1e-9 "
         )
         self.local_ampl.option["presolve_eps"] = "1.86e-7"
         # ------------------------------------------------------------
@@ -1784,8 +2035,8 @@ class WaterNetworkOptimizer:
             )
             self.local_solution_improvement_heuristic_fast()
         else:
-            self.eta_l *= self.eta_l_expend
-            self.eta_h *= self.eta_h_expend
+            self.eta_l *= self.eta_l_expand
+            self.eta_h *= self.eta_h_expand
             self.alpha_q *= self.alpha_expand
             self.Delta = self.alpha_q * median_flow
             self.fail_streak += 1
@@ -1813,12 +2064,14 @@ class WaterNetworkOptimizer:
         self.arc_ampl = AMPL()
         self.arc_ampl.read(self.model_file)
         self.arc_ampl.read_data(self.data_file)
-        self.arc_ampl.option["solver"] = "ipopt"
+        # self.arc_ampl.option["solver"] = "ipopt"
+        self.arc_ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
+
         self.arc_ampl.option["ipopt_options"] = (
             "outlev=0 "
             "warm_start_init_point=yes "
             "bound_relax_factor=0 "
-            # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             # "warm_start_bound_push=1e-9 "
             # "warm_start_mult_bound_push=1e-9 "
         )
@@ -1892,14 +2145,24 @@ class WaterNetworkOptimizer:
                 break
         self.sen_score = {}
         for (i, j), dual_val in dual_dict.items():
-            resistance_term = sum(
-                10.67
-                / (
-                    float(self.R[k]) ** 1.852
-                    * self.d[k] ** 4.87
+            if self.data_number==5:
+                resistance_term = sum(
+                    10.67
+                    / (
+                        100 ** 1.852
+                        * self.d[k] ** 4.87
+                    )
+                    for k in self.pipes
                 )
-                for k in self.pipes
-            )
+            else:
+                resistance_term = sum(
+                    10.67
+                    / (
+                        self.R[k] ** 1.852
+                        * self.d[k] ** 4.87
+                    )
+                    for k in self.pipes
+                )
             self.sen_score[(i, j)] = (
                 -dual_val
                 * (
@@ -2051,6 +2314,609 @@ class WaterNetworkOptimizer:
                 self.iteration = self.local_iteration
                 self.iterate_acyclic_flows_fast()
                 break
+
+    # ================================================================
+    # INITIALIZE REDUCED LOCAL SEARCH MODEL
+    # ================================================================
+    def initialize_local_search_model_reduced(self):
+        self.local_ampl = AMPL()
+        self.local_ampl.read(
+            {5: "newyork_epigraph_model.mod", 6: "blacksburg_epigraph_model.mod"}.get(
+                self.data_number, "exact_reduced_wdn.mod"
+            )
+        )
+        self.local_ampl.read_data(self.data_file)
+        # self.local_ampl.option["solver"] = "ipopt"
+        self.local_ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+
+        self.local_ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "bound_relax_factor=0 "
+            "warm_start_init_point=yes "
+            "warm_start_bound_push=1e-9 "
+            "warm_start_mult_bound_push=1e-9 "
+            # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+        )
+        self.local_ampl.option["presolve_eps"] = "1.86e-7"
+        # ------------------------------------------------------------
+        # Reference + perturbation parameters
+        # ------------------------------------------------------------
+        # self.local_ampl.eval(
+            # r"""
+            # param q_ref{arcs};
+            # param h_ref{nodes};
+            # param y_ref{arcs};
+            # param z_ref{arcs};
+            # param delta_q{arcs} default 0;
+            # param delta_h{nodes} default 0;
+            # param delta_y{arcs} default 0;
+            # param delta_z{arcs} default 0;
+            # """
+        # )
+        print("=" * 70)
+        print("Reduced local-search AMPL model initialized.")
+        print("=" * 70)
+    # ================================================================
+    # FAST REDUCED LOCAL SEARCH
+    # ================================================================
+
+    def local_solution_improvement_reduced_fast(
+        self,
+        y,
+        z,
+        q,
+        h,
+    ):
+        ampl = self.local_ampl
+        # ------------------------------------------------------------
+        # Reproducibility
+        # ------------------------------------------------------------
+        #if hasattr(self, "seed"):
+        random.seed(40)
+        # ------------------------------------------------------------
+        # Max local NLP safeguard
+        # ------------------------------------------------------------
+        max_local_nlp = getattr(self, "max_local_nlp", 200)
+        # ------------------------------------------------------------
+        # Main loop
+        # ------------------------------------------------------------
+        while True:
+            if self.number_of_nlp >= max_local_nlp:
+                print("-" * 70)
+                print("Maximum local NLP limit reached.")
+                print("-" * 70)
+                return
+            improved = False
+            # ========================================================
+            # TRUST REGION
+            # ========================================================
+            delta_rho = 0.15
+            rho_curr = min(delta_rho * self.k_neigh,1.0)
+            rho_prev = max(rho_curr - delta_rho,0.0)
+
+            # ========================================================
+            # ARC VARIABLES
+            # ========================================================
+            for (i, j) in self.arcs:
+                # ----------------------------------------------------
+                # q perturbation
+                # ----------------------------------------------------
+                rq = random.uniform(rho_prev, rho_curr)
+                delta_q = (
+                    random.choice([-1, 1])
+                    * rq 
+                    * self.alpha_q
+                    * abs(q[(i, j)])
+                )
+                ampl.var["q"][i, j] = (q[(i, j)] + delta_q)
+                # ----------------------------------------------------
+                # y perturbation
+                # ----------------------------------------------------
+                ry = random.uniform(rho_prev, rho_curr)
+                delta_y = (
+                    random.choice([-1, 1])
+                    * ry
+                    * self.alpha_y
+                    * y[i,j]
+                )
+                ycand = y[(i, j)] + delta_y
+                ycand = max(
+                    self.alpha_min,
+                    min(self.alpha_max, ycand),
+                )
+                ampl.var["y"][i, j] = ycand
+                # ----------------------------------------------------
+                # z perturbation
+                # ----------------------------------------------------
+                rz = random.uniform(rho_prev, rho_curr)
+                delta_z = (
+                    random.choice([-1, 1])
+                    * rz
+                    * self.eta_z
+                    * z[(i, j)]
+                )
+                ampl.var["z"][i, j] = (z[(i, j)] + delta_z)
+            # ========================================================
+            # NODE VARIABLES
+            # ========================================================
+            for i in self.nodes:
+                if i in self.source:
+                    # delta_h_dict[i] = 0.0
+                    ampl.var["h"][i] = h[i]
+                else:
+                    rh = random.uniform(rho_prev,rho_curr)
+                    delta_h = (
+                        random.choice([-1, 1])
+                        * rh
+                        * self.eta_h
+                        * h[i]
+                    )
+                    ampl.var["h"][i] = (
+                        h[i] + delta_h
+                    )
+            # ========================================================
+            # SOLVE NLP
+            # ========================================================
+            with self.suppress_output():
+                ampl.solve()
+            self.number_of_nlp += 1
+            solve_time = ampl.get_value(
+                "_solve_elapsed_time"
+            )
+            self.solver_time += solve_time
+            # ========================================================
+            # SOLVER STATUS
+            # ========================================================
+            if ampl.solve_result != "solved":
+                print(
+                    "solve_result:",
+                    ampl.solve_result,
+                )
+                self.fail_streak += 1
+                self.k_neigh += 1
+                continue
+            # ========================================================
+            # RETRIEVE SOLUTION
+            # ========================================================
+            q_star = (ampl.getVariable("q").getValues().to_dict())
+            h_star = (ampl.getVariable("h").getValues().to_dict())
+            y_star = (ampl.getVariable("y").getValues().to_dict())
+            z_star_dict = (ampl.getVariable("z").getValues().to_dict())
+            z_star = (ampl.getObjective("total_cost").value())
+            self.Z_original[self.number_of_nlp] = z_star
+            # ========================================================
+            # IMPROVEMENT CHECK
+            # ========================================================
+            is_improved = (z_star < self.current_cost - 1e-4)
+            self._log_nlp_row(
+                nlp_num=self.number_of_nlp,
+                old_cost=self.current_cost,
+                new_cost=z_star,
+                solve_time=solve_time,
+                solve_result=ampl.solve_result,
+                improved=is_improved,
+            )
+            # ========================================================
+            # ACCEPT IMPROVEMENT
+            # ========================================================
+            if is_improved:
+                improved = True
+                self.current_cost = z_star
+                self.Z_best[
+                    self.number_of_nlp
+                ] = self.current_cost
+                self.q = copy.deepcopy(q_star)
+                self.h = copy.deepcopy(h_star)
+                self.y = copy.deepcopy(y_star)
+                self.z = copy.deepcopy(z_star_dict)
+                self.network_graph = (
+                    self.generate_random_acyclic_from_solution(
+                        self.q
+                    )
+                )
+                print("-" * 70)
+                print("Improved local solution found.")
+                print(
+                    f"New cost: {self.current_cost:,.6f}"
+                )
+                print("-" * 70)
+            # ========================================================
+            # UPDATE SCALE
+            # ========================================================
+            # abs_y = sorted(abs(self.y[(i, j)])for (i, j) in self.arcs)
+            # median_y = abs_y[len(abs_y) // 2]
+            # ========================================================
+            # IMPROVEMENT CASE
+            # ========================================================
+            if improved:
+                self.local_iteration += 1
+                self.eta_h = self.eta_h_min
+                self.alpha_q = self.alpha_q_min
+                self.alpha_y = self.alpha_y_min
+                self.eta_z = self.eta_z_min
+                # self.Delta = (self.alpha_y* max(median_y, 1e-6))
+                self.fail_streak = 0
+                self.k_neigh = 1
+                self.Terminate = False
+                self._print_iteration_header(
+                    self.local_iteration
+                )
+                # Continue search from new incumbent
+                q = self.q
+                h = self.h
+                y = self.y
+                z = self.z
+            # ========================================================
+            # FAILURE CASE
+            # ========================================================
+            else:
+                self.eta_h *= self.eta_h_expand
+                self.alpha_q *= self.alpha_expand
+                self.alpha_y *= self.alpha_expand
+                self.eta_z *= self.alpha_expand
+                # self.Delta = (self.alpha_y* max(median_y, 1e-6))
+                self.fail_streak += 1
+                self.k_neigh += 1
+                # ----------------------------------------------------
+                # Trust-region termination
+                # ----------------------------------------------------
+                self.Terminate = all(
+                    (
+                        self.y[(i, j)] + delta_y
+                        >= self.alpha_max
+                    )
+                    and
+                    (
+                        self.y[(i, j)] - delta_y
+                        <= self.alpha_min
+                    )
+                    for (i, j) in self.arcs
+                )
+                should_exit = (
+                    self.Terminate
+                    or self.fail_streak >= self.total_run
+                )
+                if should_exit:
+                    print("-" * 70)
+                    print("Reduced local search exits.")
+                    print("-" * 70)
+                    self.fail_streak = 0
+                    return
+
+    # ============================================================
+    # INITIALIZE SINGLE AMPL INSTANCE
+    # ============================================================
+    def initialize_local_search_model_reduced1(self):
+        self.local_ampl = AMPL()
+        self.local_ampl.read("exact_reduced_wdn.mod")
+        self.local_ampl.read_data(self.data_file)
+        # ampl = self.local_ampl
+        self.local_ampl.option["solver"] = "ipopt"
+        self.local_ampl.option["ipopt_options"] = (
+            "outlev=0 "
+            "bound_relax_factor=0 "
+            "warm_start_init_point=yes "
+            "warm_start_bound_push=1e-9 "
+            "warm_start_mult_bound_push=1e-9 "
+        )
+        self.local_ampl.option["presolve_eps"] = "1.86e-7"
+        # ========================================================
+        # PARAMETERS FOR PERTURBATION
+        # ========================================================
+        self.local_ampl.eval("""
+            param q_ref{arcs};
+            param h_ref{nodes};
+            param y_ref{arcs};
+            param z_ref{arcs};
+    
+            param delta_q{arcs} default 0;
+            param delta_h{nodes} default 0;
+            param delta_y{arcs} default 0;
+            param delta_z{arcs} default 0;
+    
+        """)
+        print("="*70)
+        print("Reduced local-search AMPL model initialized once.")
+        print("="*70)
+    
+    # ============================================================
+    # FAST LOCAL SEARCH FOR REDUCED MODEL
+    # ============================================================
+    def local_solution_improvement_reduced_fast1(self, y, z, q, h):
+        ampl = self.local_ampl
+        improved = False
+        # ========================================================
+        # FLOW SCALE
+        # ========================================================
+        # abs_cost = sorted(
+        #     y[(i,j)]
+        #     for (i,j) in self.arcs
+        # )
+        # median_cost = abs_cost[len(abs_cost)//2]
+        # ========================================================
+        # TRUST REGION
+        # ========================================================
+        delta_rho = 0.15
+        rho_curr = min(
+            delta_rho * self.k_neigh,
+            1.0
+        )
+        rho_prev = max(
+            rho_curr - delta_rho,
+            0.0
+        )
+        # ========================================================
+        # CACHE DUALS
+        # ========================================================
+        # self.all_duals = {
+        #     name: con.getValues()
+        #     for name, con in self.ampl.get_constraints()
+        # }
+        # ========================================================
+        # UPDATE PARAMETERS + WARM START ONLY
+        # ========================================================
+        for (i,j) in self.arcs:
+            # ----------------------------------------------------
+            # reference values
+            # ----------------------------------------------------
+            ampl.param["q_ref"][i,j] = q[(i,j)]
+            ampl.param["y_ref"][i,j] = y[(i,j)]
+            ampl.param["z_ref"][i,j] = z[(i,j)]
+            # ----------------------------------------------------
+            # random perturbation
+            # ----------------------------------------------------
+            rq = random.uniform(rho_prev, rho_curr)
+            delta_q = rq * self.alpha_q * q[i,j]
+            ampl.param["delta_q"][i,j] = delta_q
+            # ----------------------------------------------------
+            # warm start q
+            # ----------------------------------------------------
+            ampl.var["q"][i,j] = (
+                q[(i,j)] + delta_q
+            )
+            # ----------------------------------------------------
+            # perturb y
+            # ----------------------------------------------------
+            ry = random.uniform(rho_prev, rho_curr)
+            # delta_y = (
+            #     ry
+            #     * self.alpha_y
+            #     * abs(self.y[(i,j)])
+            # )
+            delta_y = (
+                ry
+                * self.Delta
+            )
+            ampl.param["delta_y"][i,j] = delta_y
+            ycand = y[(i,j)] + delta_y
+            # projection to bounds
+            ycand = max(
+                self.alpha_min,
+                min(self.alpha_max, ycand)
+            )
+            ampl.var["y"][i,j] = ycand
+            # ----------------------------------------------------
+            # warm start z
+            # ----------------------------------------------------
+            rh = random.uniform(rho_prev, rho_curr)
+            delta_z = (
+                rh
+                * self.eta_z
+                * z[i,j]
+            )
+            ampl.param["delta_z"][i,j] = delta_z
+            ampl.var["z"][i,j] = (
+                z[i,j] + delta_z
+            )
+        # ========================================================
+        # HEADS
+        # ========================================================
+        for i in self.nodes:
+            ampl.param["h_ref"][i] = h[i]
+            if i not in self.source:
+                rh = random.uniform(rho_prev, rho_curr)
+                delta_h = (
+                    rh
+                    * self.eta_h
+                    * abs(h[i])
+                )
+                ampl.param["delta_h"][i] = delta_h
+                ampl.var["h"][i] = (
+                    h[i] + delta_h
+                )
+            else:
+                ampl.param["delta_h"][i] = 0.0
+                ampl.var["h"][i] = h[i]
+        # ========================================================
+        # DUAL WARM START
+        # ========================================================
+        # current_duals = {
+        #     name: con.get_values()
+        #     for name, con in ampl.get_constraints()
+        # }
+        # for name, dual_values in self.all_duals.items():
+        #     if name in current_duals:
+        #         ampl.get_constraint(name).set_values(
+        #             dual_values
+        #         )
+        # ========================================================
+        # SOLVE
+        # ========================================================
+        with self.suppress_output():
+            ampl.solve()
+        self.number_of_nlp += 1
+        self.solver_time += ampl.get_value(
+            "_solve_elapsed_time"
+        )
+        # ========================================================
+        # CHECK STATUS
+        # ========================================================
+        if ampl.solve_result != "solved":
+            print("solve_result:", ampl.solve_result)
+            return
+        # ========================================================
+        # RETRIEVE SOLUTION
+        # ========================================================
+        self.q_star = (
+            ampl.getVariable("q")
+            .getValues()
+            .to_dict()
+        )
+        self.h_star = (
+            ampl.getVariable("h")
+            .getValues()
+            .to_dict()
+        )
+        self.y_star = (
+            ampl.getVariable("y")
+            .getValues()
+            .to_dict()
+        )
+        self.z_star_dict = (
+            ampl.getVariable("z")
+            .getValues()
+            .to_dict()
+        )
+        self.z_star = (
+            ampl.getObjective("total_cost")
+            .value()
+        )
+        self.Z_original[
+            self.number_of_nlp
+        ] = self.z_star
+        # ========================================================
+        # IMPROVEMENT CHECK
+        # ========================================================
+        if self.z_star < self.current_cost - 1e-4:
+            improved = True
+            self._log_nlp_row(
+                nlp_num=self.number_of_nlp,
+                old_cost=self.current_cost,
+                new_cost=self.z_star,
+                solve_time=ampl.get_value("_solve_elapsed_time"),
+                solve_result=ampl.solve_result,
+                improved=True,
+            )
+            self.current_cost = self.z_star
+            self.Z_best[
+                self.number_of_nlp
+            ] = self.current_cost
+            # ----------------------------------------------------
+            # update incumbent
+            # ----------------------------------------------------
+            self.q = self.q_star.copy()
+            self.h = self.h_star.copy()
+            self.y = self.y_star.copy()
+            self.z = self.z_star_dict.copy()
+            self.ampl = ampl
+            self.network_graph = (
+                self.generate_random_acyclic_from_solution(
+                    self.q
+                )
+            )
+            print("-"*70)
+            print("Improved local solution found.")
+            print("New cost:", self.current_cost)
+            print("-"*70)
+        else:
+            self._log_nlp_row(
+                nlp_num=self.number_of_nlp,
+                old_cost=self.current_cost,
+                new_cost=self.z_star,
+                solve_time=ampl.get_value("_solve_elapsed_time"),
+                solve_result=ampl.solve_result,
+                improved=False,
+            )
+        # ========================================================
+        # UPDATE TRUST REGION
+        # ========================================================
+        # abs_flows = sorted(
+        #     abs(self.q[(i,j)])
+        #     for (i,j) in self.arcs
+        #     if abs(self.q[(i,j)]) > 1e-6
+        # )
+        # median_flow = abs_flows[len(abs_flows)//2]
+
+        abs_cost = sorted(
+            y[(i,j)]
+            for (i,j) in self.arcs
+        )
+        median_cost = abs_cost[len(abs_cost)//2]
+        # ========================================================
+        # IMPROVEMENT CASE
+        # ========================================================
+        if improved:
+            self.local_iteration += 1
+            self.eta_h = self.eta_h_min
+            self.alpha_q = self.alpha_q_min
+            self.alpha_y = self.alpha_y_min
+            self.eta_z = self.eta_z_min
+            self.Delta = (self.alpha_y * median_cost)
+            self.fail_streak = 0
+            self.k_neigh = 1
+            self.Terminate = False
+            self._print_iteration_header(
+                self.local_iteration
+            )
+            self.local_solution_improvement_reduced_fast(self.y, self.z, self.q, self.h)
+        # ========================================================
+        # FAILURE CASE
+        # ========================================================
+        else:
+            self.eta_h *= self.eta_h_expand
+            self.alpha_q *= self.alpha_expand
+            self.alpha_y *= self.alpha_expand
+            self.eta_z *= self.alpha_expand
+            self.Delta = (self.alpha_y * median_cost)
+            self.fail_streak += 1
+            self.k_neigh += 1
+            # ----------------------------------------------------
+            # termination
+            # ----------------------------------------------------
+            # self.Terminate = all(
+            #     abs(self.q[(i,j)]) + self.Delta > self.Q_max
+            #     for (i,j) in self.arcs
+            # )
+            self.Terminate = all(
+                self.y[(i,j)] + self.Delta > self.alpha_max
+                for (i,j) in self.arcs
+            )
+            should_exit = (
+                self.Terminate
+                or self.fail_streak >= self.total_run
+            )
+            if should_exit:
+                print("-"*70)
+                print("Reduced local search exits.")
+                print("-"*70)
+                self.fail_streak = 0
+                return
+            else:
+                self.local_solution_improvement_reduced_fast(y, z, q, h)
+
+    def _start_local_improvement_after_seg_index_red(self, y, z, q, h):
+        """Reset neighbourhood parameters and launch local improvement after an arc reversal."""
+        print("---" * 28)
+        print("------- Adaptive Variable Neighborhood Search Heuristic --------")
+        self.alpha_q = self.alpha_q_min
+        self.alpha_y = self.alpha_y_min
+        self.eta_z = self.eta_z_min
+        self.eta_h = self.eta_h_min
+
+        abs_cost = sorted(y[i, j] for (i, j) in self.arcs)
+        m = len(abs_cost)
+        self.Delta = self.alpha_y * abs_cost[m // 2]
+
+        self.local_iteration = 1
+        self.do_local_improvement = False
+        self.local_improvement = False
+        self.do_arc_reversal = True
+        self.total_run = 5
+        self.visited_arc_reduced: list = []
+
+        self._print_iteration_header(self.local_iteration)
+        self.initialize_local_search_model_reduced()
+        self.local_solution_improvement_reduced_fast(y, z, q, h)
 
     def iterate_acyclic_flows(self):
         """
@@ -2206,6 +3072,7 @@ class WaterNetworkOptimizer:
         self.alpha_q = self.alpha_q_min
         self.eta_l = self.eta_l_min
         self.eta_h = self.eta_h_min
+        self.total_run = 5
 
         abs_flows = sorted(abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-4)
         m = len(abs_flows)
@@ -2861,7 +3728,13 @@ class WaterNetworkOptimizer:
     def solve_recover_model1(self, y_input, model_name="recover_wdnmodel.mod"):
         ampl = AMPL()
         # ampl.setOption('hsllib', '/usr/local/lib/libma57.so')
-        ampl.read(model_name)
+        if self.data_number==5:
+            ampl.read("recover_newyork_model.mod")
+        elif self.data_number==6:
+            ampl.read("recover_blacksburg_model.mod")
+        else:
+            ampl.read(model_name)
+
         ampl.read_data(self.data_file)
 
         for (i, j), val in y_input.items():
@@ -2876,7 +3749,6 @@ class WaterNetworkOptimizer:
         #     "warm_start_init_point=no "
         #     "halt_on_ampl_error=yes"
         # )
-
         with self.suppress_output():
             ampl.solve()
 
@@ -2892,8 +3764,12 @@ class WaterNetworkOptimizer:
     # ============================================================
     def solve_original_with_init(self, l_init, q_init, h_init):
         ampl = AMPL()
-        # ampl.setOption('hsllib', '/usr/local/lib/libma57.so')
-        ampl.read("wdnmodel.mod")
+        if self.data_number==5:
+            ampl.read("newyork_model.mod")
+        elif self.data_number==6:
+            ampl.read("blacksburg_model.mod")
+        else:
+            ampl.read("wdnmodel.mod")
         ampl.read_data(self.data_file)
 
         for (i, j), val in q_init.items():
@@ -2908,7 +3784,8 @@ class WaterNetworkOptimizer:
         # else:
         #     ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
 
-        ampl.option['solver'] = 'ipopt'
+        # ampl.option['solver'] = 'ipopt'
+        ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
         ampl.option["ipopt_options"] = (
             "outlev=0 "
             "bound_relax_factor=0 "
@@ -2929,356 +3806,389 @@ class WaterNetworkOptimizer:
 
         return ampl, solve_result, q_sol, h_sol, l_sol, cost, solve_time
 
-    """
-    Sequential Continuation Segment-Cut Heuristic
-    ==============================================
-    
-    Algorithm overview:
-      1. Rank arcs by dual variable magnitude
-      2. For each candidate arc, attempt sequential segment reduction: n → n-1 → n-2 → ...
-      3. Accept any feasible result; track cost improvement
-      4. If improved  → continue reducing the same arc
-      5. If feasible but no improvement → restart outer loop from updated structure
-      6. If infeasible → skip to next arc
-    """
-    # ──────────────────────────────────────────────────────────────────────────────
-    # Main heuristic
-    # ──────────────────────────────────────────────────────────────────────────────
-    
-    def sequential_segment_cut_heuristic(
-        self,
-        max_outer_iterations=10,
-        cost_improve_tol=1e-4,
-        max_segment_reduction_per_arc=10
-    ):
-        """
-        Sequential Continuation Segment-Cut Heuristic
-        ─────────────────────────────────────────────
-        For each candidate arc (ranked by |dual|), attempts to reduce its active
-        segment index by solving a constrained NLP.  Feasible improvements are
-        greedily accepted; the outer loop restarts whenever a feasible (even
-        non-improving) update changes the problem structure.
-        """
-        from contextlib import contextmanager
-        from amplpy import AMPL
-        
-        
-        # ──────────────────────────────────────────────────────────────────────────────
-        # Formatting helpers
-        # ──────────────────────────────────────────────────────────────────────────────
-        
-        def _hline(widths, char="─", cross="┼", left="├", right="┤"):
-            return left + cross.join(char * w for w in widths) + right
-        
-        
-        def _header_line(widths, char="─", cross="┬", left="┌", right="┐"):
-            return left + cross.join(char * w for w in widths) + right
-        
-        
-        def _footer_line(widths, char="─", cross="┴", left="└", right="┘"):
-            return left + cross.join(char * w for w in widths) + right
-        
-        
-        def _row(cells, widths):
-            parts = []
-            for cell, w in zip(cells, widths):
-                text = str(cell)
-                parts.append(" " + text.ljust(w - 2) + " ")
-            return "│" + "│".join(parts) + "│"
-        
-        
-        def _center(text, width):
-            pad = width - len(text)
-            lpad = pad // 2
-            rpad = pad - lpad
-            return " " * lpad + text + " " * rpad
-        
-        
-        def print_banner(title, width=92):
-            print("\n" + "═" * width)
-            print(_center(title, width))
-            print("═" * width)
-        
-        
-        def print_section(title, width=92):
-            print("\n" + "─" * width)
-            print(f"  {title}")
-            print("─" * width)
-        
-        
-        def print_kv_table(pairs, title=None):
-            """Print a two-column key-value table."""
-            if title:
-                print(f"\n  {title}")
-            w_key = max(len(k) for k, _ in pairs) + 2
-            w_val = max(len(str(v)) for _, v in pairs) + 2
-            widths = [w_key, w_val]
-            print("  " + _header_line(widths))
-            for k, v in pairs:
-                print("  " + _row([k, v], widths))
-            print("  " + _footer_line(widths))
-        
-        
-        def print_solve_table(rows, title=None):
-            """
-            Print the per-solve results table.
-        
-            Columns:
-              Iter | Arc | Seg | Target | Result | Old cost | New cost | Δ cost | Time(s) | Cumul(s)
-            """
-            if title:
-                print(f"\n  {title}")
-        
-            headers = [
-                "Outer", "Arc", "Seg",
-                "→Tgt", "Status",
-                "Old cost", "New cost", "Δ cost",
-                "NLP #", "Time(s)", "Cumul(s)"
-            ]
-            widths = [7, 12, 5, 5, 12, 14, 14, 14, 7, 9, 9]
-        
-            print("  " + _header_line(widths))
-            print("  │" + "│".join(_center(h, w) for h, w in zip(headers, widths)) + "│")
-            print("  " + _hline(widths))
-        
-            for r in rows:
-                cells = [
-                    str(r.get("outer", "")),
-                    str(r.get("arc", "")),
-                    str(r.get("seg", "")),
-                    str(r.get("target", "")),
-                    str(r.get("status", "")),
-                    f"{r['old_cost']:.3f}" if r.get("old_cost") is not None else "—",
-                    f"{r['new_cost']:.3f}" if r.get("new_cost") is not None else "—",
-                    f"{r['delta']:+.3f}" if r.get("delta") is not None else "—",
-                    str(r.get("nlp_num", "")),
-                    f"{r['solve_time']:.2f}" if r.get("solve_time") is not None else "—",
-                    f"{r['cumul_time']:.2f}" if r.get("cumul_time") is not None else "—",
-                ]
-                print("  " + _row(cells, widths))
-        
-            print("  " + _footer_line(widths))
-        
-        
-        def print_segment_table(seg_index, changed_arcs=None, title=None):
-            """
-            Print segment assignments for all arcs.
-            Highlights arcs whose segment changed (if changed_arcs provided).
-            """
-            if title:
-                print(f"\n  {title}")
-        
-            changed_arcs = changed_arcs or set()
-            widths = [14, 12, 8]
-            print("  " + _header_line(widths))
-            print("  │" + "│".join(_center(h, w)
-                  for h, w in zip(["Arc", "Segments", "Changed"], widths)) + "│")
-            print("  " + _hline(widths))
-        
-            for arc, segs in sorted(seg_index.items()):
-                flag = "◀ YES" if arc in changed_arcs else ""
-                cells = [str(arc), str(segs), flag]
-                print("  " + _row(cells, widths))
-        
-            print("  " + _footer_line(widths))
-        
-        
-        def print_candidate_arcs_table(sorted_arcs, dual_dict, seg_index, title=None):
-            """Print ranked candidate arcs with their dual values and current segments."""
-            if title:
-                print(f"\n  {title}")
-        
-            widths = [5, 12, 12, 10]
-            print("  " + _header_line(widths))
-            print("  │" + "│".join(_center(h, w)
-                  for h, w in zip(["Rank", "Arc", "Dual |val|", "Seg"], widths)) + "│")
-            print("  " + _hline(widths))
-        
-            for rank, arc in enumerate(sorted_arcs, 1):
-                dual_val = dual_dict.get(arc, 0.0)
-                segs     = seg_index.get(arc, [])
-                cells    = [str(rank), str(arc), f"{abs(dual_val):.3f}", str(segs)]
-                print("  " + _row(cells, widths))
-        
-            if not sorted_arcs:
-                widths_total = sum(widths) + len(widths) - 1
-                print("  │" + _center("(no candidate arcs)", widths_total) + "│")
-        
-            print("  " + _footer_line(widths))
-    
- 
-        # ── alpha breakpoints ────────────────────────────────────────────────────
+    def compute_segments(self, y_sol):
+        """Compute active segment for each arc."""
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
         NP  = len(alpha_vals)
         tol = 1e-8
-    
-        # ── global timing ────────────────────────────────────────────────────────
-        heuristic_start = time.time()
-        # heuristic_start = time.time() - self.start_time
-    
-        # ── log accumulator for the solve table ─────────────────────────────────
-        solve_log = []
-    
-        # ── NLP counter (may already be initialised on self) ────────────────────
-        if not hasattr(self, "number_of_nlp"):
-            self.number_of_nlp = 0
-    
-        # =========================================================================
-        # Helper: segment index
-        # =========================================================================
-        def compute_segment_index(y_sol):
-            """Return {arc: [segment_indices]} for every arc."""
-            seg_index = {}
-    
-            for (u, v) in self.arcs:
-                y_val           = y_sol[(u, v)]
-                active_segments = []
-    
-                for k in range(len(alpha_vals) - 1):
-                    a_high = alpha_vals[k]
-                    a_low  = alpha_vals[k + 1]
-    
-                    if (a_low + tol) < y_val < (a_high - tol):
-                        # strictly interior to segment k+1
-                        active_segments = [k + 1]
-                        break
-    
-                    elif abs(y_val - a_high) <= tol:
-                        # on upper breakpoint
-                        active_segments = [1] if k == 0 else [k, k + 1]
-                        break
-    
-                    elif abs(y_val - a_low) <= tol:
-                        # on lower breakpoint
-                        active_segments = (
-                            [k + 1] if k == len(alpha_vals) - 2
-                            else [k + 1, k + 2]
-                        )
-                        break
-    
-                # safeguard: y outside the alpha range or no match found
-                if not active_segments:
-                    if y_val > alpha_vals[0]:
-                        active_segments = [1]
-                    elif y_val < alpha_vals[-1]:
-                        active_segments = [NP - 1]
-                    else:
-                        distances = [abs(y_val - alpha_vals[k]) for k in range(NP)]
-                        idx = distances.index(min(distances))
-                        if idx == 0:
-                            active_segments = [1]
-                        elif idx == NP - 1:
-                            active_segments = [NP - 1]
-                        else:
-                            active_segments = [idx, idx + 1]
-    
-                seg_index[(u, v)] = active_segments
-    
-            return seg_index
-    
-        # =========================================================================
-        # Helper: true piecewise-linear cost
-        # =========================================================================
-        def compute_true_cost(y_sol, seg_sol):
-            return sum(
-                self.L[(i, j)] * (
-                    self.slope[seg_sol[(i, j)][0]] * y_sol[(i, j)]
-                    + self.intercept[seg_sol[(i, j)][0]]
-                )
-                for (i, j) in self.arcs
+
+        seg = {}
+        for (u, v) in self.arcs:
+            y = y_sol[(u, v)]
+            active = []
+            for k in range(NP - 1):
+                hi = alpha_vals[k]
+                lo = alpha_vals[k + 1]
+                if (lo + tol) < y < (hi - tol):
+                    active = [k + 1]
+                    break
+                elif abs(y - hi) <= tol:
+                    active = [1] if k == 0 else [k, k + 1]
+                    break
+                elif abs(y - lo) <= tol:
+                    active = [NP - 1] if k == NP - 2 else [k + 1, k + 2]
+                    break
+            if not active:
+                if y > alpha_vals[0]:
+                    active = [1]
+                elif y < alpha_vals[-1]:
+                    active = [NP - 1]
+                else:
+                    idx = min(range(NP), key=lambda k: abs(y - alpha_vals[k]))
+                    active = [1] if idx == 0 else [NP - 1] if idx == NP - 1 else [idx, idx + 1]
+            seg[(u, v)] = active
+        return seg
+
+    def solve_nlp_fresh(self, target_arc, target_seg, init_y, init_q, init_h, init_z, current_seg_index):
+        cur_segs = current_seg_index
+
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP  = len(alpha_vals)
+        tol = 1e-8
+
+        ampl = AMPL()
+        ampl.read(
+            {5: "newyork_epigraph_model.mod", 6: "blacksburg_epigraph_model.mod"}.get(
+                self.data_number, "exact_reduced_wdn.mod"
             )
+        )
+        ampl.read_data(self.data_file)
+        # ampl.option["solver"] = "ipopt"
+        ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
 
-        # =========================================================================
-        # Helper: warm-start and solve a single NLP
-        # =========================================================================
-        def build_and_solve_nlp(i, j, target_seg):
-            """
-            Construct the AMPL model with current warm-start values and a
-            segment-cut constraint on arc (i,j), then solve with IPOPT.
 
-            Returns (ampl_instance, solve_result, solve_time)
-            """
-            ampl = AMPL()
-            ampl.reset()
+        ampl.set_option(
+            "ipopt_options",
+            f"outlev=0 bound_relax_factor=0 warm_start_init_point=yes" # bound_push = {self.bound_push} bound_frac = {self.bound_frac} ",
+        )
+        ampl.option["presolve_eps"] = "6.82e-14"
 
-            # load model
-            model_map = {5: "newyork_model.mod", 6: "blacksburg_model.mod"}
-            ampl.read(model_map.get(self.data_number, "exact_reduced_wdn.mod"))
-            ampl.read_data(self.data_file)
+        # segment neighbourhood constraints
+        constraints_block = []
+        for (u, v) in self.arcs:
+            s_cur = cur_segs[(u, v)][0]
+            if (u, v) == target_arc:
+                lb = self.alpha[target_seg]
+                # ub = alpha_vals[target_seg - 1]
+                ub = self.alpha[1]
 
-            # warm-start primal variables
-            for (u, v), val in self.y.items():
-                ampl.eval(f"let y[{u},{v}] := {val};")
-    
-            for (u, v), val in self.q.items():
-                ampl.eval(f"let q[{u},{v}] := {val};")
-                if self.data_number == 5:
-                    ampl.eval(f"let q1[{u},{v}] := {self.q1[u, v]};")
-                    ampl.eval(f"let q2[{u},{v}] := {self.q2[u, v]};")
-    
-            for u, val in self.h.items():
-                ampl.eval(f"let h[{u}] := {val};")
-    
-            for (u, v), val in self.z.items():
-                ampl.eval(f"let z[{u},{v}] := {val};")
+                ampl.var['y'][u,v] = lb/2 
+                # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
+            elif s_cur == 1:
+                lb = self.alpha[3];      ub = self.alpha[1]
+                # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
+            elif s_cur == NP - 1:
+                lb = self.alpha[NP]; ub = self.alpha[NP - 2]
+                # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+            else:
+                lb = self.alpha[s_cur + 2]
+                ub = self.alpha[s_cur - 1]
+                # print(f"segement[{u},{v}]:{s_cur}, alpha[{s_cur+2 if s_cur+1<len(alpha_vals) else NP}] <= y[{u},{v}] <= alpha[{s_cur-1 if s_cur+1>=2 else 1}]")
 
-            # warm-start duals
-            # current_duals = {
-            #     name: con.get_values()
-            #     for name, con in ampl.get_constraints()
-            # }
-            # for con_name, dual_values in self.all_duals.items():
-            #     if con_name in current_duals:
-            #         ampl.get_constraint(con_name).set_values(dual_values)
+            constraints_block.append(f"""
+                subject to seg_nbhd_{u}_{v}:
+                    {lb} <= y[{u},{v}] <= {ub};
+            """)
+            # print(f"segement[{u},{v}]:{s_cur}, alpha{}<=y[{u},{v}]<={ub}")
+        ampl.eval("\n".join(constraints_block))
 
-            # segment-cut constraint
-            ampl.eval(f"""
-                s.t. seg_cut_lower:
-                      # {self.y[i,j]} <= y[{i},{j}];
-                    alpha[{target_seg}] <= y[{i},{j}];
+        for (i, j), val in init_q.items():  ampl.var["q"][i, j] = val
+        for i,      val in init_h.items():  ampl.var["h"][i]    = val
+        # for (i, j), val in init_y.items():  ampl.var["y"][i, j] = val
+        for (i, j), val in init_z.items():  ampl.var["z"][i, j] = val
+
+        for (i,j) in self.arcs:
+            if (i,j)!=(u,v):
+                ampl.var['y'][i,j] = init_y[i,j] 
+
+        try:
+            for name, dual_values in self.all_duals.items():
+                ampl.get_constraint(name).set_values(dual_values)
+        except Exception:
+            pass
+
+        with self.suppress_output():
+            ampl.solve()
+
+        # self.all_duals = {n: c.getValues() for n, c in ampl.get_constraints()}
+
+        return (
+            ampl,
+            ampl.get_value("solve_result"),
+            ampl.get_value("_solve_elapsed_time"),
+            ampl.getObjective("total_cost").value(),
+            {v: ampl.getVariable(v).getValues().to_dict() for v in ("y", "z", "q", "h")},
+        )
+ 
+    def solve_nlp_PR(self,
+        target_arc,
+        target_seg,
+        init_y,
+        init_q,
+        init_h,
+        init_z,
+        cur_segs,
+    ):
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP  = len(alpha_vals)
+        tol = 1e-8
+
+
+        ampl = AMPL()
+        ampl.read(
+            {5: "newyork_model.mod", 6: "blacksburg_model.mod"}.get(
+                self.data_number, "exact_reduced_wdn.mod"
+            )
+        )
+        ampl.read_data(self.data_file)
+        ampl.option["solver"] = "ipopt"
+        ampl.set_option(
+            "ipopt_options",
+            "outlev=0 bound_relax_factor=0 warm_start_init_point=yes max_iter=3000",
+        )
+        ampl.option["presolve_eps"] = "6.82e-14"
+
+        # segment neighbourhood constraints
+        constraints_block = []
+        for (u, v) in self.arcs:
+            s_cur = cur_segs[(u, v)][0]
+            if (u, v) != target_arc:
+                if s_cur == 1:
+                    lb = alpha_vals[2];      ub = alpha_vals[0]
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
+                elif s_cur == NP - 1:
+                    lb = alpha_vals[NP - 1]; ub = alpha_vals[NP - 3]
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+                else:
+                    lb = alpha_vals[s_cur + 1] if s_cur + 1 < len(alpha_vals) else alpha_vals[-1]
+                    ub = alpha_vals[s_cur - 2] if s_cur >= 2 else alpha_vals[0]
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{s_cur+2 if s_cur+1<len(alpha_vals) else NP}] <= y[{u},{v}] <= alpha[{s_cur-1 if s_cur+1>=2 else 1}]")
+            else:
+                (u,v) = target_arc
+                if 2<=target_seg<=NP-2:
+                    # Force y into the target segment's interval.
+                    # alpha is decreasing: alpha[target_seg-1] > alpha[target_seg]
+                    lb = alpha_vals[target_seg]
+                    ub = alpha_vals[target_seg-1]
+                elif target_seg == 1:
+                    # First segment: only one neighbour above, so open up to
+                    # alpha[0] on the upper side and alpha[2] on the lower.
+                    lb = alpha_vals[1]
+                    ub = alpha_vals[0]
+                elif target_seg == NP - 1:
+                    # Last segment: only one neighbour below.
+                    lb = alpha_vals[NP-1]
+                    ub = alpha_vals[NP - 2]
+            constraints_block.append(f"""
+                subject to seg_nbhd_{u}_{v}:
+                    {lb} <= y[{u},{v}] <= {ub};
             """)
 
-            # solver options
-            ampl.option["solver"] = "ipopt"
-            ampl.set_option(
-                "ipopt_options",
-                "outlev=0 bound_relax_factor=0 warm_start_init_point=yes warm_start_bound_push=1e-9 warm_start_mult_bound_push=1e-9"
+
+
+        # constraints_block.append(f"""
+        #     subject to seg_nbhd_{u}_{v}:
+        #         {lb} <= y[{u},{v}] <= {ub};
+        # """)
+
+            # print(f"segement[{u},{v}]:{s_cur}, alpha{}<=y[{u},{v}]<={ub}")
+        ampl.eval("\n".join(constraints_block))
+
+        for (i, j), val in init_q.items():  ampl.var["q"][i, j] = val
+        for i,      val in init_h.items():  ampl.var["h"][i]    = val
+        for (i, j), val in init_y.items():  ampl.var["y"][i, j] = val
+        for (i, j), val in init_z.items():  ampl.var["z"][i, j] = val
+
+        try:
+            for name, dual_values in self.all_duals.items():
+                ampl.get_constraint(name).set_values(dual_values)
+        except Exception:
+            pass
+
+        with self.suppress_output():
+            ampl.solve()
+
+        # self.all_duals = {n: c.getValues() for n, c in ampl.get_constraints()}
+
+        return (
+            ampl,
+            ampl.get_value("solve_result"),
+            ampl.get_value("_solve_elapsed_time"),
+            ampl.getObjective("total_cost").value(),
+            {v: ampl.getVariable(v).getValues().to_dict() for v in ("y", "z", "q", "h")},
+        )
+
+
+    def path_relinking(self, S_new, S_prev, depth=0, max_depth=5, cost_improve_tol=1e-4):
+        indent = "  " * depth
+
+        print(f"\n{indent}{'─'*65}")
+        print(f"{indent}PATH-RELINKING  depth={depth}")
+        print(f"{indent}  init  (S_new)  cost = {S_new['cost']:,.6f}")
+        print(f"{indent}  guide (S_prev) cost = {S_prev['cost']:,.6f}")
+        print(f"{indent}{'─'*65}")
+
+        # arcs where the two solutions differ
+        differing_arcs = [
+            arc for arc in self.arcs
+            if S_new["seg"][arc][0] != S_prev["seg"][arc][0]
+        ]
+
+        if not differing_arcs:
+            print(f"{indent}  No differing arcs — skipping PR.")
+            return S_new
+
+        print(f"{indent}  {len(differing_arcs)} differing arc(s): "
+              f"{[str(a) for a in differing_arcs]}")
+
+        # rank by |dual| so most impactful arc is walked first
+        dual_dict = {}
+        for name, vals in self.all_duals.items():
+            if name == "con2":
+                dual_dict = {
+                    a: v for a, v in vals.to_dict().items()
+                    if a in differing_arcs
+                }
+                break
+
+        ranked_arcs = sorted(
+            differing_arcs,
+            key=lambda a: abs(dual_dict.get(a, 0.0)),
+            reverse=True,
+        )
+
+        # path state
+        path_current = copy.deepcopy(S_new)
+        best_on_path = copy.deepcopy(S_new)
+        pr_rows      = []
+
+        for step, arc in enumerate(ranked_arcs, 1):
+            i, j      = arc
+            guide_seg = S_prev["seg"][arc][0]   # target: revert to S_prev's segment
+            from_seg  = path_current["seg"][arc][0]
+
+            self.number_of_nlp += 1
+            ampl, status, stime, obj_val, vars_new = self.solve_nlp_PR(
+                target_arc        = arc,
+                target_seg        = guide_seg,
+                init_y            = path_current["y"],
+                init_q            = path_current["q"],
+                init_h            = path_current["h"],
+                init_z            = path_current["z"],
+                cur_segs = path_current["seg"],
             )
-            ampl.option["presolve_eps"] = "6.82e-14"
-            ampl.option["presolve"]     = 1
 
-            with self.suppress_output():
-                ampl.solve()
-            self.all_duals = {}
-            for con_name, con in ampl.get_constraints():
-                self.all_duals[con_name] = con.getValues()
+            cumul = time.time() - self.start_time
 
-            solve_time = ampl.get_value("_solve_elapsed_time")
+            if status == "solved":
+                seg_new  = self.compute_segments(vars_new["y"])
+                new_cost = obj_val
+                improved = new_cost < best_on_path["cost"] - cost_improve_tol
+            else:
+                # seg_new  = path_current["seg"]
+                new_cost = None
+                improved = False
 
-            q = ampl.getVariable("q").getValues().to_dict()
-            h = ampl.getVariable("h").getValues().to_dict()
-            y = ampl.getVariable("y").getValues().to_dict()
-            z = ampl.getVariable("z").getValues().to_dict()
-            print("\n-------------------------------- Solving Recover Model --------------------------")
+            pr_rows.append([
+                self.number_of_nlp,
+                f"({i},{j})",
+                f"{from_seg} → {guide_seg}",
+                f"{path_current['cost']:,.2f}",
+                f"{new_cost:,.2f}" if new_cost else "—",
+                f"{stime:.2f}s",
+                status,
+                "✓ Yes" if improved else "✗ No",
+                f"{cumul:.2f}s",
+            ])
 
-            rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(y)
-            print(rec_result)
-            print(recovered_cost)
+            self.print_table(
+                ["NLP", "Arc", "Seg Move", "Current", "New",
+                 "Time", "Status", "Improved", "Cumul"],
+                pr_rows,
+                title=f"{indent}  PR step {step}/{len(ranked_arcs)}",
+            )
 
-            print("\n-------------------- Solving Original Model with Initialize ---------------------")
-            orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, q, h)
+            if status != "solved":
+                # infeasible: skip this arc, keep walking
+                continue
+    
+            # advance path to this new position
+            # path_current = {
+            #     "y":    vars_new["y"],
+            #     "q":    vars_new["q"],
+            #     "h":    vars_new["h"],
+            #     "z":    vars_new["z"],
+            #     "seg":  seg_new,
+            #     "cost": new_cost,
+            # }
 
-            print(orig_result, final_cost)
+            if improved:
+                # advance path to this new position
+                path_cur = {
+                    "y":    vars_new["y"],
+                    "q":    vars_new["q"],
+                    "h":    vars_new["h"],
+                    "z":    vars_new["z"],
+                    "seg":  seg_new,
+                    "cost": new_cost,
+                }
+                self.seg_index    = copy.deepcopy(seg_new)
+                self.y            = vars_new["y"]
+                self.z            = vars_new["z"]
+                self.q            = vars_new["q"]
+                self.h            = vars_new["h"]
+                self.current_cost = new_cost
 
-            return ampl, ampl.solve_result, solve_time
+                # print(f"\n{indent}  ★ PR improvement: "
+                #       f"{best_on_path['cost']:,.6f} → {new_cost:,.6f}")
+                best_on_path = copy.deepcopy(path_cur)
+                # S_prev = copy.deepcopy(S_new)
 
-        # =========================================================================
-        # Initialisation
-        # =========================================================================
-        self.seg_index   = compute_segment_index(self.y)
-        self.current_cost = compute_true_cost(self.y, self.seg_index)
+        # ── recurse if path found a better solution ──────────────────
+        # if (
+        #     best_on_path["cost"] < S_new["cost"] - cost_improve_tol
+        # ):
+                S_prev = copy.deepcopy(S_new)
+                print(f"\n{indent}  ↺ Path improved — recursing "
+                      f"(depth {depth} → {depth+1})")
+                print(f"{indent}    new init  cost = {best_on_path['cost']:,.6f}")
+                print(f"{indent}    new guide cost = {S_prev['cost']:,.6f}")
 
-        best_solution = {
+                best_on_path = self.path_relinking(
+                    S_new    = best_on_path,
+                    S_prev   = S_prev,
+                    depth    = depth + 1,
+                    max_depth= max_depth,
+                )
+                break
+
+        print(f"\n{indent}PATH-RELINKING DONE | "
+              f"best = {best_on_path['cost']:,.6f}")
+        return best_on_path
+
+    def print_table(self, headers, rows, title=None):
+        widths = [
+            max(len(h), max((len(str(r[i])) for r in rows), default=0)) + 2
+            for i, h in enumerate(headers)
+        ]
+        sep = "+" + "+".join("-" * w for w in widths) + "+"
+        fmt = "|" + "|".join(f" {{:<{w-1}}}" for w in widths) + "|"
+        if title:
+            print(f"\n  {title}")
+        print(sep)
+        print(fmt.format(*headers))
+        print(sep)
+        for row in rows:
+            print(fmt.format(*[str(c) for c in row]))
+        print(sep)
+
+    def segment_cut_heuristic(self, cost_improve_tol=1e-4):
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        NP  = len(alpha_vals)
+        tol = 1e-8
+        t0             = time.time()
+        self.seg_index = self.compute_segments(self.y)
+        best = {
             "q":    copy.deepcopy(self.q),
             "h":    copy.deepcopy(self.h),
             "y":    copy.deepcopy(self.y),
@@ -3286,197 +4196,183 @@ class WaterNetworkOptimizer:
             "seg":  copy.deepcopy(self.seg_index),
             "cost": self.current_cost,
         }
-
-        print_banner("SEQUENTIAL CONTINUATION SEGMENT-CUT HEURISTIC")
-        print_kv_table([
-            ("Initial cost",      f"{self.current_cost:.3f}"),
-            ("Max outer iters",   str(max_outer_iterations)),
-            ("Improve tolerance", str(cost_improve_tol)),
-            ("Max seg reductions", str(max_segment_reduction_per_arc)),
-            # ("Alpha breakpoints", (alpha_vals)),
-            ("Total arcs",        str(len(list(self.arcs)))),
-        ], title="Configuration")
-
-        # print_segment_table(self.seg_index, title="Initial segment assignments")
-
-        outer_it             = 0
-        restart_global_search = True
-
-        # =========================================================================
+        # every time we find an improved solution it is appended here;
+        # the previous entry becomes the PR guide for the next relinking
+        improvement_history = [copy.deepcopy(best)]
+        print("\n" + "=" * 75)
+        # print(f"  SEGMENT-CUT")
+        print(f"  Initial cost = {self.current_cost:,.6f}")
+        print("=" * 75)
+        q = self.q 
+        h = self.h 
+        y = self.y
+        z = self.z
+        seg_index = self.seg_index
+        # ================================================================
         # OUTER LOOP
-        # =========================================================================
-        while restart_global_search and outer_it < max_outer_iterations:
-            outer_it             += 1
-            restart_global_search = False
-
-            print_section(f"OUTER ITERATION {outer_it}")
-
-            # ── candidate arcs (max segment ≥ 2) ─────────────────────────────────
+        # ================================================================
+        outer_it = 0
+        restart  = True
+        while restart:
+            outer_it += 1
+            restart   = False
+            print(f"\nOUTER ITERATION {outer_it}")
+            print("-" * 75)
+            # candidate arcs (not yet at cheapest segment)
+            # sorted_all_arcs = [
+            #     a for a in self.arcs
+            #     if a not in self.fix_arc_set and a not in self.visited_arc
+            # ] 
             candidate_arcs = [
                 (i, j) for (i, j) in self.sorted_arcs
-                if max(self.seg_index[i, j]) >= 2 
-                if (i,j) not in self.visited_arc_reverse
+                if max(self.seg_index[(i, j)]) >= 2
+                if (i,j) not in self.visited_arc
             ]
-
-            # ── extract duals for candidate arcs ─────────────────────────────────
+            # dual ranking
             dual_dict = {}
-            
-            for con_name, dual_values in self.all_duals.items():
-                if con_name == "con2":
-                    tmp       = dual_values.to_dict()
-                    dual_dict = {arc: val for arc, val in tmp.items()
-                                 if arc in candidate_arcs}
-                    break
-
-            sorted_arcs = sorted(
-                dual_dict, key=lambda a: abs(dual_dict[a]), reverse=False
-            )
-
-            print_candidate_arcs_table(
-                sorted_arcs, dual_dict, self.seg_index,
-                title=f"Candidate arcs (outer iter {outer_it})"
-            )
-
-            # ── iterate over arcs ─────────────────────────────────────────────────
-            for (i, j) in sorted_arcs:
-
-                print_section(f"Arc ({i},{j})  —  initial seg = {self.seg_index[(i,j)]}")
-
-                self.visited_arc_reverse.append((i, j))
-                current_seg       = self.seg_index[(i, j)][0]
-                reduction_counter = 0
-
-                if current_seg <= 1:
-                    print("  ⊘  Already at minimum segment — skipping.")
-                    continue
-
-                # ── CONTINUATION LOOP ─────────────────────────────────────────────
-                # while (current_seg > 1 ):
-                # while (current_seg > 1 and reduction_counter < max_segment_reduction_per_arc):
-
-                target_seg        = current_seg - 1
-                reduction_counter += 1
-                iter_start         = time.time()
-
-                # ── solve NLP ─────────────────────────────────────────────────
-                ampl_inst, solve_result, solve_time = build_and_solve_nlp(i, j, target_seg)
-                self.number_of_nlp += 1
-                # cumul_time          = time.time() - heuristic_start
-                cumul_time          = time.time() - self.start_time
-
-                # ── parse solution ────────────────────────────────────────────
-                if solve_result == "solved":
-                    y_new    = ampl_inst.getVariable("y").getValues().to_dict()
-                    q_new    = ampl_inst.getVariable("q").getValues().to_dict()
-                    h_new    = ampl_inst.getVariable("h").getValues().to_dict()
-                    z_new    = ampl_inst.getVariable("z").getValues().to_dict()
-                    seg_new  = compute_segment_index(y_new)
-                    new_cost = compute_true_cost(y_new, seg_new)
-                    achieved = seg_new[(i, j)][0]
-                    delta    = new_cost - self.current_cost
-                    status   = "IMPROVED" if delta < -cost_improve_tol else "feasible"
-                else:
-                    new_cost = None
-                    achieved = None
-                    delta    = None
-                    status   = "infeasible"
-
-                # ── log row ───────────────────────────────────────────────────
-                solve_log.append({
-                    "outer":       outer_it,
-                    "arc":         f"({i},{j})",
-                    "seg":         current_seg,
-                    "target":      target_seg,
-                    "status":      status,
-                    "old_cost":    self.current_cost,
-                    "new_cost":    new_cost,
-                    "delta":       delta,
-                    "nlp_num":     self.number_of_nlp,
-                    "solve_time":  solve_time,
-                    "cumul_time":  cumul_time,
-                })
-
-                # ── display running solve table ───────────────────────────────
-                print_solve_table([solve_log[-1]], title="  Latest solve")
-
-                # ── infeasible: stop this arc ─────────────────────────────────
-                if solve_result != "solved":
-                    print("  ✗  NLP infeasible — moving to next arc.")
-                    break
-
-                # ── always accept feasible structure ─────────────────────────
-                prev_seg_index   = copy.deepcopy(self.seg_index)
-                self.ampl        = ampl_inst
-                self.y           = copy.deepcopy(y_new)
-                self.q           = copy.deepcopy(q_new)
-                self.h           = copy.deepcopy(h_new)
-                self.z           = copy.deepcopy(z_new)
-                self.seg_index   = copy.deepcopy(seg_new)
-                self.network_graph = self.generate_random_acyclic_from_solution(q_new)
-
-                # show what changed in segments
-                changed_arcs = {
-                    arc for arc in self.arcs
-                    if self.seg_index[arc] != prev_seg_index[arc]
-                }
-                # print_segment_table(
-                #     self.seg_index,
-                #     changed_arcs=changed_arcs,
-                #     title=f"  Updated segments after seg {current_seg}→{target_seg}"
-                # )
-
-                # ── improved ─────────────────────────────────────────────────
-                if delta < -cost_improve_tol:
-                    print(f"  ★  IMPROVEMENT  {self.current_cost:.6f} → {new_cost:.6f}"
-                          f"  (Δ = {delta:+.6f})")
-                    self.current_cost = new_cost
-                    best_solution = {
-                        "q":    copy.deepcopy(q_new),
-                        "h":    copy.deepcopy(h_new),
-                        "y":    copy.deepcopy(y_new),
-                        "z":    copy.deepcopy(z_new),
-                        "seg":  copy.deepcopy(seg_new),
-                        "cost": new_cost,
+            for name, vals in self.all_duals.items():
+                if name == "con2":
+                    dual_dict = {
+                        a: v for a, v in vals.to_dict().items()
+                        if a in candidate_arcs
                     }
-                    current_seg = achieved    # continue on same arc
-                    restart_global_search = True
-                    # continue
-                    # break
-
-                # ── feasible but not improving ────────────────────────────────
-                # print("  ↺  Feasible but no improvement — restarting outer loop.")
-                # break
-
-                # ── restart outer loop if flagged ─────────────────────────────────
-                if restart_global_search:
                     break
+            sorted_arcs = sorted(
+                dual_dict, key=lambda a: abs(dual_dict[a]), reverse=True
+            )
+            self.print_table(
+                ["Rank", "Arc", "|Dual|", "Segments"],
+                [[r + 1, str(a), f"{abs(dual_dict[a]):.4e}", str(self.seg_index[a])]
+                 for r, a in enumerate(sorted_arcs)],
+                title="Candidate Arcs",
+            )
+            # ============================================================
+            # ARC LOOP
+            # ============================================================
+            for (i, j) in sorted_arcs:
+                self.visited_arc.append((i, j))
+                cur_seg = self.seg_index[(i, j)][0]
+                if cur_seg <= 1:
+                    continue
+                print(f"\nArc ({i},{j}) | segments = {self.seg_index[(i,j)]}")
+                arc_rows   = []
+                while cur_seg > 1:
+                    tgt_seg     = cur_seg 
+                    # ── segment-cut NLP ───────────────────────────────────
+                    ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,self.y,self.q,self.h,self.z,self.seg_index)
+                    # ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,y,q,h,z,seg_index)
+                    # seg_index    = copy.deepcopy(seg_new)
+                    # y            = vars_new["y"]
+                    # z            = vars_new["z"]
+                    # q            = vars_new["q"]
+                    # h            = vars_new["h"]
 
-        # =========================================================================
-        # Summary
-        # =========================================================================
-        total_time = time.time() - heuristic_start
+                    # rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(vars_new["y"])
+                    #
+                    # orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, vars_new["q"], vars_new["h"])
 
-        print_banner("FINAL RESULTS")
-        print_kv_table([
-            ("Best cost",         f"{best_solution['cost']:.3f}"),
-            ("Initial cost",      f"{solve_log[0]['old_cost']:.3f}" if solve_log else "—"),
-            ("Total improvement", f"{best_solution['cost'] - (solve_log[0]['old_cost'] if solve_log else best_solution['cost']):+.6f}"),
-            ("Outer iterations",  str(outer_it)),
-            ("NLP solves",        str(self.number_of_nlp)),
-            ("Total wall time",   f"{total_time:.2f}s"),
-        ], title="Summary statistics")
+                    self.number_of_nlp += 1
+                    cumul = time.time() - self.start_time
+                    if status == "solved":
+                        seg_new  = self.compute_segments(vars_new["y"])
+                        # ── update self state ─────────────────────────────────
+                        seg_index    = copy.deepcopy(seg_new)
+                        y            = vars_new["y"]
+                        z            = vars_new["z"]
+                        q            = vars_new["q"]
+                        h            = vars_new["h"]
+                        current_cost = obj_val
+                        # cur_seg = seg_new[(i, j)][0]
+                        # current_cost = final_cost
+                        new_cost = current_cost
+                        improved = new_cost < self.current_cost - cost_improve_tol
+                    else:
+                        improved = False
+                        new_cost = None
+                        # cur_seg = self.seg_index[(i, j)][0]-1
+                        # print(f"seg_new[{i},{j}]=",seg_new[i,j])
+                    arc_rows.append([
+                        self.number_of_nlp,
+                        f"({i},{j})",
+                        f"{self.current_cost:,.2f}",
+                        f"{new_cost:,.2f}" if new_cost else "—",
+                        f"{stime:.2f}s",
+                        status,
+                        "✓ Yes" if improved else "✗ No",
+                        f"{cumul:.2f}s",
+                    ])
+                    self.print_table(
+                        ["NLP", "Arc", "Current", "New", "Time",
+                         "Status", "Improved", "Cumul. Time"],
+                        arc_rows,
+                    )
+                    if status != "solved":
+                        break
+                    if improved:
+                        # ─────────────────────────────────────────────────
+                        # BUILD S_new AND RETRIEVE S_prev (previous best)
+                        # ─────────────────────────────────────────────────
+                        S_new = {
+                            "y":    copy.deepcopy(y),
+                            "q":    copy.deepcopy(q),
+                            "h":    copy.deepcopy(h),
+                            "z":    copy.deepcopy(z),
+                            "seg":  copy.deepcopy(seg_index),
+                            "cost": new_cost,
+                        }
+                        S_prev = improvement_history[-1]   # most recent previous best
+                        print(f"\n⭐ IMPROVED!  {S_prev['cost']:,.6f} → {new_cost:,.6f}")
+                        # ── update global state ───────────────────────────
+                        self.ampl = ampl
+                        self.y            = copy.deepcopy(y)
+                        self.q            = copy.deepcopy(q)
+                        self.h            = copy.deepcopy(h)
+                        self.z            = copy.deepcopy(z)
+                        self.seg_index    = copy.deepcopy(seg_index)
+                        self.current_cost = current_cost
+                        # print(f"seg_index[{i},{j}]:{self.seg_index[i,j]}")
+                        self.all_duals = {n: c.getValues() for n, c in self.ampl.get_constraints()}
+                        # ── log in improvement history ────────────────────
+                        improvement_history.append(copy.deepcopy(S_new))
+                        cur_seg = self.seg_index[(i, j)][0]
+                        restart = True
+                        # ────────────────────────────────────────────────────
+                        # LAUNCH LOCAL IMPROVEMENT FROM NEW SOLUTION
+                        # ────────────────────────────────────────────────────
+                        print("\nLaunching local improvement search...")
+                        self._start_local_improvement_after_seg_index_red(
+                            self.y,      # ← NEW solution
+                            self.z,
+                            self.q,
+                            self.h
+                        )
+                        print(f"\n  ↺ Restarting outer loop | "
+                              f"cost = {self.current_cost:,.6f}")
 
-        # if solve_log:
-        #     print_solve_table(solve_log, title="Complete solve history")
-
-        # print_segment_table(best_solution["seg"], title="Best solution — segment assignments")
-
-        return (
-            best_solution["q"],
-            best_solution["h"],
-            best_solution["y"],
-            best_solution["z"],
-        )
+                        # pr_best = self.path_relinking(
+                        #     S_new  = S_new,
+                        #     S_prev = S_prev,
+                        #     depth  = 0,
+                        # )
+                        # if pr_best["cost"] < S_new["cost"] - cost_improve_tol:
+                        #     print(f"\n  PR beat segment-cut: "
+                        #           f"{S_new['cost']:,.6f} → {pr_best['cost']:,.6f}")
+                        #                         # ── update global state ───────────────────────────
+                        #     self.y            = copy.deepcopy(pr_best["y"])
+                        #     self.q            = copy.deepcopy(pr_best["q"])
+                        #     self.h            = copy.deepcopy(pr_best["h"])
+                        #     self.z            = copy.deepcopy(pr_best["z"])
+                        #     self.seg_index    = copy.deepcopy(pr_best["seg"])
+                        #     self.current_cost = pr_best["cost"]
+                        # else:
+                        #     print(f"\n  Segment-cut result kept: {S_new['cost']:,.6f}")
+                        # break
+                    else:
+                        break
+                    print(f"seg_new[{i},{j}]=",self.seg_index[i,j])
+                if restart:
+                    break
+        return self.q, self.h, self.y, self.z
 
     # ============================================================
     # 🔷 ORIGINAL → REDUCED
@@ -3485,32 +4381,39 @@ class WaterNetworkOptimizer:
         # ============================================================
         # Compute alpha values
         # ============================================================
-        alpha = {
-            k: self.omega / (self.R[k]**1.852 * self.d[k]**4.87)
-            for k in self.pipes
-        }
+        if self.data_number==5:
+            alpha = {
+                k: self.omega / (100**1.852 * self.d[k]**4.87)
+                for k in self.pipes
+            }
+        else:
+            alpha = {
+                k: self.omega / (self.R[k]**1.852 * self.d[k]**4.87)
+                for k in self.pipes
+            }
+
         # ============================================================
         # Segment information
         # ============================================================
-        NP = len(list(self.pipes))
-        # Segments between consecutive pipe types
-        segs = list(range(1, NP))
-        slope = {}
-        intercept = {}
+        # NP = len(list(self.pipes))
+        # # Segments between consecutive pipe types
+        # segs = list(range(1, NP))
+        # slope = {}
+        # intercept = {}
         # ============================================================
         # Compute piecewise linear coefficients
         # ============================================================
-        for s in segs:
-            alpha1 = alpha[s]
-            alpha2 = alpha[s + 1]
-            C1 = self.C[s]
-            C2 = self.C[s + 1]
-            # ---- slope ----
-            slope[s] = (C1 - C2) / (alpha1 - alpha2)
-            # ---- intercept ----
-            intercept[s] = (
-                alpha1 * C2 - alpha2 * C1
-            ) / (alpha1 - alpha2)
+        # for s in segs:
+        #     alpha1 = alpha[s]
+        #     alpha2 = alpha[s + 1]
+        #     C1 = self.C[s]
+        #     C2 = self.C[s + 1]
+        #     # ---- slope ----
+        #     slope[s] = (C1 - C2) / (alpha1 - alpha2)
+        #     # ---- intercept ----
+        #     intercept[s] = (
+        #         alpha1 * C2 - alpha2 * C1
+        #     ) / (alpha1 - alpha2)
 
         # print("slope:", slope)
         # print("intercept:", intercept)
@@ -3521,21 +4424,23 @@ class WaterNetworkOptimizer:
         z = {}
         for (i, j) in self.arcs:
             # ---- compute y ----
+            # y[i,j] = (h[i]-h[j])/(self.L[i,j]*q[i,j]*np.abs(q[i,j])**0.852)
+            # y[i,j] = (h[i]-h[j])*(q[i,j]**2 + 0.426*self.eps[i,j]**2)/(self.L[i,j]*q[i,j]**3 * (q[i,j]**2 + self.eps[i,j]**2)**0.426)
             y[(i, j)] = sum(
                 alpha[k] * l[(i, j, k)] / self.L[i, j]
                 for k in self.pipes
             )
             # ---- compute z (epigraph value) ----
-            s = self.find_seg(y[(i,j)])[0]
-            z[(i, j)] = (
-                (
-                    slope[s] * y[(i, j)]
-                    + intercept[s]
-                ) * self.L[i, j]
-            )
+            # s = self.find_seg(y[(i,j)])[0]
+            z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+            # z[(i, j)] = (
+            #     (
+            #         slope[s] * y[(i, j)]
+            #         + intercept[s]
+            #     ) * self.L[i, j]
+            # )
         return y, z
 
-    
     def find_seg(self, yv):
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
     
@@ -3609,12 +4514,17 @@ class WaterNetworkOptimizer:
             )
         return total
 
-    def solve_exact_reduced_model(self):
+    def solve_exact_reduced_model1(self):
         # ============================================================
         # Initialize AMPL model
         # ============================================================
         ampl = AMPL()
-        ampl.read("exact_reduced_wdn.mod")
+        if self.data_number == 5:
+            ampl.read("newyork_epigraph_model.mod")
+        elif self.data_number==6:
+            ampl.read("blacksburg_epigraph_model.mod")
+        else:
+            ampl.read("exact_reduced_wdn.mod")
         ampl.read_data(self.data_file)
         # ============================================================
         # Optional warm-start initialization
@@ -3630,15 +4540,146 @@ class WaterNetworkOptimizer:
         # ============================================================
         # DUAL WARM START
         # ============================================================
-        # current_duals = {
-        #     name: con.get_values()
-        #     for name, con in ampl.get_constraints()
-        # }
-        # for name, dual_values in self.all_duals.items():
-        #     if name in current_duals:
-        #         ampl.get_constraint(name).set_values(
-        #             dual_values
-        #         )
+        current_duals = {
+            name: con.get_values()
+            for name, con in ampl.get_constraints()
+        }
+        for name, dual_values in self.all_duals.items():
+            if name in current_duals:
+                ampl.get_constraint(name).set_values(
+                    dual_values
+                )
+        # ============================================================
+        # Solver selection
+        # ============================================================
+        # ampl.option["solver"] = "ipopt"
+        ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+
+        # Alternative solvers
+        # ampl.option["solver"] = "baron"
+        # ============================================================
+        # IPOPT options
+        # ============================================================
+        ampl.option["ipopt_options"] = (
+            "outlev=1 "
+            "bound_relax_factor=0 "
+            # "tol=1e-6 "
+            f"bound_push={self.bound_push} "
+            f"bound_frac={self.bound_frac} "
+            "warm_start_init_point=yes "
+            # "halt_on_ampl_error=yes "
+            # "warm_start_bound_push=1e-9 "
+            # "warm_start_mult_bound_push=1e-9 "
+        )
+        # ============================================================
+        # BARON options
+        # ============================================================
+        ampl.option["baron_options"] = (
+            "maxtime=3600 "
+            "outlev=2 "
+            "barstats "
+            "version "
+            "objbound"
+        )
+        # ============================================================
+        # Gurobi options
+        # ============================================================
+        ampl.option["gurobi_options"] = (
+            "outlev 1 "
+            "presolve 1 "
+            "timelimit 3600"
+        )
+        # ============================================================
+        # SCIP options
+        # ============================================================
+        ampl.option["scip_options"] = (
+            "outlev 1 "
+            "timelimit 3600 "
+            "lim:gap=1e-9 "
+            "chk:feastol=1e-5 "
+            "chk:feastolrel=0"
+        )
+        # ampl.eval("option presolve_eps 6.98e-11;")
+
+        ampl.eval("drop total_cost;")
+        ampl.eval("drop exact_cost;")
+        ampl.eval("param seg_index{arcs};")
+        for (i,j) in self.arcs:
+            ampl.param["seg_index"][i, j] = self.seg_index[i,j][0] 
+        ampl.eval(f"minimize objective:sum{{(i,j) in arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]);")
+        for (i,j) in self.arcs:
+            ampl.eval(f"subject to y_bound_left{i}_{j}: alpha[seg_index[{i},{j}]+1] <= y[{i},{j}];")
+            ampl.eval(f"subject to y_bound_right{i}_{j}: y[{i},{j}] <= alpha[seg_index[{i},{j}]];")
+        # ============================================================
+        # Solve optimization model
+        # ============================================================
+        ampl.solve()
+        # ============================================================
+        # Retrieve solver status
+        # ============================================================
+        solve_result = ampl.get_value("solve_result")
+        # ============================================================
+        # Retrieve solution variables
+        # ============================================================
+        q_sol = (ampl.get_variable("q").get_values().to_dict())
+        y_sol = (ampl.get_variable("y").get_values().to_dict())
+        h_sol = (ampl.get_variable("h").get_values().to_dict())
+        z_sol = (ampl.get_variable("z").get_values().to_dict())
+        # ============================================================
+        # Retrieve objective value and solve time
+        # ============================================================
+        cost = ampl.getObjective("objective").value()
+        solve_time = ampl.get_value("_solve_elapsed_time")
+        # ============================================================
+        # Return results
+        # ============================================================
+        return (
+            ampl,
+            solve_result,
+            z_sol,
+            q_sol,
+            h_sol,
+            y_sol,
+            cost,
+            solve_time,
+        )
+
+
+    def solve_exact_reduced_model(self):
+        # ============================================================
+        # Initialize AMPL model
+        # ============================================================
+        ampl = AMPL()
+        if self.data_number == 5:
+            ampl.read("newyork_epigraph_model.mod")
+        elif self.data_number==6:
+            ampl.read("blacksburg_epigraph_model.mod")
+        else:
+            ampl.read("exact_reduced_wdn.mod")
+        ampl.read_data(self.data_file)
+        # ============================================================
+        # Optional warm-start initialization
+        # ============================================================
+        for (i, j), val in self.q.items():
+            ampl.var["q"][i, j] = val
+        for i, val in self.h.items():
+            ampl.var["h"][i] = val
+        for (i, j) in self.arcs:
+            ampl.var["y"][i, j] = self.y[i,j] 
+            ampl.var["z"][i, j] = self.z[i,j] 
+
+        # ============================================================
+        # DUAL WARM START
+        # ============================================================
+        current_duals = {
+            name: con.get_values()
+            for name, con in ampl.get_constraints()
+        }
+        for name, dual_values in self.all_duals.items():
+            if name in current_duals:
+                ampl.get_constraint(name).set_values(
+                    dual_values
+                )
         # ============================================================
         # Solver selection
         # ============================================================
@@ -3817,11 +4858,10 @@ class WaterNetworkOptimizer:
 
         self.load_model()
         fix_arc_set_result = self.fix_leaf_arc_flow(self.ampl)
-        print("fix_arc_set:", fix_arc_set_result)
+        # print("fix_arc_set:", fix_arc_set_result)
 
         self.super_source_out_arc = self.fix_arc_set()
-        print("super_source_out_arc:", self.super_source_out_arc, "\n")
-
+        # print("super_source_out_arc:", self.super_source_out_arc, "\n")
 
         self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set_result)        
         self.sorted_arcs = [
@@ -3869,6 +4909,8 @@ class WaterNetworkOptimizer:
                 self.dual_dict = {node: val for node, val in dual_values.to_dict().items()}
                 break
 
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
         # ── Step 2: Build acyclic graph and initialise neighbourhood ──────────
         print("=" * 80)
         print("Improve the Initial Solution")
@@ -3897,6 +4939,8 @@ class WaterNetworkOptimizer:
         self.q_star = self.q
         self.h_star = self.h
 
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
         abs_flows = sorted(abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-4)
         m = len(abs_flows)
         self.Delta = self.alpha_q * abs_flows[m // 2]
@@ -3905,12 +4949,14 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = False
         self.local_improvement = False
         self.do_arc_reversal = True
-        self.total_run = 3
+        self.total_run = 10
 
         self._print_iteration_header(self.local_iteration)
         # self.local_solution_improvement_heuristic_new()
-        self.initialize_local_search_model()
-        self.local_solution_improvement_heuristic_fast()
+        # self.initialize_local_search_model()
+        # self.local_solution_improvement_heuristic_fast()
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
         # ── Step 3: Arc-Reversal Heuristic ────────────────────────────────────
         print("---" * 28)
         print("Reverse Arc Direction Approach")
@@ -3926,14 +4972,24 @@ class WaterNetworkOptimizer:
         # self.iterate_acyclic_flows()
         self.initialize_arc_reversal_model()
         self.iterate_acyclic_flows_fast()
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
 
         print("\n-------------- Piecewise Linear Water Distribution Network Design Model----------------")
         print("\n-------------------------------- Solving Exact Reduced Model --------------------------")
 
         self.y, self.z = self.map_original_to_reduced(self.l, self.q, self.h)
-        print(sum(self.z[i,j] for (i,j) in self.arcs))
-
-        ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
+        # print(sum(self.z[i,j] for (i,j) in self.arcs))
+        # print(self.y)
+        self.seg_index = {}
+        # descending alpha breakpoints
+        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
+        tol = 1e-8
+        for (u, v) in self.arcs:
+            y_val = self.y[u, v]
+            self.seg_index[u, v] = self.find_seg(y_val)
+        # ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
+        ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model1()
 
         print(f"Total Cost: {cost:.8f}")
         print(f"Exact model solve time: {solve_time:.4f} sec")
@@ -3949,6 +5005,7 @@ class WaterNetworkOptimizer:
         self.current_cost = cost
         self.best_solution = (self.q, self.h, self.y, self.z, self.best_cost)
         
+        # ampl.var["z"][i,j] = delta_z
         self.segs = list(self.ampl.getSet('segs'))
         self.alpha = self.ampl.get_parameter("alpha").get_values().to_dict()
         self.slope = self.ampl.getParameter('slope').to_dict()
@@ -3977,21 +5034,69 @@ class WaterNetworkOptimizer:
             y_val = self.y[(u, v)]
             self.seg_index[(u, v)] = self.find_seg(y_val)
 
-        print(self.seg_index)
+        # print(self.seg_index)
 
-        cost = self.true_cost(self.y, self.seg_index)
-        print(cost)
-        print("\n-------------------------------- Active Segment Index Reduction Based Heuristic --------------------------")
+        # cost = self.true_cost(self.y, self.seg_index)
+        # print(cost)
+
+        # Neighbourhood parameters
+        self.iteration = 1
+        self.l_points: list = []
+        self.q_points: list = []
+        self.z_star = 0.0
+        self.l_star = self.l
+        self.q_star = self.q
+        self.h_star = self.h
+
+        abs_cost = sorted(self.y[i, j] for (i, j) in self.arcs)
+        m = len(abs_cost)
+        self.Delta = self.alpha_y * abs_cost[m // 2]
+
+        self.local_iteration = 1
+        self.do_local_improvement = False
+        self.local_improvement = False
+        self.do_arc_reversal = True
+        self.total_run = 5
+        self.visited_arc_reduced: list = []
+
+        self.fail_streak = 0
+        self._print_iteration_header(self.local_iteration)
+        # self.initialize_local_search_model_reduced()
+        # self.local_solution_improvement_reduced_fast(self.y, self.z, self.q, self.h)
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
+
+        print("\n------------------ Active Segment Index Reduction Based Heuristic ------------------")
         best_global = {
             "q": q_sol.copy(), "h": h_sol.copy(),
             "y": y_sol.copy(), "z": z_sol.copy(),
             "seg": self.seg_index.copy(), "cost": self.best_cost
         }
 
+        print("Initial seg_index:", self.seg_index)
         self.iteration = 1
-        best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.sequential_segment_cut_heuristic()
+        self.visited_arc: list = []
+        best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.segment_cut_heuristic()
+        # best_global["q"],best_global["h"],best_global["y"],best_global["z"]  = self.bilevel_segment_heuristic()
 
-        #
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
+        
+        print("\n-------------------- Solving Original Model with Initialize ---------------------")
+
+        rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
+
+        orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, self.q, self.h)
+        print(f"Final cost after recovery: {final_cost:,.6f}")
+        self.number_of_nlp += 1
+
+        if final_cost <= self.total_cost:
+            self.current_cost = final_cost
+            self.l = l_new
+            self.q = q_new
+            self.h = h_new
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
         # ── Convergence Plot ──────────────────────────────────────────────────
         plt.figure()
         iters_org = list(self.Z_original.keys())
@@ -4016,18 +5121,26 @@ class WaterNetworkOptimizer:
         plt.tight_layout()
         plt.close()
 
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
         # ── Final Report ──────────────────────────────────────────────────────
         print("\n" + "=" * 80)
         print("Final Best Results")
         print("=" * 80)
         print(f"Water Network:            {self.data_list[self.data_number]}")
+
+        self.elapsed_time = time.time() - self.start_time
+
+        self.constraint_violations(self.q, self.h, self.l, self.eps)
+
         print(f"Final best objective:     {self.current_cost}")
         print(f"NLP problems solved:      {self.number_of_nlp}")
         print(f"Total iterations:         {self.iteration}")
-        self.elapsed_time = time.time() - self.start_time
         print(f"Solver time:              {self.solver_time:.2f} s")
         print(f"Total elapsed time:       {self.elapsed_time:.2f} s")
         print("=" * 80)
+        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------#
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Entry Point
@@ -4037,7 +5150,7 @@ def _select_model_file(data_number: int) -> str:
     """Return the appropriate AMPL model filename for the given network index."""
     model_map = {5: "newyork_model.mod", 6: "blacksburg_model.mod"}
     return model_map.get(data_number, "wdnmodel.mod")
-
+    # return model_map.get(data_number, "exact_reduced_wdn.mod")
 
 if __name__ == "__main__":
     data_number = int(sys.argv[1]) - 1
