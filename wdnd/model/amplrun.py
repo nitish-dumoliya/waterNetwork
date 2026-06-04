@@ -281,9 +281,9 @@ class WaterNetworkSolver:
         #     + [(k, f"{v:.8f}") for k, v in con6_gap.items()]
         # )
         # print(tabulate(table_data, headers=["Constraint ID", "Violation"], tablefmt="grid"))
+        print(f"\n{separator}")
         print(f"\nTotal absolute constraint violation: {total_absolute_constraint_violation:.2e}")
     
-        print(f"\n{separator}")
         print("HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION\n")
     
         table_data = []
@@ -307,7 +307,7 @@ class WaterNetworkSolver:
             "Absolute Diff",
             "Relative Diff",
         ]
-        print(tabulate(table_data, headers=headers, tablefmt="grid"))
+        # print(tabulate(table_data, headers=headers, tablefmt="grid"))
         print(f"\nSum of original head-loss violation : {con2_original_violation:.2e}")
         print(f"Sum of approx  head-loss violation  : {con2_approx_violation:.2e}")
         print(f"Sum of absolute diff (orig vs approx): {con2_absolute_constraint_violation:.2e}")
@@ -886,7 +886,7 @@ class WaterNetworkSolver:
         self.ampl.option['solver'] = sys.argv[1]
         self.ampl.option["ipopt_options"] = "outlev = 5 expect_infeasible_problem = no bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
 
-        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 bonmin.num_resolve_at_root = 10 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 5"
+        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 bonmin.num_resolve_at_root = 10 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 5 option_file_name = ipopt.opt linear_solver = ma57 mu_strategy adaptive"
         # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level = 5 outlev = 4 option_file_name = ipopt.opt"
 
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
@@ -1358,7 +1358,7 @@ class WaterNetworkSolver:
 
         print(f"\nAt source node '{source}': shifted dual = {duals[source] + shift} (should equal H_source = {H_source})")
 
-    def solve_reduced_model(self):
+    def solve_reduced_model1(self):
         import os, subprocess, tempfile, time
     
         print(f"\n-------------------------------- Solving Reduced Model using {self.solver_name} --------------------------")
@@ -1380,11 +1380,12 @@ class WaterNetworkSolver:
         self.ampl.option["presolve_eps"] = "8.53e-15"
     
         self.ampl.option["ipopt_options"] = "outlev=5 expect_infeasible_problem=no bound_relax_factor=0 bound_push=0.01 bound_frac=0.01 warm_start_init_point=no halt_on_ampl_error=yes"
-        self.ampl.option["gurobi_options"] = "outlev=1 outlev_mp=1 presolve=1 aggregate=1 timelimit=600 alg:numericfocus=1 obbt=0 pre:scale=1 method=2 nodemethod=1 nonconvex=2 mipfocus=1 nlpheur=1 varbranch=0 mipgapabs=1e-6 mipgap=1e-9 alg:feastol=1e-6 pre:feastol=1e-6 pre:feastolrel=1e-9 chk:feastol=1e-6 chk:feastolrel=1e-9 mip:heurfrac=0.05"
+        self.ampl.option["gurobi_options"] = "outlev=1 outlev_mp=1 presolve=1 aggregate=1 timelimit=600 alg:numericfocus=1 obbt=0 pre:scale=1 method=2 nodemethod=1 nonconvex=2 mipfocus=1 nlpheur=1 varbranch=0 mipgapabs=1e-6 mipgap=1e-6 alg:feastol=1e-6 pre:feastol=1e-6 pre:feastolrel=1e-9 chk:feastol=1e-6 chk:feastolrel=1e-9 mip:heurfrac=0.05"
         self.ampl.option["baron_options"] = "optfile=optfile version objbound wantsol=2 outlev=2 barstats"
         self.ampl.option["scip_options"] = "param:read=scip.set"
-        self.ampl.option["knitro_options"] = "maxtime_real=600 outlev=4 opttol_abs=1e-6 opttol=1e-9 feastol_abs=1e-6 feastol=1e-9 ms_enable=1 ms_maxsolves=10"
-    
+        self.ampl.option["knitro_options"] = "maxtime_real=600 outlev=4 opttol_abs=1e-6 opttol=1e-6 feastol_abs=1e-6 feastol=1e-9 ms_enable=1 ms_maxsolves=10"
+ 
+        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 bonmin.num_resolve_at_root = 10 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 5 option_file_name = ipopt.opt linear_solver = ma57 mu_strategy adaptive"
         # ── BONMIN: subprocess path ──────────────────────────────────────────────
         if self.solver_name == 'bonmin':
             tmpdir  = tempfile.mkdtemp()
@@ -1481,7 +1482,7 @@ class WaterNetworkSolver:
         self.eps = self.ampl.getParameter('eps').to_dict()
 
 
-    def solve_reduced_model1(self):
+    def solve_reduced_model(self):
         print(f"\n-------------------------------- Solving Reduced Model using {self.solver_name} --------------------------")
 
         if self.data_number == 5:
@@ -1503,7 +1504,7 @@ class WaterNetworkSolver:
         # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 warm_start_init_point = no bonmin.num_resolve_at_root = 10 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01 bonmin.time_limit = 600 print_user_options = yes outlev = 1 bonmin.nlp_log_at_root = 5 linear_solver = ma57 outlev = 0 print_level = 0"
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 600 warmstart = 0 method = 1  mipgapabs = 1e-6 mipgap = 1e-9 barconvtol = 1e-9 sol:chk:feastol = 1e-5 sol:chk:feastolrel = 1e-9 NumericFocus = 1 tech:optionfile = gurobiOpt.prm" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
-        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-6 mipgap = 1e-9 alg:feastol = 1e-6 pre:feastol = 1e-6 pre:feastolrel = 1e-9 chk:feastol = 1e-6 chk:feastolrel = 1e-9  mip:heurfrac = 0.05" 
+        self.ampl.option["gurobi_options"] = "outlev 1 outlev_mp = 1 presolve 1 aggregate = 1 timelimit 600 alg:numericfocus = 1 obbt = 0 pre:scale = 1 method = 2 nodemethod = 1   nonconvex = 2 mipfocus = 1 nlpheur = 1 varbranch 0  mipgapabs = 1e-6 mipgap = 1e-6 alg:feastol = 1e-6 pre:feastol = 1e-6 pre:feastolrel = 1e-9 chk:feastol = 1e-6 chk:feastolrel = 1e-9  mip:heurfrac = 0.05" 
         # self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 4 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 feastol = 1e-6" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 0 timelimit 3600 NumericFocus = 1" # iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 3 nodemethod = 1 concurrentmethod = 3 nonconvex = 2 varbranch = 0 obbt = 1 warmstart = 1 basis = 1 premiqcpform = 2 preqlin = 2"# intfeastol = 1e-5 feastol = 1e-6 chk:epsrel = 1e-6 checkinfeas chk:inttol = 1e-5 scale = 3 aggregate = 1 intfocus = 1  BarHomogeneous = 1  startnodelimit = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
 
@@ -1513,15 +1514,15 @@ class WaterNetworkSolver:
         self.ampl.option["scip_options"] = "param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         # self.ampl.option["scip_options"] = "outlev 1 timelimit 3600 heu:settings = 0 method = p lim:absgap=1e-6 lim:gap = 1e-9 chk:feastol = 1e-6 chk:feastolrel=1e-9 param:read = scip.set" #cvt/pre/all = 0 pre:maxrounds 1 pre:settings 3 cvt:pre:all 0
         # self.ampl.option["scip_options"] = "outlev  1 "
-        self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-6 opttol = 1e-9 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
+        self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-6 opttol = 1e-6 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
+
+        self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 2 bonmin.nlp_log_level 1 bonmin.num_resolve_at_root = 20 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 2 option_file_name = ipopt.opt linear_solver = ma57 mu_strategy adaptive"
         #self.ampl.option["conopt_options"]= "outlev = 4"
         self.ampl.option["presolve"] = "0"
         self.ampl.option["presolve_eps"] = "8.53e-15" 
 
         # with self.suppress_output():
         self.ampl.solve()
-
-
 
         self.q = self.ampl.get_variable('q').get_values().to_dict()
         self.h = self.ampl.get_variable('h').get_values().to_dict()
@@ -1549,20 +1550,6 @@ class WaterNetworkSolver:
         # self.ampl.eval("display sum{(i,j) in arcs, k in pipes} l[i,j,k]*C[k];")
         print(f"{self.solver_name} solve time: {solve_time:.2f} seconds")
         
-        # Add this right after self.ampl.solve()
-        self.ampl.eval("display total_cost;")
-        self.ampl.eval("display {(i,j) in arcs} z[i,j];")
-        self.ampl.eval("display {(i,j) in arcs} y[i,j];")
-        
-        sol_file = stub + '.sol'
-
-        # Add this right after subprocess.run in your solve_reduced_model
-        with open(sol_file) as f:
-            content = f.read()
-        print("=== RAW SOL FILE ===")
-        print(content)
-        print("=== SOL FILE SIZE:", os.path.getsize(sol_file), "bytes ===")
-        # return self.objective, solve_time
 
     def solve_recover_model(self):
         print(f"\n-------------------------------- Solving Recover Model using cplex --------------------------")
@@ -1574,7 +1561,6 @@ class WaterNetworkSolver:
         else:
             self.model_file = "recover_wdnmodel.mod"
 
-
         ampl = AMPL()
         ampl.reset()
         ampl.read(self.model_file)
@@ -1583,11 +1569,12 @@ class WaterNetworkSolver:
         for (u, v), val in self.y.items():
             ampl.param["y"][u, v] = val
     
+        #ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
         ampl.option['solver'] = "cplex"
 
-        ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 tol = 1e-9 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes "
+        ampl.option["ipopt_options"] = "outlev = 0 expect_infeasible_problem = no bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
 
-        ampl.option["presolve"] = "1"
+        ampl.option["presolve"] = "0"
         ampl.option["presolve_eps"] = "8.53e-15" 
         #with self.suppress_output():
         ampl.solve()
@@ -1747,11 +1734,11 @@ class WaterNetworkSolver:
             iter += 1
 
     def run(self):
-        self.read_model_and_data()
-        self.solve_original_model_without_init()
+        # self.read_model_and_data()
+        # self.solve_original_model_without_init()
 
-        # self.solve_reduced_model()
-        # self.solve_recover_model()
+        self.solve_reduced_model()
+        self.solve_recover_model()
 
 if __name__ == "__main__":
     data_list = [

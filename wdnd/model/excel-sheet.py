@@ -409,8 +409,8 @@ def BonminInstanceOutput(instance, output):
     time = 0
     # find, time = find_float(file_data, "Total CPU secs in IPOPT", time)
     Objective = 0
-    find, Objective = find_float(file_data, "Total cost using bonmin", Objective)
-    find, time = find_float(file_data, "bonmin solve time:", time)
+    find, Objective = find_float(file_data, "Total cost using /home/nitishdumoliya/build/bin/bonmin", Objective)
+    find, time = find_float(file_data, "/home/nitishdumoliya/build/bin/bonmin solve time:", time)
     
     # T = []
     # for line in file_data:
@@ -554,8 +554,8 @@ Heuristic_Rel_error = []
 Heuristic_Number_of_NLP = []
 Heuristic_Number_of_Iteration = []
 
-#dir0 = "epigraph_model_output"
-dir0 = "europt"
+dir0 = "epigraph_model_output"
+#dir0 = "europt"
 dir1 = "original_10min"
 dir = "smooth-approx"
 dir2 = "approx2"
@@ -680,9 +680,9 @@ for ins in data_list:
     with open(f"../{dir0}/bonmin_out/{dir2}/{error}/{ins}.bonmin_out") as output:
         print("Model Name:",ins)
         obj, time = BonminInstanceOutput(ins,output)
-        # print("Objective :",obj)
-        # print("Time :",time)
-        # print(" ")
+        print("Objective :",obj)
+        print("Time :",time)
+        print(" ")
         Bonmin_Objective.append(obj)
         Bonmin_Time_taken.append(time)
 

@@ -1476,8 +1476,8 @@ class WaterNetworkOptimizer:
 
     def solve(self):
         """Solve the initial NLP relaxation."""
-        # self.ampl.option["solver"] = "ipopt"
-        self.ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
+        self.ampl.option["solver"] = "ipopt"
+        # self.ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
         self.ampl.set_option(
             "ipopt_options",
             f"outlev = 1 bound_relax_factor = 0 "
@@ -2064,8 +2064,8 @@ class WaterNetworkOptimizer:
         self.arc_ampl = AMPL()
         self.arc_ampl.read(self.model_file)
         self.arc_ampl.read_data(self.data_file)
-        # self.arc_ampl.option["solver"] = "ipopt"
-        self.arc_ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
+        self.arc_ampl.option["solver"] = "ipopt"
+        # self.arc_ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
 
         self.arc_ampl.option["ipopt_options"] = (
             "outlev=0 "
@@ -2326,8 +2326,8 @@ class WaterNetworkOptimizer:
             )
         )
         self.local_ampl.read_data(self.data_file)
-        # self.local_ampl.option["solver"] = "ipopt"
-        self.local_ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+        self.local_ampl.option["solver"] = "ipopt"
+        # self.local_ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
 
         self.local_ampl.option["ipopt_options"] = (
             "outlev=0 "
@@ -3072,7 +3072,7 @@ class WaterNetworkOptimizer:
         self.alpha_q = self.alpha_q_min
         self.eta_l = self.eta_l_min
         self.eta_h = self.eta_h_min
-        self.total_run = 5
+        self.total_run = 3
 
         abs_flows = sorted(abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-4)
         m = len(abs_flows)
@@ -3784,8 +3784,8 @@ class WaterNetworkOptimizer:
         # else:
         #     ampl.eval("subject to con3{(i,j) in arcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
 
-        # ampl.option['solver'] = 'ipopt'
-        ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
+        ampl.option['solver'] = 'ipopt'
+        # ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
         ampl.option["ipopt_options"] = (
             "outlev=0 "
             "bound_relax_factor=0 "
@@ -3853,8 +3853,8 @@ class WaterNetworkOptimizer:
             )
         )
         ampl.read_data(self.data_file)
-        # ampl.option["solver"] = "ipopt"
-        ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+        ampl.option["solver"] = "ipopt"
+        # ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
 
 
         ampl.set_option(
@@ -3868,9 +3868,12 @@ class WaterNetworkOptimizer:
         for (u, v) in self.arcs:
             s_cur = cur_segs[(u, v)][0]
             if (u, v) == target_arc:
+                # if np.abs(init_y[u,v] - self.alpha[target_seg]) <= np.abs(init_y[u,v] - self.alpha[target_seg+1]):
                 lb = self.alpha[target_seg]
-                # ub = alpha_vals[target_seg - 1]
                 ub = self.alpha[1]
+                # else:
+                #     ub = self.alpha[target_seg+1]
+                #     lb = self.alpha[NP]
 
                 ampl.var['y'][u,v] = lb/2 
                 # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
@@ -4237,6 +4240,7 @@ class WaterNetworkOptimizer:
                         if a in candidate_arcs
                     }
                     break
+
             sorted_arcs = sorted(
                 dual_dict, key=lambda a: abs(dual_dict[a]), reverse=True
             )
@@ -4259,8 +4263,8 @@ class WaterNetworkOptimizer:
                 while cur_seg > 1:
                     tgt_seg     = cur_seg 
                     # ── segment-cut NLP ───────────────────────────────────
-                    ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,self.y,self.q,self.h,self.z,self.seg_index)
-                    # ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,y,q,h,z,seg_index)
+                    # ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,self.y,self.q,self.h,self.z,self.seg_index)
+                    ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,y,q,h,z,seg_index)
                     # seg_index    = copy.deepcopy(seg_new)
                     # y            = vars_new["y"]
                     # z            = vars_new["z"]
@@ -4308,6 +4312,7 @@ class WaterNetworkOptimizer:
                     )
                     if status != "solved":
                         break
+                    print(f"seg_new[{i},{j}]=",seg_index[i,j])
                     if improved:
                         # ─────────────────────────────────────────────────
                         # BUILD S_new AND RETRIEVE S_prev (previous best)
@@ -4369,7 +4374,6 @@ class WaterNetworkOptimizer:
                         # break
                     else:
                         break
-                    print(f"seg_new[{i},{j}]=",self.seg_index[i,j])
                 if restart:
                     break
         return self.q, self.h, self.y, self.z
@@ -4955,6 +4959,7 @@ class WaterNetworkOptimizer:
         # self.local_solution_improvement_heuristic_new()
         # self.initialize_local_search_model()
         # self.local_solution_improvement_heuristic_fast()
+        # self._start_local_improvement_after_reversal()
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
         # ── Step 3: Arc-Reversal Heuristic ────────────────────────────────────

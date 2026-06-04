@@ -49,6 +49,7 @@ param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
 #****************************************VARIABLES****************************************#
 var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
+#var q{arcs}>=-Q_max,<=Q_max;	            # Flow variable
 var h{nodes};	            # Head
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
@@ -65,8 +66,8 @@ subject to con1{j in nodes diff Source}:
 
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs}: 
-     h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    #h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)) = 0;
+     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
+    h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)) = 0;
     #(h[i] - h[j])  =  q[i,j] * ((q[i,j]^2 + eps[i,j]^2))^0.426 * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + 0.574 * eps[i,j]^2) / (q[i,j]^2 + eps[i,j]^2)^0.574) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + eps[i,j]^2)^0.426 - (0.426 * eps[i,j]^2 / (q[i,j]^2 + eps[i,j]^2)^0.574)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
@@ -117,7 +118,7 @@ subject to con6{i in Source}:
 ;
 subject to con7{i in nodes diff Source}: -h[i] + (E[i] + P[i]) <= 0;
 #subject to con6_{i in nodes diff Source}: h[i] <= max{j in Source} E[j] ;
-subject to con8{(i,j) in arcs}: 
-   -Q_max <= q[i,j] <= Q_max
-;
+#subject to con8{(i,j) in arcs}: 
+#   -Q_max <= q[i,j] <= Q_max
+#;
 #*******************************************************************************************#

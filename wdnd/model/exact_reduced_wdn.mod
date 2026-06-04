@@ -68,9 +68,11 @@ param intercept{s in segs} :=
 # VARIABLES
 # =========================
 var q{arcs};
+#var q{arcs}>=-Q_max,<=Q_max;
 var h{nodes};
-var y{arcs};
-var z{arcs}>=0;
+#var y{arcs};
+var y{arcs}>=alpha_min,<=alpha_max;
+var z{arcs};
 
 # =========================
 # OBJECTIVE
@@ -107,12 +109,12 @@ subject to exact_cost{(i,j) in arcs, s in segs}:
 #subject to z_upper{(i,j) in arcs}:
 #    z[i,j] <= L[i,j]*(c_max + ((c_min - c_max)/(alpha_max - alpha_min))*(y[i,j] - alpha_min));
 
-subject to y_bounds_l{(i,j) in arcs}:
-    alpha_min - y[i,j]<= 0 ;
+#subject to y_bounds_l{(i,j) in arcs}:
+#    alpha_min - y[i,j]<= 0 ;
+#
+#subject to y_bounds_u{(i,j) in arcs}:
+#    y[i,j] - alpha_max <= 0;
 
-subject to y_bounds_r{(i,j) in arcs}:
-    y[i,j] - alpha_max <= 0;
-
-subject to con8{(i,j) in arcs}: 
-   -Q_max <= q[i,j] <= Q_max
-;
+#subject to con8{(i,j) in arcs}: 
+#   -Q_max <= q[i,j] <= Q_max
+#;
