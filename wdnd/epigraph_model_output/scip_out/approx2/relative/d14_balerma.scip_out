@@ -1,0 +1,94 @@
+Water Network: 14
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using scip --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+SCIP version 10.0.0 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: SoPlex 8.0.0] [GitHash: 0c80fdd8e9]
+Copyright (c) 2002-2025 Zuse Institute Berlin (ZIB)
+
+External libraries: 
+  Readline 8.3         GNU library for command line editing (gnu.org/s/readline)
+  SoPlex 8.0.0         Linear programming solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: 2207cfb2]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.13          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  MPFR 4.0.2           GNU Multiple Precision Floating-Point Reliable Library (mpfr.org)
+  Boost 1.82.0         Boost C++ Libraries (boost.org)
+  TinyCThread 1.2      small portable implementation of the C11 threads API (tinycthread.github.io)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  AMPL/MP 4.0.3        AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 3.0.0         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 4cbdc327]
+  Nauty 2.8.8          Computing Graph Automorphism Groups by Brendan D. McKay (users.cecs.anu.edu.au/~bdm/nauty)
+  sassy 2.0            Symmetry preprocessor by Markus Anders (github.com/markusa4/sassy)
+  Ipopt 3.14.20        Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+applying scip_options:
+  param:read = =
+WARNING: unknown parameter <param:read>
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 600
+limits/gap = 1e-06
+limits/absgap = 1e-06
+
+read problem </tmp/at2994315.nl>
+============
+
+original problem has 1809 variables (0 bin, 0 int, 1809 cont) and 5884 constraints
+
+solve problem
+=============
+
+Changing lower bound for child of pow(.,-1) from 1.06059e-10 to 1e-09.
+Check your model formulation or use option expr/pow/minzerodistance to avoid this warning.
+Expression: (((<t_x0>)^2+1.06059477168752e-10))^(-1)
+presolving:
+(round 1, fast)       356 del vars, 1253 del conss, 0 add conss, 1845 chg bounds, 0 chg sides, 0 chg coeffs, 252 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 2, fast)       498 del vars, 1379 del conss, 0 add conss, 1996 chg bounds, 0 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 3, fast)       551 del vars, 1726 del conss, 0 add conss, 2041 chg bounds, 1 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 4, fast)       596 del vars, 1764 del conss, 0 add conss, 2047 chg bounds, 1 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 5, fast)       603 del vars, 1767 del conss, 0 add conss, 2057 chg bounds, 3 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 6, fast)       606 del vars, 1785 del conss, 0 add conss, 2069 chg bounds, 3 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 7, fast)       609 del vars, 1785 del conss, 0 add conss, 2074 chg bounds, 4 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 8, exhaustive) 609 del vars, 1785 del conss, 0 add conss, 2501 chg bounds, 5 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 9, fast)       609 del vars, 1838 del conss, 0 add conss, 2501 chg bounds, 5 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 10, fast)       612 del vars, 1841 del conss, 0 add conss, 2501 chg bounds, 5 chg sides, 0 chg coeffs, 288 upgd conss, 0 impls, 0 clqs, 0 implints
+   (0.3s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.3s) no symmetry present (symcode time: 0.00)
+presolving (11 rounds: 11 fast, 2 medium, 2 exhaustive):
+ 612 deleted vars, 1841 deleted constraints, 0 added constraints, 2507 tightened bounds, 0 added holes, 5 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolving was interrupted.
+Presolving Time: 600.16
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 600.20
+Solving Nodes      : 0
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+time limit reached
+option pl_linearize 2;
+option var_bounds 1;
+Total cost using scip: 0.0
+scip solve time: 600.41 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: infeasible problem
+0 simplex iterations
+
+suffix dunbdd OUT;
+
+*******************************************************************************
+
+Total absolute constraint violation: 1.35e+05
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 0.00e+00
+Sum of approx  head-loss violation  : 0.00e+00
+Sum of absolute diff (orig vs approx): 0.00e+00
+Sum of relative diff (orig vs approx): 0.00e+00
+
+*******************************************************************************
+
+Total Cost: 0.0
+cplex solve time: 0.11 seconds

@@ -1,0 +1,91 @@
+Water Network: 7
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using /home/nitishdumoliya/build/bin/bonmin --------------------------
+WDN Model Name: blacksburg_epigraph_model.mod
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 2
+bonmin.nlp_log_level 1
+bonmin.num_resolve_at_root = 20
+expect_infeasible_problem = no
+bonmin.time_limit = 600
+option_file_name = ipopt.opt
+print_user_options = yes
+bonmin.nlp_log_at_root = 2
+option_file_name = ipopt.opt
+linear_solver = ma57
+mu_strategy adaptive
+
+Cbc3007W No integer variables - nothing to do
+
+List of user-set options:
+
+                                    Name   Value                used
+                     bonmin.bb_log_level = 2                     yes
+                  bonmin.nlp_log_at_root = 2                     yes
+                    bonmin.nlp_log_level = 1                     yes
+              bonmin.num_resolve_at_root = 20                    yes
+                       bonmin.time_limit = 600                   yes
+               expect_infeasible_problem = no                    yes
+                           linear_solver = ma57                  yes
+                             mu_strategy = adaptive              yes
+                        option_file_name = ipopt.opt              no
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1         OPT 117534.23      263 0.752009
+NLP0014I             1         OPT 143402.06      161 0.402876         resolve cost
+NLP0014I             2      INFEAS 3.2370963e-07      288 0.891797         resolve cost
+NLP0014I             3      INFEAS 2.9832195e-06      196 0.634502         resolve cost
+NLP0014I             4         OPT 134552.34      243 0.618852         resolve cost
+NLP0014I             5         OPT 135130.51      331 0.986782         resolve cost
+NLP0014I             6      FAILED 119334.24      269 0.823678         resolve cost
+NLP0014I             7      INFEAS 9.7321334e-08      247 0.73031         resolve cost
+NLP0014I             8         OPT 143402.06      353 1.023943         resolve cost
+NLP0014I             9      INFEAS 1.4578263e-05      194 0.664564         resolve cost
+NLP0014I            10      INFEAS 3.8041217e-07      222 0.778677         resolve cost
+NLP0014I            11      INFEAS 4.148255e-08      207 0.593339         resolve cost
+NLP0014I            12      INFEAS 5.4894786e-06      274 0.859346         resolve cost
+NLP0014I            13         OPT 118092.92      283 0.849547         resolve cost
+NLP0014I            14         OPT 117928.8      446 1.159119         resolve cost
+NLP0014I            15         OPT 144013.5      404 1.045643         resolve cost
+NLP0014I            16      INFEAS 7.459412e-06      334 1.199482         resolve cost
+NLP0014I            17      INFEAS 4.1277909e-06      159 0.518461         resolve cost
+NLP0014I            18         OPT 117789.92      349 1.092114         resolve cost
+NLP0014I            19      INFEAS 8.6507024e-07      336 1.111629         resolve cost
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I            20      INFEAS 2.8915803e-06      185 0.663149         resolve cost
+Cbc3007W No integer variables - nothing to do
+
+ 	"Finished"
+
+bonmin: Optimal
+Total cost using /home/nitishdumoliya/build/bin/bonmin: 117534.23056263512
+/home/nitishdumoliya/build/bin/bonmin solve time: 23.92 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: optimal solution; objective 117534.2317
+37 simplex iterations
+
+*******************************************************************************
+
+Total absolute constraint violation: 4.14e-05
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 4.71e-07
+Sum of approx  head-loss violation  : 4.71e-07
+Sum of absolute diff (orig vs approx): 3.60e-12
+Sum of relative diff (orig vs approx): 2.38e-11
+
+*******************************************************************************
+
+Total Cost: 117534.23173417035
+cplex solve time: 0.02 seconds

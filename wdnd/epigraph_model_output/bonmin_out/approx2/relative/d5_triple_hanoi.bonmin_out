@@ -1,0 +1,74 @@
+Water Network: 5
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using /home/nitishdumoliya/build/bin/bonmin --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+Bonmin 1.8.9 using Cbc 2.10.8 and Ipopt 3.12.13
+bonmin: bonmin.bb_log_level 2
+bonmin.nlp_log_level 1
+bonmin.num_resolve_at_root = 20
+expect_infeasible_problem = no
+bonmin.time_limit = 600
+option_file_name = ipopt.opt
+print_user_options = yes
+bonmin.nlp_log_at_root = 2
+option_file_name = ipopt.opt
+linear_solver = ma57
+mu_strategy adaptive
+
+Cbc3007W No integer variables - nothing to do
+
+List of user-set options:
+
+                                    Name   Value                used
+                     bonmin.bb_log_level = 2                     yes
+                  bonmin.nlp_log_at_root = 2                     yes
+                    bonmin.nlp_log_level = 1                     yes
+              bonmin.num_resolve_at_root = 20                    yes
+                       bonmin.time_limit = 600                   yes
+               expect_infeasible_problem = no                    yes
+                           linear_solver = ma57                  yes
+                             mu_strategy = adaptive              yes
+                        option_file_name = ipopt.opt              no
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit http://projects.coin-or.org/Ipopt
+******************************************************************************
+
+NLP0012I 
+              Num      Status      Obj             It       time                 Location
+NLP0014I             1      FAILED 7846390.8     3000 29.32616
+NLP0014I             1      FAILED 7846390.8     3000 28.122111   resolve robustness
+NLP0014I             3      FAILED 7846390.8     3000 24.905173
+Cbc3007W No integer variables - nothing to do
+Cbc0006I The LP relaxation is infeasible or too expensive
+
+ 	"Aborted"
+
+bonmin: Error encountered in optimization.
+Total cost using /home/nitishdumoliya/build/bin/bonmin: 0.0
+/home/nitishdumoliya/build/bin/bonmin solve time: 97.39 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: infeasible problem
+0 simplex iterations
+
+suffix dunbdd OUT;
+
+*******************************************************************************
+
+Total absolute constraint violation: 1.22e+05
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 0.00e+00
+Sum of approx  head-loss violation  : 0.00e+00
+Sum of absolute diff (orig vs approx): 0.00e+00
+Sum of relative diff (orig vs approx): 0.00e+00
+
+*******************************************************************************
+
+Total Cost: 0.0
+cplex solve time: 0.02 seconds

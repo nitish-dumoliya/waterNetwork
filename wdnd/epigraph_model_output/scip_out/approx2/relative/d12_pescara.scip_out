@@ -1,0 +1,135 @@
+Water Network: 12
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using scip --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+SCIP version 10.0.0 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: SoPlex 8.0.0] [GitHash: 0c80fdd8e9]
+Copyright (c) 2002-2025 Zuse Institute Berlin (ZIB)
+
+External libraries: 
+  Readline 8.3         GNU library for command line editing (gnu.org/s/readline)
+  SoPlex 8.0.0         Linear programming solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: 2207cfb2]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.13          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  MPFR 4.0.2           GNU Multiple Precision Floating-Point Reliable Library (mpfr.org)
+  Boost 1.82.0         Boost C++ Libraries (boost.org)
+  TinyCThread 1.2      small portable implementation of the C11 threads API (tinycthread.github.io)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  AMPL/MP 4.0.3        AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 3.0.0         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 4cbdc327]
+  Nauty 2.8.8          Computing Graph Automorphism Groups by Brendan D. McKay (users.cecs.anu.edu.au/~bdm/nauty)
+  sassy 2.0            Symmetry preprocessor by Markus Anders (github.com/markusa4/sassy)
+  Ipopt 3.14.20        Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+applying scip_options:
+  param:read = =
+WARNING: unknown parameter <param:read>
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 600
+limits/gap = 1e-06
+limits/absgap = 1e-06
+
+read problem </tmp/at2993593.nl>
+============
+
+original problem has 368 variables (0 bin, 0 int, 368 cont) and 1525 constraints
+
+solve problem
+=============
+
+Changing lower bound for child of pow(.,-1) from 2.98583e-12 to 1e-09.
+Check your model formulation or use option expr/pow/minzerodistance to avoid this warning.
+Expression: (((<t_x0>)^2+2.98583359362453e-12))^(-1)
+presolving:
+(round 1, fast)       19 del vars, 186 del conss, 0 add conss, 553 chg bounds, 0 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 2, fast)       25 del vars, 202 del conss, 0 add conss, 553 chg bounds, 0 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 3, fast)       28 del vars, 226 del conss, 0 add conss, 553 chg bounds, 1 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 4, fast)       30 del vars, 226 del conss, 0 add conss, 650 chg bounds, 1 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 5, fast)       30 del vars, 236 del conss, 0 add conss, 650 chg bounds, 1 chg sides, 0 chg coeffs, 4 upgd conss, 0 impls, 0 clqs, 0 implints
+   (0.1s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.1s) no symmetry present (symcode time: 0.00)
+presolving (6 rounds: 6 fast, 1 medium, 1 exhaustive):
+ 30 deleted vars, 236 deleted constraints, 0 added constraints, 651 tightened bounds, 0 added holes, 1 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolved problem has 338 variables (0 bin, 0 int, 338 cont) and 1289 constraints
+   1194 constraints of type <linear>
+     95 constraints of type <nonlinear>
+Presolving Time: 0.05
+
+(node 1) unresolved numerical troubles in LP 2 -- using pseudo solution instead (loop 1)
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  1.8s|     1 |     2 |  1187 |     - |    17M |   0 |1096 |1289 |3103 |   0 |  0 |   0 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 10.1s|   100 |    89 | 50389 | 497.0 |    19M |  49 |1096 |1292 |3330 |  10k|  2 |   3 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 14.9s|   200 |   177 | 66976 | 330.6 |    22M |  54 |1096 |1296 |3412 |  16k|  2 |   7 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 21.4s|   300 |   269 |101505 | 335.5 |    25M |  54 |1096 |1300 |3425 |  25k|  3 |  11 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 27.6s|   400 |   367 |120551 | 299.2 |    29M |  54 |1096 |1300 |3549 |  33k|  9 |  11 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 35.3s|   500 |   453 |209715 | 417.9 |    31M |  54 |1096 |1301 |3795 |  44k| 10 |  12 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 42.6s|   600 |   539 |265038 | 440.5 |    34M |  54 |1096 |1301 |3753 |  55k|  6 |  14 |   0 | 1.440974e+06 |      --      |    Inf | unknown
+ 56.8s|   700 |   631 |287359 | 409.4 |    38M |  54 |1096 |1302 |3553 |  64k|  9 |  15 |   0 | 1.440974e+06 |      --      |    Inf |   0.60%
+ 71.3s|   800 |   717 |309076 | 385.3 |    41M |  54 |1096 |1301 |3958 |  72k| 13 |  16 |   0 | 1.440974e+06 |      --      |    Inf |   2.55%
+ 84.4s|   900 |   805 |336941 | 373.5 |    45M |  54 |1096 |1302 |4320 |  81k|  6 |  17 |   0 | 1.440974e+06 |      --      |    Inf |   2.55%
+ 95.6s|  1000 |   891 |365600 | 364.8 |    47M |  54 |1096 |1302 |3516 |  90k|  3 |  17 |   0 | 1.440974e+06 |      --      |    Inf |   2.56%
+  113s|  1100 |   971 |388858 | 352.7 |    49M |  54 |1096 |1305 |3311 |  98k|  2 |  20 |   0 | 1.440974e+06 |      --      |    Inf |   2.59%
+  139s|  1200 |  1059 |435473 | 362.2 |    52M |  54 |1096 |1306 |3985 | 109k|  6 |  21 |   0 | 1.440974e+06 |      --      |    Inf |   2.62%
+  157s|  1300 |  1139 |469182 | 360.3 |    56M |  54 |1096 |1306 |3797 | 119k|  1 |  21 |   0 | 1.440974e+06 |      --      |    Inf |   2.63%
+d 186s|  1400 |  1147 |564473 | 402.6 |adaptive|  54 |1096 |1306 |3497 | 131k|  9 |  22 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.96%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  204s|  1500 |  1237 |606010 | 403.5 |    61M |  54 |1096 |1308 |3567 | 142k|  9 |  25 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.96%
+  221s|  1600 |  1327 |644960 | 402.6 |    64M |  54 |1096 |1307 |   0 | 153k|  0 |  25 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.97%
+  242s|  1700 |  1421 |686187 | 403.2 |    66M |  54 |1096 |1308 |3674 | 164k| 12 |  26 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.97%
+  263s|  1800 |  1521 |740791 | 411.1 |    71M |  54 |1096 |1308 |3871 | 178k| 13 |  26 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.97%
+  277s|  1900 |  1613 |776867 | 408.5 |    74M |  54 |1096 |1309 |3839 | 187k| 10 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.97%
+  297s|  2000 |  1701 |810677 | 404.9 |    77M |  54 |1096 |1309 |3643 | 196k|  9 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   0.97%
+  317s|  2100 |  1795 |881478 | 419.4 |    80M |  54 |1096 |1309 |3628 | 209k| 12 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.06%
+  334s|  2200 |  1891 |915058 | 415.6 |    84M |  54 |1096 |1309 |3614 | 219k| 10 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.08%
+  350s|  2300 |  1987 |958201 | 416.3 |    86M |  54 |1096 |1308 |3656 | 230k|  5 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.08%
+  367s|  2400 |  2077 |  1001k| 417.1 |    90M |  54 |1096 |1307 |   0 | 242k|  0 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.08%
+  385s|  2500 |  2169 |  1032k| 412.6 |    93M |  54 |1096 |1307 |3967 | 251k| 10 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.08%
+  403s|  2600 |  2269 |  1069k| 411.2 |    97M |  54 |1096 |1307 |3684 | 263k|  2 |  27 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.09%
+  423s|  2700 |  2363 |  1118k| 413.9 |   101M |  54 |1096 |1307 |3472 | 274k|  7 |  28 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.09%
+  442s|  2800 |  2449 |  1145k| 408.8 |   103M |  54 |1096 |1307 |4328 | 283k|  9 |  28 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.09%
+  461s|  2900 |  2539 |  1188k| 409.5 |   107M |  54 |1096 |1307 |   0 | 292k|  0 |  28 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.10%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  490s|  3000 |  2622 |  1235k| 411.6 |   110M |  54 |1096 |1308 |3675 | 304k|  2 |  29 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.26%
+  509s|  3100 |  2707 |  1264k| 407.6 |   114M |  54 |1096 |1308 |3619 | 313k| 10 |  29 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.36%
+  526s|  3200 |  2799 |  1309k| 408.8 |   118M |  54 |1096 |1308 |3792 | 324k|  6 |  31 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.37%
+  539s|  3300 |  2881 |  1345k| 407.6 |   122M |  54 |1096 |1310 |3830 | 333k|  8 |  33 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.38%
+  554s|  3400 |  2981 |  1391k| 409.0 |   125M |  54 |1096 |1310 |4135 | 343k|  7 |  33 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.38%
+  569s|  3500 |  3077 |  1424k| 406.8 |   128M |  54 |1096 |1309 |4013 | 352k| 11 |  33 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.55%
+  585s|  3600 |  3169 |  1447k| 401.9 |   131M |  54 |1096 |1308 |3879 | 360k|  8 |  33 |   0 | 1.440974e+06 | 1.900605e+06 |  31.90%|   1.70%
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 600.01
+Solving Nodes      : 3662
+Primal Bound       : +1.90060473601764e+06 (1 solutions)
+Dual Bound         : +1.44097424819620e+06
+Gap                : 31.90 %
+time limit reached
+option pl_linearize 2;
+option var_bounds 1;
+Total cost using scip: 1900604.7360176444
+scip solve time: 601.08 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: infeasible problem
+0 simplex iterations
+
+suffix dunbdd OUT;
+
+*******************************************************************************
+
+Total absolute constraint violation: 4.90e+04
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 4.05e+02
+Sum of approx  head-loss violation  : 4.05e+02
+Sum of absolute diff (orig vs approx): 0.00e+00
+Sum of relative diff (orig vs approx): 0.00e+00
+
+*******************************************************************************
+
+Total Cost: 0.0
+cplex solve time: 0.03 seconds

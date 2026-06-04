@@ -1,0 +1,230 @@
+Water Network: 2
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using gurobi --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+Gurobi 13.0.0: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+  tech:outlev_mp = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter Aggregate to value 1
+  pre:aggregate = 1
+Set parameter TimeLimit to value 600
+  lim:time = 600
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter OBBT to value 0
+  mip:obbt = 0
+Set parameter ScaleFlag to value 1
+  pre:scale = 1
+Set parameter Method to value 2
+  alg:method = 2
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter MIPFocus to value 1
+  mip:focus = 1
+Set parameter NLPHeur to value 1
+  alg:nlpheur = 1
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 9.9999999999999995e-07
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1.0000000000000001e-09
+Set parameter FeasibilityTol to value 1e-06
+  alg:feastol = 9.9999999999999995e-07
+  cvt:pre:feastol = 9.9999999999999995e-07
+  cvt:pre:feastolrel = 1.0000000000000001e-09
+  sol:chk:feastol = 9.9999999999999995e-07
+  sol:chk:feastolrel = 1.0000000000000001e-09
+Set parameter Heuristics to value 0.05
+  mip:heurfrac = 0.050000000000000003
+
+AMPL MP initial flat model has 30 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  110 linear; 32 quadratic;
+Algebraic expressions:  8 div; 16 powconstexp;
+
+AMPL MP final model has 86 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  118 linear; 32 quadratic;
+Algebraic expressions:  8 div; 16 powconstexp;
+
+
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Warning: small constant(s) (< 1e-13) in general constraint NL will be treated as zero
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (linux64 - "Debian GNU/Linux 13 (trixie)")
+
+CPU model: AMD Ryzen Threadripper PRO 5975WX 32-Cores, instruction set [SSE2|AVX|AVX2]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+MIPGap  1e-09
+MIPGapAbs  1e-06
+Method  2
+ScaleFlag  1
+MIPFocus  1
+NodeMethod  1
+OBBT  0
+NLPHeur  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 118 rows, 86 columns and 246 nonzeros (Min)
+Model fingerprint: 0xe5a7a316
+Model has 8 linear objective coefficients
+Model has 8 general nonlinear constraints (56 nonlinear terms)
+Variable types: 86 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [4e-02, 3e+07]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [2e-15, 5e+12]
+  RHS range        [3e-02, 1e+06]
+  NLCon coe range  [2e-15, 1e+03]
+Warning: Model contains large bounds
+Presolve model has 8 nlconstr
+Added 48 variables to disaggregate expressions
+Presolve removed 1 rows and 49 columns
+Presolve time: 0.01s
+Presolved: 357 rows, 94 columns, 769 nonzeros
+Presolved model has 32 bilinear constraint(s)
+Presolved model has 16 nonlinear constraint(s)
+
+Solving non-convex NLP to global optimality
+
+Variable types: 94 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 2.999e+03
+ Factor NZ  : 4.241e+03
+ Factor Ops : 6.937e+04 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   8.00000160e+10 -7.54754774e+16  1.70e+16 3.54e-02  7.51e+09     0s
+   1   8.00000159e+10 -2.37197031e+21  1.70e+16 3.81e-01  7.42e+12     0s
+   2   8.00000162e+10 -7.50572510e+22  1.70e+16 3.81e-01  2.14e+14     0s
+   3   8.00000325e+10 -6.31900622e+26  1.70e+16 5.72e-01  1.74e+18     0s
+   4   8.00000160e+10 -9.80571401e+19  1.70e+16 0.00e+00  9.78e+12     0s
+   5   8.00000159e+10 -3.12530031e+24  1.70e+16 4.93e+02  9.77e+15     0s
+   6   8.00000163e+10 -9.81269054e+25  1.70e+16 4.93e+02  2.80e+17     0s
+   7   8.00000335e+10 -8.28588808e+29  1.70e+16 7.40e+02  2.29e+21     0s
+
+Barrier performed 7 iterations in 0.14 seconds (0.02 work units)
+Numerical trouble encountered
+
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
+
+Crossover changed status from Numeric to Infeasible
+Root barrier log...
+
+Ordering time: 0.01s
+
+Barrier statistics:
+ AA' NZ     : 2.923e+03
+ Factor NZ  : 4.419e+03
+ Factor Ops : 6.430e+04 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   8.00000160e+10 -7.54715513e+16  1.70e+16 3.54e-02  7.47e+09     0s
+   1   8.00000159e+10 -2.40271250e+21  1.70e+16 3.80e-01  7.12e+12     0s
+   2   8.00000161e+10 -7.55917957e+22  1.70e+16 3.79e-01  2.05e+14     0s
+   3   8.00000319e+10 -6.36215221e+26  1.70e+16 5.70e-01  1.66e+18     0s
+   4   8.00000160e+10 -9.80571401e+19  1.70e+16 0.00e+00  9.71e+12     0s
+   5   8.00000159e+10 -3.16443982e+24  1.70e+16 4.92e+02  9.38e+15     0s
+   6   8.00000163e+10 -9.88031998e+25  1.70e+16 4.91e+02  2.67e+17     0s
+   7   8.00000327e+10 -8.34376809e+29  1.70e+16 7.37e+02  2.18e+21     0s
+
+Barrier performed 7 iterations in 0.15 seconds (0.02 work units)
+Numerical trouble encountered
+
+Model may be infeasible or unbounded.  Consider using the
+homogeneous algorithm (through parameter 'BarHomogeneous')
+
+Crossover changed status from Numeric to Infeasible
+
+Root relaxation: infeasible, 66 iterations, 0.02 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 infeasible    0               - infeasible      -     -    0s
+
+Explored 1 nodes (66 simplex iterations) in 0.15 seconds (0.02 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 0
+
+Model is infeasible or unbounded
+Best objective -, best bound -, gap -
+Gurobi 13.0.0: infeasible or unbounded problem. Set dualreductions=0 or iis=1 for definitive answer.
+66 simplex iterations
+7 barrier iterations
+1 branching node
+
+suffix unbdd OUT;
+suffix dunbdd OUT;
+Total cost using gurobi: 0.0
+gurobi solve time: 0.62 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: infeasible problem
+0 simplex iterations
+
+suffix dunbdd OUT;
+
+Total absolute constraint violation: 9.33e+03
+
+*******************************************************************************
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| Arc (i,j)   |   Flow |   Original Violation |   Approx Violation |   Absolute Diff |   Relative Diff |
++=============+========+======================+====================+=================+=================+
+| 1,2         |      0 |                  210 |                210 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 2,3         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 2,4         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 3,5         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 4,5         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 4,6         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 5,7         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+| 6,7         |      0 |                    0 |                  0 |               0 |               0 |
++-------------+--------+----------------------+--------------------+-----------------+-----------------+
+
+Sum of original head-loss violation : 2.10e+02
+Sum of approx  head-loss violation  : 2.10e+02
+Sum of absolute diff (orig vs approx): 0.00e+00
+Sum of relative diff (orig vs approx): 0.00e+00
+
+*******************************************************************************
+
+Total Cost: 0.0
+cplex solve time: 0.09 seconds

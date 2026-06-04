@@ -1,0 +1,119 @@
+Water Network: 13
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using scip --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+SCIP version 10.0.0 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: SoPlex 8.0.0] [GitHash: 0c80fdd8e9]
+Copyright (c) 2002-2025 Zuse Institute Berlin (ZIB)
+
+External libraries: 
+  Readline 8.3         GNU library for command line editing (gnu.org/s/readline)
+  SoPlex 8.0.0         Linear programming solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: 2207cfb2]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.2.13          General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  MPFR 4.0.2           GNU Multiple Precision Floating-Point Reliable Library (mpfr.org)
+  Boost 1.82.0         Boost C++ Libraries (boost.org)
+  TinyCThread 1.2      small portable implementation of the C11 threads API (tinycthread.github.io)
+  GMP 6.2.1            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  AMPL/MP 4.0.3        AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 3.0.0         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) [GitHash: 4cbdc327]
+  Nauty 2.8.8          Computing Graph Automorphism Groups by Brendan D. McKay (users.cecs.anu.edu.au/~bdm/nauty)
+  sassy 2.0            Symmetry preprocessor by Markus Anders (github.com/markusa4/sassy)
+  Ipopt 3.14.20        Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+applying scip_options:
+  param:read = =
+WARNING: unknown parameter <param:read>
+reading user parameter file <scip.set>
+===========================
+
+limits/time = 600
+limits/gap = 1e-06
+limits/absgap = 1e-06
+
+read problem </tmp/at3004653.nl>
+============
+
+original problem has 1223 variables (0 bin, 0 int, 1223 cont) and 4978 constraints
+
+solve problem
+=============
+
+presolving:
+(round 1, fast)       200 del vars, 785 del conss, 0 add conss, 1532 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs, 0 implints
+(round 2, fast)       200 del vars, 785 del conss, 0 add conss, 2038 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs, 0 implints
+   (0.4s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.4s) no symmetry present (symcode time: 0.00)
+presolving (3 rounds: 3 fast, 1 medium, 1 exhaustive):
+ 200 deleted vars, 785 deleted constraints, 0 added constraints, 2042 tightened bounds, 0 added holes, 0 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolved problem has 1023 variables (0 bin, 0 int, 1023 cont) and 4193 constraints
+   3876 constraints of type <linear>
+    317 constraints of type <nonlinear>
+Presolving Time: 0.34
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.6s|     1 |     0 |  2120 |     - |    32M |   0 |2445 |4193 |7749 |   0 |  0 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.1s|     1 |     0 |  3771 |     - |    33M |   0 |2445 |4193 |8031 | 282 |  1 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.3s|     1 |     0 |  5293 |     - |    33M |   0 |2445 |4193 |8217 | 468 |  2 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.4s|     1 |     0 |  6180 |     - |    33M |   0 |2445 |4193 |8303 | 554 |  3 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.5s|     1 |     0 |  7091 |     - |    33M |   0 |2445 |4193 |8347 | 598 |  4 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.5s|     1 |     0 |  7860 |     - |    33M |   0 |2445 |4193 |8375 | 626 |  5 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.6s|     1 |     0 |  8880 |     - |    33M |   0 |2445 |4193 |8399 | 650 |  6 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.7s|     1 |     0 |  9360 |     - |    33M |   0 |2445 |4193 |8439 | 690 |  7 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.7s|     1 |     0 | 10153 |     - |    33M |   0 |2445 |4193 |8463 | 714 |  8 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.8s|     1 |     0 | 10413 |     - |    33M |   0 |2445 |4193 |8486 | 737 |  9 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.8s|     1 |     0 | 10896 |     - |    33M |   0 |2445 |4193 |8495 | 746 | 10 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  1.9s|     1 |     0 | 11198 |     - |    33M |   0 |2445 |4193 |5353 | 758 | 11 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.2s|     1 |     0 | 31020 |     - |    37M |   0 |2445 |4193 |5770 |1175 | 11 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.2s|     1 |     0 | 31490 |     - |    37M |   0 |2445 |4193 |5902 |1307 | 12 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.3s|     1 |     0 | 31795 |     - |    37M |   0 |2445 |4193 |6041 |1446 | 13 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 10.3s|     1 |     0 | 31985 |     - |    37M |   0 |2445 |4193 |6088 |1493 | 14 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.3s|     1 |     0 | 32115 |     - |    37M |   0 |2445 |4193 |6115 |1520 | 15 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.3s|     1 |     0 | 32171 |     - |    37M |   0 |2445 |4193 |5391 |1527 | 16 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.3s|     1 |     0 | 32219 |     - |    37M |   0 |2445 |4193 |5403 |1539 | 17 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.4s|     1 |     0 | 32252 |     - |    37M |   0 |2445 |4193 |5417 |1553 | 18 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.4s|     1 |     0 | 32297 |     - |    37M |   0 |2445 |4193 |5428 |1564 | 19 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.4s|     1 |     0 | 32336 |     - |    37M |   0 |2445 |4193 |5437 |1573 | 20 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.4s|     1 |     0 | 32349 |     - |    37M |   0 |2445 |4193 |5448 |1584 | 21 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.4s|     1 |     0 | 32350 |     - |    37M |   0 |2445 |4193 |5062 |1585 | 22 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+ 10.4s|     1 |     2 | 32350 |     - |    37M |   0 |2445 |4193 |5062 |1585 | 23 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  265s|   100 |   101 |  2092k|21002.8 |    44M |  21 |2445 |4193 |6052 |  29k|  4 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  293s|   200 |   201 |  2474k|12367.5 |    49M |  23 |2445 |4193 |5179 |  48k|  4 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  469s|   300 |   301 |  4338k|14468.1 |    55M |  33 |2445 |4193 |5633 |  74k|  8 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+  555s|   400 |   401 |  5234k|13086.1 |    61M |  33 |2445 |4193 |6192 |  92k|  7 |   0 |   0 | 2.129367e+06 |      --      |    Inf | unknown
+
+SCIP Status        : solving was interrupted [time limit reached]
+Solving Time (sec) : 600.00
+Solving Nodes      : 418
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +2.12936651883404e+06
+Gap                : infinite
+time limit reached
+option pl_linearize 2;
+option var_bounds 1;
+Total cost using scip: 0.0
+scip solve time: 600.21 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: infeasible problem
+0 simplex iterations
+
+suffix dunbdd OUT;
+
+*******************************************************************************
+
+Total absolute constraint violation: 8.70e+04
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 0.00e+00
+Sum of approx  head-loss violation  : 0.00e+00
+Sum of absolute diff (orig vs approx): 0.00e+00
+Sum of relative diff (orig vs approx): 0.00e+00
+
+*******************************************************************************
+
+Total Cost: 0.0
+cplex solve time: 0.04 seconds

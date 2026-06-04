@@ -1,0 +1,209 @@
+Water Network: 1
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using gurobi --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+Gurobi 13.0.0: Set parameter LogToConsole to value 1
+  tech:outlev = 1
+  tech:outlev_mp = 1
+Set parameter Presolve to value 1
+  pre:solve = 1
+Set parameter Aggregate to value 1
+  pre:aggregate = 1
+Set parameter TimeLimit to value 600
+  lim:time = 600
+Set parameter NumericFocus to value 1
+  alg:numericfocus = 1
+Set parameter OBBT to value 0
+  mip:obbt = 0
+Set parameter ScaleFlag to value 1
+  pre:scale = 1
+Set parameter Method to value 2
+  alg:method = 2
+Set parameter NodeMethod to value 1
+  mip:nodemethod = 1
+Set parameter NonConvex to value 2
+  qp:nonconvex = 2
+Set parameter MIPFocus to value 1
+  mip:focus = 1
+Set parameter NLPHeur to value 1
+  alg:nlpheur = 1
+Set parameter VarBranch to value 0
+  mip:varbranch = 0
+Set parameter MIPGapAbs to value 1e-06
+  mip:gapabs = 9.9999999999999995e-07
+Set parameter MIPGap to value 1e-09
+  mip:gap = 1.0000000000000001e-09
+Set parameter FeasibilityTol to value 1e-06
+  alg:feastol = 9.9999999999999995e-07
+  cvt:pre:feastol = 9.9999999999999995e-07
+  cvt:pre:feastolrel = 1.0000000000000001e-09
+  sol:chk:feastol = 9.9999999999999995e-07
+  sol:chk:feastolrel = 1.0000000000000001e-09
+Set parameter Heuristics to value 0.05
+  mip:heurfrac = 0.050000000000000003
+
+AMPL MP initial flat model has 27 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  69 linear; 7 quadratic;
+Algebraic expressions:  7 signpowconstexp;
+
+AMPL MP final model has 55 variables (0 integer, 0 binary);
+Objectives: 1 linear; 
+Constraints:  76 linear; 7 quadratic;
+Algebraic expressions:  7 signpowconstexp;
+
+
+Set parameter InfUnbdInfo to value 1
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (linux64 - "Debian GNU/Linux 13 (trixie)")
+
+CPU model: INTEL(R) XEON(R) GOLD 6530, instruction set [SSE2|AVX|AVX2|AVX512]
+Thread count: 32 physical cores, 64 logical processors, using up to 32 threads
+
+Non-default parameters:
+TimeLimit  600
+MIPGap  1e-09
+MIPGapAbs  1e-06
+Method  2
+ScaleFlag  1
+MIPFocus  1
+NodeMethod  1
+OBBT  0
+NLPHeur  1
+VarBranch  0
+InfUnbdInfo  1
+NonConvex  2
+NumericFocus  1
+Presolve  1
+
+Optimize a model with 76 rows, 55 columns and 159 nonzeros (Min)
+Model fingerprint: 0x60b16719
+Model has 7 linear objective coefficients
+Model has 7 general nonlinear constraints (14 nonlinear terms)
+Variable types: 55 continuous, 0 integer (0 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 6e+05]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [2e-02, 4e+04]
+  RHS range        [4e-02, 7e+04]
+  NLCon coe range  [4e+02, 3e+03]
+Presolve model has 7 nlconstr
+Added 14 variables to disaggregate expressions
+Presolve removed 1 rows and 22 columns
+Presolve time: 0.00s
+Presolved: 157 rows, 48 columns, 352 nonzeros
+Presolved model has 7 bilinear constraint(s)
+Presolved model has 7 nonlinear constraint(s)
+
+Solving non-convex NLP to global optimality
+
+Variable types: 48 continuous, 0 integer (0 binary)
+Root barrier log...
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 1.130e+03
+ Factor NZ  : 1.441e+03
+ Factor Ops : 2.397e+04 (less than 1 second per iteration)
+ Threads    : 1
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   2.44614309e+07 -1.86040626e+09  2.78e+02 2.43e+00  2.84e+07     0s
+   1   7.19374608e+06 -2.22895418e+08  4.19e+01 8.73e-11  2.62e+06     0s
+   2   4.22964001e+05 -2.38651581e+07  1.76e+00 8.73e-11  1.77e+05     0s
+   3   1.62746988e+05 -8.73199812e+05  2.23e-01 2.33e-10  1.02e+04     0s
+   4   8.11211086e+04 -2.42310656e+05  8.41e-03 8.73e-11  1.89e+03     0s
+   5   6.38994028e+04  4.03161454e+04  8.11e-04 5.31e-11  1.32e+02     0s
+   6   5.90682440e+04  5.40368774e+04  1.38e-05 3.94e-11  2.80e+01     0s
+   7   5.82410216e+04  5.73387368e+04  3.61e-06 6.93e-12  5.02e+00     0s
+   8   5.81403608e+04  5.79490172e+04  1.11e-06 2.10e-12  1.06e+00     0s
+   9   5.80881666e+04  5.80806003e+04  6.58e-08 2.91e-11  4.21e-02     0s
+  10   5.80853013e+04  5.80852923e+04  2.50e-12 2.08e-12  5.01e-05     0s
+  11   5.80852977e+04  5.80852977e+04  2.65e-13 1.17e-11  5.01e-08     0s
+  12   5.80852977e+04  5.80852977e+04  3.00e-13 3.04e-12  5.01e-11     0s
+
+Barrier solved model in 12 iterations and 0.03 seconds (0.01 work units)
+Optimal objective 5.80852977e+04
+
+Crossover time: 0.00 seconds (0.00 work units)
+
+Root relaxation: objective 5.808530e+04, 10 iterations, 0.01 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 58085.2977    0   12          - 58085.2977      -     -    0s
+H    0     0                    139831.53315 58085.2977  58.5%     -    0s
+     0     0 63562.3118    0   11 139831.533 63562.3118  54.5%     -    0s
+     0     0 64626.0411    0   12 139831.533 64626.0411  53.8%     -    0s
+     0     0 64716.5248    0   11 139831.533 64716.5248  53.7%     -    0s
+     0     0 64793.4763    0   12 139831.533 64793.4763  53.7%     -    0s
+     0     0 64803.7997    0   10 139831.533 64803.7997  53.7%     -    0s
+     0     0 64803.7997    0   10 139831.533 64803.7997  53.7%     -    0s
+H    0     0                    125618.35103 64803.7997  48.4%     -    0s
+     0     2 64803.7997    0   10 125618.351 64803.7997  48.4%     -    0s
+*  431   147              60    124714.03842 90711.2847  27.3%  17.1    0s
+*  740    60              53    124360.41124 100682.820  19.0%  20.4    0s
+*  866    60              61    124130.87655 100682.820  18.9%  22.0    0s
+*  895    25              57    123960.84009 107565.361  13.2%  22.3    0s
+H 1711   704                    123958.05833 123878.272  0.06%  12.7    0s
+H 1854   704                    123936.56122 123878.272  0.05%  11.7    0s
+H 1876   704                    123928.92756 123878.272  0.04%  11.6    0s
+H18956  3797                    123887.52843 123878.272  0.01%   1.2    1s
+
+Cutting planes:
+  RLT: 9
+
+Explored 19076 nodes (24927 simplex iterations) in 1.58 seconds (0.31 work units)
+Thread count was 32 (of 64 available processors)
+
+Solution count 10: 123888 123929 123937 ... 139832
+
+Sub-optimal termination (unable to solve some node relaxations)
+Best objective 1.238875284304e+05, best bound 1.238816534061e+05, gap 0.0047%
+Gurobi 13.0.0: suboptimal solution, can be infeasible; objective 123887.5284
+24927 simplex iterations
+60 barrier iterations
+19076 branching nodes
+absmipgap=5.87502, relmipgap=4.74222e-05
+Objective: 123887.52843044154
+gurobi solve time: 1.61 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: optimal solution; objective 123887.5284
+20 simplex iterations
+
+Total absolute constraint violation: 7.84e-12
+
+*******************************************************************************
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| Arc (i,j)   |        Flow |   Original Violation |   Approx Violation |   Absolute Diff |   Relative Diff |
++=============+=============+======================+====================+=================+=================+
+| 1,2         | 0.42043     |             7.11e-15 |           8.88e-15 |        1.78e-15 |        2.01e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 2,3         | 0.291997    |            -2.18e-14 |          -2.2e-14  |       -2.22e-16 |       -1.63e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 2,6         | 0.128433    |            -1.28e-13 |          -1.28e-13 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 3,4         | 0.248557    |            -3.2e-14  |          -3.11e-14 |        8.88e-16 |        1.62e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 4,5         | 0.208267    |            -3.91e-14 |          -3.91e-14 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 6,7         | 0.0806531   |            -5.77e-14 |          -5.6e-14  |        1.78e-15 |        2.5e-16  |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 7,5         | 0.000333128 |            -2.29e-15 |           7.1e-12  |        7.11e-12 |        1.46e-10 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+
+Sum of original head-loss violation : 2.88e-13
+Sum of approx  head-loss violation  : 7.39e-12
+Sum of absolute diff (orig vs approx): 7.11e-12
+Sum of relative diff (orig vs approx): 1.46e-10
+
+*******************************************************************************
+
+Total Cost: 123887.52843044155
+cplex solve time: 0.01 seconds

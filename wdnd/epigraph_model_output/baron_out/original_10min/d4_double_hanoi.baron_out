@@ -1,0 +1,117 @@
+Water Network: 4
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using baron --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+BARON 25.12.10 (2025.12.10): optfile=optfile
+EpsA=1e-6
+EpsR=1e-6
+AbsConFeasTol=1e-6
+RelConFeasTol=1e-9
+MaxTime=600
+DoLocal=1
+PrLevel=1
+version 
+objbound 
+wantsol = 2
+outlev = 2
+barstats
+Time-limited version (expiring midnight 20260630 GMT)
+License 69689b50-1 for A7409: IE 802, Prof. Ashutosh Mahajan, Indian Institute of Technology Bombay
+BARON 25.12.10 (2025.12.10) (Linux x86_64), driver(20251225), ASL(20250727)
+
+===========================================================================
+ BARON version 25.12.10. Built: LNX-int-64 2025-12-10 23:22:04           
+ Running on machine kanjur
+
+ BARON is a product of The Optimization Firm. For more information and 
+ related optimization and data analytics products visit https://minlp.com.
+
+
+ If you publish work using this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Zhang, Y. and N. V. Sahinidis, Solving continuous and discrete
+ nonlinear programs with BARON, Comput Optim Appl, 92, 1123-1161, 2025. 
+ https://doi.org/10.1007/s10589-024-00633-0
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP/QP: CLP/CBC                                         
+ For NLP: External NLP, IPOPT, FILTERSQP
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 0.122724E+08
+ Solving bounding LP
+ Starting multi-start local search
+ Done with local search
+===========================================================================
+  Iteration       Time (s)     Mem   Lower bound     Upper bound   Progress
+*         1           0.17    17MB    0.359930E+07    0.121312E+08    0.17%
+*         1           0.53    17MB    0.359930E+07    0.120647E+08    0.17%
+          1           0.74    17MB    0.359930E+07    0.120647E+08    0.17%
+        883          30.74    17MB    0.359930E+07    0.120647E+08    3.91%
+       1917          60.78    17MB    0.359930E+07    0.120647E+08    5.27%
+       2928          90.78    17MB    0.363298E+07    0.120647E+08    6.56%
+       3957         120.84    17MB    0.365804E+07    0.120647E+08    7.28%
+       4894         150.86    17MB    0.368432E+07    0.120647E+08    7.76%
+       5936         180.90    17MB    0.368432E+07    0.120647E+08    8.15%
+       6824         210.93    17MB    0.368432E+07    0.120647E+08    8.42%
+       7756         240.93    17MB    0.368432E+07    0.120647E+08    8.42%
+       8579         271.00    17MB    0.368432E+07    0.120647E+08    8.43%
+       9327         301.00    17MB    0.368432E+07    0.120647E+08    8.43%
+      10215         331.03    17MB    0.368432E+07    0.120647E+08    8.43%
+      11139         361.04    17MB    0.368432E+07    0.120647E+08    8.48%
+      12622         391.04    17MB    0.368432E+07    0.120647E+08    8.54%
+      13351         421.05    17MB    0.368432E+07    0.120647E+08    8.59%
+      14009         451.16    17MB    0.368432E+07    0.120647E+08    8.59%
+      14673         481.16    17MB    0.368432E+07    0.120647E+08    8.60%
+      15311         511.21    17MB    0.368432E+07    0.120647E+08    8.60%
+      15947         541.27    17MB    0.368432E+07    0.120647E+08    8.60%
+      16595         571.30    17MB    0.368432E+07    0.120647E+08    8.60%
+      17182         600.00    17MB    0.368432E+07    0.120647E+08    8.60%
+
+                    *** Max. allowable time exceeded ***      
+
+ Wall clock time:                   600.03
+ Total CPU time used:               600.00
+
+ Total no. of BaR iterations:   17182
+ Best solution found at node:       1
+ Max. no. of nodes in memory:     961
+ 
+ All done
+===========================================================================
+BARON 25.12.10 (2025.12.10): 17182 iterations, CPU time limit reached.
+Objective 12064652.23
+Objective lower bound = 3684319.058546874, upper bound = 12064652.225226726
+barstatus = 4, modelstatus = 4
+max nodes in memory = 961
+optimum found at node 1
+Baron run time (excluding setup) = 600 seconds
+
+suffix obj_ub OUT;
+suffix obj_lb OUT;
+Total cost using baron: 12064652.225226728
+baron solve time: 600.05 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: infeasible problem
+69 simplex iterations
+
+suffix dunbdd OUT;
+
+*******************************************************************************
+
+Total absolute constraint violation: 6.46e-04
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 8.60e-11
+Sum of approx  head-loss violation  : 9.27e-11
+Sum of absolute diff (orig vs approx): 6.96e-12
+Sum of relative diff (orig vs approx): 2.01e-11
+
+*******************************************************************************
+
+Total Cost: 12064652.225290308
+cplex solve time: 0.01 seconds

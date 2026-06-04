@@ -1,0 +1,136 @@
+Water Network: 1
+***********************************************************************************************
+
+-------------------------------- Solving Reduced Model using knitro --------------------------
+WDN Model Name: exact_reduced_wdn.mod
+Artelys Knitro 15.1.0: maxtime_real = 600
+outlev = 4
+opttol_abs=1e-6
+opttol = 1e-6
+feastol_abs = 1.0e-6
+feastol = 1.0e-9
+ms_enable = 1
+ms_maxsolves = 10
+
+=======================================
+          Commercial License
+         Artelys Knitro 15.1.0
+=======================================
+
+Knitro using up to 8 threads.
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 1 variable and 21 constraints.
+
+concurrent_evals         0
+datacheck                0
+feastol                  1e-09
+feastol_abs              1e-06
+findiff_numthreads       1
+hessian_no_f             1
+hessopt                  1
+maxtime_real             600
+ms_enable                1
+ms_maxsolves             10
+opttol                   1e-06
+opttol_abs               1e-06
+outlev                   4
+
+Problem Characteristics                     |           Presolved
+-----------------------
+Problem type: NLP
+Objective: minimize / linear
+Number of variables:                     28 |                            27
+  bounds:         lower     upper     range |     lower     upper     range
+                      0         0         7 |         9         3         8
+                             free     fixed |                free     fixed
+                               21         0 |                   7         0
+Number of constraints:                   90 |                            76
+                    eq.     ineq.     range |       eq.     ineq.     range
+  linear:             7        69         7 |         6        63         0
+  quadratic:          0         0         0 |         0         0         0
+  nonlinear:          7         0         0 |         7         0         0
+Number of nonzeros:
+              objective  Jacobian   Hessian | objective  Jacobian   Hessian
+  linear:             7       153           |         7       152          
+  quadratic:          0         0         0 |         0         0         0
+  nonlinear:          0        28        14 |         0        28        14
+  total:              7       181        14 |         7       166        14
+
+Knitro parallel multistart will run with 8 threads.
+
+Return codes description
+------------------------
+  0:  The final solution satisfies the termination conditions for verifying optimality.
+  -100 to -199:  A feasible approximate solution was found.
+  -200 to -299:  Knitro terminated at an infeasible point.
+  -300 to -301:  The problem was determined to be unbounded.
+  -400 to -499:  Knitro terminated because it reached a pre-defined limit.
+    -400 to -409:  A feasible point was found.
+    -410 to -419:  No feasible point was found.
+  -500 to -599:  Knitro terminated with an input error or some non-standard error.
+A more detailed description of individual return codes and their corresponding
+termination messages is provided at
+https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
+
+ Solve Thrd Status   Objective   FeasError   Opt Error   Solve Time  Real Time 
+ ----- ---- ------ ------------ ----------- ----------- ----------- -----------
+     7    5      0      152844. 1.45519e-11 6.26650e-09    0.470541    0.605080
+     3    6      0      150695. 1.45519e-11 2.32831e-10    0.496782    0.609777
+     1    2      0      136554. 1.05951e-07 6.79413e-07    0.575184    0.613906
+     2    4      0      139187. 1.45519e-11 3.05610e-09    0.581651    0.613906
+     6    7      0      139187. 1.45519e-11 4.65661e-10    0.583815    0.613906
+     9    6      0      152844. 7.67896e-08 4.02506e-08    0.116482    0.615388
+     0    1      0      138245. 1.45519e-11 1.04146e-09    0.611859    0.615564
+     8    5      0      136554. 1.45519e-11 5.82077e-11    0.141764    0.615564
+     5    0      0      123883. 9.47729e-10 9.54284e-09    0.838755    0.840731
+     4    3      0      123883. 1.45519e-11 2.98023e-08    0.918974    0.920864
+
+MULTISTART: Best locally optimal solution is returned.
+EXIT: All multi-start solves have terminated.
+      10 solve(s) returned satisfactory solutions.
+
+Final Statistics
+----------------
+Final objective value               =   1.23882614356972e+05
+Final feasibility error (abs / rel) =   1.46e-11 / 3.11e-16
+Final optimality error  (abs / rel) =   2.98e-08 / 2.98e-08
+# of iterations                     =       1862 
+# of CG iterations                  =          0 
+# of function evaluations           =       4988
+# of gradient evaluations           =       1939
+# of Hessian evaluations            =       1867
+Total program time (secs)           =       0.92173 (     1.863 CPU time)
+
+================================================================================
+
+Knitro 15.1.0: Locally optimal or satisfactory solution.
+objective 123882.6144; feasibility error 1.46e-11
+1862 iterations; 4988 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+Total cost using knitro: 123882.61435697218
+knitro solve time: 0.98 seconds
+
+-------------------------------- Solving Recover Model using cplex --------------------------
+CPLEX 22.1.2: CPLEX 22.1.2: optimal solution; objective 123882.6144
+20 simplex iterations
+
+*******************************************************************************
+
+Total absolute constraint violation: 6.51e-11
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 4.19e-13
+Sum of approx  head-loss violation  : 6.47e-11
+Sum of absolute diff (orig vs approx): 6.45e-11
+Sum of relative diff (orig vs approx): 8.86e-09
+
+*******************************************************************************
+
+Total Cost: 123882.61435697228
+cplex solve time: 0.03 seconds
