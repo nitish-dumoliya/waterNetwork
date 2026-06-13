@@ -57,7 +57,7 @@ minimize total_cost : sum{(i,j) in arcs} sum{k in pipes}l[i,j,k]*C[k];
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
-    sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] -  D[j] = 0
+    sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] =  D[j]
 ;
 
 # hazen-Williams Constraint 
@@ -67,7 +67,7 @@ subject to con1{j in nodes diff Source}:
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs}: 
      #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)) = 0;
+    h[i] - h[j]  =  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #(h[i] - h[j])  =  q[i,j] * ((q[i,j]^2 + eps[i,j]^2))^0.426 * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + 0.574 * eps[i,j]^2) / (q[i,j]^2 + eps[i,j]^2)^0.574) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
     #h[i] - h[j]  =  (q[i,j] * (q[i,j]^2 + eps[i,j]^2)^0.426 - (0.426 * eps[i,j]^2 / (q[i,j]^2 + eps[i,j]^2)^0.574)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87));
@@ -106,7 +106,7 @@ subject to con3{(i,j) in arcs}:
     sum{k in pipes} l[i,j,k] = L[i,j]
 ;
 subject to con4{(i,j) in arcs , k in pipes}: 
-    l[i,j,k] - L[i,j] <= 0
+    l[i,j,k] <= L[i,j]
 ;
 
 #subject to con5{(i,j) in arcs , k in pipes}: 
@@ -114,9 +114,9 @@ subject to con4{(i,j) in arcs , k in pipes}:
 #;
 
 subject to con6{i in Source}: 
-    h[i] - E[i] = 0
+    h[i] = E[i]
 ;
-subject to con7{i in nodes diff Source}: -h[i] + (E[i] + P[i]) <= 0;
+subject to con7{i in nodes diff Source}: h[i] >= E[i] + P[i];
 #subject to con6_{i in nodes diff Source}: h[i] <= max{j in Source} E[j] ;
 #subject to con8{(i,j) in arcs}: 
 #   -Q_max <= q[i,j] <= Q_max

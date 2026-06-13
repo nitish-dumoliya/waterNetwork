@@ -95,10 +95,10 @@ subject to con6{i in Source}:
     h[i] - E[i] = 0;
 
 subject to con7{i in nodes diff Source}:
-    -h[i] + E[i] + P[i] <=0 ;
+    -h[i] + E[i] + P[i] <= 0;
 
 subject to exact_cost{(i,j) in arcs, s in segs}:
-   L[i,j]*(slope[s] * y[i,j] + intercept[s]) - z[i,j] <= 0 ;
+    -z[i,j] + L[i,j]*(slope[s] * y[i,j] + intercept[s])  <= 0;
 
 #subject to z_bounds_l{(i,j) in arcs}:
 #    c_min*L[i,j] <= z[i,j] ;
