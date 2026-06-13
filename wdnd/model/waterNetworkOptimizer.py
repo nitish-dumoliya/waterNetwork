@@ -149,8 +149,8 @@ class WaterNetworkOptimizer:
         self.alpha_expand = 1.2
         self.alpha_q = self.alpha_q_min
 
-        self.eta_l_min = 0.2
-        self.eta_h_min = 0.2
+        self.eta_l_min = 0.5
+        self.eta_h_min = 0.5
         self.eta_l_expand = 1.5
         self.eta_h_expand = 1.5
         self.eta_l = self.eta_l_min
@@ -170,11 +170,12 @@ class WaterNetworkOptimizer:
         self.p = 1.852
         self.omega = 10.67
         
-        self.alpha_y_min = 0.1
-        self.eta_z_min = 0.1
+        self.alpha_y_min = 0.05
+        self.eta_z_min = 0.05
         self.alpha_y = self.alpha_y_min
         self.eta_z = self.eta_z_min
         self.nlp_local_fail = 0 
+        self.scaling = 1.0
 
     # ── Model Loading ─────────────────────────────────────────────────────────
 
@@ -1471,14 +1472,20 @@ class WaterNetworkOptimizer:
         # )
         ampl_nlp.set_option(
             "ipopt_options",
-            f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = no "
+            f"outlev = 0 "
             f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             f"warm_start_init_point = yes "
-            "linear_solver = ma57 "
-            "halt_on_ampl_error = yes "
-            "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
+            f"warm_start_bound_push        = 1e-9 "  # default 1e-3, smaller = stay closer to bounds
+            f"warm_start_mult_bound_push   = 1e-9 "  # keep multipliers close to previous
+            f"warm_start_bound_frac        = 1e-9 "  # fraction push from bounds
+            f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
+            f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
+            f"obj_scaling_factor = {self.scaling} "
+            # "linear_solver = ma57 "
+            # "halt_on_ampl_error = yes "
+            # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
         )
-        ampl_nlp.option["presolve"] = "1"
+        # ampl_nlp.option["presolve"] = "1"
         ampl_nlp.option["presolve_eps"] = "1.86e-7"
         return ampl_nlp
 
@@ -1487,14 +1494,14 @@ class WaterNetworkOptimizer:
     def solve(self):
         """Solve the initial NLP relaxation."""
         self.ampl.option["solver"] = "ipopt"
-        # self.ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
+        # self.ampl.option['solver'] = "/home/nitishdumoliya/ipopt_3.14.20/dist/bin/ipopt"
         self.ampl.set_option(
             "ipopt_options",
-            f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = no "
-            # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            f"outlev = 1 "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             f"warm_start_init_point = no "
-            "linear_solver = ma57 "
-            "halt_on_ampl_error = yes "
+            # "linear_solver = ma57 "
+            # "halt_on_ampl_error = yes "
             # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
         )
 
@@ -2351,15 +2358,30 @@ class WaterNetworkOptimizer:
         self.local_ampl.read_data(self.data_file)
         self.local_ampl.option["solver"] = "ipopt"
         # self.local_ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+        # self.local_ampl.option['solver'] = "/home/nitishdumoliya/ipopt_3.14.20/dist/bin/ipopt"
         self.local_ampl.set_option(
             "ipopt_options",
-            f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = no "
-            # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            f"outlev = 1 "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             f"warm_start_init_point = yes "
-            "linear_solver = ma57 "
+            # "linear_solver = ma57 "
             # "halt_on_ampl_error = yes "
-            "mu_strategy = adaptive "
+            # "mu_strategy = adaptive "
+            # "mu_oracle = probing "
+            # "obj_scaling_factor = 0.5 "
             # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 alpha_for_y_tol = 1e-6 "
+            # "tol = 1e-6 acceptable_tol = 1e-4 constr_viol_tol = 1e-6 dual_inf_tol = 1e-4"
+            # "warm_start_bound_push=1e-9 "
+            # "warm_start_mult_bound_push=1e-9 "
+            f"warm_start_bound_push        = 1e-9 "  # default 1e-3, smaller = stay closer to bounds
+            f"warm_start_mult_bound_push   = 1e-9 "  # keep multipliers close to previous
+            f"warm_start_bound_frac     = 1e-9 "  # fraction push from bounds
+            f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
+            f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
+            f"obj_scaling_factor = {self.scaling} "
+
+
+
         )
         # self.local_ampl.option["ipopt_options"] = (
         #     "outlev=0 "
@@ -2370,7 +2392,6 @@ class WaterNetworkOptimizer:
         #     # "linear_solver = mumps "
         #     # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
         # )
-        self.local_ampl.option["presolve"] = "1"
         self.local_ampl.option["presolve_eps"] = "1.86e-7"
         # ------------------------------------------------------------
         # Reference + perturbation parameters
@@ -2945,7 +2966,7 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = False
         self.local_improvement = False
         self.do_arc_reversal = True
-        self.total_run = 10
+        self.total_run = 5
         self.visited_arc_reduced: list = []
 
         self._print_iteration_header(self.local_iteration)
@@ -3135,17 +3156,22 @@ class WaterNetworkOptimizer:
             # ampl.set_option("ipopt_options", f"outlev = 0 expect_infeasible_problem = no warm_start_init_point = yes halt_on_ampl_error = yes linear_solver ma57 ma57_pivot_order 2 ma57_pivtol 1e-8 ma57_pivtolmax 1e-4 mu_strategy adaptive alpha_for_y_tol 1e-6")   #max_iter = 1000
             ampl.set_option(
                 "ipopt_options",
-                f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = no "
+                f"outlev = 1 "
                 f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
                 f"warm_start_init_point = yes "
-                "linear_solver = ma57 "
-                "halt_on_ampl_error = yes "
-                "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
+                f"warm_start_bound_push        = 1e-9 "  # default 1e-3, smaller = stay closer to bounds
+                f"warm_start_mult_bound_push   = 1e-9 "  # keep multipliers close to previous
+                f"warm_start_bound_frac        = 1e-9 "  # fraction push from bounds
+                f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
+                f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
+                f"obj_scaling_factor = {self.scaling} "
+                # "linear_solver = ma57 "
+                # "halt_on_ampl_error = yes "
+                # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
             )
             # ampl.option["ipopt_options"] = f"outlev = 0 expect_infeasible_problem = no bound_relax_factor = 0 tol = 1e-9 bound_push = {self.bound_push} bound_frac = {self.bound_frac} warm_start_init_point = yes halt_on_ampl_error = yes mu_strategy = adaptive recalc_y = no"
             # ampl.set_option("snopt_options", "outlev = 2")
             ampl.option["presolve_eps"] = "6.82e-14"
-            ampl.option['presolve'] = 1
             with self.suppress_output():
                 ampl.solve()
             #self.ampl.eval("display q;")
@@ -3228,7 +3254,7 @@ class WaterNetworkOptimizer:
 
                     self.local_iteration = self.iteration + 1
                     self.local_improvement = False
-                    self.total_run = 10
+                    self.total_run = 5
                     print(f"Iteration {self.local_iteration}" )
                     print("----------------------------------------------------------------------------------------")
                     print(f"{'NLP':<5}{'C_Best_Sol':<14}{'New_Sol':<14}"f"{'Solve_Time':<12}{'Solve_Result':<14}{'Improved':<10}{'Time':<12}")
@@ -4151,6 +4177,7 @@ class WaterNetworkOptimizer:
 
         ampl.option['solver'] = 'ipopt'
         # ampl.option['solver'] = "/home/nitishdumoliya/build/bin/ipopt"
+        # ampl.option['solver'] = "/home/nitishdumoliya/ipopt_3.14.20/dist/bin/ipopt"
         # ampl.option["ipopt_options"] = (
         #     "outlev=0 "
         #     "bound_relax_factor=0 "
@@ -4161,12 +4188,20 @@ class WaterNetworkOptimizer:
         # )
         ampl.set_option(
             "ipopt_options",
-            f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = no "
+            f"outlev = 1 "
             f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             f"warm_start_init_point = yes "
-            "linear_solver = ma57 "
-            "halt_on_ampl_error = yes "
-            "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
+            f"warm_start_bound_push        = 1e-9 "  # default 1e-3, smaller = stay closer to bounds
+            f"warm_start_mult_bound_push   = 1e-9 "  # keep multipliers close to previous
+            f"warm_start_bound_frac     = 1e-9 "  # fraction push from bounds
+            f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
+            f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
+            f"obj_scaling_factor = {self.scaling} "
+
+
+            # "linear_solver = ma57 "
+            # "halt_on_ampl_error = yes "
+            # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
         )
         with self.suppress_output():
             ampl.solve()
@@ -4229,6 +4264,7 @@ class WaterNetworkOptimizer:
         ampl.read_data(self.data_file)
         ampl.option["solver"] = "ipopt"
         # ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+        # ampl.option['solver'] = "/home/nitishdumoliya/ipopt_3.14.20/dist/bin/ipopt"
 
 
         # ampl.set_option(
@@ -4238,15 +4274,25 @@ class WaterNetworkOptimizer:
         # )
         ampl.set_option(
             "ipopt_options",
-            f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = yes "
-            # f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            f"outlev = 0 "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             f"warm_start_init_point = yes "
-            "linear_solver = ma57 "
+            f"warm_start_bound_push        = 1e-9 "  # default 1e-3, smaller = stay closer to bounds
+            f"warm_start_mult_bound_push   = 1e-9 "  # keep multipliers close to previous
+            f"warm_start_bound_frac     = 1e-9 "  # fraction push from bounds
+            f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
+            f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
+            f"obj_scaling_factor = {self.scaling} "
+
+
+            # "linear_solver = ma57 "
             # "halt_on_ampl_error = yes "
-            "mu_strategy = adaptive "
+            # "mu_strategy = adaptive "
             # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 alpha_for_y_tol = 1e-6 "
+            # "mu_oracle = probing "
+            # "obj_scaling_factor = 0.5 "
+            # "tol = 1e-6 acceptable_tol = 1e-4 constr_viol_tol = 1e-6 dual_inf_tol = 1e-4"
         )
-        ampl.option["presolve"] = "1"
         ampl.option["presolve_eps"] = "6.82e-14"
 
         # segment neighbourhood constraints
@@ -4642,23 +4688,23 @@ class WaterNetworkOptimizer:
             # --------------------------------------------------
             # Rank arcs using sensitivity score (absolute value)
             # --------------------------------------------------
-            # sorted_arcs = [
-            #     arc for arc, _ in sorted(
-            #         self.sen_score.items(),
-            #         key=lambda kv: abs(kv[1]),
-            #         reverse=True
-            #     )
-            # ]
-            sorted_arcs = sorted(
-                dual_dict, key=lambda a: abs(dual_dict[a]), reverse=True
-            )
+            sorted_arcs = [
+                arc for arc, _ in sorted(
+                    self.sen_score.items(),
+                    key=lambda kv: abs(kv[1]),
+                    reverse=True
+                )
+            ]
+            # sorted_arcs = sorted(
+            #     dual_dict, key=lambda a: abs(dual_dict[a]), reverse=True
+            # )
             # self.print_table(
             #     ["Rank", "Arc", "|Dual|", "Segments"],
             #     [[r + 1, str(a), f"{abs(dual_dict[a]):.4e}", str(self.seg_index[a])]
             #      for r, a in enumerate(sorted_arcs)],
             #     title="Candidate Arcs",
             # )
-            print("-" * 95)
+            print("-" * 98)
             print(
                 f"{'NLP':<8}"
                 f"{'Arc':<15}"
@@ -4669,7 +4715,7 @@ class WaterNetworkOptimizer:
                 f"{'Improved':<10}"
                 f"{'Cumul. Time'}"
             )
-            print("-" * 95)
+            print("-" * 98)
 
             # ============================================================
             # ARC LOOP
@@ -5046,6 +5092,7 @@ class WaterNetworkOptimizer:
         # ============================================================
         ampl.option["solver"] = "ipopt"
         # ampl.option["solver"] = "/home/nitishdumoliya/build/bin/ipopt"
+        # ampl.option['solver'] = "/home/nitishdumoliya/ipopt_3.14.20/dist/bin/ipopt"
 
         # Alternative solvers
         # ampl.option["solver"] = "baron"
@@ -5066,12 +5113,20 @@ class WaterNetworkOptimizer:
         # )
         ampl.set_option(
             "ipopt_options",
-            f"outlev = 1 bound_relax_factor = 0 expect_infeasible_problem = no "
+            f"outlev = 1 bound_relax_factor = 0 "
             f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
             f"warm_start_init_point = yes "
-            "linear_solver = ma57 "
-            "halt_on_ampl_error = yes "
-            "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
+            f"warm_start_bound_push        = 1e-9 "  # default 1e-3, smaller = stay closer to bounds
+            f"warm_start_mult_bound_push   = 1e-9 "  # keep multipliers close to previous
+            f"warm_start_bound_frac        = 1e-9 "  # fraction push from bounds
+            f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
+            f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
+            f"obj_scaling_factor = {self.scaling} "
+
+
+            # "linear_solver = ma57 "
+            # "halt_on_ampl_error = yes "
+            # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
         )
         # ============================================================
         # BARON options
@@ -5400,6 +5455,8 @@ class WaterNetworkOptimizer:
             self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
             self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
 
+        self.scaling = 1.0/self.current_cost
+
         # Cache initial duals and con2 dual dict
         self.all_duals = {
             name: con.getValues()
@@ -5451,7 +5508,7 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = False
         self.local_improvement = False
         self.do_arc_reversal = True
-        self.total_run = 10
+        self.total_run = 5
 
         self._print_iteration_header(self.local_iteration)
         # self.local_solution_improvement_heuristic_new()
@@ -5472,7 +5529,7 @@ class WaterNetworkOptimizer:
         self.is_improved_in_arc_reversal = False
         self.do_diameter_reduction = False
         self.reversed_arcs: list = []
-        # self.iterate_acyclic_flows()
+        self.iterate_acyclic_flows()
         # self.initialize_arc_reversal_model()
         # self.iterate_acyclic_flows_fast()
         #-------------------------------------------------------------------------------------------------------#
