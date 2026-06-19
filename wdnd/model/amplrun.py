@@ -16,7 +16,6 @@ class WaterNetworkSolver:
 
         self.solver_name = solver_name
         self.ampl = AMPL()
-        # self.ampl.setOption('hsllib', '/usr/local/lib/libma57.so')        
         # To store solutions
         self.q_init = {}
         self.h_init = {}
@@ -27,10 +26,18 @@ class WaterNetworkSolver:
         self.eps = {}
 
     def read_model_and_data(self):
-        if self.data_number == 5:
+        if self.data_number == 4:
             self.model_file = "newyork_model.mod"
-        elif self.data_number == 6:
+        elif self.data_number == 7:
             self.model_file = "blacksburg_model.mod"
+        elif self.data_number == 9:
+            self.model_file = "bakryun_model.mod"
+        elif self.data_number == 13:
+            self.model_file = "farhadgerd_model.mod"
+        elif self.data_number == 3:
+            self.model_file = "trn_model.mod"
+        elif self.data_number == 22:
+            self.model_file = "marchi_rural_model.mod"
         else:
             self.model_file = "wdnmodel.mod"
 
@@ -39,7 +46,6 @@ class WaterNetworkSolver:
         self.ampl.reset()
         self.ampl.read(self.model_file)
         self.ampl.read_data(self.data_file)
-
 
         self.nodes = self.ampl.getSet('nodes')
         self.source = self.ampl.getSet('Source')
@@ -53,6 +59,23 @@ class WaterNetworkSolver:
         self.R = self.ampl.getParameter('R').to_dict()
         self.E = self.ampl.getParameter('E').to_dict()
         self.d = self.ampl.getParameter('d').to_dict()
+
+        # if self.data_number==15:
+        #     non_fix_arcs = [(99,1), (1,2), (2,3), (3,4), (4,6), (6,7), (7,11), (11, 16), (16, 17)]
+        #     for (i,j) in non_fix_arcs:
+        #         # self.ampl.eval(f"s.t. con_headloss_{i}_{j}:h[{i}] - h[{j}]  = (q[{i},{j}])^3 *((((q[{i},{j}])^2 + eps[{i},{j}]^2)^0.426) /((q[{i},{j}])^2 + 0.426*eps[{i},{j}]^2)) * sum{{k in pipes}}(omega * l[{i},{j},k]/(R[k]^1.852 * d[k]^4.87));")
+        #         self.ampl.eval(
+        #             f"s.t. con_headloss_{i}_{j}: "
+        #             f"h[{i}] - h[{j}] = "
+        #             f"(q[{i},{j}])^3 * "
+        #             f"((((q[{i},{j}])^2 + eps[{i},{j}]^2)^0.426) / "
+        #             f"((q[{i},{j}])^2 + 0.426*eps[{i},{j}]^2)) * "
+        #             f"sum{{k in pipes}}(omega * l[{i},{j},k]/(R[k]^1.852 * d[k]^4.87));"
+        #             )
+        #         self.ampl.eval(f"""
+        #             subject to con3__{i}_{j}: sum{{k in pipes}} l[{i},{j},k] = L[{i},{j}];
+        #             subject to con4_{i}_{j}{{k in pipes}}: l[{i},{j},k] <= L[{i},{j}];
+        #         """)
 
         # n_vars = self.ampl.getValue("_nvars")
         # n_cons = self.ampl.getValue("_ncons")
@@ -92,12 +115,12 @@ class WaterNetworkSolver:
             con6: Minimum pressure head at demand nodes
         """
         total_absolute_constraint_violation = 0.0
-    
+
         # ------------------------------------------------------------------
         # Constraint 1: Flow balance at non-source nodes
         # ------------------------------------------------------------------
         con1_gap = {}
-    
+
         if self.data_number == 5:
             q1 = self.ampl.get_variable('q1').get_values().to_dict()
             q2 = self.ampl.get_variable('q2').get_values().to_dict()
@@ -884,7 +907,7 @@ class WaterNetworkSolver:
     def solve_original_model_without_init(self):
         print(f"\n-------------------------------- Solving with {self.solver_name} --------------------------")
         self.ampl.option['solver'] = sys.argv[1]
-        self.ampl.option["ipopt_options"] = "outlev = 5 expect_infeasible_problem = no bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 5 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
 
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 bonmin.num_resolve_at_root = 10 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 5 option_file_name = ipopt.opt linear_solver = ma57 mu_strategy adaptive"
         # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level = 5 outlev = 4 option_file_name = ipopt.opt"
@@ -903,7 +926,7 @@ class WaterNetworkSolver:
         # self.ampl.option["scip_options"] = "outlev  1 "
         self.ampl.option["knitro_options"] = "maxtime_real = 600 outlev = 4 opttol_abs=1e-6 opttol = 1e-6 feastol_abs = 1.0e-6 feastol = 1.0e-9  ms_enable = 1 ms_maxsolves = 10"
         #self.ampl.option["conopt_options"]= "outlev = 4"
-        self.ampl.option["presolve"] = "1"
+        # self.ampl.option["presolve"] = "1"
         self.ampl.option["presolve_eps"] = "8.53e-15" 
 
         print(f"{sys.argv[1]} solver outputs:")
@@ -920,8 +943,10 @@ class WaterNetworkSolver:
         self.l = self.ampl.get_variable('l').get_values().to_dict()
         self.eps = self.ampl.getParameter('eps').get_values().to_dict()
 
-        print(self.q)
-        self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
+        # print(self.l)
+        # self.ampl.eval("display l;")
+        # self.ampl.eval("display {(i,j) in arcs, k in pipes: l[i,j,k]>1e-6}: l[i,j,k];")
+        # self.constraint_violations(self.q, self.h, self.l, self.eps, self.solver_name)
         # self.constraint_violations(q_init, h_init, l_init, eps, "ipopt")
         #ampl.eval("display con1.body;")
         #ampl.eval("display con2.body;")
@@ -1734,29 +1759,68 @@ class WaterNetworkSolver:
             iter += 1
 
     def run(self):
-        # self.read_model_and_data()
-        # self.solve_original_model_without_init()
+        self.read_model_and_data()
+        self.solve_original_model_without_init()
 
-        self.solve_reduced_model()
-        self.solve_recover_model()
+        # self.solve_reduced_model()
+        # self.solve_recover_model()
 
 if __name__ == "__main__":
     data_list = [
         "d1_bessa",
         "d2_shamir",
-        "d3_hanoi",
-        "d4_double_hanoi",
-        "d5_triple_hanoi",
-        "d6_newyork",
+        "d3_trn",
+        "d4_newyork",
+        "d5_goyang",
+        "d6_kadu",
         "d7_blacksburg",
-        "d8_fossolo_iron",
-        "d9_fossolo_poly_0",
-        "d10_fossolo_poly_1",
-        "d11_kadu",
-        "d12_pescara",
-        "d13_modena",
-        "d14_balerma"
+        "d8_hanoi",
+        "d9_bakryun",
+        "d10_fossolo_iron",
+        "d11_fossolo_poly_0",
+        "d12_fossolo_poly_1",
+        "d13_farhadgerd",
+        "d14_cgn",
+        "d15_double_hanoi",
+        "d16_pescara",
+        "d17_triple_hanoi",
+        "d18_zj_network",
+        "d19_small",
+        "d20_modena",
+        "d21_ramnagar",
+        "d22_marchi_rural",
+        "d23_balerma",
+        "d24_kl",
+        "d25_large"
     ]
+
+    # data_list1 = [
+    #     "d1_bessa",
+    #     "d2_shamir",
+    #     "d3_hanoi",
+    #     "d4_double_hanoi",
+    #     "d5_triple_hanoi",
+    #     "d6_newyork",
+    #     "d7_blacksburg",
+    #     "d8_fossolo_iron",
+    #     "d9_fossolo_poly_0",
+    #     "d10_fossolo_poly_1",
+    #     "d11_kadu",
+    #     "d12_pescara",
+    #     "d13_modena",
+    #     "d14_balerma",
+    #     "d15_goyang",
+    #     "d16_bakryun",
+    #     "d17_farhadgerd",
+    #     "d18_ramnagar",
+    #     "d20_zj_network",
+    #     "d21_trn",
+    #     "d22_kl",
+    #     "d23_marchi_rural",
+    #     "d25_small",
+    #     "d26_large",
+    #     "d24_cgn"
+    # ]
 
     # Select the data number here (0 to 18)
     data_number = int(sys.argv[2]) -1
@@ -1777,5 +1841,5 @@ if __name__ == "__main__":
 
     solver = sys.argv[1] 
 
-    solver_instance = WaterNetworkSolver(solver, data, data_number)
+    solver_instance = WaterNetworkSolver(solver, data, data_number+1)
     solver_instance.run()

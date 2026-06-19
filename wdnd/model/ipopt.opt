@@ -4,10 +4,17 @@ ma57_pivot_order 2
 ma57_pivtol 1e-8
 ma57_pivtolmax 1e-4
 ma57_automatic_scaling yes
-# ma57_pre_alloc 5
+ma57_pre_alloc 5
 mu_strategy adaptive
 alpha_for_y_tol 1e-6
 bound_relax_factor 0
+corrector_type affine
+skip_corr_if_neg_curv no
+hessian_approximation exact
+nlp_scaling_method gradient-based
+max_iter 12000
+
+
 # expect_infeasible_problem yes
 # warm_start_bound_push 1e-9 
 # warm_start_mult_bound_push 1e-9 
@@ -22,9 +29,4 @@ bound_relax_factor 0
 # alpha_for_y full
 # accept_every_trial_step no
 # soc_method 0
-corrector_type affine
-skip_corr_if_neg_curv no
-hessian_approximation exact
-# hessian_approximation limited-memory
-nlp_scaling_method gradient-based
-max_iter 500
+
