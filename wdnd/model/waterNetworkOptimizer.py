@@ -227,6 +227,12 @@ class WaterNetworkOptimizer:
         self.source = self.ampl.getSet("Source")
         self.arcs = self.ampl.getSet("arcs")
         self.pipes = self.ampl.getSet("pipes")
+        
+        if self.data_number==3:
+            self.fixarcs = self.ampl.getSet("fixed_arcs")
+            self.unfixed_arcs = self.ampl.getSet("unfixed_arcs")
+            self.parallel_arcs = self.ampl.getSet("parallel_arcs")
+
 
         if self.data_number == 7:
             self.fixarcs = self.ampl.getSet("fixarcs")
@@ -1480,7 +1486,12 @@ class WaterNetworkOptimizer:
         for (u, v) in self.arcs:
             for k in self.pipes:
                 r = random.uniform(rho_prev, rho_curr)
-                if self.data_number==9:
+                if self.data_number==3:
+                    if (u,v) in self.parallel_arcs or (u,v) in self.unfixed_arcs:
+                        cand = l[u, v, k] + r * self.eta_l * self.L[u, v]
+                        ampl_nlp.eval(f"let l[{u},{v},{k}] := {cand};")
+
+                elif self.data_number==9:
                     if (u,v) in self.parallel_arcs:
                         cand = self.l1[u, v, k] + r * self.eta_l * self.L[u, v]
                         ampl_nlp.eval(f"let l1[{u},{v},{k}] := {cand};")
@@ -1504,17 +1515,23 @@ class WaterNetworkOptimizer:
         # Perturb flows
         for (u, v) in self.arcs:
             r = random.uniform(rho_prev, rho_curr)
-            if self.data_number == 4:
+            if self.data_number==3:
+                if (u,v) in self.parallel_arcs:
+                    ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r * self.Delta};")
+                    ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r * self.Delta};")
+                ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r * self.Delta};")
+
+            elif self.data_number == 4:
                 ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r * self.Delta};")
                 ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r * self.Delta};")
                 ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r * self.Delta};")
-            if self.data_number == 9:
+            elif self.data_number == 9:
                 if (u,v) in self.parallel_arcs:
                     ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r * self.Delta};")
                     ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r * self.Delta};")
                 ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r * self.Delta};")
  
-            if self.data_number == 13:
+            elif self.data_number == 13:
                 if (u,v) in self.parallel_arcs:
                     ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r * self.Delta};")
                     ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r * self.Delta};")
@@ -5571,6 +5588,10 @@ class WaterNetworkOptimizer:
         self.q = self.ampl.getVariable("q").getValues().to_dict()
         self.h = self.ampl.getVariable("h").getValues().to_dict()
 
+        if self.data_number==3:
+            self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
+            self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
+
         if self.data_number in [4,9,13 ]:
             self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
             self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
@@ -5647,7 +5668,7 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = False
         self.local_improvement = False
         self.do_arc_reversal = True
-        self.total_run = 20
+        self.total_run = 5
 
         self._print_iteration_header(self.local_iteration)
         self.local_solution_improvement_heuristic_new()
@@ -5830,7 +5851,7 @@ class WaterNetworkOptimizer:
         print("\n" + "=" * 80)
         print("Final Best Results")
         print("=" * 80)
-        print(f"Water Network:            {self.data_list[self.data_number]}")
+        print(f"Water Network:            {self.data_list[self.data_number-1]}")
 
         self.elapsed_time = time.time() - self.start_time
 
@@ -5851,7 +5872,7 @@ class WaterNetworkOptimizer:
 
 def _select_model_file(data_number: int) -> str:
     """Return the appropriate AMPL model filename for the given network index."""
-    model_map = {4: "newyork_model.mod", 7: "blacksburg_model.mod", 9: "bakryun_model.mod", 13: "farhadgerd_model.mod"}
+    model_map = {3: "trn_model.mod", 4: "newyork_model.mod", 7: "blacksburg_model.mod", 9: "bakryun_model.mod", 13: "farhadgerd_model.mod", 22: "marchi_rural_model.mod"}
     return model_map.get(data_number, "wdnmodel.mod")
     # return model_map.get(data_number, "exact_reduced_wdn.mod")
 
