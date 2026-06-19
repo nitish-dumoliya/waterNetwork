@@ -1,18 +1,16 @@
 Water Network: 1
-Results of actual Hazen--Williams headloss constraint
-
-Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error
-
-*******************************************************************************
-wdnmodel.mod
+***********************************************************************************************
+WDN Model Name: wdnmodel.mod
 
 -------------------------------- Solving with ipopt --------------------------
-Ipopt 3.12.13: outlev = 0
+ipopt solver outputs:
+---------------------
+
+Ipopt 3.14.20: outlev = 5
 expect_infeasible_problem = no
 bound_relax_factor=0
-tol = 1e-9
-bound_push = 0.1
-bound_frac = 0.1
+bound_push = 0.01
+bound_frac = 0.01
 warm_start_init_point = no
 halt_on_ampl_error = yes
 
@@ -20,62 +18,118 @@ halt_on_ampl_error = yes
 ******************************************************************************
 This program contains Ipopt, a library for large-scale nonlinear optimization.
  Ipopt is released as open source code under the Eclipse Public License (EPL).
-         For more information visit http://projects.coin-or.org/Ipopt
+         For more information visit https://github.com/coin-or/Ipopt
 ******************************************************************************
 
+This is Ipopt version 3.14.20, running with linear solver MUMPS 5.8.1.
+
+Number of nonzeros in equality constraint Jacobian...:      173
+Number of nonzeros in inequality constraint Jacobian.:        0
+Number of nonzeros in Lagrangian Hessian.............:       77
+
+Total number of variables............................:       83
+                     variables with only lower bounds:        6
+                variables with lower and upper bounds:       77
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:       20
+Total number of inequality constraints...............:        0
+        inequality constraints with only lower bounds:        0
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:        0
+
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+   0  7.5737200e+00 2.54e+03 2.31e+01   0.0 0.00e+00    -  0.00e+00 0.00e+00   0
+   1  1.0280250e+05 4.66e+03 1.00e+07  -3.2 2.54e+02    -  3.90e-05 9.90e-01h  1
+   2  9.3442614e+04 4.61e+03 9.64e+06   4.8 5.71e+04    -  3.46e-02 1.13e-02f  1
+   3  9.3207487e+04 2.62e+03 7.91e+06   3.4 1.89e+03    -  6.77e-01 4.26e-01f  1
+   4  9.5712073e+04 1.85e+03 5.13e+06   3.3 1.34e+03    -  1.00e+00 2.93e-01h  1
+   5  9.5165157e+04 8.78e+02 2.41e+06   3.0 1.36e+03    -  1.00e+00 5.25e-01h  1
+   6  9.2724306e+04 4.37e+02 9.10e+05   2.7 7.18e+02    -  1.00e+00 5.02e-01h  1
+   7  9.9906084e+04 3.16e+02 1.58e+06   3.1 3.09e+03    -  1.00e+00 2.78e-01h  1
+   8  1.0897377e+05 2.15e+02 6.07e+06   3.3 2.38e+03    -  1.00e+00 3.19e-01h  1
+   9  1.1294741e+05 9.75e+01 3.90e+06   2.8 4.96e+02    -  8.80e-01 5.46e-01h  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  10  1.2231941e+05 7.42e+01 1.57e+07   3.2 5.31e+03    -  1.00e+00 2.39e-01h  1
+  11  1.2748303e+05 2.41e+01 5.43e+06   2.6 3.21e+02    -  7.33e-01 6.75e-01h  1
+  12  1.4647150e+05 2.22e+01 6.64e+06   3.9 2.00e+04    -  4.77e-02 8.09e-02f  1
+  13  1.4247351e+05 1.19e+01 1.77e+07   2.9 9.41e+02  -2.0 1.00e+00 5.20e-01h  1
+  14  1.4241297e+05 3.37e+00 2.04e+07   2.7 4.89e+02    -  1.00e+00 6.83e-01h  1
+  15  1.3657745e+05 5.56e-01 9.64e+05   2.4 6.03e+02    -  1.00e+00 9.90e-01h  1
+  16  1.3289930e+05 2.24e-01 4.84e+07   2.2 3.29e+02    -  1.00e+00 9.90e-01f  1
+  17  1.2932095e+05 1.36e-03 2.86e+09   1.9 5.38e+02    -  1.00e+00 9.90e-01f  1
+  18  1.2727423e+05 7.90e-04 2.54e+02   1.7 2.12e+02    -  1.00e+00 1.00e+00f  1
+  19  1.2490882e+05 3.39e-03 2.49e+03   1.2 3.15e+02    -  9.75e-01 1.00e+00f  1
+iter    objective    inf_pr   inf_du lg(mu)  ||d||  lg(rg) alpha_du alpha_pr  ls
+  20  1.2440478e+05 7.18e-03 6.63e+08   0.7 1.88e+02    -  1.00e+00 7.25e-01f  1
+  21  1.2413667e+05 5.96e-03 1.98e+03   0.6 5.00e+01    -  1.00e+00 1.00e+00f  1
+  22  1.2391232e+05 2.34e-03 3.28e+03  -0.4 4.86e+01    -  1.00e+00 1.00e+00f  1
+  23  1.2388370e+05 6.79e-04 2.12e+03  -1.7 7.23e+00    -  1.00e+00 1.00e+00f  1
+  24  1.2388261e+05 4.01e-05 2.85e+02  -3.8 7.62e-01    -  1.00e+00 1.00e+00f  1
+  25  1.2388262e+05 2.04e-10 5.74e-03  -4.0 1.67e-02    -  1.00e+00 1.00e+00h  1
+In iteration 25, 1 Slack too small, adjusting variable bound
+  26  1.2388261e+05 4.55e-13 1.45e-01 -10.0 1.41e-03    -  1.00e+00 1.00e+00f  1
+
+Number of Iterations....: 26
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.2388261435696227e+05    1.2388261435696227e+05
+Dual infeasibility......:   1.4483642578125000e-01    1.4483642578125000e-01
+Constraint violation....:   4.5474735088646412e-13    4.5474735088646412e-13
+Variable bound violation:   0.0000000000000000e+00    0.0000000000000000e+00
+Complementarity.........:   9.7456480196244658e-10    9.7456480196244658e-10
+Overall NLP error.......:   1.2741191305436216e-09    1.4483642578125000e-01
+
+
+Number of objective function evaluations             = 27
+Number of objective gradient evaluations             = 27
+Number of equality constraint evaluations            = 27
+Number of inequality constraint evaluations          = 0
+Number of equality constraint Jacobian evaluations   = 27
+Number of inequality constraint Jacobian evaluations = 0
+Number of Lagrangian Hessian evaluations             = 26
+Total seconds in IPOPT                               = 0.030
+
+EXIT: Optimal Solution Found.
  
-Ipopt 3.12.13: Optimal Solution Found
+Ipopt 3.14.20: Optimal Solution Found
 
 suffix ipopt_zU_out OUT;
 suffix ipopt_zL_out OUT;
-eps :=
-1 2   1.58069e-06
-2 3   4.60957e-06
-2 6   2.5871e-06
-3 4   2.43629e-06
-4 5   2.15564e-06
-6 7   2.1721e-06
-7 5   1.95722e-06
-;
+*******************************************************************************
+
+{(1, 2): 0.42042999999999997, (2, 3): 0.29221072299055456, (2, 6): 0.12821927700944555, (3, 4): 0.24877072299055444, (4, 5): 0.20848072299055445, (6, 7): 0.08043927700944556, (7, 5): 0.00011927700944555728}
+
+Total absolute constraint violation: 6.41e-13
+
+*******************************************************************************
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| Arc (i,j)   |        Flow |   Original Violation |   Approx Violation |   Absolute Diff |   Relative Diff |
++=============+=============+======================+====================+=================+=================+
+| 1,2         | 0.42043     |             1.78e-15 |           1.78e-15 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 2,3         | 0.292211    |            -1.11e-15 |          -6.66e-16 |        4.44e-16 |        3.26e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 2,6         | 0.128219    |            -3.55e-15 |          -1.78e-15 |        1.78e-15 |        2.1e-16  |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 3,4         | 0.248771    |             1.78e-15 |           2.66e-15 |        8.88e-16 |        1.62e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 4,5         | 0.208481    |             0        |           3.55e-15 |        3.55e-15 |        4.03e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 6,7         | 0.0804393   |            -3.55e-15 |          -3.55e-15 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 7,5         | 0.000119277 |            -6.45e-11 |          -1.36e-15 |        6.45e-11 |        8.86e-09 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+
+Sum of original head-loss violation : 6.45e-11
+Sum of approx  head-loss violation  : 1.54e-14
+Sum of absolute diff (orig vs approx): 6.45e-11
+Sum of relative diff (orig vs approx): 8.86e-09
 
 *******************************************************************************
 
-Constraints violation:
-
-
-Sum of constraints violation: 1.4773654782168633e-10
-*******************************************************************************
-
-*******************************************************************************
-
-Absolute and relative violations between original and approximation constraint 2:
-
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
-+=================+==============+==========================+========================+======================+======================+
-| 1,2             |  0.42043     |                       -0 |                     -0 |                    0 |                0     |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.292211    |                       -0 |                     -0 |                    0 |                0     |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,6             |  0.128219    |                        0 |                      0 |                   -0 |               -0     |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,4             |  0.248771    |                       -0 |                     -0 |                    0 |                0     |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.208481    |                       -0 |                     -0 |                   -0 |               -0     |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0804393   |                        0 |                      0 |                    0 |                0     |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,5             |  0.000119277 |                       -0 |                     -0 |                    0 |                1e-08 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-
-Sum of violation of original headloss constraint: 1.776125149732799e-10
-Sum of violation of approx headloss constraint: 1.1310627694854913e-10
-
-Con2 sum of absolute violation between original function and approximate function: 6.451334345208837e-11
-Con2 sum of relative violation between original function and approximate function: 8.86159080664007e-09
-*******************************************************************************
-
-Total cost using ipopt: 123882.6143573755
-ipopt solve time: 0.19 seconds
+Total cost using ipopt: 123882.61435696227
+ipopt solve time: 0.23 seconds
 *******************************************************************************
 

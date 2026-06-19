@@ -48,14 +48,12 @@ model.h = Var(model.nodes, within=Reals)
 # ******************** OBJECTIVE ******************** #
 def objective_rule(model):
     return sum(model.l[i, j, k] * model.C[k] for (i, j) in model.arcs for k in model.pipes)
-model.total_cost = Objective(rule=objective_rule, sense=minimize)
 
 # ******************** CONSTRAINTS ******************** #
 # Flow conservation constraint
 def con1_rule(model, j):
     return sum(model.q[i, j] for i in model.nodes if (i, j) in model.arcs) - \
            sum(model.q[j, i] for i in model.nodes if (j, i) in model.arcs) == model.D[j]
-model.con1 = Constraint(model.nodes, rule=con1_rule)
 
 def smooth_sign(q, eps=1e-6):
     """Smooth approximation of sign(q) for Pyomo."""
@@ -91,7 +89,28 @@ def con2_approx3(model, i, j):
     expr += ((0.175255362 * (model.eps) ** 2) * model.q[i, j] / ((abs(model.q[i, j]) + 1000 * model.eps) ** 1.148))
     return model.h[i] - model.h[j] == expr * sum(model.omega * model.l[i, j, k] / ((model.R[k] ** 1.852) * (model.d[k] / 1000) ** 4.87) for k in model.pipes)
 
-model.con2 = Constraint(model.arcs, rule=con2_approx2)  #con2_approx3
+def con2_smooth_approx2(model, i, j):
+    return (
+        model.h[i] - model.h[j]
+        ==
+        (
+            model.q[i, j]**3
+            * (model.q[i, j]**2 + model.eps**2)**0.426
+            / (model.q[i, j]**2 + 0.426 * model.eps**2)
+        )
+        * sum(
+            model.omega * model.l[i, j, k]
+            / (model.R[k]**1.852 * model.d[k]**4.87)
+            for k in model.pipes
+        )
+    )
+
+model.total_cost = Objective(rule=objective_rule, sense=minimize)
+
+model.con1 = Constraint(model.nodes, rule=con1_rule)
+
+# model.con2 = Constraint(model.arcs, rule=con2_approx2)  #con2_approx3
+model.con2 = Constraint(model.arcs, rule=con2_smooth_approx2)
 
 model.con3 = Constraint(model.arcs, rule=lambda model, i, j: sum(model.l[i, j, k] for k in model.pipes) == model.L[i, j])
 

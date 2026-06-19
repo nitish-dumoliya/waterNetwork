@@ -72,7 +72,8 @@ var y{arcs}>=alpha_min,<=alpha_max;
 var z{arcs};
 #var delta_flow_balance{nodes};
 var delta_headloss{arcs};
-var delta_y{arcs}>=0;
+var delta_y{arcs};
+#var delta_y_minus{arcs}>=0;
 # =========================
 # OBJECTIVE
 # =========================
@@ -80,11 +81,14 @@ var delta_y{arcs}>=0;
 #minimize total_infeasibility:sum{i in nodes diff Source} delta_flow_balance[i]^2 + sum{(i,j) in arcs} delta_headloss[i,j]^2 ;
 #minimize total_infeasibility: sum{(i,j) in arcs} (delta_headloss[i,j]^2 + delta_y[i,j]^2);
 param rho >= 0 default 1;
-
+param gamma >= 0 default 0.5;   # repulsion strength
 #minimize infeas_obj:
 #    rho * (
-#        sum{(i,j) in arcs} (delta_headloss[i,j]^2)
-#    );
+#        sum{(i,j) in arcs} (delta_headloss[i,j]^2 + delta_y[i,j]^2)
+#    ) - gamma * sum{(i,j) in arcs} (y[i,j] - alpha_arc[i,j])^2 ;
+
+param mode integer default 1;
+
 # =========================
 # CONSTRAINTS
 # =========================
@@ -95,6 +99,15 @@ subject to flow_balance{j in nodes diff Source}:
 subject to con2{(i,j) in arcs}:
 #    h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * y[i,j] * L[i,j] = 0;
     h[i] - h[j] - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426 * eps[i,j]^2)) * y[i,j] * L[i,j] = delta_headloss[i,j];
+
+#subject to con2{(i,j) in arcs}:
+#    h[i] - h[j]
+#    - (
+#        q[i,j]^3
+#        * (q[i,j]^2 + eps[i,j]^2)^0.426
+#        / (q[i,j]^2 + 0.426*eps[i,j]^2)
+#      ) * y[i,j] * L[i,j]
+#    = if mode = 1 then delta_headloss[i,j] else 0;
 
 subject to source_head{i in Source}:
     h[i] - E[i] = 0;

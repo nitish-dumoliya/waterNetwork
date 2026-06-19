@@ -1,66 +1,66 @@
 Water Network: 1
-Results smooth approximation 2 of Hazen--Williams headloss constraint using relative error
-
-*******************************************************************************
-wdnmodel.mod
+***********************************************************************************************
+WDN Model Name: wdnmodel.mod
 
 -------------------------------- Solving with knitro --------------------------
-Artelys Knitro 14.2.0: maxtime_real = 600
+knitro solver outputs:
+---------------------
+
+Artelys Knitro 15.1.0: maxtime_real = 600
 outlev = 4
-opttol_abs=1e-5
+opttol_abs=1e-6
 opttol = 1e-6
-feastol_abs = 1.0e-5
-feastol = 1.0e-5
+feastol_abs = 1.0e-6
+feastol = 1.0e-9
 ms_enable = 1
 ms_maxsolves = 10
 
 =======================================
           Commercial License
-         Artelys Knitro 14.2.0
+         Artelys Knitro 15.1.0
 =======================================
 
-Knitro using up to 16 threads.
+Knitro using up to 8 threads.
 No start point provided -- Knitro computing one.
 
 Knitro presolve eliminated 0 variables and 0 constraints.
 
 concurrent_evals         0
 datacheck                0
-feastol                  1e-05
-feastol_abs              1e-05
+feastol                  1e-09
+feastol_abs              1e-06
 findiff_numthreads       1
 hessian_no_f             1
 hessopt                  1
 maxtime_real             600
 ms_enable                1
 ms_maxsolves             10
-opttol_abs               1e-05
+opttol                   1e-06
+opttol_abs               1e-06
 outlev                   4
 
-Problem Characteristics                                 (   Presolved)
+Problem Characteristics                     |           Presolved
 -----------------------
-Objective goal:  Minimize
-Objective type:  linear
-Number of variables:                                 83 (          83)
-    bounded below only:                               6 (           9)
-    bounded above only:                               0 (           3)
-    bounded below and above:                         77 (          71)
-    fixed:                                            0 (           0)
-    free:                                             0 (           0)
-Number of constraints:                               20 (          20)
-    linear equalities:                               13 (          13)
-    quadratic equalities:                             0 (           0)
-    gen. nonlinear equalities:                        7 (           7)
-    linear one-sided inequalities:                    0 (           0)
-    quadratic one-sided inequalities:                 0 (           0)
-    gen. nonlinear one-sided inequalities:            0 (           0)
-    linear two-sided inequalities:                    0 (           0)
-    quadratic two-sided inequalities:                 0 (           0)
-    gen. nonlinear two-sided inequalities:            0 (           0)
-Number of nonzeros in Jacobian:                     173 (         173)
-Number of nonzeros in Hessian:                       77 (          77)
+Problem type: NLP
+Objective: minimize / linear
+Number of variables:                     83 |                            83
+  bounds:         lower     upper     range |     lower     upper     range
+                      6         0        77 |         9         3        71
+                             free     fixed |                free     fixed
+                                0         0 |                   0         0
+Number of constraints:                   20 |                            20
+                    eq.     ineq.     range |       eq.     ineq.     range
+  linear:            13         0         0 |        13         0         0
+  quadratic:          0         0         0 |         0         0         0
+  nonlinear:          7         0         0 |         7         0         0
+Number of nonzeros:
+              objective  Jacobian   Hessian | objective  Jacobian   Hessian
+  linear:            70        83           |        70        96          
+  quadratic:          0         0         0 |         0         0         0
+  nonlinear:          0        90        77 |         0        90        77
+  total:             70       173        77 |        70       173        77
 
-Knitro parallel multistart will run with 16 threads.
+Knitro parallel multistart will run with 8 threads.
 
 Return codes description
 ------------------------
@@ -76,92 +76,80 @@ A more detailed description of individual return codes and their corresponding
 termination messages is provided at
 https://www.artelys.com/app/docs/knitro/3_referenceManual/returnCodes.html
 
- Solve #  ThreadID  Status     Objective      FeasError    OptError    Real Time 
---------  --------  ------  --------------   ----------   ----------  ----------
-      3          8       0         123883.  1.53264e-11  4.53978e-08     0.263746
-      5         10       0         139187.  1.54517e-08  1.19209e-07     0.263624
-      2          3       0         123883.  4.13181e-12  5.11523e-07     0.283416
-      0          0       0         139187.  3.27152e-09  1.90735e-06     0.302476
-      6         11       0         123883.  2.51035e-11  3.79060e-06     0.331517
-      8          4       0         139187.  1.56313e-06  9.89717e-06     0.333602
-      9          7       0         136554.  9.66338e-13  5.96046e-08     0.359951
-      4          2       0         123883.  4.54747e-13  1.27330e-07     0.374210
-      1          1       0         123883.  1.21183e-11  1.26671e-06     0.393354
-      7         14       0         139187.  3.51456e-06  7.69779e-06     0.406194
+ Solve Thrd Status   Objective   FeasError   Opt Error   Solve Time  Real Time 
+ ----- ---- ------ ------------ ----------- ----------- ----------- -----------
+     2    4      0      123883. 1.57350e-10 4.91679e-07     1.29021     1.91373
+     3    1      0      123883. 2.27374e-13 3.10802e-10     1.18146     2.14937
+     1    7      0      123883. 4.10338e-12 2.82220e-07     1.70321     2.33597
+     6    5      0      123883. 2.39460e-10 7.05550e-08     1.77944     2.33597
+     9    4      0      123883. 4.54747e-13 9.82092e-10     1.12315     2.41659
+     4    3      0      123883. 4.54747e-13 2.98023e-08     2.54295     2.79533
+     7    6      0      136554. 5.06879e-08 3.33509e-07     3.14555     3.16772
+     5    2      0      123883. 4.54747e-13 1.21701e-12     3.16322     3.17248
+     8    1      0      123883. 1.44951e-12 2.32831e-10     1.98882     3.17317
+     0    0      0      143204. 2.85375e-13 2.54002e-09     3.23979     3.24424
 
 MULTISTART: Best locally optimal solution is returned.
-EXIT: Locally optimal solution found.
+EXIT: All multi-start solves have terminated.
+      10 solve(s) returned satisfactory solutions.
 
 Final Statistics
 ----------------
-Final objective value               =   1.23882614084979e+05
-Final feasibility error (abs / rel) =   2.51e-11 / 2.47e-15
-Final optimality error  (abs / rel) =   3.79e-06 / 1.64e-07
-# of iterations                     =       1392 
+Final objective value               =   1.23882614356904e+05
+Final feasibility error (abs / rel) =   1.57e-10 / 1.55e-14
+Final optimality error  (abs / rel) =   4.92e-07 / 2.13e-08
+# of iterations                     =       1571 
 # of CG iterations                  =          0 
-# of function evaluations           =       2030
-# of gradient evaluations           =       1402
-# of Hessian evaluations            =       1403
-Total program time (secs)           =       0.51003 (     2.421 CPU time)
+# of function evaluations           =       2116
+# of gradient evaluations           =       1625
+# of Hessian evaluations            =       1583
+Total program time (secs)           =       3.24498 (     3.197 CPU time)
 
-===============================================================================
+================================================================================
 
-Knitro 14.2.0: Locally optimal or satisfactory solution.
-objective 123882.6141; feasibility error 2.51e-11
-1392 iterations; 2030 function evaluations
+Knitro 15.1.0: Locally optimal or satisfactory solution.
+objective 123882.6144; feasibility error 1.57e-10
+1571 iterations; 2116 function evaluations
 
 suffix feaserror OUT;
 suffix opterror OUT;
 suffix numfcevals OUT;
 suffix numiters OUT;
-eps :=
-1 2   1.74465e-05
-2 3   5.0877e-05
-2 6   2.85545e-05
-3 4   2.68899e-05
-4 5   2.37923e-05
-6 7   2.3974e-05
-7 5   2.16023e-05
-;
+*******************************************************************************
+
+{(1, 2): 0.4204300000000028, (2, 3): 0.29221072299066864, (2, 6): 0.12821927700932853, (3, 4): 0.24877072299065664, (4, 5): 0.2084807229906486, (6, 7): 0.08043927700932631, (7, 5): 0.00011927700936061512}
+
+Total absolute constraint violation: 1.74e-10
+
+*******************************************************************************
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| Arc (i,j)   |        Flow |   Original Violation |   Approx Violation |   Absolute Diff |   Relative Diff |
++=============+=============+======================+====================+=================+=================+
+| 1,2         | 0.42043     |            -1.08e-13 |          -1.07e-13 |        1.78e-15 |        2.01e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 2,3         | 0.292211    |            -2.94e-13 |          -2.94e-13 |       -2.22e-16 |       -1.63e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 2,6         | 0.128219    |            -1.02e-11 |          -1.02e-11 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 3,4         | 0.248771    |             2.72e-12 |           2.72e-12 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 4,5         | 0.208481    |             4.09e-14 |           3.91e-14 |       -1.78e-15 |       -2.01e-16 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 6,7         | 0.0804393   |            -3.05e-12 |          -3.05e-12 |        0        |        0        |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+| 7,5         | 0.000119277 |            -2.22e-10 |          -1.57e-10 |        6.45e-11 |        8.86e-09 |
++-------------+-------------+----------------------+--------------------+-----------------+-----------------+
+
+Sum of original head-loss violation : 2.38e-10
+Sum of approx  head-loss violation  : 1.74e-10
+Sum of absolute diff (orig vs approx): 6.45e-11
+Sum of relative diff (orig vs approx): 8.86e-09
 
 *******************************************************************************
 
-Constraints violation:
-
-
-Sum of constraints violation: 2.7202500668677132e-11
-*******************************************************************************
-
-*******************************************************************************
-
-Absolute and relative violations between original and approximation constraint 2:
-
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| Constraint ID   |   flow value |   Original Con Violation |   Approx Con Violation |   Absolute Violation |   Relative Violation |
-+=================+==============+==========================+========================+======================+======================+
-| 1,2             |  0.42043     |                 -0       |                     -0 |             -0       |          -0          |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,3             |  0.292211    |                 -0       |                     -0 |              0       |           0          |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 2,6             |  0.128219    |                 -0       |                     -0 |              0       |           0          |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 3,4             |  0.248771    |                 -0       |                     -0 |              0       |           0          |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 4,5             |  0.208481    |                  0       |                      0 |              0       |           0          |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 6,7             |  0.0804393   |                  0       |                      0 |              0       |           0          |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-| 7,5             |  0.000119256 |                 -9.3e-07 |                     -0 |              9.3e-07 |           0.00012763 |
-+-----------------+--------------+--------------------------+------------------------+----------------------+----------------------+
-
-Sum of violation of original headloss constraint: 9.287888147919976e-07
-Sum of violation of approx headloss constraint: 2.6349710607886934e-11
-
-Con2 sum of absolute violation between original function and approximate function: 9.287624846213149e-07
-Con2 sum of relative violation between original function and approximate function: 0.00012763036381113063
-*******************************************************************************
-
-Total cost using knitro: 123882.61408497891
-knitro solve time: 0.86 seconds
+Total cost using knitro: 123882.6143569045
+knitro solve time: 3.31 seconds
 *******************************************************************************
 

@@ -1296,52 +1296,82 @@ class WaterNetworkSolver:
 
         # 🔥 y-range (first quadrant)
         alpha_vals = np.array([alpha[k] for k in pipe_list])
-        y_min = max(0, Lij * np.min(alpha_vals))
-        y_max = Lij * np.max(alpha_vals)
+        y_min = max(0, np.min(alpha_vals))
+        y_max = np.max(alpha_vals)
 
         y_grid = np.linspace(y_min, y_max, n_points)
 
-        plt.figure(figsize=(15, 6))
-
+        #plt.figure(figsize=(15, 6))
+        plt.figure(figsize=(18, 7))
         print("m",m)
         # 🔥 Plot all lines
         for k in m:
             print(k)
-            z_vals = np.array([m[k]*y + Lij*b[k] for y in y_grid])
+            z_vals = np.array([Lij*(m[k]*y + b[k]) for y in y_grid])
             # z_vals = np.maximum(z_vals, 0)
             # plt.plot(y_grid, z_vals, linestyle='-', label=f"line k={k-1}")
             # plt.plot(y_grid,z_vals,linestyle='-',label=rf"$z(y) = {m[k]:.3g}\,y + {b[k]:.3g}\,L$")
-            plt.plot(y_grid,z_vals,linestyle='-',label=rf"$z(y) = m_{{{k-1}}} y + b_{{{k-1}}} L$")
-
+            # plt.plot(y_grid,z_vals,linestyle='-',label=rf"$z_{{ij}}(y_{{ij}}) = L(m_{{{k-1}}} y_{{ij}} + b_{{{k-1}}})$")
+            plt.plot(
+                y_grid,
+                z_vals,
+                linestyle='-',
+                linewidth=2.5,
+                label=rf"$z_{{ij}}(y_{{ij}})=L_{{ij}}(m_{{{k-1}}}y_{{ij}}+b_{{{k-1}}})$"
+            )
 
         # 🔥 Plot envelope (min of lines)
         z_env = []
         for y in y_grid:
-            z_env.append(max(m[k]*y + Lij*b[k] for k in m))
+            z_env.append(max(Lij*(m[k]*y + b[k]) for k in m))
         # z_env = np.maximum(z_env)
 
-        # plt.plot(y_grid, z_env, color='black', linewidth=3, label="Envelope (max)")
-
+        # plt.plot(y_grid, z_env, color='black',linestyle='--', linewidth=1, label="Convex Upper Envelope (Max-affine)")
+        
+        plt.plot(
+            y_grid,
+            z_env,
+            color='black',
+            linestyle='--',
+            linewidth=3,
+            label="Convex Upper Envelope"
+        )
         # 🔥 Vertical lines at y = alpha_k * Lij
         for k in pipe_list:
-            yk = alpha[k] * Lij
+            yk = alpha[k]
 
             if yk >= 0:
-                plt.axvline(x=yk, linestyle=':', linewidth=1.5, color="gray")
-                plt.text(yk, -plt.ylim()[1]*0.01, rf"$\alpha_{{{k}}} L$", rotation=0, horizontalalignment='center', fontsize=8)
+                # plt.axvline(x=yk, linestyle=':', linewidth=1.5, color="gray")
+                plt.axvline(
+                    x=yk,
+                    linestyle=':',
+                    linewidth=2.5,
+                    color="gray"
+                )
+                # plt.text(yk, -plt.ylim()[1]*0.01, rf"$\alpha_{{{k}}}$", rotation=0, horizontalalignment='center', fontsize=8)
+                plt.text(
+                    yk,
+                    -plt.ylim()[1]*0.03,
+                    rf"$\alpha_{{{k}}}$",
+                    rotation=0,
+                    horizontalalignment='center',
+                    fontsize=18
+                )
 
 
         # 🔴 Plot only breakpoint points
         for k in pipe_list:
-            xk = alpha[k] * Lij
+            xk = alpha[k]
             zk = C[k] * Lij
         
-            plt.scatter(xk, zk, s=50)
+            # plt.scatter(xk, zk, s=50)
+            plt.scatter(xk, zk, s=140)
             plt.text(
                 xk,
                 zk,
-                rf"$(\alpha_{{{k}}}L,\;C_{{{k}}}L)$",
-                fontsize=8,
+                rf"$(\alpha_{{{k}}},\;C_{{{k}}}L_{{ij}})$",
+                # fontsize=8,
+                fontsize=18,
                 ha='left',
                 va='bottom'
             )
@@ -1357,13 +1387,20 @@ class WaterNetworkSolver:
 
         # plt.xlim(0, 0.2 * max(alpha[k]*Lij for k in pipe_list))
         
-        plt.xlabel(r"$y_{ij}$")
-        plt.ylabel(r"$z_{ij}(y_{ij})$")
-        plt.title(f"Piecewise Lines + Breakpoints for Arc ({i},{j})")
+        # plt.xlabel(r"$y_{ij}$")
+        # plt.ylabel(r"$z_{ij}(y_{ij})$")
+        plt.xlabel(r"$y_{ij}$", fontsize=26)
+        plt.ylabel(r"$z_{ij}(y_{ij})$", fontsize=26)
+        # plt.title(rf"Convex piecewise linear cost function $z_{{ij}}(y_{{ij}})$ for Arc $(i,j)$")
 
-        plt.legend()
+        # plt.legend()
+        plt.legend(
+            fontsize=18,
+            loc='best',
+            frameon=True
+        )
         # plt.grid(True)
-        plt.savefig("piecewise_with_breakpoints.png", dpi=300, bbox_inches="tight")
+        plt.savefig("convex_pwl_cost.png", dpi=300, bbox_inches="tight")
         plt.show()
 
 
@@ -1484,11 +1521,11 @@ class WaterNetworkSolver:
             m_k = (self.C[k] - self.C[kp1]) / (alpha_k - alpha_kp1)
     
             # intercept
-            b_k = Lij * (self.C[kp1] - m_k * alpha_kp1)
+            b_k = (self.C[kp1] - m_k * alpha_kp1)
     
             # feasible y interval for this segment
-            y_low = alpha_kp1 * Lij
-            y_high = alpha_k * Lij
+            y_low = alpha_kp1
+            y_high = alpha_k
     
             segments.append({
                 "k": k,
@@ -1536,10 +1573,11 @@ class WaterNetworkSolver:
     
         plt.figure(figsize=(10, 6))
     
+        Lij = self.L[(i, j)]
         # plot each segment
         for s in segments:
             y_vals = np.linspace(s["y_low"], s["y_high"], 100)
-            z_vals = s["m"] * y_vals + s["b"]
+            z_vals = Lij * (s["m"] * y_vals + s["b"])
     
             plt.plot(
                 y_vals,
@@ -2282,7 +2320,6 @@ class WaterNetworkSolver:
             # Add commas every two digits in the remaining part
             remaining = ','.join([remaining[max(i - 2, 0):i] for i in range(len(remaining), 0, -2)][::-1])
             return remaining + ',' + last_three
-
 
 
     def segment_cut_based_heuristic(self):
@@ -3654,10 +3691,6 @@ class WaterNetworkSolver:
       5. If feasible but no improvement → restart outer loop from updated structure
       6. If infeasible → skip to next arc
     """
-    
-    import copy
-    import time
-   
     # ──────────────────────────────────────────────────────────────────────────────
     # Main heuristic
     # ──────────────────────────────────────────────────────────────────────────────
@@ -3903,7 +3936,7 @@ class WaterNetworkSolver:
                 )
                 for (i, j) in self.arcs
             )
-    
+
         # =========================================================================
         # Helper: warm-start and solve a single NLP
         # =========================================================================
@@ -3911,17 +3944,17 @@ class WaterNetworkSolver:
             """
             Construct the AMPL model with current warm-start values and a
             segment-cut constraint on arc (i,j), then solve with IPOPT.
-    
+
             Returns (ampl_instance, solve_result, solve_time)
             """
             ampl = AMPL()
             ampl.reset()
-    
+
             # load model
             model_map = {5: "newyork_model.mod", 6: "blacksburg_model.mod"}
             ampl.read(model_map.get(self.data_number, "exact_reduced_wdn.mod"))
             ampl.read_data(self.data_file)
-    
+
             # warm-start primal variables
             for (u, v), val in self.y.items():
                 ampl.eval(f"let y[{u},{v}] := {val};")
@@ -3969,7 +4002,6 @@ class WaterNetworkSolver:
             for con_name, con in ampl.get_constraints():
                 self.all_duals[con_name] = con.getValues()
 
-
             solve_time = ampl.get_value("_solve_elapsed_time")
             return ampl, ampl.solve_result, solve_time
 
@@ -3990,7 +4022,7 @@ class WaterNetworkSolver:
 
         print_banner("SEQUENTIAL CONTINUATION SEGMENT-CUT HEURISTIC")
         print_kv_table([
-            ("Initial cost",      f"{self.current_cost:.6f}"),
+            ("Initial cost",      f"{self.current_cost:.3f}"),
             ("Max outer iters",   str(max_outer_iterations)),
             ("Improve tolerance", str(cost_improve_tol)),
             ("Max seg reductions", str(max_segment_reduction_per_arc)),
@@ -9392,7 +9424,7 @@ class WaterNetworkSolver:
         # self.plot_value_function_for_arc((1, 2))
         # self.plot_value_function_for_arcs([(19,3), (18,19)])
         # self.plot_m_values()
-        # self.plot_piecewise_lines((1,2))
+        self.plot_piecewise_lines((1,2))
 
         # print("\n-------------------------------- Solving Original Model --------------------------")
 
@@ -9404,22 +9436,19 @@ class WaterNetworkSolver:
         # print(viol_red)
 
         # self.print_piecewise_reduced_cost(arc=(1, 2))
-        # Plot segment-wise piecewise function
+        # # Plot segment-wise piecewise function
         # self.plot_piecewise_reduced_cost(
         #     arc=(1, 2),
         #     save_path="piecewise_reduced_cost_arc_1_2.png"
         # )
-
-        # Plot continuous envelope
+        #
+        # # Plot continuous envelope
         # self.plot_piecewise_reduced_cost_envelope(
         #     arc=(1, 2),
         #     save_path="piecewise_reduced_cost_envelope_arc_1_2.png"
         # )
 
-
-
         ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
-
 
         print(f"Total Cost: {cost:.8f}")
         print(f"Exact model solve time: {solve_time:.4f} sec")
@@ -9440,113 +9469,64 @@ class WaterNetworkSolver:
         for con_name, con in self.ampl.get_constraints():
             self.all_duals[con_name] = con.getValues()
 
-        # self.seg_index = {}
-        # # Sort alpha values in descending order
-        # alpha_vals = sorted(set(self.alpha.values()), reverse=True)
-        # tol = 1e-8
-        # for (u, v) in self.arcs:
-        #     y_val = self.y[(u, v)]
-        #     active_s = None
-        #     for k in range(len(alpha_vals) - 1):
-        #         a_high = alpha_vals[k]
-        #         a_low  = alpha_vals[k+1]
-        #         if (a_low - tol) <= y_val <= (a_high + tol):
-        #             active_s = k + 1   # 1-based segment index (matches AMPL segs)
-        #             break
-        #     # fallback (numerical edge cases)
-        #     # if active_s is None:
-        #     #     if y_val > alpha_vals[0]:
-        #     #         active_s = 1
-        #     #     elif y_val < alpha_vals[-1]:
-        #     #         active_s = len(alpha_vals) - 1
-        #
-        #     self.seg_index[(u, v)] = active_s
-        # print("seg_index:",self.seg_index) 
-        # print("seg_index:",self.seg_index)
-
         self.seg_index = {}
-        
         # descending alpha breakpoints
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
-        
         tol = 1e-8
-        
         for (u, v) in self.arcs:
-        
             y_val = self.y[(u, v)]
-        
             active_segments = []
-        
             for k in range(len(alpha_vals) - 1):
-        
                 a_high = alpha_vals[k]
                 a_low  = alpha_vals[k + 1]
-        
                 # --------------------------------------------------------
                 # interior of segment
                 # --------------------------------------------------------
                 if (a_low + tol) < y_val < (a_high - tol):
-        
                     active_segments = [k + 1]
                     break
-        
                 # --------------------------------------------------------
                 # breakpoint at upper boundary
                 # shared by segment k and k-1
                 # --------------------------------------------------------
                 elif abs(y_val - a_high) <= tol:
-        
                     if k == 0:
                         active_segments = [1]
                     else:
                         active_segments = [k, k + 1]
-        
                     break
-        
                 # --------------------------------------------------------
                 # breakpoint at lower boundary
                 # shared by segment k and k+1
                 # --------------------------------------------------------
                 elif abs(y_val - a_low) <= tol:
-        
                     if k == len(alpha_vals) - 2:
                         active_segments = [k + 1]
                     else:
                         active_segments = [k + 1, k + 2]
-        
                     break
-        
             # ------------------------------------------------------------
             # fallback
             # ------------------------------------------------------------
             if not active_segments:
-        
                 if y_val > alpha_vals[0]:
                     active_segments = [1]
-        
                 elif y_val < alpha_vals[-1]:
                     active_segments = [len(alpha_vals) - 1]
-        
                 else:
                     # numerical safeguard
                     distances = [
                         abs(y_val - alpha_vals[k])
                         for k in range(len(alpha_vals))
                     ]
-        
                     idx = distances.index(min(distances))
-        
                     if idx == 0:
                         active_segments = [1]
-        
                     elif idx == len(alpha_vals) - 1:
                         active_segments = [len(alpha_vals) - 1]
-        
                     else:
                         active_segments = [idx, idx + 1]
-        
             self.seg_index[(u, v)] = active_segments
-
             # print(f"arc {(u,v)} -> y = {y_val:.6f}, segment = {active_s}")
         print(self.seg_index)
         # self.seg_index = {}
@@ -9604,9 +9584,9 @@ class WaterNetworkSolver:
         self.iteration = 1
         self.visited_arc_reverse = []
         self.reversed_arcs = []
-        # self.segment_cut_based_heuristic()
+        self.segment_cut_based_heuristic()
 
-        best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.sequential_segment_cut_heuristic()
+        # best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.sequential_segment_cut_heuristic()
         # for (i,j) in self.arcs:
         #     print((i,j), self.z[i,j] - self.L[i,j]*(self.slope[self.seg_index[i,j]]*self.y[i,j] + self.intercept[self.seg_index[i,j]]))
 

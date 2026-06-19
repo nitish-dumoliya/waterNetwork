@@ -1,0 +1,138 @@
+Water Network: d2_shamir
+NLP Model: Smooth Approximate WDN Design Model 2, Epsilon via Relative Error
+NLP Solver: IPOPT
+================================================================================
+Initial Solution of Approximate WDN Design Model
+================================================================================
+Ipopt 3.14.19: outlev = 1
+bound_push = 0.1
+bound_frac = 0.1
+warm_start_init_point = no
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.19: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Objective:    417178.7280978443
+Solve result: solved
+Solve time:   0.24 s
+
+================================================================================
+Improve the Initial Solution
+================================================================================
+Iteration 1
+------------------------------------------------------------------------------------
+NLP  C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+Reverse Arc Direction Approach
+------------------------------------------------------------------------------------
+Iteration : 2
+sorted_arcs: [(3, 5), (5, 7), (6, 7), (4, 5)]
+----------------------------------------------------------------------------------------
+NLP  Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+----------------------------------------------------------------------------------------
+2    (3, 5)    4,17,179      4,33,715      0.08s       solved        No        0.4s
+3    (5, 7)    4,17,179      4,03,390      0.24s       solved        Yes       0.54s
+----------------------------------------------------------------------------------------
+-------------------Adaptive Variable Neighborhood Search Heuristic----------------------
+Iteration 3
+----------------------------------------------------------------------------------------
+NLP  C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+----------------------------------------------------------------------------------------
+4       4,03,390      4,03,390      0.13s       solved        No        0.69s
+5       4,03,390      4,03,390      0.11s       solved        No        0.83s
+6       4,03,390      4,33,715      0.21s       solved        No        1.08s
+7       4,03,390      4,23,979      0.14s       solved        No        1.29s
+8       4,03,390      4,17,179      0.26s       solved        No        1.58s
+------------------------------------------------------------------------------------
+Iteration : 4
+sorted_arcs: [(4, 5)]
+----------------------------------------------------------------------------------------
+NLP  Arc       C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+----------------------------------------------------------------------------------------
+9    (4, 5)    4,03,390      4,55,622      0.1s        solved        No        1.73s
+
+-------------- Piecewise Linear Water Distribution Network Design Model----------------
+
+-------------------------------- Solving Exact Reduced Model --------------------------
+alpha_values: {1: 76137.94152789014, 2: 2603.664682529021, 3: 361.4270229756447, 4: 89.03668319645467, 5: 12.359603584614641, 6: 3.0447588000946335, 7: 1.027072570780574, 8: 0.42265738602260805, 9: 0.19950675152133468, 10: 0.10412063677505515, 11: 0.058671073043261024, 12: 0.03512247015446429, 13: 0.022080183351577718, 14: 0.014453478603620904}
+Ipopt 3.14.19: outlev = 1
+bound_push = 0.1
+bound_frac = 0.1
+warm_start_init_point = yes
+warm_start_bound_push        = 1e-9
+warm_start_mult_bound_push   = 1e-9
+warm_start_bound_frac        = 1e-9
+warm_start_slack_bound_frac  = 1e-9
+warm_start_slack_bound_push  = 1e-9
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+ 
+Ipopt 3.14.19: Optimal Solution Found
+
+suffix ipopt_zU_out OUT;
+suffix ipopt_zL_out OUT;
+Total Cost: 403389.78016647
+Exact model solve time: 0.0522 sec
+Iteration 1
+------------------------------------------------------------------------------------
+NLP  C_Best_Sol    New_Sol       Solve_Time  Solve_Result  Improved  Time        
+------------------------------------------------------------------------------------
+
+------------------ Active Segment Index Reduction Based Heuristic ------------------
+Initial seg_index: {(1, 2): [10, 11], (2, 3): [7], (2, 4): [9, 10], (4, 5): [1], (4, 6): [9], (6, 7): [6], (3, 5): [6], (5, 7): [1]}
+
+===========================================================================
+  Initial cost = 403,389.780166
+===========================================================================
+
+OUTER ITERATION 1
+--------------------------------------------------------------------------------------------------
+NLP     Arc            Current       New           Time        Status        Improved  Cumul. Time
+--------------------------------------------------------------------------------------------------
+10      (4,6)          4,03,390      4,07,002      0.07s       solved        No        1.92s
+11      (6,7)          4,03,390      —             0.15s       infeasible    No        2.09s
+12      (3,5)          4,03,390      4,38,908      0.08s       solved        No        2.19s
+
+-------------------- Solving Original Model with Initialize ---------------------
+Final cost after recovery: 403,389.780166
+
+================================================================================
+Final Best Results
+================================================================================
+Water Network:            d2_shamir
+
+Total absolute constraint violation: 7.69e-13
+
+*******************************************************************************
+HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION
+
+
+Sum of original head-loss violation : 1.20e-13
+Sum of approx  head-loss violation  : 8.66e-14
+Sum of absolute diff (orig vs approx): 3.42e-14
+Sum of relative diff (orig vs approx): 3.29e-15
+
+*******************************************************************************
+
+Final best objective:     403389.7801657729
+NLP problems solved:      13
+Total iterations:         1
+Solver time:              1.39 s
+Total elapsed time:       2.35 s
+================================================================================
