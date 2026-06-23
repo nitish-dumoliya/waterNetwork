@@ -51,8 +51,6 @@ param intercept{s in segs} :=
 param alpha_min := min{k in pipes} alpha[k];
 param alpha_max := max{k in pipes} alpha[k];
 
-
-
 param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
 
 #****************************************VARIABLES****************************************#

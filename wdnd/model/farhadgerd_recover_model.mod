@@ -39,33 +39,26 @@ param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
 var l{arcs diff parallel_arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var l1{parallel_arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var l2{parallel_arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
-var q{arcs};	            # Flow variable
-var q1{parallel_arcs};	            # Flow variable
-var q2{parallel_arcs};	            # Flow variable
-#var q{arcs}>=-Q_max,<=Q_max;	            # Flow variable
-var h{nodes};	            # Head
 
+param y{arcs diff parallel_arcs};
+param y1{parallel_arcs};
+param y2{parallel_arcs};
 #****************************************OBJECTIVE****************************************#
 # Total cost as a sum of "length of the commercial pipe * cost per unit length of the commercial pipe"
 minimize total_cost : sum{(i,j) in arcs diff parallel_arcs} sum{k in pipes}l[i,j,k]*C[k] + sum{(i,j) in parallel_arcs} sum{k in pipes}(l1[i,j,k]+l2[i,j,k])*C[k];	
 
 #****************************************CONSTRAINTS**************************************#
-subject to con1{j in nodes diff Source}:
-    sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] -  D[j] = 0
-;
-
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs diff parallel_arcs}:
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = 0;
+    sum{k in pipes}(omega * l[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = L[i,j] * y[i,j];
 
 subject to con3{(i,j) in parallel_arcs}:
      #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    h[i] - h[j]  -  (q1[i,j]^3 * (q1[i,j]^2 + eps[i,j]^2)^0.426 / (q1[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l1[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = 0;
+    sum{k in pipes}(omega * l1[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = L[i,j] * y1[i,j];
 
 subject to con4{(i,j) in parallel_arcs}:
      #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
-    h[i] - h[j]  -  (q2[i,j]^3 * (q2[i,j]^2 + eps[i,j]^2)^0.426 / (q2[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l2[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = 0;
+    sum{k in pipes}(omega * l2[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = L[i,j] * y2[i,j];
 
 subject to con5{(i,j) in arcs diff parallel_arcs}: 
     sum{k in pipes} l[i,j,k] - L[i,j] = 0 
@@ -89,14 +82,6 @@ subject to con9{(i,j) in parallel_arcs}:
 subject to con10{(i,j) in parallel_arcs, k in pipes}: 
     l2[i,j,k] - L[i,j] <= 0 
 ;
-
-subject to con11{i in Source}: 
-    h[i] - E[i] = 0
-;
-
-subject to con12{i in nodes diff Source}: -h[i] + E[i] + P[i] <= 0;
-
-subject to con13{(i,j) in parallel_arcs}: q[i,j] = q1[i,j] + q2[i,j];
 
 #subject to con14{(i,j) in arcs}: 
 #   -Q_max <= q[i,j] <= Q_max

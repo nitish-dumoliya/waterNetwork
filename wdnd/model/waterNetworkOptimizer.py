@@ -738,7 +738,7 @@ class WaterNetworkOptimizer:
         # ------------------------------------------------------------------
         con1_gap = {}
     
-        if self.data_number == 5:
+        if self.data_number == 4:
             q1 = self.ampl.get_variable('q1').get_values().to_dict()
             q2 = self.ampl.get_variable('q2').get_values().to_dict()
     
@@ -808,7 +808,7 @@ class WaterNetworkOptimizer:
             con2_relative_constraint_violation += abs(rel_viol)
             total_absolute_constraint_violation += abs(lhs - apprx_rhs)
     
-        if self.data_number == 5:
+        if self.data_number == 4:
             self.exdiam = self.ampl.getParameter('exdiam').to_dict()
     
             for (i, j) in q1.keys():
@@ -829,7 +829,7 @@ class WaterNetworkOptimizer:
                 )
                 _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
     
-        elif self.data_number == 6:
+        elif self.data_number == 7:
             self.fixarcs  = self.ampl.getSet('fixarcs')
             self.fix_r    = self.ampl.getParameter('fix_r').to_dict()
             self.exdiam   = self.ampl.getParameter('fixdiam').to_dict()
@@ -866,7 +866,7 @@ class WaterNetworkOptimizer:
         con3_gap = {}
         arcs_to_check = (
             [(i, j) for (i, j) in self.arcs if (i, j) not in self.fixarcs]
-            if self.data_number == 6
+            if self.data_number == 7
             else list(self.arcs)
         )
         for (i, j) in arcs_to_check:
@@ -2446,7 +2446,7 @@ class WaterNetworkOptimizer:
     def initialize_local_search_model_reduced(self):
         self.local_ampl = AMPL()
         self.local_ampl.read(
-            {5: "newyork_epigraph_model.mod", 6: "blacksburg_epigraph_model.mod"}.get(
+            {4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 13:"farhadgerd_epigraph_model.mod"}.get(
                 self.data_number, "exact_reduced_wdn.mod"
             )
         )
@@ -2548,44 +2548,145 @@ class WaterNetworkOptimizer:
             # ARC VARIABLES
             # ========================================================
             for (i, j) in self.arcs:
-                # ----------------------------------------------------
-                # q perturbation
-                # ----------------------------------------------------
-                rq = random.uniform(rho_prev, rho_curr)
-                delta_q = (
-                    random.choice([-1, 1])
-                    * rq 
-                    * self.alpha_q
-                    * abs(q[(i, j)])
-                )
-                ampl.var["q"][i, j] = (q[(i, j)] + delta_q)
-                # ----------------------------------------------------
-                # y perturbation
-                # ----------------------------------------------------
-                ry = random.uniform(rho_prev, rho_curr)
-                delta_y = (
-                    random.choice([-1, 1])
-                    * ry
-                    * self.alpha_y
-                    * y[i,j]
-                )
-                ycand = y[(i, j)] + delta_y
-                ycand = max(
-                    self.alpha_min,
-                    min(self.alpha_max, ycand),
-                )
-                ampl.var["y"][i, j] = ycand
-                # ----------------------------------------------------
-                # z perturbation
-                # ----------------------------------------------------
-                rz = random.uniform(rho_prev, rho_curr)
-                delta_z = (
-                    random.choice([-1, 1])
-                    * rz
-                    * self.eta_z
-                    * z[(i, j)]
-                )
-                ampl.var["z"][i, j] = (z[(i, j)] + delta_z)
+                if self.data_number==13:
+                    if (i,j) in self.parallel_arcs:
+                        rq = random.uniform(rho_prev, rho_curr)
+                        delta_q = (
+                            random.choice([-1, 1])
+                            * rq 
+                            * self.alpha_q
+                            * abs(self.q1[(i, j)])
+                        )
+                        ampl.var["q1"][i, j] = (self.q1[(i, j)] + delta_q)
+                        delta_q = (
+                            random.choice([-1, 1])
+                            * rq 
+                            * self.alpha_q
+                            * abs(self.q2[(i, j)])
+                        )
+                        ampl.var["q2"][i, j] = (self.q2[(i, j)] + delta_q)
+                        # ----------------------------------------------------
+                        # y perturbation
+                        # ----------------------------------------------------
+                        ry = random.uniform(rho_prev, rho_curr)
+                        delta_y = (
+                            random.choice([-1, 1])
+                            * ry
+                            * self.alpha_y
+                            * self.y1[i,j]
+                        )
+                        ycand = self.y1[(i, j)] + delta_y
+                        ycand = max(
+                            self.alpha_min,
+                            min(self.alpha_max, ycand),
+                        )
+                        ampl.var["y1"][i, j] = ycand
+                        delta_y = (
+                            random.choice([-1, 1])
+                            * ry
+                            * self.alpha_y
+                            * self.y2[i,j]
+                        )
+                        ycand = self.y2[(i, j)] + delta_y
+                        ycand = max(
+                            self.alpha_min,
+                            min(self.alpha_max, ycand),
+                        )
+                        ampl.var["y2"][i, j] = ycand
+                        # ----------------------------------------------------
+                        # z perturbation
+                        # ----------------------------------------------------
+                        rz = random.uniform(rho_prev, rho_curr)
+                        delta_z = (
+                            random.choice([-1, 1])
+                            * rz
+                            * self.eta_z
+                            * self.z1[(i, j)]
+                        )
+                        ampl.var["z1"][i, j] = (self.z1[(i, j)] + delta_z)
+                        delta_z = (
+                            random.choice([-1, 1])
+                            * rz
+                            * self.eta_z
+                            * self.z2[(i, j)]
+                        )
+                        ampl.var["z2"][i, j] = (self.z2[(i, j)] + delta_z)
+
+                    else:
+                        rq = random.uniform(rho_prev, rho_curr)
+                        delta_q = (
+                            random.choice([-1, 1])
+                            * rq 
+                            * self.alpha_q
+                            * abs(q[(i, j)])
+                        )
+                        ampl.var["q"][i, j] = (q[(i, j)] + delta_q)
+                        # ----------------------------------------------------
+                        # y perturbation
+                        # ----------------------------------------------------
+                        ry = random.uniform(rho_prev, rho_curr)
+                        delta_y = (
+                            random.choice([-1, 1])
+                            * ry
+                            * self.alpha_y
+                            * y[i,j]
+                        )
+                        ycand = y[(i, j)] + delta_y
+                        ycand = max(
+                            self.alpha_min,
+                            min(self.alpha_max, ycand),
+                        )
+                        ampl.var["y"][i, j] = ycand
+                        # ----------------------------------------------------
+                        # z perturbation
+                        # ----------------------------------------------------
+                        rz = random.uniform(rho_prev, rho_curr)
+                        delta_z = (
+                            random.choice([-1, 1])
+                            * rz
+                            * self.eta_z
+                            * z[(i, j)]
+                        )
+                        ampl.var["z"][i, j] = (z[(i, j)] + delta_z)
+                else:
+                    # ----------------------------------------------------
+                    # q perturbation
+                    # ----------------------------------------------------
+                    rq = random.uniform(rho_prev, rho_curr)
+                    delta_q = (
+                        random.choice([-1, 1])
+                        * rq 
+                        * self.alpha_q
+                        * abs(q[(i, j)])
+                    )
+                    ampl.var["q"][i, j] = (q[(i, j)] + delta_q)
+                    # ----------------------------------------------------
+                    # y perturbation
+                    # ----------------------------------------------------
+                    ry = random.uniform(rho_prev, rho_curr)
+                    delta_y = (
+                        random.choice([-1, 1])
+                        * ry
+                        * self.alpha_y
+                        * y[i,j]
+                    )
+                    ycand = y[(i, j)] + delta_y
+                    ycand = max(
+                        self.alpha_min,
+                        min(self.alpha_max, ycand),
+                    )
+                    ampl.var["y"][i, j] = ycand
+                    # ----------------------------------------------------
+                    # z perturbation
+                    # ----------------------------------------------------
+                    rz = random.uniform(rho_prev, rho_curr)
+                    delta_z = (
+                        random.choice([-1, 1])
+                        * rz
+                        * self.eta_z
+                        * z[(i, j)]
+                    )
+                    ampl.var["z"][i, j] = (z[(i, j)] + delta_z)
             # ========================================================
             # NODE VARIABLES
             # ========================================================
@@ -3053,9 +3154,9 @@ class WaterNetworkOptimizer:
         self.eta_z = self.eta_z_min
         self.eta_h = self.eta_h_min
 
-        abs_cost = sorted(y[i, j] for (i, j) in self.arcs)
-        m = len(abs_cost)
-        self.Delta = self.alpha_y * abs_cost[m // 2]
+        # abs_cost = sorted(y[i, j] for (i, j) in self.arcs)
+        # m = len(abs_cost)
+        # self.Delta = self.alpha_y * abs_cost[m // 2]
 
         self.local_iteration = 1
         self.do_local_improvement = False
@@ -3113,6 +3214,7 @@ class WaterNetworkOptimizer:
         # Remove fixed and already-visited arcs
         sorted_all_arcs = [
             arc for arc in sorted_all_arcs
+            if arc in self.sorted_arcs
             if arc not in self.fix_arc_set
         ]
 
@@ -4261,23 +4363,37 @@ class WaterNetworkOptimizer:
     # ============================================================
     # RECOVER l FROM y
     # ============================================================
-    def solve_recover_model1(self, y_input, model_name="recover_wdnmodel.mod"):
+    def solve_recover_model1(self, y_input, model_name="wdn_recover_model.mod"):
         ampl = AMPL()
-        # ampl.setOption('hsllib', '/usr/local/lib/libma57.so')
-        if self.data_number==5:
-            ampl.read("recover_newyork_model.mod")
-        elif self.data_number==6:
-            ampl.read("recover_blacksburg_model.mod")
+        if self.data_number==3:
+            ampl.read("trn_recover_model.mod")
+        elif self.data_number==4:
+            ampl.read("newyork_recover_model.mod")
+        elif self.data_number==7:
+            ampl.read("blacksburg_recover_model.mod")
+        elif self.data_number==9:
+            ampl.read("bakryun_recover_model.mod")
+        elif self.data_number==13:
+            ampl.read("farhadgerd_recover_model.mod")
         else:
             ampl.read(model_name)
 
         ampl.read_data(self.data_file)
 
-        for (i, j), val in y_input.items():
-            ampl.param["y"][i, j] = val
+        if self.data_number==13:
+            for (i, j), val in y_input.items():
+                ampl.param["y"][i, j] = val
+
+            for (i, j), val in self.y1.items():
+                ampl.param["y1"][i, j] = val
+            for (i, j), val in self.y2.items():
+                ampl.param["y2"][i, j] = val
+        else:
+            for (i, j), val in y_input.items():
+                ampl.param["y"][i, j] = val
 
         ampl.option['solver'] = 'cplex'
-        ampl.option['presolve_eps'] = 2.04e-10 
+        # ampl.option['presolve_eps'] = 2.04e-10
         # ampl.option["ipopt_options"] = (
         #     "outlev=0 "
         #     "expect_infeasible_problem=no "
@@ -4293,19 +4409,25 @@ class WaterNetworkOptimizer:
         cost = ampl.getObjective("total_cost").value()
         solve_time = ampl.get_value('_solve_elapsed_time')
         # ampl.eval("display l;")
-        return ampl, solve_result, l_sol, cost, solve_time
+        if self.data_number==13:
+            l_sol1 = ampl.get_variable('l1').get_values().to_dict()
+            l_sol2 = ampl.get_variable('l2').get_values().to_dict()
+            return ampl, solve_result, l_sol, l_sol1, l_sol2, cost, solve_time
+        else:
+            return ampl, solve_result, l_sol, cost, solve_time
 
     # ============================================================
     # ORIGINAL NLP RE-SOLVE WITH WARM START
     # ============================================================
-    def solve_original_with_init(self, l_init, q_init, h_init):
+    def solve_original_with_init(self, l_init,l_init1=None, l_init2=None, q_init=None, q_init1=None, q_init2=None, h_init=None):
         ampl = AMPL()
-        if self.data_number==5:
-            ampl.read("newyork_model.mod")
-        elif self.data_number==6:
-            ampl.read("blacksburg_model.mod")
-        else:
-            ampl.read("wdnmodel.mod")
+        # if self.data_number==4:
+        #     ampl.read("newyork_model.mod")
+        # elif self.data_number==7:
+        #     ampl.read("blacksburg_model.mod")
+        # else:
+        #     ampl.read("wdnmodel.mod")
+        ampl.read(self.model_file)
         ampl.read_data(self.data_file)
 
         for (i, j), val in q_init.items():
@@ -4315,6 +4437,16 @@ class WaterNetworkOptimizer:
         for (i, j, k), val in l_init.items():
             ampl.var["l"][i, j, k] = val
 
+        if self.data_number==13:
+            for (i, j), val in q_init1.items():
+                ampl.var["q1"][i, j] = val
+            for (i, j), val in q_init2.items():
+                ampl.var["q2"][i, j] = val
+
+            for (i, j, k), val in l_init2.items():
+                ampl.var["l1"][i, j, k] = val
+            for (i, j, k), val in l_init2.items():
+                ampl.var["l2"][i, j, k] = val
         # if self.data_number == 6:
         #     ampl.eval("subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
         # else:
@@ -4367,7 +4499,7 @@ class WaterNetworkOptimizer:
         tol = 1e-8
 
         seg = {}
-        for (u, v) in self.arcs:
+        for (u, v) in y_sol.keys():
             y = y_sol[(u, v)]
             active = []
             for k in range(NP - 1):
@@ -4393,7 +4525,7 @@ class WaterNetworkOptimizer:
             seg[(u, v)] = active
         return seg
 
-    def solve_nlp_fresh(self, target_arc, target_seg, init_y, init_q, init_h, init_z, current_seg_index):
+    def solve_nlp_fresh(self, target_arc, target_seg, init_y, init_q, init_h, init_z, current_seg_index, init_q1=None, init_q2=None, init_y1=None, init_y2=None, init_z1 = None, init_z2=None):
         cur_segs = current_seg_index
 
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
@@ -4402,7 +4534,7 @@ class WaterNetworkOptimizer:
 
         ampl = AMPL()
         ampl.read(
-            {5: "newyork_epigraph_model.mod", 6: "blacksburg_epigraph_model.mod"}.get(
+            {4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 9: "bakryun_epigraph_model.mod", 13: "farhadgerd_epigraph_model.mod"}.get(
                 self.data_number, "exact_reduced_wdn.mod"
             )
         )
@@ -4443,32 +4575,114 @@ class WaterNetworkOptimizer:
         # segment neighbourhood constraints
         constraints_block = []
         for (u, v) in self.arcs:
-            s_cur = cur_segs[(u, v)][0]
-            if (u, v) == target_arc:
-                # if np.abs(init_y[u,v] - self.alpha[target_seg]) <= np.abs(init_y[u,v] - self.alpha[target_seg+1]):
-                lb = self.alpha[target_seg]
-                ub = self.alpha[1]
-                # else:
-                #     ub = self.alpha[target_seg+1]
-                #     lb = self.alpha[NP]
+            if self.data_number==13:
+                if (u,v) in self.parallel_arcs:
+                    s_cur = self.seg_index1[(u, v)][0]
 
-                ampl.var['y'][u,v] = lb/2 
-                # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
-            elif s_cur == 1:
-                lb = self.alpha[3];      ub = self.alpha[1]
-                # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
-            elif s_cur == NP - 1:
-                lb = self.alpha[NP]; ub = self.alpha[NP - 2]
-                # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+                    if (u, v) == target_arc:
+                        # if np.abs(init_y[u,v] - self.alpha[target_seg]) <= np.abs(init_y[u,v] - self.alpha[target_seg+1]):
+                        lb = self.alpha[target_seg]
+                        ub = self.alpha[1]
+                        # else:
+                        #     ub = self.alpha[target_seg+1]
+                        #     lb = self.alpha[NP]
+
+                        ampl.var['y1'][u,v] = lb/2 
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
+                    elif s_cur == 1:
+                        lb = self.alpha[3];      ub = self.alpha[1]
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
+                    elif s_cur == NP - 1:
+                        lb = self.alpha[NP]; ub = self.alpha[NP - 2]
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+                    else:
+                        lb = self.alpha[s_cur + 2]
+                        ub = self.alpha[s_cur - 1]
+                    constraints_block.append(f"""
+                        subject to seg_nbhd1_{u}_{v}:
+                            {lb} <= y1[{u},{v}] <= {ub};
+                    """)
+
+                    s_cur = self.seg_index2[(u, v)][0]
+
+                    if (u, v) == target_arc:
+                        # if np.abs(init_y[u,v] - self.alpha[target_seg]) <= np.abs(init_y[u,v] - self.alpha[target_seg+1]):
+                        lb = self.alpha[target_seg]
+                        ub = self.alpha[1]
+                        # else:
+                        #     ub = self.alpha[target_seg+1]
+                        #     lb = self.alpha[NP]
+
+                        ampl.var['y2'][u,v] = lb/2 
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
+                    elif s_cur == 1:
+                        lb = self.alpha[3];      ub = self.alpha[1]
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
+                    elif s_cur == NP - 1:
+                        lb = self.alpha[NP]; ub = self.alpha[NP - 2]
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+                    else:
+                        lb = self.alpha[s_cur + 2]
+                        ub = self.alpha[s_cur - 1]
+                    constraints_block.append(f"""
+                        subject to seg_nbhd2_{u}_{v}:
+                            {lb} <= y2[{u},{v}] <= {ub};
+                    """)
+                else:
+                    s_cur = cur_segs[(u, v)][0] 
+
+                    # s_cur = cur_segs[(u, v)][0]
+                    if (u, v) == target_arc:
+                        # if np.abs(init_y[u,v] - self.alpha[target_seg]) <= np.abs(init_y[u,v] - self.alpha[target_seg+1]):
+                        lb = self.alpha[target_seg]
+                        ub = self.alpha[1]
+                        # else:
+                        #     ub = self.alpha[target_seg+1]
+                        #     lb = self.alpha[NP]
+
+                        ampl.var['y'][u,v] = lb/2 
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
+                    elif s_cur == 1:
+                        lb = self.alpha[3];      ub = self.alpha[1]
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
+                    elif s_cur == NP - 1:
+                        lb = self.alpha[NP]; ub = self.alpha[NP - 2]
+                        # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+                    else:
+                        lb = self.alpha[s_cur + 2]
+                        ub = self.alpha[s_cur - 1]
+                    constraints_block.append(f"""
+                        subject to seg_nbhd_{u}_{v}:
+                            {lb} <= y[{u},{v}] <= {ub};
+                    """)
             else:
-                lb = self.alpha[s_cur + 2]
-                ub = self.alpha[s_cur - 1]
-                # print(f"segement[{u},{v}]:{s_cur}, alpha[{s_cur+2 if s_cur+1<len(alpha_vals) else NP}] <= y[{u},{v}] <= alpha[{s_cur-1 if s_cur+1>=2 else 1}]")
+                s_cur = cur_segs[(u, v)][0]
+                if (u, v) == target_arc:
+                    # if np.abs(init_y[u,v] - self.alpha[target_seg]) <= np.abs(init_y[u,v] - self.alpha[target_seg+1]):
+                    lb = self.alpha[target_seg]
+                    ub = self.alpha[1]
+                    # else:
+                    #     ub = self.alpha[target_seg+1]
+                    #     lb = self.alpha[NP]
 
-            constraints_block.append(f"""
-                subject to seg_nbhd_{u}_{v}:
-                    {lb} <= y[{u},{v}] <= {ub};
-            """)
+                    ampl.var['y'][u,v] = lb/2 
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{target_seg+1}] <= y[{u},{v}] <= alpha[{target_seg}]")
+                elif s_cur == 1:
+                    lb = self.alpha[3];      ub = self.alpha[1]
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{3}] <= y[{u},{v}] <= alpha[{1}]")
+                elif s_cur == NP - 1:
+                    lb = self.alpha[NP]; ub = self.alpha[NP - 2]
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{NP}] <= y[{u},{v}] <= alpha[{NP-2}]")
+                else:
+                    lb = self.alpha[s_cur + 2]
+                    ub = self.alpha[s_cur - 1]
+                    # print(f"segement[{u},{v}]:{s_cur}, alpha[{s_cur+2 if s_cur+1<len(alpha_vals) else NP}] <= y[{u},{v}] <= alpha[{s_cur-1 if s_cur+1>=2 else 1}]")
+
+                constraints_block.append(f"""
+                    subject to seg_nbhd_{u}_{v}:
+                        {lb} <= y[{u},{v}] <= {ub};
+                """)
+
             # print(f"segement[{u},{v}]:{s_cur}, alpha{}<=y[{u},{v}]<={ub}")
         ampl.eval("\n".join(constraints_block))
 
@@ -4479,8 +4693,16 @@ class WaterNetworkOptimizer:
 
         for (i,j) in self.arcs:
             if (i,j)!=(u,v):
-                ampl.var['y'][i,j] = init_y[i,j] 
-
+                if self.data_number==13:
+                    if (i,j) in self.parallel_arcs:
+                        ampl.var['q1'][i,j] = init_q1[i,j] 
+                        ampl.var['q2'][i,j] = init_q2[i,j] 
+                        ampl.var['y1'][i,j] = init_y1[i,j] 
+                        ampl.var['y2'][i,j] = init_y2[i,j] 
+                        ampl.var['z1'][i,j] = init_z1[i,j] 
+                        ampl.var['z2'][i,j] = init_z2[i,j] 
+                else:
+                    ampl.var['y'][i,j] = init_y[i,j] 
         # try:
         #     for name, dual_values in self.all_duals.items():
         #         ampl.get_constraint(name).set_values(dual_values)
@@ -4491,14 +4713,23 @@ class WaterNetworkOptimizer:
             ampl.solve()
 
         # self.all_duals = {n: c.getValues() for n, c in ampl.get_constraints()}
+        if self.data_number==13:
+            return (
+                ampl,
+                ampl.get_value("solve_result"),
+                ampl.get_value("_solve_elapsed_time"),
+                ampl.getObjective("total_cost").value(),
+                {v: ampl.getVariable(v).getValues().to_dict() for v in ("y", "z", "q", "h", "q1", "q2", "y1", "y2", "z1", "z2")},
+            )
+        else:
+            return (
+                ampl,
+                ampl.get_value("solve_result"),
+                ampl.get_value("_solve_elapsed_time"),
+                ampl.getObjective("total_cost").value(),
+                {v: ampl.getVariable(v).getValues().to_dict() for v in ("y", "z", "q", "h")},
+            )
 
-        return (
-            ampl,
-            ampl.get_value("solve_result"),
-            ampl.get_value("_solve_elapsed_time"),
-            ampl.getObjective("total_cost").value(),
-            {v: ampl.getVariable(v).getValues().to_dict() for v in ("y", "z", "q", "h")},
-        )
  
     def solve_nlp_PR(self,
         target_arc,
@@ -4787,7 +5018,16 @@ class WaterNetworkOptimizer:
         h = self.h 
         y = self.y
         z = self.z
+        if self.data_number==13:
+            y1 = self.y1
+            y2 = self.y2
+            z1 = self.z1
+            z2 = self.z2
+            q1 = self.q1
+            q2 = self.q2
+
         seg_index = self.seg_index
+        print("seg_index:", self.seg_index)
         # ================================================================
         # OUTER LOOP
         # ================================================================
@@ -4803,11 +5043,27 @@ class WaterNetworkOptimizer:
             #     a for a in self.arcs
             #     if a not in self.fix_arc_set and a not in self.visited_arc
             # ] 
-            candidate_arcs = [
-                (i, j) for (i, j) in self.sorted_arcs
-                if max(self.seg_index[(i, j)]) >= 2
-                if (i,j) not in self.visited_arc
-            ]
+            if self.data_number == 13:
+                candidate_arcs = [
+                    (i, j)
+                    for (i, j) in self.sorted_arcs
+                    if (
+                        (
+                            max(self.seg_index1[(i, j)]) >= 2
+                            or max(self.seg_index2[(i, j)]) >= 2
+                        )
+                        if (i, j) in self.parallel_arcs
+                        else max(self.seg_index[(i, j)]) >= 2
+                    )
+                    and (i, j) not in self.visited_arc
+                ]
+            else:
+                candidate_arcs = [
+                    (i, j)
+                    for (i, j) in self.sorted_arcs
+                    if max(self.seg_index[(i, j)]) >= 2
+                    and (i, j) not in self.visited_arc
+                ]
             # dual ranking
             dual_dict = {}
             for name, vals in self.all_duals.items():
@@ -4822,7 +5078,7 @@ class WaterNetworkOptimizer:
             for (i, j), dual_val in dual_dict.items():
                 self.sen_score[(i, j)] = -dual_val * np.abs(self.h[i] - self.h[j])
                 # self.sen_score[(i, j)] = -dual_val * np.abs(self.q[i,j])
-                if self.data_number==5:
+                if self.data_number==4:
                     self.sen_score[(i, j)] = -dual_val *(2 + 1.852*np.abs(self.q[i,j])**0.852 * sum(10.67*self.l[i,j,k]/(float(self.R[i,j])**1.852 * self.d[k]**4.87) for k in self.pipes) + np.abs(self.q[i,j])**1.852 * sum(10.67/(float(self.R[i,j])**1.852 * self.d[k]**4.87) for k in self.pipes) )
                 else:
                     # self.sen_score[(i, j)] = -dual_val * 1.852*np.abs(self.q[i,j])**0.852 * sum(10.67*self.l[i,j,k]/(float(self.R[k])**1.852 * self.d[k]**4.87) for k in self.pipes)
@@ -4849,6 +5105,7 @@ class WaterNetworkOptimizer:
             #      for r, a in enumerate(sorted_arcs)],
             #     title="Candidate Arcs",
             # )
+            print("sorted_arcs:", sorted_arcs)
             print("-" * 98)
             print(
                 f"{'NLP':<8}"
@@ -4888,8 +5145,17 @@ class WaterNetworkOptimizer:
                 while cur_seg > 1:
                     tgt_seg     = cur_seg 
                     # ── segment-cut NLP
-                    # ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,self.y,self.q,self.h,self.z,self.seg_index)
-                    ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,y,q,h,z,seg_index)
+                    if self.data_number==13:
+                        # ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,self.y,self.q,self.h,self.z,self.seg_index)
+                        ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,y,q,h,z,seg_index, q1, q2, y1, y2, z1, z2)
+                    else:
+                        q1 = None
+                        q2 = None
+                        y1 = None
+                        y2 = None
+                        z1 = None
+                        z2 = None
+                        ampl, status, stime, obj_val, vars_new = self.solve_nlp_fresh((i, j),tgt_seg,y,q,h,z,seg_index, q1, q2, y1, y2, z1, z2)
                     # seg_index    = copy.deepcopy(seg_new)
                     # y            = vars_new["y"]
                     # z            = vars_new["z"]
@@ -4910,6 +5176,13 @@ class WaterNetworkOptimizer:
                         q            = vars_new["q"]
                         h            = vars_new["h"]
                         current_cost = obj_val
+                        if self.data_number==13:
+                            q1            = vars_new["q1"]
+                            q2            = vars_new["q2"]
+                            y1            = vars_new["y1"]
+                            y2            = vars_new["y2"]
+                            z1            = vars_new["z1"]
+                            z2            = vars_new["z2"]
 
                         # if len(seg_new[i,j])==1:
                         #     cur_seg = seg_new[(i, j)][0]
@@ -4994,7 +5267,14 @@ class WaterNetworkOptimizer:
                         self.z            = copy.deepcopy(z)
                         self.seg_index    = copy.deepcopy(seg_index)
                         self.current_cost = current_cost
-                        # print(f"seg_index[{i},{j}]:{self.seg_index[i,j]}")
+
+                        if self.data_number==13:
+                            self.q1            = copy.deepcopy(q1)
+                            self.q2            = copy.deepcopy(q2)
+                            self.y1            = copy.deepcopy(y1)
+                            self.y2            = copy.deepcopy(y2)
+                            self.z1            = copy.deepcopy(z1)
+                            self.z2            = copy.deepcopy(z2)                        # print(f"seg_index[{i},{j}]:{self.seg_index[i,j]}")
                         self.all_duals = {n: c.getValues() for n, c in self.ampl.get_constraints()}
                         # ── log in improvement history ────────────────────
                         improvement_history.append(copy.deepcopy(S_new))
@@ -5064,16 +5344,16 @@ class WaterNetworkOptimizer:
         # ============================================================
         # Compute alpha values
         # ============================================================
-        if self.data_number==4:
-            alpha = {
-                k: self.omega / (100**1.852 * self.d[k]**4.87)
-                for k in self.pipes
-            }
-        else:
-            alpha = {
-                k: self.omega / (self.R[k]**1.852 * self.d[k]**4.87)
-                for k in self.pipes
-            }
+        # if self.data_number==4:
+        #     alpha = {
+        #         k: self.omega / (100**1.852 * self.d[k]**4.87)
+        #         for k in self.pipes
+        #     }
+        # else:
+        #     alpha = {
+        #         k: self.omega / (self.R[k]**1.852 * self.d[k]**4.87)
+        #         for k in self.pipes
+        #     }
 
         # ============================================================
         # Segment information
@@ -5105,23 +5385,76 @@ class WaterNetworkOptimizer:
         # ============================================================
         y = {}
         z = {}
+        if self.data_number==13:
+            self.y1 = {}
+            self.z1 = {}
+            self.y2 = {}
+            self.z2 = {}
         for (i, j) in self.arcs:
             # ---- compute y ----
             # y[i,j] = (h[i]-h[j])/(self.L[i,j]*q[i,j]*np.abs(q[i,j])**0.852)
             # y[i,j] = (h[i]-h[j])*(q[i,j]**2 + 0.426*self.eps[i,j]**2)/(self.L[i,j]*q[i,j]**3 * (q[i,j]**2 + self.eps[i,j]**2)**0.426)
-            y[(i, j)] = sum(
-                alpha[k] * l[(i, j, k)] / self.L[i, j]
-                for k in self.pipes
-            )
-            # ---- compute z (epigraph value) ----
-            # s = self.find_seg(y[(i,j)])[0]
-            z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
-            # z[(i, j)] = (
-            #     (
-            #         slope[s] * y[(i, j)]
-            #         + intercept[s]
-            #     ) * self.L[i, j]
-            # )
+            if self.data_number==3:
+                if (i,j) in self.unfixed_arcs:
+                    y[(i, j)] = sum(
+                        self.alpha[k] * l[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+
+                if (i,j) in self.parallel_arcs:
+                    y[(i, j)] = sum(
+                        self.alpha[k] * l[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+            elif self.data_number==9:
+                if (i,j) in self.unfixed_arcs:
+                    y[(i, j)] = sum(
+                        self.alpha[k] * l[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+
+                if (i,j) in self.parallel_arcs:
+                    y[(i, j)] = sum(
+                        self.alpha[k] * self.l1[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    z[i,j] = sum(self.l1[i,j,k]*self.C[k] for k in self.pipes)
+            elif self.data_number==13:
+                if (i,j) in self.parallel_arcs:
+                    self.y1[(i, j)] = sum(
+                        self.alpha[k] * self.l1[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    self.z1[i,j] = sum(self.l1[i,j,k]*self.C[k] for k in self.pipes)
+
+                    self.y2[(i, j)] = sum(
+                        self.alpha[k] * self.l2[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    self.z2[i,j] = sum(self.l2[i,j,k]*self.C[k] for k in self.pipes)
+                else:
+                    y[(i, j)] = sum(
+                        self.alpha[k] * l[(i, j, k)] / self.L[i, j]
+                        for k in self.pipes
+                    )
+                    z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+            else:
+                y[(i, j)] = sum(
+                    self.alpha[k] * l[(i, j, k)] / self.L[i, j]
+                    for k in self.pipes
+                )
+                # ---- compute z (epigraph value) ----
+                # s = self.find_seg(y[(i,j)])[0]
+                z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+                # z[(i, j)] = (
+                #     (
+                #         slope[s] * y[(i, j)]
+                #         + intercept[s]
+                #     ) * self.L[i, j]
+                # )
         return y, z
 
     def find_seg(self, yv):
@@ -5202,10 +5535,16 @@ class WaterNetworkOptimizer:
         # Initialize AMPL model
         # ============================================================
         ampl = AMPL()
-        if self.data_number == 5:
+        if self.data_number==3:
+            ampl.read("trn_epigraph_model.mod")
+        elif self.data_number == 4:
             ampl.read("newyork_epigraph_model.mod")
-        elif self.data_number==6:
+        elif self.data_number==7:
             ampl.read("blacksburg_epigraph_model.mod")
+        elif self.data_number==9:
+            ampl.read("bakryun_epigraph_model.mod")
+        elif self.data_number==13:
+            ampl.read("farhadgerd_epigraph_model.mod")
         else:
             ampl.read("exact_reduced_wdn.mod")
         ampl.read_data(self.data_file)
@@ -5216,9 +5555,17 @@ class WaterNetworkOptimizer:
             ampl.var["q"][i, j] = val
         for i, val in self.h.items():
             ampl.var["h"][i] = val
-        for (i, j) in self.arcs:
+        for (i, j) in self.y.keys():
             ampl.var["y"][i, j] = self.y[i,j] 
             ampl.var["z"][i, j] = self.z[i,j] 
+            if self.data_number==13:
+                if (i,j) in self.parallel_arcs:
+                    ampl.var["y1"][i, j] = self.y1[i,j] 
+                    ampl.var["z1"][i, j] = self.z1[i,j] 
+                    ampl.var["y2"][i, j] = self.y2[i,j] 
+                    ampl.var["y2"][i, j] = self.z2[i,j] 
+
+
 
         # ============================================================
         # DUAL WARM START
@@ -5266,8 +5613,7 @@ class WaterNetworkOptimizer:
             f"warm_start_bound_frac        = 1e-9 "  # fraction push from bounds
             f"warm_start_slack_bound_frac  = 1e-9 "  # slack variable push
             f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
-            # f"obj_scaling_factor = {self.scaling} "
-
+            f"obj_scaling_factor = {self.scaling} "
 
             # "linear_solver = ma57 "
             # "halt_on_ampl_error = yes "
@@ -5306,12 +5652,25 @@ class WaterNetworkOptimizer:
         ampl.eval("drop total_cost;")
         ampl.eval("drop exact_cost;")
         ampl.eval("param seg_index{arcs};")
-        for (i,j) in self.arcs:
+        for (i,j) in self.y.keys():
             ampl.param["seg_index"][i, j] = self.seg_index[i,j][0] 
-        ampl.eval(f"minimize objective:sum{{(i,j) in arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]);")
-        for (i,j) in self.arcs:
+        if self.data_number==13:
+            ampl.eval("param seg_index1{arcs};")
+            ampl.eval("param seg_index2{arcs};")
+            for (i,j) in self.y1.keys():
+                ampl.param["seg_index1"][i, j] = self.seg_index1[i,j][0] 
+                ampl.param["seg_index2"][i, j] = self.seg_index2[i,j][0] 
+        if self.data_number in [3,9]:
+            ampl.eval(f"minimize objective:sum{{(i,j) in parallel_arcs union unfixed_arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]);")
+        elif self.data_number==13:
+            ampl.eval(f"minimize objective:sum{{(i,j) in arcs diff parallel_arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]) + sum{{(i,j) in parallel_arcs}} (L[i,j]*(slope[seg_index1[i,j]]*y1[i,j] + intercept[seg_index1[i,j]]) + L[i,j]*(slope[seg_index2[i,j]]*y2[i,j] + intercept[seg_index2[i,j]]));")
+        else:
+            ampl.eval(f"minimize objective:sum{{(i,j) in arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]);")
+
+        for (i,j) in self.y.keys():
             ampl.eval(f"subject to y_bound_left{i}_{j}: alpha[seg_index[{i},{j}]+1] <= y[{i},{j}];")
             ampl.eval(f"subject to y_bound_right{i}_{j}: y[{i},{j}] <= alpha[seg_index[{i},{j}]];")
+
         # ============================================================
         # Solve optimization model
         # ============================================================
@@ -5346,15 +5705,14 @@ class WaterNetworkOptimizer:
             solve_time,
         )
 
-
     def solve_exact_reduced_model(self):
         # ============================================================
         # Initialize AMPL model
         # ============================================================
         ampl = AMPL()
-        if self.data_number == 5:
+        if self.data_number == 4:
             ampl.read("newyork_epigraph_model.mod")
-        elif self.data_number==6:
+        elif self.data_number==7:
             ampl.read("blacksburg_epigraph_model.mod")
         else:
             ampl.read("exact_reduced_wdn.mod")
@@ -5558,10 +5916,17 @@ class WaterNetworkOptimizer:
         # print("super_source_out_arc:", self.super_source_out_arc, "\n")
 
         self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set_result)        
-        self.sorted_arcs = [
-            arc for arc in self.arcs
-            if arc not in self.fix_arc_set
-        ]
+        if self.data_number in [3,9]:
+            self.sorted_arcs = [
+                arc for arc in list(set(self.parallel_arcs) | set(self.unfixed_arcs)) 
+                if arc not in self.fix_arc_set
+            ]
+        else:
+            self.sorted_arcs = [
+                arc for arc in self.arcs
+                if arc not in self.fix_arc_set
+            ]
+        print("sorted_arcs:", self.sorted_arcs)
 
         # if self.data_number == 6:
         #     self.ampl.eval(
@@ -5648,7 +6013,7 @@ class WaterNetworkOptimizer:
         #-------------------------------------------------------------------------------------------------------#
         abs_flows = sorted(abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-6)
         m = len(abs_flows)
-        print(m)
+        # print(m)
         self.Delta = self.alpha_q * abs_flows[m // 2]
 
         # abs_flows = sorted(
@@ -5703,12 +6068,21 @@ class WaterNetworkOptimizer:
         # print(self.y)
         self.seg_index = {}
         # descending alpha breakpoints
-        print("alpha_values:", self.alpha)
+        # print("alpha_values:", self.alpha)
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
         tol = 1e-8
-        for (u, v) in self.arcs:
+        for (u, v) in self.y.keys():
             y_val = self.y[u, v]
+            # print(y_val)
             self.seg_index[u, v] = self.find_seg(y_val)
+        if self.data_number==13:
+            self.seg_index1 = {}
+            self.seg_index2 = {}
+            for (u, v) in self.y1.keys():
+                y_val1 = self.y1[u, v]
+                y_val2 = self.y2[u, v]
+                self.seg_index1[u, v] = self.find_seg(y_val1)
+                self.seg_index2[u, v] = self.find_seg(y_val2)
         # ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
         ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model1()
 
@@ -5751,7 +6125,7 @@ class WaterNetworkOptimizer:
         # descending alpha breakpoints
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
         tol = 1e-8
-        for (u, v) in self.arcs:
+        for (u, v) in self.y.keys():
             y_val = self.y[(u, v)]
             self.seg_index[(u, v)] = self.find_seg(y_val)
 
@@ -5794,21 +6168,38 @@ class WaterNetworkOptimizer:
             "y": y_sol.copy(), "z": z_sol.copy(),
             "seg": self.seg_index.copy(), "cost": self.best_cost
         }
+        # print("alpha_min:", self.alpha_min, "alpha_max:", self.alpha_max)
+        # print("y_sol:", y_sol)
+        # for (i,j), val in y_sol.items():
+        #     term1 = sum(10.67 * self.l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes) 
+        #     term2 = self.L[i,j]*val
+        #     print(term1, term2)
+            # print(val)
 
-        print("Initial seg_index:", self.seg_index)
+        # print("Initial seg_index:", self.seg_index)
         self.iteration = 1
         self.visited_arc: list = []
         best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.segment_cut_heuristic()
         # best_global["q"],best_global["h"],best_global["y"],best_global["z"]  = self.bilevel_segment_heuristic()
-
+        # print("y_sol:", best_global["y"])
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
 
         print("\n-------------------- Solving Original Model with Initialize ---------------------")
 
-        rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
+        if self.data_number==13:
+            rec_ampl, rec_result, l_trial, l_trial1, l_trial2, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
+            q_trial1 = self.q1
+            q_trial2 = self.q2
+        else:
+            l_trial1 = None
+            l_trial2 = None
+            q_trial1 = None
+            q_trial2 = None
+            rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
 
-        orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, self.q, self.h)
+        orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, l_trial1, l_trial2, self.q, q_trial1, q_trial2, self.h)
+
         print(f"Final cost after recovery: {final_cost:,.6f}")
         # print(f"current cost:", self.current_cost)
         self.number_of_nlp += 1
@@ -5855,7 +6246,7 @@ class WaterNetworkOptimizer:
 
         self.elapsed_time = time.time() - self.start_time
 
-        self.constraint_violations(self.q, self.h, self.l, self.eps)
+        # self.constraint_violations(self.q, self.h, self.l, self.eps)
 
         print(f"Final best objective:     {self.current_cost}")
         print(f"NLP problems solved:      {self.number_of_nlp}")
@@ -5864,7 +6255,7 @@ class WaterNetworkOptimizer:
         print(f"Total elapsed time:       {self.elapsed_time:.2f} s")
         print("=" * 80)
         #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
+        #-------------------------------------------------------------------------------------------------------i#
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Entry Point

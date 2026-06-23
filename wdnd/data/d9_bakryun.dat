@@ -90,6 +90,7 @@ param: nodes:      E      D                   P    pmax :=
 33                 12.9   0.05441  15   0
 34                 18.2   0.00000  15   0
 35                 25.2   0.00772  15   0 ;
+
 # Pipe's parameters: start node, end node, length (m)
 # Diameters are decision variables chosen from the candidate set below
 param: arcs:                        L       vmax:=
@@ -201,8 +202,8 @@ param: arcs:                        L       vmax:=
 set Source := 99 ;
 #param H_source := 58.0 ;
 
-param d_min := 0.300;
-param d_max := 1.100;
+#param d_min := 0.300;
+#param d_max := 1.100;
 
 # Candidate pipe diameters (m), Hazen-Williams C = 100, unit cost in $/m
 # From Table (BakRyun available pipes): diameters in mm converted to m
