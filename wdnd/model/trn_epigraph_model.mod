@@ -75,6 +75,19 @@ subject to con1{j in nodes diff Source}:
     sum{i in nodes : (i,j) in arcs }(q[i,j]) -  sum{i in nodes : (j,i) in arcs}(q[j,i]) =  D[j]
 ;
 
+#subject to con2{(i,j) in fixed_arcs diff parallel_arcs}: 
+#   h[i] - h[j] = q[i,j]*abs(q[i,j])^0.852 *omega * L[i,j] / ( (exroughness[i,j]^1.852) * (exdiam[i,j])^4.87) ;
+#
+#subject to con3{(i,j) in unfixed_arcs}: 
+#   h[i] - h[j] = q[i,j]*abs(q[i,j])^0.852 * L[i,j] * y[i,j] ;
+#
+#subject to con4{(i,j) in parallel_arcs}: 
+#   h[i] - h[j] = q1[i,j]*abs(q1[i,j])^0.852 *omega * L[i,j] / ( (exroughness[i,j]^1.852) * (exdiam[i,j])^4.87) ;
+#
+#subject to con5{(i,j) in parallel_arcs}: 
+#   h[i] - h[j] = q2[i,j]*abs(q2[i,j])^0.852 * L[i,j] * y[i,j] ;
+
+
 subject to con2{(i,j) in fixed_arcs diff parallel_arcs}: 
    h[i] - h[j] = (q[i,j])^3 *((((q[i,j])^2 + eps[i,j]^2)^0.426) /((q[i,j])^2 + 0.426*eps[i,j]^2)) *omega * L[i,j] / ( (exroughness[i,j]^1.852) * (exdiam[i,j])^4.87) ;
 
@@ -98,4 +111,7 @@ subject to con9{i in nodes diff Source}: h[i] >= (E[i] + P[i]) ;
 
 subject to con10{(i,j) in parallel_arcs}: q[i,j] = q1[i,j] + q2[i,j];
 
+#subject to con11{(i,j) in arcs}: 
+#   -Q_max <= q[i,j] <= Q_max
+#;
 #*******************************************************************************************#

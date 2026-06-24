@@ -26,7 +26,10 @@ class WaterNetworkSolver:
         self.eps = {}
 
     def read_model_and_data(self):
-        if self.data_number == 4:
+
+        if self.data_number == 3:
+            self.model_file = "trn_model.mod"
+        elif self.data_number == 4:
             self.model_file = "newyork_model.mod"
         elif self.data_number == 7:
             self.model_file = "blacksburg_model.mod"
@@ -34,10 +37,9 @@ class WaterNetworkSolver:
             self.model_file = "bakryun_model.mod"
         elif self.data_number == 13:
             self.model_file = "farhadgerd_model.mod"
-        elif self.data_number == 3:
-            self.model_file = "trn_model.mod"
-        elif self.data_number == 22:
-            self.model_file = "marchi_rural_model.mod"
+
+        # elif self.data_number == 22:
+        #     self.model_file = "marchi_rural_model.mod"
         else:
             self.model_file = "wdnmodel.mod"
 
@@ -907,7 +909,7 @@ class WaterNetworkSolver:
     def solve_original_model_without_init(self):
         print(f"\n-------------------------------- Solving with {self.solver_name} --------------------------")
         self.ampl.option['solver'] = sys.argv[1]
-        self.ampl.option["ipopt_options"] = "outlev = 5 bound_relax_factor=0  bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes"
+        self.ampl.option["ipopt_options"] = "outlev = 5 bound_relax_factor=0  bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes"
 
         self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 bonmin.num_resolve_at_root = 10 expect_infeasible_problem = no bonmin.time_limit = 600 option_file_name = ipopt.opt print_user_options = yes bonmin.nlp_log_at_root = 5 option_file_name = ipopt.opt linear_solver = ma57 mu_strategy adaptive"
         # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level = 5 outlev = 4 option_file_name = ipopt.opt"
@@ -968,7 +970,7 @@ class WaterNetworkSolver:
         self.h_init = self.ampl.get_variable('h').get_values().to_dict()
         self.l_init = self.ampl.get_variable('l').get_values().to_dict()
         # self.eps_init = self.ampl.get_variable('eps').get_values().to_dict()
-        if self.data_number ==5:
+        if self.data_number ==4:
             self.q1_init = self.ampl.get_variable('q1').get_values().to_dict()
             self.q2_init = self.ampl.get_variable('q2').get_values().to_dict()
         print("*******************************************************************************\n")
@@ -1510,10 +1512,16 @@ class WaterNetworkSolver:
     def solve_reduced_model(self):
         print(f"\n-------------------------------- Solving Reduced Model using {self.solver_name} --------------------------")
 
-        if self.data_number == 5:
+        if self.data_number==3:
+            self.model_file = "trn_epigraph_model.mod"
+        elif self.data_number == 4:
             self.model_file = "newyork_epigraph_model.mod"
-        elif self.data_number == 6:
+        elif self.data_number == 7:
             self.model_file = "blacksburg_epigraph_model.mod"
+        elif self.data_number == 9:
+            self.model_file = "bakryun_epigraph_model.mod"
+        elif self.data_number == 13:
+            self.model_file = "farhadgerd_epigraph_model.mod"
         else:
             self.model_file = "exact_reduced_wdn.mod"
         print("WDN Model Name:", self.model_file)
@@ -1522,9 +1530,21 @@ class WaterNetworkSolver:
         self.ampl.read(self.model_file)
         self.ampl.read_data(self.data_file)
 
+        # if self.data_number==13:
+        #     for (i, j), val in y_input.items():
+        #         ampl.param["y"][i, j] = val
+        #
+        #     for (i, j), val in self.y1.items():
+        #         ampl.param["y1"][i, j] = val
+        #     for (i, j), val in self.y2.items():
+        #         ampl.param["y2"][i, j] = val
+        # else:
+        #     for (i, j), val in y_input.items():
+        #         ampl.param["y"][i, j] = val
+
         self.ampl.option['solver'] = self.solver_name
 
-        self.ampl.option["ipopt_options"] = "outlev = 5 expect_infeasible_problem = no bound_relax_factor=0 bound_push = 0.01 bound_frac = 0.01 warm_start_init_point = no halt_on_ampl_error = yes "
+        self.ampl.option["ipopt_options"] = "outlev = 5 expect_infeasible_problem = no bound_relax_factor=0 bound_push = 0.1 bound_frac = 0.1 warm_start_init_point = no halt_on_ampl_error = yes "
 
         # self.ampl.option["bonmin_options"] = "bonmin.bb_log_level 0 bonmin.nlp_log_level 0 warm_start_init_point = no bonmin.num_resolve_at_root = 10 expect_infeasible_problem = yes bound_relax_factor = 0 bound_push = 0.01 bound_frac = 0.01 bonmin.time_limit = 600 print_user_options = yes outlev = 1 bonmin.nlp_log_at_root = 5 linear_solver = ma57 outlev = 0 print_level = 0"
         #self.ampl.option["gurobi_options"] = "outlev 1 presolve 1 timelimit 3600 iis = 1 iismethod = 0 iisforce = 1 NumericFocus = 1 socp = 2 method = 2 nodemethod = 2 concurrentmethod = 3 nonconvex = 2  warmstart = 1 barconvtol = 1e-9 feastol = 1e-5 chk:epsrel = 0" #lim:time=10 concurrentmip 8 pool_jobs 0 Threads=1 basis = 1 mipstart = 3 feastol=1e-9 mipfocus = 1 fixmodel = 1 PumpPasses = 10
@@ -1578,11 +1598,16 @@ class WaterNetworkSolver:
 
     def solve_recover_model(self):
         print(f"\n-------------------------------- Solving Recover Model using cplex --------------------------")
-
-        if self.data_number == 5:
-            self.model_file = "recover_newyork_model.mod"
-        elif self.data_number == 6:
-            self.model_file = "recover_blacksburg_model.mod"
+        if self.data_number==3:
+            ampl.read("trn_recover_model.mod")
+        elif self.data_number==4:
+            ampl.read("newyork_recover_model.mod")
+        elif self.data_number==7:
+            ampl.read("blacksburg_recover_model.mod")
+        elif self.data_number==9:
+            ampl.read("bakryun_recover_model.mod")
+        elif self.data_number==13:
+            ampl.read("farhadgerd_recover_model.mod")
         else:
             self.model_file = "recover_wdnmodel.mod"
 
@@ -1759,10 +1784,10 @@ class WaterNetworkSolver:
             iter += 1
 
     def run(self):
-        self.read_model_and_data()
-        self.solve_original_model_without_init()
+        # self.read_model_and_data()
+        # self.solve_original_model_without_init()
 
-        # self.solve_reduced_model()
+        self.solve_reduced_model()
         # self.solve_recover_model()
 
 if __name__ == "__main__":
@@ -1823,7 +1848,7 @@ if __name__ == "__main__":
     # ]
 
     # Select the data number here (0 to 18)
-    data_number = int(sys.argv[2]) -1
+    data_number = int(sys.argv[2]) - 1
     data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{data_list[(data_number)]}.dat"
     #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"
     #data = f"/home/nitishdumoliya/waterNetwork/wdnd/data/{sys.argv[3]}"

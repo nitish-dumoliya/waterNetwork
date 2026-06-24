@@ -73,17 +73,24 @@ subject to con1{j in nodes diff Source}:
     sum{i in nodes : (i,j) in arcs }q[i,j] -  sum{i in nodes : (j,i) in arcs}q[j,i] -  D[j] = 0
 ;
 
+#subject to con2{(i,j) in arcs diff parallel_arcs}:
+#    h[i] - h[j]  -  q[i,j]*abs(q[i,j])^0.852 * L[i,j] * y[i,j] = 0;
+#
+#subject to con3{(i,j) in parallel_arcs}:
+#    h[i] - h[j]  -  q1[i,j]*abs(q1[i,j])^0.852 * L[i,j] * y1[i,j] = 0;
+#
+#subject to con4{(i,j) in parallel_arcs}:
+#    h[i] - h[j]  -  q2[i,j]*abs(q2[i,j])^0.852 * L[i,j] * y2[i,j]= 0;
+
+
 # Smooth-Approximation of Hazen-Williams Constraint
 subject to con2{(i,j) in arcs diff parallel_arcs}:
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
     h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * L[i,j] * y[i,j] = 0;
 
 subject to con3{(i,j) in parallel_arcs}:
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
     h[i] - h[j]  -  (q1[i,j]^3 * (q1[i,j]^2 + eps[i,j]^2)^0.426 / (q1[i,j]^2 + 0.426*eps[i,j]^2)) * L[i,j] * y1[i,j] = 0;
 
 subject to con4{(i,j) in parallel_arcs}:
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
     h[i] - h[j]  -  (q2[i,j]^3 * (q2[i,j]^2 + eps[i,j]^2)^0.426 / (q2[i,j]^2 + 0.426*eps[i,j]^2)) * L[i,j] * y2[i,j]= 0;
 
 subject to exact_cost{(i,j) in arcs diff parallel_arcs, s in segs}: 

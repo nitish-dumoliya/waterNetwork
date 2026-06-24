@@ -2308,7 +2308,7 @@ class WaterNetworkOptimizer:
                 reverse=True
             )
         ]
-        print("sorted_arcs:", sorted_arcs)
+        # print("sorted_arcs:", sorted_arcs)
         self._print_arc_reversal_header()
         # =========================================================
         # MAIN LOOP
@@ -3293,7 +3293,7 @@ class WaterNetworkOptimizer:
         #    arc for arc in sorted_arcs
         #    if arc not in self.reversed_arcs
         # ]
-        print("sorted_arcs:", sorted_arcs)
+        # print("sorted_arcs:", sorted_arcs)
         # sorted_arcs = sorted_arcs[:min(10, len(sorted_arcs))]
         # print("reversed_arcs:", self.reversed_arcs)
 
@@ -3359,7 +3359,7 @@ class WaterNetworkOptimizer:
                     ampl.eval(f'let l[{x},{y},{k}] := {val};')
                 for (x, y), val in self.q.items():
                     ampl.eval(f'let q[{x},{y}] := {val};')
-                    if self.data_number ==5:
+                    if self.data_number ==4:
                         ampl.eval(f'let q1[{x},{y}] := {self.q1[x,y]};')
                         ampl.eval(f'let q2[{x},{y}] := {self.q2[x,y]};')
                 for x, val in self.h.items():
@@ -5570,15 +5570,15 @@ class WaterNetworkOptimizer:
         # ============================================================
         # DUAL WARM START
         # ============================================================
-        current_duals = {
-            name: con.get_values()
-            for name, con in ampl.get_constraints()
-        }
-        for name, dual_values in self.all_duals.items():
-            if name in current_duals:
-                ampl.get_constraint(name).set_values(
-                    dual_values
-                )
+        # current_duals = {
+        #     name: con.get_values()
+        #     for name, con in ampl.get_constraints()
+        # }
+        # for name, dual_values in self.all_duals.items():
+        #     if name in current_duals:
+        #         ampl.get_constraint(name).set_values(
+        #             dual_values
+        #         )
         # ============================================================
         # Solver selection
         # ============================================================
@@ -5926,7 +5926,7 @@ class WaterNetworkOptimizer:
                 arc for arc in self.arcs
                 if arc not in self.fix_arc_set
             ]
-        print("sorted_arcs:", self.sorted_arcs)
+        # print("sorted_arcs:", self.sorted_arcs)
 
         # if self.data_number == 6:
         #     self.ampl.eval(

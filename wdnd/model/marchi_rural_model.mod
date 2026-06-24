@@ -56,6 +56,7 @@ subject to con1{j in nodes diff Source}:
 subject to con2{(i,j) in arcs}: 
      #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
     h[i] - h[j]  -  (q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)) = 0;
+
 subject to con3{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] - L[i,j] = 0 
 ;
