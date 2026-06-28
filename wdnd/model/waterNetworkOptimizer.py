@@ -232,9 +232,11 @@ class WaterNetworkOptimizer:
             self.fixarcs = self.ampl.getSet("fixed_arcs")
             self.unfixed_arcs = self.ampl.getSet("unfixed_arcs")
             self.parallel_arcs = self.ampl.getSet("parallel_arcs")
+            self.exroughness = self.ampl.getParameter("exroughness").to_dict()
+            self.exdiam = self.ampl.getParameter("exdiam").to_dict()
 
 
-        if self.data_number == 7:
+        if self.data_number in [7, 24]:
             self.fixarcs = self.ampl.getSet("fixarcs")
  
         if self.data_number==9:
@@ -243,8 +245,11 @@ class WaterNetworkOptimizer:
             self.parallel_arcs = self.ampl.getSet("parallel_arcs")
 
         if self.data_number==13:
-            # self.fixarcs = self.ampl.getSet("fixarcs")
             self.parallel_arcs = self.ampl.getSet("parallel_arcs")
+
+        if self.data_number==24:
+            self.fix_L = self.ampl.getParameter("fix_L").to_dict()
+            print(self.fix_L)
 
         self.L = self.ampl.getParameter("L").to_dict()
         self.D = self.ampl.getParameter("D").to_dict()
@@ -720,6 +725,476 @@ class WaterNetworkOptimizer:
 
     # ── Constraint Violation Reporting ────────────────────────────────────────
     def constraint_violations(self, q_values, h_values, l_values, epsilon):
+        from collections import defaultdict
+        """
+        Compute and report all constraint violations for the current solution.
+    
+        Constraints checked:
+            con1 : Flow balance at non-source nodes
+            con2 : Head-loss (original vs. approximated)
+            con3 : Pipe length summation per arc
+            con4 : Individual pipe segment length upper bound
+            con5 : Source node head equality
+            con6 : Minimum pressure head at demand nodes
+    
+        Supported data_number values: 3, 4, 7, 9, 24
+        """
+        total_absolute_constraint_violation = 0.0
+    
+        # ── Build arc-neighbour index once (avoids O(N²) membership tests) ────
+        # incoming[j] = list of i where (i,j) in arcs
+        # outgoing[i] = list of j where (i,j) in arcs
+        arc_set = set(self.arcs)
+        incoming = defaultdict(list)
+        outgoing = defaultdict(list)
+        for (i, j) in arc_set:
+            incoming[j].append(i)
+            outgoing[i].append(j)
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Constraint 1 – Flow balance at non-source nodes
+        # ══════════════════════════════════════════════════════════════════════
+        con1_gap = {}
+    
+        if self.data_number == 4:
+            q1 = self.q1
+            q2 = self.q2
+    
+            # Accumulate net-flow per node in one pass over arcs
+            net_flow = defaultdict(float)  # net_flow[i] = inflow - outflow at i
+            for (i, j) in q1:
+                f = q1[i, j] + q2[i, j]
+                net_flow[j] += f
+                net_flow[i] -= f
+    
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                violation = net_flow[i] - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+    
+        else:
+            # Works for data_number 3, 7, 9, 24 (all use scalar q_values)
+            net_flow = defaultdict(float)
+            for (i, j), f in q_values.items():
+                net_flow[j] += f
+                net_flow[i] -= f
+    
+            for i in self.nodes:
+                if i in self.source:
+                    continue
+                violation = net_flow[i] - self.D[i]
+                con1_gap[str(i)] = violation
+                total_absolute_constraint_violation += abs(violation)
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Constraint 2 – Head-loss (original vs. approximated)
+        # ══════════════════════════════════════════════════════════════════════
+        con2_original_gap  = {}
+        con2_approx_gap    = {}
+        absolute_violations = {}
+        relative_violations = {}
+    
+        con2_original_violation           = 0.0
+        con2_approx_violation             = 0.0
+        con2_absolute_constraint_violation = 0.0
+        con2_relative_constraint_violation = 0.0
+    
+        # ── Precompute alpha for every (i,j,k) triplet once ──────────────────
+        # alpha_cache[(i,j)] = sum_k  omega * l[i,j,k] / (R[k]^1.852 * d[k]^4.87)
+        OMEGA = 10.67  # Hazen-Williams SI constant (same as param omega in AMPL)
+    
+        # Precompute per-pipe denominator  R[k]^1.852 * d[k]^4.87
+        if self.data_number==4:
+            # pipe_denom = self.alpha
+            pipe_denom = {k: (100 ** 1.852) * (self.d[k] ** 4.87) for k in self.pipes}
+        elif self.data_number==13:
+            pipe_denom = {k: (130 ** 1.852) * (self.d[k] ** 4.87) for k in self.pipes}
+        else:
+            pipe_denom = {k: (self.R[k] ** 1.852) * (self.d[k] ** 4.87) for k in self.pipes}
+    
+        def _alpha_cache_build(arcs_iter):
+            cache = {}
+            for (i, j) in arcs_iter:
+                cache[i, j] = sum(
+                    OMEGA * l_values[i, j, k] / pipe_denom[k]
+                    for k in self.pipes
+                )
+            return cache
+    
+        def _hl_original(q, alpha):
+            """True Hazen-Williams head-loss: q |q|^0.852 * alpha"""
+            return q * (abs(q) ** 0.852) * alpha
+    
+        def _hl_approx(q, eps, alpha):
+            """Smooth approximation of head-loss."""
+            q2e2 = q * q + eps * eps
+            return (q ** 3) * (q2e2 ** 0.426) / (q * q + 0.426 * eps * eps) * alpha
+    
+        def _record_con2(key, lhs, orig_rhs, apprx_rhs):
+            nonlocal con2_original_violation, con2_approx_violation
+            nonlocal con2_absolute_constraint_violation, con2_relative_constraint_violation
+            nonlocal total_absolute_constraint_violation
+    
+            con2_original_gap[key] = lhs - orig_rhs
+            con2_approx_gap[key]   = lhs - apprx_rhs
+    
+            abs_viol = orig_rhs - apprx_rhs
+            rel_viol = abs_viol / (orig_rhs + 1e-14)
+    
+            absolute_violations[key] = abs_viol
+            relative_violations[key] = rel_viol
+            # print(key, abs_viol) 
+            con2_original_violation            += abs(lhs - orig_rhs)
+            con2_approx_violation              += abs(lhs - apprx_rhs)
+            con2_absolute_constraint_violation += abs(abs_viol)
+            con2_relative_constraint_violation += abs(rel_viol)
+            total_absolute_constraint_violation += abs(lhs - apprx_rhs)
+    
+        # ── data_number 4 ──────────────────────────────────────────────────────
+        if self.data_number == 4:
+            self.exdiam = self.ampl.getParameter('exdiam').to_dict()
+    
+            # alpha uses R[i,j] (arc-level roughness) — different from pipe R[k]
+            for (i, j) in q1:
+                lhs = 2.0 * (h_values[i] - h_values[j])
+    
+                alpha = sum(
+                    OMEGA * l_values[i, j, k] / ((self.R[i, j] ** 1.852) * (self.d[k] ** 4.87))
+                    for k in self.pipes
+                )
+                hl_coeff = (OMEGA * self.L[i, j]
+                            / (self.R[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87))
+    
+                orig_rhs  = (_hl_original(q1[i, j], hl_coeff)
+                             + _hl_original(q2[i, j], alpha))
+                apprx_rhs = (_hl_approx(q1[i, j], epsilon[i, j], hl_coeff)
+                             + _hl_approx(q2[i, j], epsilon[i, j], alpha))
+                _record_con2(f"{i},{j}", lhs, orig_rhs, apprx_rhs)
+    
+        # ── data_number 7 ──────────────────────────────────────────────────────
+        elif self.data_number == 7:
+            self.fixarcs = self.ampl.getSet('fixarcs')
+            self.fix_r   = self.ampl.getParameter('fix_r').to_dict()
+            self.exdiam  = self.ampl.getParameter('fixdiam').to_dict()
+    
+            var_arcs   = [(i, j) for (i, j) in self.arcs if (i, j) not in self.fixarcs]
+            alpha_map  = _alpha_cache_build(var_arcs)
+    
+            for (i, j) in var_arcs:
+                lhs       = h_values[i] - h_values[j]
+                alpha     = alpha_map[i, j]
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], alpha),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha))
+    
+            for (i, j) in self.fixarcs:
+                lhs      = h_values[i] - h_values[j]
+                hl_coeff = (OMEGA * self.L[i, j]
+                            / (self.fix_r[i, j] ** 1.852 * self.exdiam[i, j] ** 4.87))
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], hl_coeff),
+                             _hl_approx(q_values[i, j], epsilon[i, j], hl_coeff))
+    
+        # ── data_number 3 ──────────────────────────────────────────────────────
+        # Standard network: all arcs are variable-diameter, no fixed arcs.
+        # Uses q_values (single flow per arc), l_values for pipe lengths.
+        elif self.data_number == 3:
+            var_arcs   = [(i, j) for (i, j) in self.unfixed_arcs]
+            alpha_map = _alpha_cache_build(var_arcs)
+            for (i, j) in var_arcs:
+                lhs       = h_values[i] - h_values[j]
+                alpha     = alpha_map[i, j]
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], alpha),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha))
+            var_arcs   = [(i, j) for (i, j) in self.parallel_arcs]
+            alpha_map = _alpha_cache_build(var_arcs)
+            for (i, j) in var_arcs:
+                lhs       = h_values[i] - h_values[j]
+                alpha     = alpha_map[i, j]
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(self.q2[i, j], alpha),
+                             _hl_approx(self.q2[i, j], epsilon[i, j], alpha))
+                alpha1     = OMEGA * self.L[i,j] / ( (self.exroughness[i,j]**1.852) * (self.exdiam[i,j])**4.87)
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(self.q1[i, j], alpha1),
+                             _hl_approx(self.q1[i, j], epsilon[i, j], alpha1))
+
+            var_arcs   = [(i, j) for (i, j) in self.fixarcs if (i,j) not in self.parallel_arcs]
+            # alpha_map = _alpha_cache_build(var_arcs)
+            for (i, j) in var_arcs:
+                lhs       = h_values[i] - h_values[j]
+                alpha1     = OMEGA * self.L[i,j] / ( (self.exroughness[i,j]**1.852) * (self.exdiam[i,j])**4.87)
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], alpha1),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha1))
+
+
+        # ── data_number 9 ──────────────────────────────────────────────────────
+        # Mixed network: unfixed_arcs (variable diameter) + parallel_arcs
+        # (existing pipe + new pipe in parallel), rest are fixed-diameter.
+        # Mirrors the AMPL model in document 3 (set unfixed_arcs / parallel_arcs).
+        elif self.data_number == 9:
+            # Retrieve sets and parameters needed
+            unfixed_arcs  = set(self.ampl.getSet('unfixed_arcs'))
+            parallel_arcs = set(self.ampl.getSet('parallel_arcs'))
+    
+            # q1_9 = self.ampl.get_variable('q1').get_values().to_dict()  # flow on new pipe
+            # q2_9 = self.ampl.get_variable('q2').get_values().to_dict()  # flow on existing pipe
+            # l1_9 = {(i, j, k): self.ampl.get_variable('l1').get_values().to_dict().get((i, j, k), 0.0)
+            #         for (i, j) in parallel_arcs for k in self.pipes}
+            
+            q1_9 = self.q1
+            q2_9 = self.q2
+            l1_9 = self.l1
+
+            fix_r_9   = self.ampl.getParameter('fix_r').to_dict()
+            fixdiam_9 = self.ampl.getParameter('fixdiam').to_dict()
+    
+            # Pre-cache alpha for unfixed and parallel arcs separately
+            alpha_unfixed  = _alpha_cache_build(unfixed_arcs)
+    
+            # alpha for parallel arcs uses l1 (new pipe lengths)
+            alpha_parallel = {}
+            for (i, j) in parallel_arcs:
+                alpha_parallel[i, j] = sum(
+                    OMEGA * l1_9[i, j, k] / pipe_denom[k]
+                    for k in self.pipes
+                )
+    
+            # Unfixed arcs: single flow q[i,j], variable-diameter new pipe
+            for (i, j) in unfixed_arcs:
+                lhs   = h_values[i] - h_values[j]
+                alpha = alpha_unfixed[i, j]
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], alpha),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha))
+
+            # Parallel arcs: q1 on new pipe, q2 on existing (fixed-diameter) pipe
+            for (i, j) in parallel_arcs:
+                lhs = h_values[i] - h_values[j]
+    
+                alpha_new = alpha_parallel[i, j]
+                hl_exist  = (OMEGA * self.L[i, j]
+                             / (fix_r_9[i, j] ** 1.852 * fixdiam_9[i, j] ** 4.87))
+    
+                # con3: h_i - h_j = HL(q1, new pipe)
+                _record_con2(f"{i},{j}_new", lhs,
+                             _hl_original(q1_9[i, j], alpha_new),
+                             _hl_approx(q1_9[i, j], epsilon[i, j], alpha_new))
+    
+                # con4: h_i - h_j = HL(q2, existing pipe)
+                _record_con2(f"{i},{j}_exist", lhs,
+                             _hl_original(q2_9[i, j], hl_exist),
+                             _hl_approx(q2_9[i, j], epsilon[i, j], hl_exist))
+    
+            # Fixed arcs (fixarcs minus parallel_arcs): single flow on existing pipe
+            fixarcs_9 = set(self.ampl.getSet('fixarcs'))
+            fix_r_all = self.ampl.getParameter('fix_r').to_dict()
+            exdiam_9  = self.ampl.getParameter('fixdiam').to_dict()
+            for (i, j) in (fixarcs_9 - parallel_arcs):
+                lhs      = h_values[i] - h_values[j]
+                hl_coeff = (OMEGA * self.L[i, j]
+                            / (fix_r_all[i, j] ** 1.852 * exdiam_9[i, j] ** 4.87))
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], hl_coeff),
+                             _hl_approx(q_values[i, j], epsilon[i, j], hl_coeff))
+ 
+        # ── data_number 4 ──────────────────────────────────────────────────────
+        # arcs diff parallel_arcs : single new pipe  l[i,j,k],  flow q[i,j]
+        # parallel_arcs           : two new pipes
+        #                             pipe-1  l1[i,j,k], flow q1[i,j]
+        #                             pipe-2  l2[i,j,k], flow q2[i,j]
+        # R is arc-indexed: self.R[i,j]
+        elif self.data_number == 13:
+            parallel_arcs_4 = set(self.ampl.getSet('parallel_arcs'))
+            non_par_4       = arc_set - parallel_arcs_4
+ 
+            q1_4 = self.q1
+            q2_4 = self.q2
+            l1_4 = self.l1
+            l2_4 = self.l2
+ 
+            # pipe_denom_arc: per (arc, pipe) because R is arc-indexed
+            def _alpha_arc(i, j, lmap):
+                r_pow = self.R[i, j] ** 1.852
+                return sum(OMEGA * lmap[i, j, k] / (r_pow * self.d[k] ** 4.87)
+                           for k in self.pipes)
+ 
+            # con2: single new pipe, flow q
+            for (i, j) in non_par_4:
+                lhs   = h_values[i] - h_values[j]
+                alpha = _alpha_arc(i, j, l_values)
+                _record_con2(f"{i},{j}",
+                             lhs,
+                             _hl_original(q_values[i, j], alpha),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha))
+ 
+            # con3: parallel pipe-1, flow q1
+            for (i, j) in parallel_arcs_4:
+                lhs   = h_values[i] - h_values[j]
+                alpha = _alpha_arc(i, j, l1_4)
+                _record_con2(f"{i},{j}_pipe1",
+                             lhs,
+                             _hl_original(q1_4[i, j], alpha),
+                             _hl_approx(q1_4[i, j], epsilon[i, j], alpha))
+ 
+            # con4: parallel pipe-2, flow q2
+            for (i, j) in parallel_arcs_4:
+                lhs   = h_values[i] - h_values[j]
+                alpha = _alpha_arc(i, j, l2_4)
+                _record_con2(f"{i},{j}_pipe2",
+                             lhs,
+                             _hl_original(q2_4[i, j], alpha),
+                             _hl_approx(q2_4[i, j], epsilon[i, j], alpha))
+
+        # ── data_number 24 ─────────────────────────────────────────────────────
+        # Mixed network: arcs (variable-diameter) + fixarcs (existing pipes,
+        # with parallel new pipe in l1).  Mirrors the AMPL model in document 4.
+        elif self.data_number == 24:
+            fixarcs_24 = set(self.ampl.getSet('fixarcs'))
+            # fix_r_24   = self.ampl.getParameter('fix_r').to_dict()
+            # fixdiam_24 = self.ampl.getParameter('fixdiam').to_dict()
+            fix_L_24   = self.ampl.getParameter('fix_L').to_dict()
+    
+            q1_24 = self.q1  # flow on new parallel pipe
+            q2_24 = self.q2  # flow on existing pipe
+            l1_24_raw = self.l1
+    
+            # alpha for regular arcs (variable-diameter, l[i,j,k])
+            alpha_var = _alpha_cache_build(
+                [(i, j) for (i, j) in self.arcs]
+            )
+ 
+            # alpha for new parallel pipe on fixarcs (l1[i,j,k])
+            alpha_fix_new = {}
+            for (i, j) in fixarcs_24:
+                alpha_fix_new[i, j] = sum(
+                    OMEGA * l1_24_raw[i, j, k] / pipe_denom[k]
+                    for k in self.pipes
+                )
+    
+            # Regular (non-fixed) arcs: con2 in the AMPL model
+            for (i, j) in self.arcs:
+                if (i, j) in fixarcs_24:
+                    continue
+                lhs   = h_values[i] - h_values[j]
+                alpha = alpha_var[i, j]
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], alpha),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha))
+    
+            # Fixed arcs: con2_ (new parallel pipe, q1) + con2__ (existing, q2)
+            for (i, j) in fixarcs_24:
+                lhs = h_values[i] - h_values[j]
+    
+                alpha_new = alpha_var[i, j]
+                # hl_exist  = (OMEGA * fix_L_24[i, j]
+                #              / (fix_r_24[i, j] ** 1.852 * fixdiam_24[i, j] ** 4.87))
+    
+                _record_con2(f"{i},{j}_new", lhs,
+                             _hl_original(q1_24[i, j], alpha_new),
+                             _hl_approx(q1_24[i, j], epsilon[i, j], alpha_new))
+    
+                _record_con2(f"{i},{j}_exist", lhs,
+                             _hl_original(q2_24[i, j], alpha_new),
+                             _hl_approx(q2_24[i, j], epsilon[i, j],alpha_new))
+ 
+        # ── Generic fallback (same logic as original 'else') ──────────────────
+        else:
+            alpha_map = _alpha_cache_build(q_values)
+            for (i, j) in q_values:
+                lhs   = h_values[i] - h_values[j]
+                alpha = alpha_map[i, j]
+                _record_con2(f"{i},{j}", lhs,
+                             _hl_original(q_values[i, j], alpha),
+                             _hl_approx(q_values[i, j], epsilon[i, j], alpha))
+
+        # ══════════════════════════════════════════════════════════════════════
+        # Constraint 3 – Pipe lengths must sum to arc length
+        # ══════════════════════════════════════════════════════════════════════
+        con3_gap = {}
+
+        if self.data_number == 7:
+            arcs_to_check = [(i, j) for (i, j) in self.arcs if (i, j) not in self.fixarcs]
+        elif self.data_number==3:
+            arcs_to_check = self.unfixed_arcs.to_list() + self.parallel_arcs.to_list()
+        elif self.data_number==9:
+            arcs_to_check = self.unfixed_arcs
+            arc_len_sum = defaultdict(float)
+            for (i,j,k), val in self.l1.items():
+                arc_len_sum[i,j] += val
+
+            for (i, j) in self.parallel_arcs:
+                violation = arc_len_sum[i, j] - self.L[i, j]
+                con3_gap[f"{i},{j}"] = violation
+                total_absolute_constraint_violation += abs(violation)
+
+        else:
+            arcs_to_check = list(self.arcs)
+
+        # Accumulate per-arc totals in one pass over l_values keys
+        arc_len_sum = defaultdict(float)
+        for (i, j, k), val in l_values.items():
+            if (i, j) in set(arcs_to_check):
+                arc_len_sum[i, j] += val
+
+        for (i, j) in arcs_to_check:
+            violation = arc_len_sum[i, j] - self.L[i, j]
+            con3_gap[f"{i},{j}"] = violation
+            total_absolute_constraint_violation += abs(violation)
+
+        # ══════════════════════════════════════════════════════════════════════
+        # Constraint 4 – Individual pipe segment ≤ arc length
+        # ══════════════════════════════════════════════════════════════════════
+        con4_gap = {}
+        for (i, j, k), val in l_values.items():
+            if (i, j) not in arc_set:
+                continue
+            violation = max(0.0, val - self.L[i, j])
+            if violation:
+                con4_gap[f"{i},{j},{k}"] = violation
+                total_absolute_constraint_violation += violation
+
+        # ══════════════════════════════════════════════════════════════════════
+        # Constraint 5 – Source node head equality
+        # ══════════════════════════════════════════════════════════════════════
+        con5_gap = {}
+        for j in self.source:
+            violation = h_values[j] - self.E[j]
+            con5_gap[str(j)] = violation
+            total_absolute_constraint_violation += abs(violation)
+
+        # ══════════════════════════════════════════════════════════════════════
+        # Constraint 6 – Minimum pressure head at demand nodes
+        # ══════════════════════════════════════════════════════════════════════
+        con6_gap = {}
+        for j in self.nodes:
+            if j in self.source:
+                continue
+            violation = max(0.0, self.E[j] + self.P[j] - h_values[j])
+            if violation:
+                con6_gap[str(j)] = violation
+                total_absolute_constraint_violation += violation
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Reporting
+        # ══════════════════════════════════════════════════════════════════════
+        separator = "*" * 79
+    
+        print(f"\nTotal absolute constraint violation: {total_absolute_constraint_violation:.2e}")
+        print(f"\n{separator}")
+        print("HEAD-LOSS CONSTRAINT: ORIGINAL vs. APPROXIMATION\n")
+        print(f"\nSum of original head-loss violation : {con2_original_violation:.2e}")
+        print(f"Sum of approx  head-loss violation  : {con2_approx_violation:.2e}")
+        print(f"Sum of absolute diff (orig vs approx): {con2_absolute_constraint_violation:.2e}")
+        print(f"Sum of relative diff (orig vs approx): {con2_relative_constraint_violation:.2e}")
+        print(f"\n{separator}\n")
+
+    # ── Constraint Violation Reporting ────────────────────────────────────────
+    def constraint_violations_(self, q_values, h_values, l_values, epsilon):
         """
         Compute and report all constraint violations for the current solution.
     
@@ -1690,11 +2165,12 @@ class WaterNetworkOptimizer:
             self.q = cvx_nlp.getVariable("q").getValues().to_dict()
             self.h = cvx_nlp.getVariable("h").getValues().to_dict()
             self.network_graph = self.generate_random_acyclic_from_solution(self.q)
-
-            if self.data_number == 5:
+            self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
+            if self.data_number == 4:
                 self.q1 = cvx_nlp.getVariable("q1").getValues().to_dict()
                 self.q2 = cvx_nlp.getVariable("q2").getValues().to_dict()
             print("---" * 28)
+            
         else:
             self._log_nlp_row(
                 nlp_num=self.number_of_nlp,
@@ -2446,7 +2922,7 @@ class WaterNetworkOptimizer:
     def initialize_local_search_model_reduced(self):
         self.local_ampl = AMPL()
         self.local_ampl.read(
-            {4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 13:"farhadgerd_epigraph_model.mod"}.get(
+            {3: "trn_epigraph_model.mod", 4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 9:"bakryun_epigraph_model.mod", 13:"farhadgerd_epigraph_model.mod", 24:"kl_epigraph_model.mod"}.get(
                 self.data_number, "exact_reduced_wdn.mod"
             )
         )
@@ -2705,6 +3181,16 @@ class WaterNetworkOptimizer:
                     ampl.var["h"][i] = (
                         h[i] + delta_h
                     )
+
+            # Transfer dual values to warm-start the NLP
+            current_duals = {
+                name: con.get_values()
+                for name, con in ampl.get_constraints()
+            }
+            for name, dual_values in self.all_duals.items():
+                if name in current_duals:
+                    ampl.get_constraint(name).set_values(dual_values)
+
             # ========================================================
             # SOLVE NLP
             # ========================================================
@@ -2797,6 +3283,8 @@ class WaterNetworkOptimizer:
                 h = self.h
                 y = self.y
                 z = self.z
+                self.ampl = ampl 
+                self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
             # ========================================================
             # FAILURE CASE
             # ========================================================
@@ -3317,14 +3805,14 @@ class WaterNetworkOptimizer:
             # self.load_model()
             ampl = AMPL()
             ampl.reset()
-            if self.data_number==4:
-                ampl.read("newyork_model.mod")
-            elif self.data_number==7:
-                ampl.read("blacksburg_model.mod")
-            elif self.data_number == 9:
-                ampl.read("bakryun_model.mod")
-            else:
-                ampl.read(self.model_file)
+            # if self.data_number==4:
+            #     ampl.read("newyork_model.mod")
+            # elif self.data_number==7:
+            #     ampl.read("blacksburg_model.mod")
+            # elif self.data_number == 9:
+            #     ampl.read("bakryun_model.mod")
+            # else:
+            ampl.read(self.model_file)
             ampl.read_data(self.data_file)
 
             if self.data_number==9:
@@ -3455,6 +3943,7 @@ class WaterNetworkOptimizer:
                     self.is_improved_in_arc_reversal = True
                     self.ampl = ampl
                     self.network_graph = self.generate_random_acyclic_from_solution(q)
+                    self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
                     # self.best_acyclic_flow = self.network_graph.copy()
                     # self.indegree_2_or_more = [node for node, indeg in self.best_acyclic_flow.in_degree() if indeg >= 2]
                     # print("indegree_2_or_more:", self.indegree_2_or_more)
@@ -4375,19 +4864,35 @@ class WaterNetworkOptimizer:
             ampl.read("bakryun_recover_model.mod")
         elif self.data_number==13:
             ampl.read("farhadgerd_recover_model.mod")
+        elif self.data_number==24:
+            ampl.read("kl_recover_model.mod")
         else:
             ampl.read(model_name)
 
         ampl.read_data(self.data_file)
 
-        if self.data_number==13:
+        if self.data_number == 13:
+            # y covers arcs diff parallel_arcs only
+            par_set = set(self.parallel_arcs)
             for (i, j), val in y_input.items():
-                ampl.param["y"][i, j] = val
-
+                if (i, j) not in par_set:
+                    ampl.param["y"][i, j] = val
             for (i, j), val in self.y1.items():
                 ampl.param["y1"][i, j] = val
             for (i, j), val in self.y2.items():
                 ampl.param["y2"][i, j] = val
+        # if self.data_number==13:
+        #     for (i, j), val in y_input.items():
+        #         ampl.param["y"][i, j] = val
+        #     for (i, j), val in self.y1.items():
+        #         ampl.param["y1"][i, j] = val
+        #     for (i, j), val in self.y2.items():
+        #         ampl.param["y2"][i, j] = val
+        elif self.data_number==24:
+            for (i, j), val in y_input.items():
+                ampl.param["y"][i, j] = val
+            for (i, j), val in self.y1.items():
+                ampl.param["y1"][i, j] = val
         else:
             for (i, j), val in y_input.items():
                 ampl.param["y"][i, j] = val
@@ -4401,8 +4906,8 @@ class WaterNetworkOptimizer:
         #     "warm_start_init_point=no "
         #     "halt_on_ampl_error=yes"
         # )
-        with self.suppress_output():
-            ampl.solve()
+        # with self.suppress_output():
+        ampl.solve()
 
         solve_result = ampl.get_value("solve_result")
         l_sol = ampl.get_variable('l').get_values().to_dict()
@@ -4413,6 +4918,10 @@ class WaterNetworkOptimizer:
             l_sol1 = ampl.get_variable('l1').get_values().to_dict()
             l_sol2 = ampl.get_variable('l2').get_values().to_dict()
             return ampl, solve_result, l_sol, l_sol1, l_sol2, cost, solve_time
+        if self.data_number==24:
+            l_sol1 = ampl.get_variable('l1').get_values().to_dict()
+            return ampl, solve_result, l_sol, l_sol1, cost, solve_time
+
         else:
             return ampl, solve_result, l_sol, cost, solve_time
 
@@ -4443,10 +4952,19 @@ class WaterNetworkOptimizer:
             for (i, j), val in q_init2.items():
                 ampl.var["q2"][i, j] = val
 
-            for (i, j, k), val in l_init2.items():
+            for (i, j, k), val in l_init1.items():
                 ampl.var["l1"][i, j, k] = val
             for (i, j, k), val in l_init2.items():
                 ampl.var["l2"][i, j, k] = val
+        if self.data_number==24:
+            for (i, j), val in q_init1.items():
+                ampl.var["q1"][i, j] = val
+            for (i, j), val in q_init2.items():
+                ampl.var["q2"][i, j] = val
+
+            for (i, j, k), val in l_init1.items():
+                ampl.var["l1"][i, j, k] = val
+
         # if self.data_number == 6:
         #     ampl.eval("subject to con3{(i,j) in arcs diff fixarcs}: sum{k in pipes} l[i,j,k] = L[i,j];")
         # else:
@@ -4475,7 +4993,6 @@ class WaterNetworkOptimizer:
             f"warm_start_slack_bound_push  = 1e-9 "  # keep slacks close to previous
             # f"obj_scaling_factor = {self.scaling} "
 
-
             # "linear_solver = ma57 "
             # "halt_on_ampl_error = yes "
             # "ma57_pivot_order = 2 ma57_pivtol = 1e-8 ma57_pivtolmax = 1e-4 mu_strategy = adaptive alpha_for_y_tol = 1e-6 "
@@ -4489,6 +5006,8 @@ class WaterNetworkOptimizer:
         l_sol = ampl.get_variable('l').get_values().to_dict()
         cost = ampl.getObjective("total_cost").value()
         solve_time = ampl.get_value('_solve_elapsed_time')
+
+
 
         return ampl, solve_result, q_sol, h_sol, l_sol, cost, solve_time
 
@@ -4534,7 +5053,7 @@ class WaterNetworkOptimizer:
 
         ampl = AMPL()
         ampl.read(
-            {4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 9: "bakryun_epigraph_model.mod", 13: "farhadgerd_epigraph_model.mod"}.get(
+            {4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 9: "bakryun_epigraph_model.mod", 13: "farhadgerd_epigraph_model.mod", 24: "kl_epigraph_model.mod"}.get(
                 self.data_number, "exact_reduced_wdn.mod"
             )
         )
@@ -4708,6 +5227,16 @@ class WaterNetworkOptimizer:
         #         ampl.get_constraint(name).set_values(dual_values)
         # except Exception:
         #     pass
+        current_duals = {}
+        for con_name, val in ampl.get_constraints():
+            dual_values = val.get_values()
+            current_duals[con_name] = dual_values
+
+        # Initialize dual values for all constraints
+        for con_name, dual_values in self.all_duals.items():
+            if con_name in current_duals:
+                # Initialize dual values for each constraint
+                ampl.get_constraint(con_name).set_values(dual_values)               
 
         with self.suppress_output():
             ampl.solve()
@@ -5025,9 +5554,12 @@ class WaterNetworkOptimizer:
             z2 = self.z2
             q1 = self.q1
             q2 = self.q2
+        if self.data_number==24:
+            y1 = self.y1
+            z1 = self.z1
 
         seg_index = self.seg_index
-        print("seg_index:", self.seg_index)
+        # print("seg_index:", self.seg_index)
         # ================================================================
         # OUTER LOOP
         # ================================================================
@@ -5267,7 +5799,7 @@ class WaterNetworkOptimizer:
                         self.z            = copy.deepcopy(z)
                         self.seg_index    = copy.deepcopy(seg_index)
                         self.current_cost = current_cost
-
+                        
                         if self.data_number==13:
                             self.q1            = copy.deepcopy(q1)
                             self.q2            = copy.deepcopy(q2)
@@ -5390,6 +5922,10 @@ class WaterNetworkOptimizer:
             self.z1 = {}
             self.y2 = {}
             self.z2 = {}
+        if self.data_number==24:
+            self.y1 = {}
+            self.z1 = {}
+
         for (i, j) in self.arcs:
             # ---- compute y ----
             # y[i,j] = (h[i]-h[j])/(self.L[i,j]*q[i,j]*np.abs(q[i,j])**0.852)
@@ -5441,6 +5977,22 @@ class WaterNetworkOptimizer:
                         for k in self.pipes
                     )
                     z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
+            elif self.data_number==24:
+                # print(self.fix_L)
+                if (i,j) in self.fixarcs:
+                    self.y1[(i, j)] = sum(
+                        self.alpha[k] * self.l1[(i, j, k)] / self.fix_L[i, j]
+                        for k in self.pipes
+                    )
+                    self.z1[i,j] = sum(self.l1[i,j,k]*self.C[k] for k in self.pipes)
+
+                y[(i, j)] = sum(
+                    self.alpha[k] * l[(i, j, k)] / self.L[i, j]
+                    for k in self.pipes
+                )
+                # ---- compute z (epigraph value) ----
+                # s = self.find_seg(y[(i,j)])[0]
+                z[i,j] = sum(l[i,j,k]*self.C[k] for k in self.pipes)
             else:
                 y[(i, j)] = sum(
                     self.alpha[k] * l[(i, j, k)] / self.L[i, j]
@@ -5545,6 +6097,8 @@ class WaterNetworkOptimizer:
             ampl.read("bakryun_epigraph_model.mod")
         elif self.data_number==13:
             ampl.read("farhadgerd_epigraph_model.mod")
+        elif self.data_number==24:
+            ampl.read("kl_epigraph_model.mod")
         else:
             ampl.read("exact_reduced_wdn.mod")
         ampl.read_data(self.data_file)
@@ -5563,10 +6117,12 @@ class WaterNetworkOptimizer:
                     ampl.var["y1"][i, j] = self.y1[i,j] 
                     ampl.var["z1"][i, j] = self.z1[i,j] 
                     ampl.var["y2"][i, j] = self.y2[i,j] 
-                    ampl.var["y2"][i, j] = self.z2[i,j] 
-
-
-
+                    ampl.var["z2"][i, j] = self.z2[i,j] 
+            if self.data_number==24:
+                if (i,j) in self.fixarcs:
+                    ampl.var["y1"][i, j] = self.y1[i,j] 
+                    ampl.var["z1"][i, j] = self.z1[i,j] 
+             
         # ============================================================
         # DUAL WARM START
         # ============================================================
@@ -5660,10 +6216,32 @@ class WaterNetworkOptimizer:
             for (i,j) in self.y1.keys():
                 ampl.param["seg_index1"][i, j] = self.seg_index1[i,j][0] 
                 ampl.param["seg_index2"][i, j] = self.seg_index2[i,j][0] 
+
+        if self.data_number==24:
+            ampl.eval("drop exact_cost_;")
+            ampl.eval("param seg_index1{arcs};")
+            for (i,j) in self.y1.keys():
+                ampl.param["seg_index1"][i, j] = self.seg_index1[i,j][0] 
+            # print(self.fix_L)
+
         if self.data_number in [3,9]:
             ampl.eval(f"minimize objective:sum{{(i,j) in parallel_arcs union unfixed_arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]);")
         elif self.data_number==13:
             ampl.eval(f"minimize objective:sum{{(i,j) in arcs diff parallel_arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]) + sum{{(i,j) in parallel_arcs}} (L[i,j]*(slope[seg_index1[i,j]]*y1[i,j] + intercept[seg_index1[i,j]]) + L[i,j]*(slope[seg_index2[i,j]]*y2[i,j] + intercept[seg_index2[i,j]]));")
+            for (i,j) in self.y1.keys():
+                ampl.eval(f"subject to y1_bound_left{i}_{j}: alpha[seg_index1[{i},{j}]+1] <= y1[{i},{j}];")
+                ampl.eval(f"subject to y1_bound_right{i}_{j}: y1[{i},{j}] <= alpha[seg_index1[{i},{j}]];")
+
+                ampl.eval(f"subject to y2_bound_left{i}_{j}: alpha[seg_index2[{i},{j}]+1] <= y2[{i},{j}];")
+                ampl.eval(f"subject to y2_bound_right{i}_{j}: y2[{i},{j}] <= alpha[seg_index2[{i},{j}]];")
+
+        elif self.data_number==7:
+            ampl.eval(f"minimize objective:sum{{(i,j) in arcs diff fixarcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]) + sum{{(i,j) in fixarcs}} L[i,j]*fix_c[i,j] ;")
+        elif self.data_number==24:
+            ampl.eval(f"minimize objective:sum{{(i,j) in arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]) + sum{{(i,j) in fixarcs}} (fix_L[i,j]*(slope[seg_index1[i,j]]*y1[i,j] + intercept[seg_index1[i,j]]));")
+            for (i,j) in self.y1.keys():
+                ampl.eval(f"subject to y1_bound_left{i}_{j}: alpha[seg_index1[{i},{j}]+1] <= y1[{i},{j}];")
+                ampl.eval(f"subject to y1_bound_right{i}_{j}: y1[{i},{j}] <= alpha[seg_index1[{i},{j}]];")
         else:
             ampl.eval(f"minimize objective:sum{{(i,j) in arcs}} L[i,j]*(slope[seg_index[i,j]]*y[i,j] + intercept[seg_index[i,j]]);")
 
@@ -5957,10 +6535,10 @@ class WaterNetworkOptimizer:
             self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
             self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
 
-        if self.data_number in [4,9,13 ]:
+        if self.data_number in [4,9,13, 24 ]:
             self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
             self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
-        if self.data_number==9:
+        if self.data_number in [9, 24]:
             self.l1 = self.ampl.getVariable("l1").getValues().to_dict()
         if self.data_number==13:
             self.l1 = self.ampl.getVariable("l1").getValues().to_dict()
@@ -5979,6 +6557,10 @@ class WaterNetworkOptimizer:
                 self.dual_dict = {node: val for node, val in dual_values.to_dict().items()}
                 break
 
+        # for (i,j) in self.arcs:
+        #     for k in self.pipes:
+        #         if self.l[i,j,k]>=1e-3:
+        #             print(f"l[{i},{j},{k}]:", self.l[i,j,k])
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
         # ── Step 2: Build acyclic graph and initialise neighbourhood ──────────
@@ -6037,9 +6619,6 @@ class WaterNetworkOptimizer:
 
         self._print_iteration_header(self.local_iteration)
         self.local_solution_improvement_heuristic_new()
-        # self.initialize_local_search_model()
-        # self.local_solution_improvement_heuristic_fast()
-        # self._start_local_improvement_after_reversal()
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
         # ── Step 3: Arc-Reversal Heuristic ────────────────────────────────────
@@ -6055,8 +6634,6 @@ class WaterNetworkOptimizer:
         self.do_diameter_reduction = False
         self.reversed_arcs: list = []
         self.iterate_acyclic_flows()
-        # self.initialize_arc_reversal_model()
-        # self.iterate_acyclic_flows_fast()
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
 
@@ -6075,6 +6652,7 @@ class WaterNetworkOptimizer:
             y_val = self.y[u, v]
             # print(y_val)
             self.seg_index[u, v] = self.find_seg(y_val)
+
         if self.data_number==13:
             self.seg_index1 = {}
             self.seg_index2 = {}
@@ -6083,6 +6661,12 @@ class WaterNetworkOptimizer:
                 y_val2 = self.y2[u, v]
                 self.seg_index1[u, v] = self.find_seg(y_val1)
                 self.seg_index2[u, v] = self.find_seg(y_val2)
+        if self.data_number==24:
+            self.seg_index1 = {}
+            for (u, v) in self.y1.keys():
+                y_val1 = self.y1[u, v]
+                self.seg_index1[u, v] = self.find_seg(y_val1)
+
         # ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
         ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model1()
 
@@ -6091,20 +6675,31 @@ class WaterNetworkOptimizer:
         # ampl.eval("display exact_cost.dual;")
         # ampl.eval("display flow_balance.dual;")
         # ampl.eval("display h;")
-        self.ampl = ampl
-        self.q = q_sol
-        self.h = h_sol
-        self.y = y_sol
-        self.z = z_sol
-        self.best_cost = cost
-        self.current_cost = cost
-        self.best_solution = (self.q, self.h, self.y, self.z, self.best_cost)
+
+        if cost <= self.current_cost:
+            self.ampl = ampl
+            self.q = q_sol
+            self.h = h_sol
+            self.y = y_sol
+            self.z = z_sol
+            self.best_cost = cost
+            self.current_cost = cost
+            self.best_solution = (self.q, self.h, self.y, self.z, self.best_cost)
+
+            if self.data_number in [9, 13]:
+               self.q1 = self.ampl.get_variable('q1').get_values().to_dict()
+               self.q2 = self.ampl.get_variable('q2').get_values().to_dict()       
+            if self.data_number in [13]:
+               self.y1 = self.ampl.get_variable('y1').get_values().to_dict()
+               # self.z1 = self.ampl.get_variable('z1').get_values().to_dict()
+               self.y2 = self.ampl.get_variable('y2').get_values().to_dict()       
+               # self.z2 = self.ampl.get_variable('z2').get_values().to_dict()       
 
         # ampl.var["z"][i,j] = delta_z
-        self.segs = list(self.ampl.getSet('segs'))
-        self.alpha = self.ampl.get_parameter("alpha").get_values().to_dict()
-        self.slope = self.ampl.getParameter('slope').to_dict()
-        self.intercept = self.ampl.getParameter('intercept').to_dict()
+        self.segs = list(ampl.getSet('segs'))
+        self.alpha = ampl.get_parameter("alpha").get_values().to_dict()
+        self.slope = ampl.getParameter('slope').to_dict()
+        self.intercept = ampl.getParameter('intercept').to_dict()
         # print("slope:", self.slope)
         # print("intercept:", self.intercept)
         self.alpha_min = min(self.alpha[k] for k in self.segs)
@@ -6117,9 +6712,9 @@ class WaterNetworkOptimizer:
             self.y_ub[(i, j)] = self.omega * self.L[(i, j)] / (self.R_min**1.852 * self.d_min**4.87)
  
         # self.ampl.eval("display y;")
-        self.all_duals = {}
-        for con_name, con in self.ampl.get_constraints():
-            self.all_duals[con_name] = con.getValues()
+        # self.all_duals = {}
+        # for con_name, con in self.ampl.get_constraints():
+        #     self.all_duals[con_name] = con.getValues()
 
         self.seg_index = {}
         # descending alpha breakpoints
@@ -6164,8 +6759,8 @@ class WaterNetworkOptimizer:
 
         print("\n------------------ Active Segment Index Reduction Based Heuristic ------------------")
         best_global = {
-            "q": q_sol.copy(), "h": h_sol.copy(),
-            "y": y_sol.copy(), "z": z_sol.copy(),
+            "q": self.q.copy(), "h": self.h.copy(),
+            "y": self.y.copy(), "z": self.z.copy(),
             "seg": self.seg_index.copy(), "cost": self.best_cost
         }
         # print("alpha_min:", self.alpha_min, "alpha_max:", self.alpha_max)
@@ -6180,17 +6775,21 @@ class WaterNetworkOptimizer:
         self.iteration = 1
         self.visited_arc: list = []
         best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.segment_cut_heuristic()
-        # best_global["q"],best_global["h"],best_global["y"],best_global["z"]  = self.bilevel_segment_heuristic()
         # print("y_sol:", best_global["y"])
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
 
-        print("\n-------------------- Solving Original Model with Initialize ---------------------")
+        print("\n-------------------- Solving Recover Model ---------------------")
 
         if self.data_number==13:
             rec_ampl, rec_result, l_trial, l_trial1, l_trial2, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
             q_trial1 = self.q1
             q_trial2 = self.q2
+        elif self.data_number==24:
+            rec_ampl, rec_result, l_trial, l_trial1, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
+            q_trial1 = self.q1
+            q_trial2 = self.q2
+            l_trial2 = None
         else:
             l_trial1 = None
             l_trial2 = None
@@ -6198,6 +6797,17 @@ class WaterNetworkOptimizer:
             q_trial2 = None
             rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
 
+        print("recovered_cost:",recovered_cost)
+        if recovered_cost <= self.current_cost:
+            self.current_cost = recovered_cost
+            self.l = l_trial
+            if self.data_number in [9,24]:
+                self.l1 = l_trial1
+            if self.data_number==13:
+                self.l1 = l_trial1
+                self.l2 = l_trial2
+
+        print("\n-------------------- Solving Original Model with Initialize ---------------------")
         orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, l_trial1, l_trial2, self.q, q_trial1, q_trial2, self.h)
 
         print(f"Final cost after recovery: {final_cost:,.6f}")
@@ -6209,6 +6819,18 @@ class WaterNetworkOptimizer:
             self.l = l_new
             self.q = q_new
             self.h = h_new
+            if self.data_number in [9,24]:
+                self.q1 = orig_ampl.get_variable('q1').get_values().to_dict()
+                self.q2 = orig_ampl.get_variable('q2').get_values().to_dict()
+                self.l1 = orig_ampl.get_variable('l1').get_values().to_dict()
+            if self.data_number==4:
+                self.q1 = orig_ampl.get_variable('q1').get_values().to_dict()
+                self.q2 = orig_ampl.get_variable('q2').get_values().to_dict()
+            if self.data_number==13:
+                self.q1 = orig_ampl.get_variable('q1').get_values().to_dict()
+                self.q2 = orig_ampl.get_variable('q2').get_values().to_dict()
+                self.l1 = orig_ampl.get_variable('l1').get_values().to_dict()
+                self.l2 = orig_ampl.get_variable('l2').get_values().to_dict()
 
         #-------------------------------------------------------------------------------------------------------#
         #-------------------------------------------------------------------------------------------------------#
@@ -6246,7 +6868,7 @@ class WaterNetworkOptimizer:
 
         self.elapsed_time = time.time() - self.start_time
 
-        # self.constraint_violations(self.q, self.h, self.l, self.eps)
+        self.constraint_violations(self.q, self.h, self.l, self.eps)
 
         print(f"Final best objective:     {self.current_cost}")
         print(f"NLP problems solved:      {self.number_of_nlp}")
@@ -6263,7 +6885,7 @@ class WaterNetworkOptimizer:
 
 def _select_model_file(data_number: int) -> str:
     """Return the appropriate AMPL model filename for the given network index."""
-    model_map = {3: "trn_model.mod", 4: "newyork_model.mod", 7: "blacksburg_model.mod", 9: "bakryun_model.mod", 13: "farhadgerd_model.mod", 22: "marchi_rural_model.mod"}
+    model_map = {3: "trn_model.mod", 4: "newyork_model.mod", 7: "blacksburg_model.mod", 9: "bakryun_model.mod", 13: "farhadgerd_model.mod", 24: "kl_model.mod"}
     return model_map.get(data_number, "wdnmodel.mod")
     # return model_map.get(data_number, "exact_reduced_wdn.mod")
 

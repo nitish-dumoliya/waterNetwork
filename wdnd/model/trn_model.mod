@@ -82,7 +82,6 @@ subject to con4{(i,j) in parallel_arcs}:
 subject to con5{(i,j) in parallel_arcs}: 
    h[i] - h[j]  = (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j]^2)^0.426) /((q2[i,j])^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k]/(R[k]^1.852 * d[k]^4.87)) ;
 
-
 subject to con6{(i,j) in parallel_arcs union unfixed_arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]
 ;

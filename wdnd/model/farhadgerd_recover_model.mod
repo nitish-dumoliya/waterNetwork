@@ -53,11 +53,9 @@ subject to con2{(i,j) in arcs diff parallel_arcs}:
     sum{k in pipes}(omega * l[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = L[i,j] * y[i,j];
 
 subject to con3{(i,j) in parallel_arcs}:
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
     sum{k in pipes}(omega * l1[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = L[i,j] * y1[i,j];
 
 subject to con4{(i,j) in parallel_arcs}:
-     #h[i] - h[j]  = q[i,j]*abs(q[i,j])^0.852 * sum{k in pipes} (omega * l[i,j,k] / ( (R[k]^1.852) * (d[k])^4.87));
     sum{k in pipes}(omega * l2[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)) = L[i,j] * y2[i,j];
 
 subject to con5{(i,j) in arcs diff parallel_arcs}: 
@@ -75,6 +73,7 @@ subject to con7{(i,j) in parallel_arcs}:
 subject to con8{(i,j) in parallel_arcs, k in pipes}: 
     l1[i,j,k] - L[i,j] <= 0 
 ;
+
 subject to con9{(i,j) in parallel_arcs}: 
     sum{k in pipes} l2[i,j,k] - L[i,j] = 0 
 ;

@@ -90,10 +90,10 @@ subject to con2{(i,j) in arcs}:
 #    h[i] - h[j] - (q[i,j] * abs(q[i,j])^0.852) * y[i,j] * L[i,j] = 0;
     h[i] - h[j] - ( q[i,j]^3 * (q[i,j]^2 + eps[i,j]^2)^0.426 / (q[i,j]^2 + 0.426 * eps[i,j]^2)) * y[i,j] * L[i,j] = 0;
 
-subject to con6{i in Source}:
+subject to con5{i in Source}:
     h[i] - E[i] = 0;
 
-subject to con7{i in nodes diff Source}:
+subject to con6{i in nodes diff Source}:
     -h[i] + E[i] + P[i] <=0 ;
 
 subject to exact_cost{(i,j) in arcs, s in segs}:

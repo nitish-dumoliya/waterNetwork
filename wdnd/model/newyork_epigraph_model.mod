@@ -54,7 +54,6 @@ param alpha_max := max{k in pipes} alpha[k];
 param eps{(i,j) in arcs} := 0.0535*(1e-3/MaxK[i,j])^(0.54);
 
 #****************************************VARIABLES****************************************#
-#var l{arcs,pipes} >= 0 ;	# Length of each commercial pipe for each arc/link
 var q{arcs};	            # Flow variable
 var q1{arcs};	            # Flow variable
 var q2{arcs};	            # Flow variable
@@ -74,11 +73,11 @@ subject to con2{(i,j) in arcs}:
 #   h[i] - h[j]  = (q1[i,j]*abs(q1[i,j])^0.852) * omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87);
    h[i] - h[j]  = (q1[i,j])^3 *((((q1[i,j])^2 + eps[i,j]^2)^0.426) /((q1[i,j])^2 + 0.426*eps[i,j]^2)) * omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87);
 
-subject to con2_{(i,j) in arcs}: 
+subject to con3{(i,j) in arcs}: 
 #   h[i] - h[j]  = (q2[i,j]*abs(q2[i,j])^0.852) * L[i,j] * y[i,j] ;
    h[i] - h[j]  = (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j]^2)^0.426) /((q2[i,j])^2 + 0.426*eps[i,j]^2)) * L[i,j] * y[i,j] ;
 
-subject to con5{i in Source}: 
+subject to con6{i in Source}: 
     h[i] = E[i]
 ;
 
@@ -89,4 +88,7 @@ subject to exact_cost{(i,j) in arcs, s in segs}:
 
 subject to con9{(i,j) in arcs}: q[i,j] = q1[i,j] + q2[i,j];
 
+#subject to con8{(i,j) in arcs}: 
+#   -Q_max <= q[i,j] <= Q_max
+#;
 #*******************************************************************************************#

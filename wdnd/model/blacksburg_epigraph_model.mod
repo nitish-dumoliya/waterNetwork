@@ -61,6 +61,7 @@ var y{arcs}>=alpha_min,<=alpha_max;
 var z{arcs};
 #****************************************OBJECTIVE****************************************#
 minimize total_cost:sum{(i,j) in arcs diff fixarcs} z[i,j] + sum{(i,j) in fixarcs} L[i,j]*fix_c[i,j] ;
+#minimize total_cost:sum{(i,j) in arcs diff fixarcs} z[i,j] ;
 
 #****************************************CONSTRAINTS**************************************#
 subject to con1{j in nodes diff Source}:
@@ -85,8 +86,8 @@ subject to con7{i in nodes diff Source}: E[i] + P[i] <= h[i];
 subject to exact_cost{(i,j) in arcs diff fixarcs, s in segs}:
     z[i,j] >= L[i,j]*(slope[s] * y[i,j] + intercept[s]);
 
-subject to con8{(i,j) in arcs}: -Q_max <= q[i,j];
-
-subject to con9{(i,j) in arcs}: q[i,j] <= Q_max;
+#subject to con8{(i,j) in arcs}: 
+#   -Q_max <= q[i,j] <= Q_max
+#;
 
 #*******************************************************************************************#

@@ -90,6 +90,7 @@ subject to con7{(i,j) in parallel_arcs}:
 subject to con8{(i,j) in parallel_arcs, k in pipes}: 
     l1[i,j,k] - L[i,j] <= 0 
 ;
+
 subject to con9{(i,j) in parallel_arcs}: 
     sum{k in pipes} l2[i,j,k] - L[i,j] = 0 
 ;

@@ -58,47 +58,28 @@ subject to con1{j in nodes diff Source}:
 ;
 
 #subject to con2{(i,j) in arcs}: 
-#    2*(h[i] - h[j])  = q1[i,j]*abs(q1[i,j])^0.852 *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) + q2[i,j]*abs(q2[i,j])^0.852 * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
-#subject to epsilon_upper1{(i,j) in arcs}:
-    #eps[i,j] * (1e-6 + sum{k in pipes}(omega * l[i,j,k] / (R[i,j]^1.852 * d[k]^4.87)))^(0.54)  <= 0.0535 * (abs(h[i]-h[j]) + 1e-6)^(0.54);
-#    eps[i,j] <= (0.0535 / (MaxK[i,j]^0.54) )* (1e-6)^(0.54);
-    #eps[i,j] = 0.0535/(MaxK[i,j])^(0.54) * (abs(h[i]-h[j]) + 1e-10)^(0.54);
-
-#subject to con2{(i,j) in arcs}: 
 #    h[i] - h[j]  = q1[i,j]*abs(q1[i,j])^0.852 *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) ;
 #
 #subject to con2_{(i,j) in arcs}: 
 #    h[i] - h[j]  = q2[i,j]*abs(q2[i,j])^0.852 * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87));
 
-#subject to con2{(i,j) in arcs}: 
-#    2*(h[i] - h[j])  = (q1[i,j])^3 *((((q1[i,j])^2 + eps[i,j])^0.426) /((q1[i,j])^2 + 0.426*eps[i,j])) *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) + (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j])^0.426) /((q2[i,j])^2 + 0.426*eps[i,j])) * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
-
-#subject to con2{(i,j) in arcs}:
-#   h[i] - h[j] = (q1[i,j]+q2[i,j])*abs(q1[i,j]+q2[i,j])^0.852 * ((10.67*L[i,j]/(R[i,j]^1.852 * exdiam[i,j]^4.87))*(sum{k in pipes}(10.67*l[i,j,k])/(R[i,j]^1.852 * d[k]^4.87)))/((10.67*L[i,j]/(R[i,j]^1.852 * exdiam[i,j]^4.87)) + (sum{k in pipes}(10.67*l[i,j,k])/(R[i,j]^1.852 * d[k]^4.87)))^1.852 
-#;
-
-
 subject to con2{(i,j) in arcs}: 
    h[i] - h[j]  = (q1[i,j])^3 *((((q1[i,j])^2 + eps[i,j]^2)^0.426) /((q1[i,j])^2 + 0.426*eps[i,j]^2)) *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) ;
    #h[i] - h[j]  = q1[i,j] *((((q1[i,j])^2 + eps[i,j]^2)^0.426)) *omega * L[i,j] / ( (R[i,j]^1.852) * (exdiam[i,j])^4.87) ;
 
-subject to con2_{(i,j) in arcs}: 
+subject to con3{(i,j) in arcs}: 
    h[i] - h[j]  = (q2[i,j])^3 *((((q2[i,j])^2 + eps[i,j]^2)^0.426) /((q2[i,j])^2 + 0.426*eps[i,j]^2)) * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
    #h[i] - h[j]  = q2[i,j] *((((q2[i,j])^2 + eps[i,j]^2)^0.426)) * sum{k in pipes}(omega * l[i,j,k]/(R[i,j]^1.852 * d[k]^4.87)) ;
 
-#subject to con2{(i,j) in arcs}:
-#    h[i] - h[j] =  (q1[i,j]+q2[i,j])^3 *((((q1[i,j]+q2[i,j])^2 + eps[i,j])^0.426) /((q1[i,j]+q2[i,j])^2 + 0.426*eps[i,j]))  * ((10.67*L[i,j]/(R[i,j]^1.852 * exdiam[i,j]^4.87))*(sum{k in pipes}(10.67*l[i,j,k])/(R[i,j]^1.852 * d[k]^4.87)))/((10.67*L[i,j]/(R[i,j]^1.852 * exdiam[i,j]^4.87)) + (sum{k in pipes}(10.67*l[i,j,k])/(R[i,j]^1.852 * d[k]^4.87)))^1.852 
-#;
-
-subject to con3{(i,j) in arcs}: 
+subject to con4{(i,j) in arcs}: 
     sum{k in pipes} l[i,j,k] = L[i,j]
 ;
 
-subject to con4{(i,j) in arcs , k in pipes}: 
+subject to con5{(i,j) in arcs , k in pipes}: 
     l[i,j,k] <= L[i,j]
 ;
 
-subject to con5{i in Source}: 
+subject to con6{i in Source}: 
     h[i] = E[i]
 ;
 
@@ -106,4 +87,7 @@ subject to con7{i in nodes diff Source}: h[i] >= (E[i] + P[i]) ;
 
 subject to con9{(i,j) in arcs}: q[i,j] = q1[i,j] + q2[i,j];
 
+#subject to con8{(i,j) in arcs}: 
+#   -Q_max <= q[i,j] <= Q_max
+#;
 #*******************************************************************************************#
