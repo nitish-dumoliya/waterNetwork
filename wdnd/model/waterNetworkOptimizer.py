@@ -217,6 +217,12 @@ class WaterNetworkOptimizer:
         self.nlp_local_fail = 0 
         self.scaling = 1.0
 
+
+        self.eta_l_prev   = 0.0
+        self.eta_h_prev   = 0.0
+        self.alpha_q_prev = 0.0
+        self.Delta_prev   = 0.0
+
     # ── Model Loading ─────────────────────────────────────────────────────────
 
     def load_model(self):
@@ -1927,7 +1933,7 @@ class WaterNetworkOptimizer:
 
     # ── NLP Sub-problem: Reduced (Perturbed) NLP ──────────────────────────────
 
-    def reduced_nlp_model(
+    def reduced_nlp_model_old(
         self,
         iteration: int,
         l_cvx: dict,
@@ -2061,6 +2067,365 @@ class WaterNetworkOptimizer:
         ampl_nlp.option["presolve_eps"] = "1.86e-7"
         return ampl_nlp
 
+
+
+    """
+    Phase 2: Adaptive Variable Neighbourhood Search (updated methodology)
+    ======================================================================
+    
+    WHAT CHANGED FROM THE OLD (k_neigh / rho) VERSION
+    ---------------------------------------------------
+    Old scheme (Phase-1 style, still fine to keep for Phase 1):
+        rho_curr = min(delta_rho * k_neigh, 1.0)
+        rho_prev = max(rho_curr - delta_rho, 0.0)
+        r        = U(rho_prev, rho_curr)              # fraction in [0,1]
+        cand     = x + r * eta_x * scale               # eta_x is a *separate*
+                                                         # fixed scale factor
+    This mixes two things together: a linearly-growing trust-region
+    fraction (k_neigh * delta_rho) AND a per-variable-type scale (eta_l,
+    eta_h, alpha_q) that ALSO grows multiplicatively on failure. That is a
+    redundant double-expansion and the growth is only linear in k_neigh.
+    
+    New scheme (matches Sec. "Phase 2: Adaptive VNS" in the paper):
+        eta          <- eta_min                        # eq. (eta_init)
+        r ~ U(0, eta)                                    # eq. (r_first) — first try
+        on failure:
+            eta_new  = gamma * eta_old                  # eq. (eta_expand)
+            r ~ U(eta_old, eta_new)                      # eq. (r_next)  — disjoint interval
+        on success:
+            eta      <- eta_min                          # eq. (eta_reset), intensify
+        on failure:
+            eta      <- gamma * eta                      # eq. (eta_grow), diversify
+    
+    Each perturbed quantity (pipe length l, nodal head h, flow q) now
+    carries its OWN pair of bookkeeping attributes:
+        eta_l_prev / eta_l        -> length perturbation annulus
+        eta_h_prev / eta_h        -> head   perturbation annulus
+        alpha_q_prev / alpha_q    -> flow-scale annulus (via Delta)
+        Delta_prev  / Delta       -> Delta = alpha_q * median_flow
+    
+    `r` is now sampled DIRECTLY from the annulus [x_prev, x_curr] — there
+    is no more secondary rho-fraction multiplying an already-expanding
+    scale. This removes the double growth and makes each iteration probe
+    a strictly new, non-overlapping neighbourhood, exactly as in
+    Eqs. (it1)-(it3) of the paper.
+    
+    NOTE ON INITIALIZATION
+    -----------------------
+    Make sure the following attributes exist (e.g. set in __init__ or at
+    the start of Phase 2, alongside eta_l_min, eta_h_min, alpha_q_min,
+    eta_l_expand, eta_h_expand, alpha_expand which you already have):
+    
+        self.eta_l_prev   = 0.0
+        self.eta_h_prev   = 0.0
+        self.alpha_q_prev = 0.0
+        self.Delta_prev   = 0.0
+    
+    and that self.eta_l, self.eta_h, self.alpha_q, self.Delta are already
+    set to their *_min values before the first call, as before.
+    """
+    # ----------------------------------------------------------------------
+    # Method 1: outer adaptive-VNS driver
+    # ----------------------------------------------------------------------
+    def local_solution_improvement_heuristic_new(self):
+        """
+        Adaptive Variable Neighbourhood Search (Phase 2).
+    
+        At each call, a perturbed warm start is drawn from a
+        non-overlapping annulus [eta_prev, eta_curr] around the incumbent,
+        tracked independently for pipe lengths (eta_l), nodal heads
+        (eta_h), and flows (alpha_q -> Delta).
+    
+        - Improvement found  -> reset every annulus to [0, eta_min]
+                                 (intensify around the new incumbent),
+                                 reset fail streak, recurse.
+        - No improvement     -> expand every annulus to
+                                 [eta_curr, gamma * eta_curr]
+                                 (diversify into unexplored territory),
+                                 increment fail streak.
+        - Termination        -> stop when the perturbation is exhausted
+                                 (Q_max reached) or the fail streak
+                                 exceeds total_run (tau_max), or the NLP
+                                 budget / time limit is hit.
+        """
+        abs_flows = sorted(
+            abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-6
+        )
+        m = len(abs_flows)
+        median_flow = abs_flows[m // 2]
+        improved = False
+    
+        # Cache dual variables
+        self.all_duals = {
+            name: con.getValues()
+            for name, con in self.ampl.get_constraints()
+        }
+    
+        sorted_all_arcs = [a for a in self.arcs if a not in self.fix_arc_set]
+    
+        dual_dict = {}
+        for con_name, dual_values in self.all_duals.items():
+            if con_name == "con2":
+                tmp = dual_values.to_dict()
+                dual_dict = {node: val for node, val in tmp.items()}
+                break
+    
+        cvx_nlp = self.reduced_nlp_model(
+            self.iteration, self.l_star, self.q_star, self.h_star,
+            self.l, self.q, self.h, self.z_star,
+            sorted_all_arcs, self.l_points, self.q_points, dual_dict,
+        )
+    
+        with self.suppress_output():
+            cvx_nlp.solve()
+    
+        self.solver_time += cvx_nlp.get_value("_solve_elapsed_time")
+        self.number_of_nlp += 1
+    
+        if cvx_nlp.solve_result != "solved":
+            print("solve_result:", cvx_nlp.solve_result)
+            return
+    
+        self.z_star = cvx_nlp.getObjective("total_cost").value()
+        self.l_star = cvx_nlp.getVariable("l").getValues().to_dict()
+        self.q_star = cvx_nlp.getVariable("q").getValues().to_dict()
+        self.h_star = cvx_nlp.getVariable("h").getValues().to_dict()
+    
+        if self.data_number == 4:
+            self.q1_star = cvx_nlp.getVariable("q1").getValues().to_dict()
+            self.q2_star = cvx_nlp.getVariable("q2").getValues().to_dict()
+    
+        self.Z_original[self.number_of_nlp] = self.z_star
+    
+        if self.z_star < self.current_cost - 1e-4:
+            # ── Improvement accepted ────────────────────────────────────
+            self._log_nlp_row(
+                nlp_num=self.number_of_nlp,
+                old_cost=self.current_cost,
+                new_cost=self.z_star,
+                solve_time=self.ampl.get_value("_solve_elapsed_time"),
+                solve_result=self.solve_result,
+                improved=True,
+            )
+            self.current_cost = self.z_star
+            self.Z_best[self.number_of_nlp] = self.current_cost
+            improved = True
+            self.ampl = cvx_nlp
+            self.l = cvx_nlp.getVariable("l").getValues().to_dict()
+            self.q = cvx_nlp.getVariable("q").getValues().to_dict()
+            self.h = cvx_nlp.getVariable("h").getValues().to_dict()
+    
+            self.best_solution_hitting_time = time.time() - self.start_time
+    
+            self.network_graph = self.generate_random_acyclic_from_solution(self.q)
+            self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
+            if self.data_number == 4:
+                self.q1 = cvx_nlp.getVariable("q1").getValues().to_dict()
+                self.q2 = cvx_nlp.getVariable("q2").getValues().to_dict()
+            print("---" * 28)
+    
+        else:
+            self._log_nlp_row(
+                nlp_num=self.number_of_nlp,
+                old_cost=self.current_cost,
+                new_cost=self.z_star,
+                solve_time=cvx_nlp.get_value("_solve_elapsed_time"),
+                solve_result=self.solve_result,
+                improved=False,
+            )
+    
+        # Update median flow for next iteration
+        abs_flows = sorted(
+            abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-6
+        )
+        m = len(abs_flows)
+        median_flow = abs_flows[m // 2]
+    
+        if time.time() - self.start_time >= TIME_LIMIT:
+            print("---" * 28)
+            print("Time limit reached.")
+            print("---" * 28)
+            TIME_LIMIT_REACHED = True
+            self.final_result()
+            sys.exit()
+    
+        if improved:
+            # ── eq. (eta_reset): eta <- eta_min, intensify ──────────────
+            self.local_iteration += 1
+            self.eta_l_prev, self.eta_l = 0.0, self.eta_l_min
+            self.eta_h_prev, self.eta_h = 0.0, self.eta_h_min
+            self.alpha_q_prev, self.alpha_q = 0.0, self.alpha_q_min
+            self.Delta_prev = 0.0
+            self.Delta = self.alpha_q * median_flow
+            self.tr_failure_count = 0
+            self.Terminate = False
+            self.fail_streak = 0
+            self._print_iteration_header(self.local_iteration)
+            self.local_solution_improvement_heuristic_new()
+        else:
+            # ── eq. (eta_grow): eta <- gamma * eta, diversify ───────────
+            # old (eta_curr) becomes the new lower bound (eta_prev),
+            # ensuring the next annulus is disjoint from the last one.
+            self.eta_l_prev, self.eta_l = self.eta_l, self.eta_l * self.eta_l_expand
+            self.eta_h_prev, self.eta_h = self.eta_h, self.eta_h * self.eta_h_expand
+            self.alpha_q_prev, self.alpha_q = self.alpha_q, self.alpha_q * self.alpha_expand
+            self.Delta_prev = self.Delta
+            self.Delta = self.alpha_q * median_flow
+            self.fail_streak += 1
+    
+            self.Terminate = all(
+                abs(self.q[i, j]) + self.Delta > self.Q_max
+                for (i, j) in sorted_all_arcs
+            )
+    
+            should_exit = self.Terminate or self.fail_streak >= self.total_run
+            if self.do_local_improvement:
+                if should_exit:
+                    self.fail_streak = 0
+                    self.local_iteration += 1
+                    print("---" * 28)
+                    return
+                else:
+                    self.local_solution_improvement_heuristic_new()
+            else:
+                if should_exit:
+                    print("---" * 28)
+                    print("Local Search Exits.")
+                    return
+                else:
+                    self.local_solution_improvement_heuristic_new()
+    
+    
+    # ----------------------------------------------------------------------
+    # Method 2: builds the perturbed / warm-started NLP for one trial
+    # ----------------------------------------------------------------------
+    def reduced_nlp_model(
+        self,
+        iteration: int,
+        l_cvx: dict,
+        q_cvx: dict,
+        h_cvx: dict,
+        l: dict,
+        q: dict,
+        h: dict,
+        z_star: float,
+        sorted_arcs: list,
+        l_points: list,
+        q_points: list,
+        dual_dict: dict,
+    ):
+        """
+        Build a perturbed NLP starting from the current incumbent, with a
+        random draw taken directly from the current adaptive annulus
+        [x_prev, x_curr] for each variable type (l, h, q), following
+    
+            r ~ U(eta_prev, eta_curr),      x^(0) = x* + r * scale(x)
+    
+        which mirrors eq. (r_first)/(r_next) and (x0_first)/(x0_next) in
+        the paper. Unlike the old version, `r` is sampled directly from
+        the growing annulus itself — there is no secondary rho-fraction
+        multiplying a separately expanding eta scale, so each trial probes
+        a neighbourhood strictly disjoint from all previously explored
+        ones (Eqs. it1-it3).
+    
+        Returns
+        -------
+        AMPL
+            Populated AMPL instance ready to be solved with IPOPT.
+        """
+        ampl_nlp = self._build_base_ampl()
+    
+        # ── Perturb pipe lengths: r ~ U(eta_l_prev, eta_l) ──────────────
+        for (u, v) in self.arcs:
+            for k in self.pipes:
+                r = random.uniform(self.eta_l_prev, self.eta_l)
+                if self.data_number == 3:
+                    if (u, v) in self.parallel_arcs or (u, v) in self.unfixed_arcs:
+                        cand = l[u, v, k] + r * self.L[u, v]
+                        ampl_nlp.eval(f"let l[{u},{v},{k}] := {cand};")
+    
+                elif self.data_number == 9:
+                    if (u, v) in self.parallel_arcs:
+                        cand = self.l1[u, v, k] + r * self.L[u, v]
+                        ampl_nlp.eval(f"let l1[{u},{v},{k}] := {cand};")
+                    elif (u, v) in self.unfixed_arcs:
+                        cand = l[u, v, k] + r * self.L[u, v]
+                        ampl_nlp.eval(f"let l[{u},{v},{k}] := {cand};")
+    
+                elif self.data_number == 13:
+                    if (u, v) in self.parallel_arcs:
+                        cand1 = self.l1[u, v, k] + r * self.L[u, v]
+                        cand2 = self.l2[u, v, k] + r * self.L[u, v]
+                        ampl_nlp.eval(f"let l1[{u},{v},{k}] := {cand1};")
+                        ampl_nlp.eval(f"let l2[{u},{v},{k}] := {cand2};")
+                    else:
+                        cand = l[u, v, k] + r * self.L[u, v]
+                        ampl_nlp.eval(f"let l[{u},{v},{k}] := {cand};")
+                else:
+                    cand = l[u, v, k] + r * self.L[u, v]
+                    ampl_nlp.eval(f"let l[{u},{v},{k}] := {cand};")
+    
+        # ── Perturb flows: r ~ U(Delta_prev, Delta) ─────────────────────
+        for (u, v) in self.arcs:
+            r = random.uniform(self.Delta_prev, self.Delta)
+            if self.data_number == 3:
+                if (u, v) in self.parallel_arcs:
+                    ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r};")
+                    ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r};")
+                ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r};")
+    
+            elif self.data_number == 4:
+                ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r};")
+                ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r};")
+                ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r};")
+    
+            elif self.data_number == 9:
+                if (u, v) in self.parallel_arcs:
+                    ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r};")
+                    ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r};")
+                ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r};")
+    
+            elif self.data_number == 13:
+                if (u, v) in self.parallel_arcs:
+                    ampl_nlp.eval(f"let q1[{u},{v}] := {self.q1[u, v] + r};")
+                    ampl_nlp.eval(f"let q2[{u},{v}] := {self.q2[u, v] + r};")
+                ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r};")
+    
+            else:
+                ampl_nlp.eval(f"let q[{u},{v}] := {q[u, v] + r};")
+    
+        # ── Perturb heads: r ~ U(eta_h_prev, eta_h) ─────────────────────
+        for u in self.nodes:
+            if u not in list(self.source):
+                r = random.uniform(self.eta_h_prev, self.eta_h)
+                cand = h[u] + r * h[u]
+                ampl_nlp.eval(f"let h[{u}] := {cand};")
+    
+        # ── Transfer dual values to warm-start the NLP ──────────────────
+        current_duals = {
+            name: con.get_values()
+            for name, con in ampl_nlp.get_constraints()
+        }
+        for name, dual_values in self.all_duals.items():
+            if name in current_duals:
+                ampl_nlp.get_constraint(name).set_values(dual_values)
+    
+        ampl_nlp.option["solver"] = "ipopt"
+        ampl_nlp.set_option(
+            "ipopt_options",
+            f"outlev = 0 "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            f"warm_start_init_point = yes "
+            f"warm_start_bound_push        = 1e-9 "
+            f"warm_start_mult_bound_push   = 1e-9 "
+            f"warm_start_bound_frac        = 1e-9 "
+            f"warm_start_slack_bound_frac  = 1e-9 "
+            f"warm_start_slack_bound_push  = 1e-9 "
+            f"obj_scaling_factor = {self.scaling} "
+        )
+        ampl_nlp.option["presolve_eps"] = "1.86e-7"
+        return ampl_nlp
+
     # ── Main Solve ────────────────────────────────────────────────────────────
 
     def solve(self):
@@ -2091,7 +2456,7 @@ class WaterNetworkOptimizer:
 
     # ── Heuristic: Local Solution Improvement (Perturbed NLP) ─────────────────
 
-    def local_solution_improvement_heuristic_new(self):
+    def local_solution_improvement_heuristic_new_old(self):
         """
         Adaptive local search using perturbed NLP re-solves (reduced NLP).
 
@@ -6625,7 +6990,7 @@ class WaterNetworkOptimizer:
         self.is_improved_in_arc_reversal = False
         self.do_diameter_reduction       = False
         self.reversed_arcs:         list = []
-        self.iterate_acyclic_flows()
+        # self.iterate_acyclic_flows()
     
         # ══════════════════════════════════════════════════════════════════════
         # Step 4 – Piecewise-linear (epigraph) exact reduced model
@@ -6715,8 +7080,8 @@ class WaterNetworkOptimizer:
     
         self.iteration    = 1
         self.visited_arc: list = []
-        (best_global["q"], best_global["h"],
-         best_global["y"], best_global["z"]) = self.segment_cut_heuristic()
+        # (best_global["q"], best_global["h"],
+        #  best_global["y"], best_global["z"]) = self.segment_cut_heuristic()
     
         # Clamp y1/y2 into [alpha_min, alpha_max] after heuristic
         # to prevent recover model infeasibility (values can drift at boundaries)
