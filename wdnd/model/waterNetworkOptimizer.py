@@ -125,7 +125,8 @@ DEFAULT_BOUND_FRAC = 1e-1
 DEFAULT_MU_INIT = 1e-2
 PRESOLVE_EPS_MAIN = "6.82e-14"
 PRESOLVE_EPS_LP = "7.19e-7"
-
+TIME_LIMIT = 600  # seconds
+TIME_LIMIT_REACHED = True
 # ══════════════════════════════════════════════════════════════════════════════
 # WaterNetworkOptimizer
 # ══════════════════════════════════════════════════════════════════════════════
@@ -171,6 +172,7 @@ class WaterNetworkOptimizer:
 
         # Solver tracking
         self.solver_time = 0
+        self.best_solution_hitting_time = 0
         self.number_of_nlp = 0
         self.start_time = None
 
@@ -249,7 +251,7 @@ class WaterNetworkOptimizer:
 
         if self.data_number==24:
             self.fix_L = self.ampl.getParameter("fix_L").to_dict()
-            print(self.fix_L)
+            # print(self.fix_L)
 
         self.L = self.ampl.getParameter("L").to_dict()
         self.D = self.ampl.getParameter("D").to_dict()
@@ -1090,7 +1092,7 @@ class WaterNetworkOptimizer:
             for (i, j) in fixarcs_24:
                 lhs = h_values[i] - h_values[j]
     
-                alpha_new = alpha_var[i, j]
+                alpha_new = alpha_fix_new[i, j]
                 # hl_exist  = (OMEGA * fix_L_24[i, j]
                 #              / (fix_r_24[i, j] ** 1.852 * fixdiam_24[i, j] ** 4.87))
     
@@ -2019,7 +2021,7 @@ class WaterNetworkOptimizer:
         for u in self.nodes:
             if u not in list(self.source):
                 r = random.uniform(rho_prev, rho_curr)
-                cand = h[u] + r * self.eta_h * abs(h[u])
+                cand = h[u] + r * self.eta_h * h[u]
                 ampl_nlp.eval(f"let h[{u}] := {cand};")
 
         # Transfer dual values to warm-start the NLP
@@ -2084,6 +2086,7 @@ class WaterNetworkOptimizer:
         self.total_cost = self.ampl.get_objective("total_cost").value()
         solve_time = self.ampl.get_value("_solve_elapsed_time")
         self.solver_time += solve_time
+        self.best_solution_hitting_time = time.time() - self.start_time
         self.number_of_nlp += 1
 
     # ── Heuristic: Local Solution Improvement (Perturbed NLP) ─────────────────
@@ -2164,6 +2167,9 @@ class WaterNetworkOptimizer:
             self.l = cvx_nlp.getVariable("l").getValues().to_dict()
             self.q = cvx_nlp.getVariable("q").getValues().to_dict()
             self.h = cvx_nlp.getVariable("h").getValues().to_dict()
+
+            self.best_solution_hitting_time =  time.time() - self.start_time
+
             self.network_graph = self.generate_random_acyclic_from_solution(self.q)
             self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
             if self.data_number == 4:
@@ -2188,11 +2194,20 @@ class WaterNetworkOptimizer:
         m = len(abs_flows)
         median_flow = abs_flows[m // 2]
 
+        if time.time() - self.start_time >= TIME_LIMIT:
+            print("---" * 28)
+            print("Time limit reached.")
+            print("---" * 28)
+            TIME_LIMIT_REACHED = True
+            self.final_result()
+            sys.exit()
+
         if improved:
             self.local_iteration += 1
             self.eta_l = self.eta_l_min
             self.eta_h = self.eta_h_min
             self.alpha_q = self.alpha_q_min
+            # self.alpha_q = self.alpha_shrink*self.alpha_q
             self.Delta = self.alpha_q * median_flow
             self.tr_failure_count = 0
             self.k_neigh = 1
@@ -3007,11 +3022,19 @@ class WaterNetworkOptimizer:
         # Main loop
         # ------------------------------------------------------------
         while True:
-            if self.number_of_nlp >= max_local_nlp:
-                print("-" * 70)
-                print("Maximum local NLP limit reached.")
-                print("-" * 70)
-                return
+            if time.time() - self.start_time >= TIME_LIMIT:
+                print("---" * 28)
+                print("Time limit reached.")
+                print("---" * 28)
+                TIME_LIMIT_REACHED = True
+                self.final_result()
+                sys.exit()
+
+            # if self.number_of_nlp >= max_local_nlp:
+            #     print("-" * 70)
+            #     print("Maximum local NLP limit reached.")
+            #     print("-" * 70)
+            #     return
             improved = False
             # ========================================================
             # TRUST REGION
@@ -3284,6 +3307,7 @@ class WaterNetworkOptimizer:
                 y = self.y
                 z = self.z
                 self.ampl = ampl 
+                self.best_solution_hitting_time =  time.time() - self.start_time
                 self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
             # ========================================================
             # FAILURE CASE
@@ -3798,6 +3822,14 @@ class WaterNetworkOptimizer:
         # for edge in sorted_arcs:
         while sorted_arcs:
             # print(edge)
+            if time.time() - self.start_time >= TIME_LIMIT:
+                # print("---" * 28)
+                print("Time limit reached.")
+                print("---" * 28)
+                TIME_LIMIT_REACHED = True
+                self.final_result()
+                sys.exit()
+
             (i,j) = sorted_arcs[0]
             sorted_arcs.remove((i,j))
             edge = (i,j)
@@ -3952,6 +3984,7 @@ class WaterNetworkOptimizer:
                     self.h = h 
                     # print(self.q)
                     # ampl.eval("display q;")
+                    self.best_solution_hitting_time =  time.time() - self.start_time
                     if self.data_number in [4,9]:
                         self.q1 = ampl.getVariable('q1').getValues().to_dict()
                         self.q2 = ampl.getVariable('q2').getValues().to_dict()
@@ -4871,23 +4904,13 @@ class WaterNetworkOptimizer:
 
         ampl.read_data(self.data_file)
 
-        if self.data_number == 13:
-            # y covers arcs diff parallel_arcs only
-            par_set = set(self.parallel_arcs)
+        if self.data_number==13:
             for (i, j), val in y_input.items():
-                if (i, j) not in par_set:
-                    ampl.param["y"][i, j] = val
+                ampl.param["y"][i, j] = val
             for (i, j), val in self.y1.items():
                 ampl.param["y1"][i, j] = val
             for (i, j), val in self.y2.items():
                 ampl.param["y2"][i, j] = val
-        # if self.data_number==13:
-        #     for (i, j), val in y_input.items():
-        #         ampl.param["y"][i, j] = val
-        #     for (i, j), val in self.y1.items():
-        #         ampl.param["y1"][i, j] = val
-        #     for (i, j), val in self.y2.items():
-        #         ampl.param["y2"][i, j] = val
         elif self.data_number==24:
             for (i, j), val in y_input.items():
                 ampl.param["y"][i, j] = val
@@ -4906,8 +4929,8 @@ class WaterNetworkOptimizer:
         #     "warm_start_init_point=no "
         #     "halt_on_ampl_error=yes"
         # )
-        # with self.suppress_output():
-        ampl.solve()
+        with self.suppress_output():
+            ampl.solve()
 
         solve_result = ampl.get_value("solve_result")
         l_sol = ampl.get_variable('l').get_values().to_dict()
@@ -5523,6 +5546,14 @@ class WaterNetworkOptimizer:
         print(sep)
 
     def segment_cut_heuristic(self, cost_improve_tol=1e-4):
+        if time.time() - self.start_time >= TIME_LIMIT:
+            # print("---" * 28)
+            print("Time limit reached.")
+            print("---" * 28)
+            TIME_LIMIT_REACHED = True
+            self.final_result()
+            sys.exit()
+
         alpha_vals = sorted(set(self.alpha.values()), reverse=True)
         NP  = len(alpha_vals)
         tol = 1e-8
@@ -5799,6 +5830,7 @@ class WaterNetworkOptimizer:
                         self.z            = copy.deepcopy(z)
                         self.seg_index    = copy.deepcopy(seg_index)
                         self.current_cost = current_cost
+                        self.best_solution_hitting_time =  time.time() - self.start_time
                         
                         if self.data_number==13:
                             self.q1            = copy.deepcopy(q1)
@@ -5858,6 +5890,13 @@ class WaterNetworkOptimizer:
                 #     )
                 #     print(f"\n  ↺ Restarting outer loop | "
                 #           f"cost = {self.current_cost:,.6f}")
+                if time.time() - self.start_time >= TIME_LIMIT:
+                    print("---" * 28)
+                    print("Time limit reached.")
+                    print("---" * 28)
+                    self.final_result()
+                    sys.exit()
+
                 if restart:
                     print("\nLaunching local improvement search...")
                     self._start_local_improvement_after_seg_index_red(
@@ -6472,412 +6511,322 @@ class WaterNetworkOptimizer:
 
 
     # ── Main Entry Point ──────────────────────────────────────────────────────
-
     def run(self):
         self.start_time = time.time()
-        self.Z_red: dict = {}
+        self.Z_red:      dict = {}
         self.Z_original: dict = {}
-        self.Z_best: dict = {}
-
-        # ── Step 1: Initial NLP ───────────────────────────────────────────────
+        self.Z_best:     dict = {}
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 1 – Initial NLP solve
+        # ══════════════════════════════════════════════════════════════════════
         print("NLP Model: Smooth Approximate WDN Design Model 2, Epsilon via Relative Error")
         print("NLP Solver: IPOPT")
+        print("TIME_LIMIT: 600 sec.")
         print("=" * 80)
         print("Initial Solution of Approximate WDN Design Model")
         print("=" * 80)
-
+    
         self.load_model()
-        fix_arc_set_result = self.fix_leaf_arc_flow(self.ampl)
-        # print("fix_arc_set:", fix_arc_set_result)
-
+        fix_arc_set_result        = self.fix_leaf_arc_flow(self.ampl)
         self.super_source_out_arc = self.fix_arc_set()
-        # print("super_source_out_arc:", self.super_source_out_arc, "\n")
-
-        self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set_result)        
-        if self.data_number in [3,9]:
+        self.fix_arc_set          = list(set(self.super_source_out_arc) | fix_arc_set_result)
+    
+        if self.data_number in {3, 9}:
             self.sorted_arcs = [
-                arc for arc in list(set(self.parallel_arcs) | set(self.unfixed_arcs)) 
+                arc for arc in set(self.parallel_arcs) | set(self.unfixed_arcs)
                 if arc not in self.fix_arc_set
             ]
         else:
-            self.sorted_arcs = [
-                arc for arc in self.arcs
-                if arc not in self.fix_arc_set
-            ]
-        # print("sorted_arcs:", self.sorted_arcs)
-
-        # if self.data_number == 6:
-        #     self.ampl.eval(
-        #         "subject to con3{(i,j) in arcs diff fixarcs}: "
-        #         "sum{k in pipes} l[i,j,k] - L[i,j] = 0;"
-        #     )
-        # else:
-        #     self.ampl.eval(
-        #         "subject to con3{(i,j) in arcs}: "
-        #         "sum{k in pipes} l[i,j,k] - L[i,j] = 0;"
-        #     )
-
+            self.sorted_arcs = [arc for arc in self.arcs if arc not in self.fix_arc_set]
+    
         self.solve()
         print(f"Objective:    {self.total_cost}")
         print(f"Solve result: {self.solve_result}")
         print(f"Solve time:   {self.ampl.get_value('_solve_elapsed_time'):.2f} s\n")
-
+    
         if self.solve_result != "solved":
             print("IPOPT did not solve the initial problem optimally. Exiting.")
             sys.exit()
-
+    
+        # ── Pull all initial variable values ──────────────────────────────────
         self.current_cost = self.total_cost
         self.l = self.ampl.getVariable("l").getValues().to_dict()
         self.q = self.ampl.getVariable("q").getValues().to_dict()
         self.h = self.ampl.getVariable("h").getValues().to_dict()
-
-        if self.data_number==3:
+    
+        if self.data_number in {3, 4, 9, 13, 24}:
             self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
             self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
-
-        if self.data_number in [4,9,13, 24 ]:
-            self.q1 = self.ampl.getVariable("q1").getValues().to_dict()
-            self.q2 = self.ampl.getVariable("q2").getValues().to_dict()
-        if self.data_number in [9, 24]:
+        if self.data_number in {9, 13, 24}:
             self.l1 = self.ampl.getVariable("l1").getValues().to_dict()
-        if self.data_number==13:
-            self.l1 = self.ampl.getVariable("l1").getValues().to_dict()
+        if self.data_number == 13:
             self.l2 = self.ampl.getVariable("l2").getValues().to_dict()
-
-        self.scaling = 1.0/self.current_cost
-
-        # Cache initial duals and con2 dual dict
-        self.all_duals = {
-            name: con.getValues()
-            for name, con in self.ampl.get_constraints()
-        }
-        self.dual_dict = {}
-        for con_name, dual_values in self.all_duals.items():
-            if con_name == "con2":
-                self.dual_dict = {node: val for node, val in dual_values.to_dict().items()}
-                break
-
-        # for (i,j) in self.arcs:
-        #     for k in self.pipes:
-        #         if self.l[i,j,k]>=1e-3:
-        #             print(f"l[{i},{j},{k}]:", self.l[i,j,k])
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-        # ── Step 2: Build acyclic graph and initialise neighbourhood ──────────
+    
+        self.scaling = 1.0 / self.current_cost
+    
+        # Cache duals; extract con2 dual dict in one pass
+        self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
+        self.dual_dict = next(
+            ({node: val for node, val in dv.to_dict().items()}
+             for name, dv in self.all_duals.items() if name == "con2"),
+            {}
+        )
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 2 – Neighbourhood improvement heuristic
+        # ══════════════════════════════════════════════════════════════════════
         print("=" * 80)
-        print("Improve the Initial Solution")
+        print("                  Improve the Initial Solution                   ")
         print("=" * 80)
-
-        self.network_graph = self.generate_random_acyclic_from_solution(self.q)
-        self.indegree_2_or_more = [
-            node for node, indeg in self.network_graph.in_degree() if indeg >= 2
-        ]
-        self.fix_arc_set = list(set(self.super_source_out_arc) | fix_arc_set_result)
-        self.best_acyclic_flow = self.network_graph.copy()
-        self.visited_nodes: list = []
-        self.sorted_nodes: list = []
-
-        self.iteration = 0
-        self.Z_original[self.iteration] = self.current_cost
-        self.Z_red[self.iteration] = None
-        self.elapsed_time = time.time() - self.start_time
-
-        # Neighbourhood parameters
-        self.iteration = 1
+    
+        self.network_graph        = self.generate_random_acyclic_from_solution(self.q)
+        self.indegree_2_or_more   = [n for n, d in self.network_graph.in_degree() if d >= 2]
+        self.fix_arc_set          = list(set(self.super_source_out_arc) | fix_arc_set_result)
+        self.best_acyclic_flow    = self.network_graph.copy()
+        self.visited_nodes:  list = []
+        self.sorted_nodes:   list = []
+    
+        self.Z_original[0]  = self.current_cost
+        self.Z_red[0]       = None
+        self.elapsed_time   = time.time() - self.start_time
+    
+        self.iteration      = 1
         self.l_points: list = []
         self.q_points: list = []
-        self.z_star = 0.0
-        self.l_star = self.l
-        self.q_star = self.q
-        self.h_star = self.h
-
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-        abs_flows = sorted(abs(self.q[i, j]) for (i, j) in self.arcs if abs(self.q[i, j]) > 1e-6)
-        m = len(abs_flows)
-        # print(m)
-        self.Delta = self.alpha_q * abs_flows[m // 2]
-
-        # abs_flows = sorted(
-        #     abs(self.q[i, j])
-        #     for (i, j) in self.arcs
-        #     if abs(self.q[i, j]) > 1e-6
-        # )
-        #
-        # m = len(abs_flows)
-        #
-        # if m == 0:
-        #     self.Delta = 0.0
-        # else:
-        #     self.Delta = self.alpha_q * abs_flows[m // 2]
-
-        self.local_iteration = 1
+        self.z_star         = 0.0
+        self.l_star         = self.l
+        self.q_star         = self.q
+        self.h_star         = self.h
+    
+        abs_flows  = sorted(abs(self.q[a]) for a in self.arcs if abs(self.q[a]) > 1e-6)
+        self.Delta = self.alpha_q * abs_flows[len(abs_flows) // 2]
+    
+        self.local_iteration      = 1
         self.do_local_improvement = False
-        self.local_improvement = False
-        self.do_arc_reversal = True
-        self.total_run = 5
-
+        self.local_improvement    = False
+        self.do_arc_reversal      = True
+        self.total_run            = 5
+    
         self._print_iteration_header(self.local_iteration)
         self.local_solution_improvement_heuristic_new()
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-        # ── Step 3: Arc-Reversal Heuristic ────────────────────────────────────
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 3 – Arc-reversal heuristic
+        # ══════════════════════════════════════════════════════════════════════
         print("---" * 28)
-        print("Reverse Arc Direction Approach")
+        print("                      Reverse Arc Direction Approach                    ")
         print("---" * 28)
-
-        self.iteration = self.local_iteration + 1
-        self.visited_arc_reverse: list = []
-        self.do_arc_reversal = True
-        self.do_local_improvement = True
+    
+        self.iteration                   = self.local_iteration + 1
+        self.visited_arc_reverse:   list = []
+        self.do_arc_reversal             = True
+        self.do_local_improvement        = True
         self.is_improved_in_arc_reversal = False
-        self.do_diameter_reduction = False
-        self.reversed_arcs: list = []
+        self.do_diameter_reduction       = False
+        self.reversed_arcs:         list = []
         self.iterate_acyclic_flows()
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-
-        print("\n-------------- Piecewise Linear Water Distribution Network Design Model----------------")
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 4 – Piecewise-linear (epigraph) exact reduced model
+        # ══════════════════════════════════════════════════════════════════════
+        print("\n-------------- Piecewise Linear Water Distribution Network Design Model ----------------")
         print("\n-------------------------------- Solving Exact Reduced Model --------------------------")
-
+    
         self.y, self.z = self.map_original_to_reduced(self.l, self.q, self.h)
-        # print(sum(self.z[i,j] for (i,j) in self.arcs))
-        # print(self.y)
-        self.seg_index = {}
-        # descending alpha breakpoints
-        # print("alpha_values:", self.alpha)
-        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
-        tol = 1e-8
-        for (u, v) in self.y.keys():
-            y_val = self.y[u, v]
-            # print(y_val)
-            self.seg_index[u, v] = self.find_seg(y_val)
-
-        if self.data_number==13:
-            self.seg_index1 = {}
-            self.seg_index2 = {}
-            for (u, v) in self.y1.keys():
-                y_val1 = self.y1[u, v]
-                y_val2 = self.y2[u, v]
-                self.seg_index1[u, v] = self.find_seg(y_val1)
-                self.seg_index2[u, v] = self.find_seg(y_val2)
-        if self.data_number==24:
-            self.seg_index1 = {}
-            for (u, v) in self.y1.keys():
-                y_val1 = self.y1[u, v]
-                self.seg_index1[u, v] = self.find_seg(y_val1)
-
-        # ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model()
-        ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = self.solve_exact_reduced_model1()
-
+    
+        # Build segment indices (single pass, replaces two identical loops)
+        self.seg_index = {(u, v): self.find_seg(val) for (u, v), val in self.y.items()}
+        if self.data_number == 13:
+            self.seg_index1 = {(u, v): self.find_seg(val) for (u, v), val in self.y1.items()}
+            self.seg_index2 = {(u, v): self.find_seg(val) for (u, v), val in self.y2.items()}
+        elif self.data_number == 24:
+            self.seg_index1 = {(u, v): self.find_seg(val) for (u, v), val in self.y1.items()}
+    
+        epig_ampl, solve_result, z_sol, q_sol, h_sol, y_sol, cost, solve_time = \
+            self.solve_exact_reduced_model1() 
+        self.number_of_nlp += 1
         print(f"Total Cost: {cost:.8f}")
         print(f"Exact model solve time: {solve_time:.4f} sec")
-        # ampl.eval("display exact_cost.dual;")
-        # ampl.eval("display flow_balance.dual;")
-        # ampl.eval("display h;")
-
+    
         if cost <= self.current_cost:
-            self.ampl = ampl
-            self.q = q_sol
-            self.h = h_sol
-            self.y = y_sol
-            self.z = z_sol
-            self.best_cost = cost
-            self.current_cost = cost
-            self.best_solution = (self.q, self.h, self.y, self.z, self.best_cost)
-
-            if self.data_number in [9, 13]:
-               self.q1 = self.ampl.get_variable('q1').get_values().to_dict()
-               self.q2 = self.ampl.get_variable('q2').get_values().to_dict()       
-            if self.data_number in [13]:
-               self.y1 = self.ampl.get_variable('y1').get_values().to_dict()
-               # self.z1 = self.ampl.get_variable('z1').get_values().to_dict()
-               self.y2 = self.ampl.get_variable('y2').get_values().to_dict()       
-               # self.z2 = self.ampl.get_variable('z2').get_values().to_dict()       
-
-        # ampl.var["z"][i,j] = delta_z
-        self.segs = list(ampl.getSet('segs'))
-        self.alpha = ampl.get_parameter("alpha").get_values().to_dict()
-        self.slope = ampl.getParameter('slope').to_dict()
-        self.intercept = ampl.getParameter('intercept').to_dict()
-        # print("slope:", self.slope)
-        # print("intercept:", self.intercept)
+            self.ampl          = epig_ampl
+            self.q             = q_sol
+            self.h             = h_sol
+            self.y             = y_sol
+            self.z             = z_sol
+            # self.best_cost     = cost
+            self.current_cost  = cost
+            self.best_solution = (self.q, self.h, self.y, self.z, cost)
+            self.best_solution_hitting_time =  time.time() - self.start_time
+            if self.data_number in {9, 13}:
+                self.q1 = epig_ampl.get_variable('q1').get_values().to_dict()
+                self.q2 = epig_ampl.get_variable('q2').get_values().to_dict()
+            if self.data_number == 13:
+                self.y1 = epig_ampl.get_variable('y1').get_values().to_dict()
+                self.y2 = epig_ampl.get_variable('y2').get_values().to_dict()
+            elif self.data_number == 24:
+                self.y1 = epig_ampl.get_variable('y1').get_values().to_dict()
+    
+        # Load epigraph model metadata
+        self.segs      = list(epig_ampl.getSet('segs'))
+        self.alpha     = epig_ampl.get_parameter("alpha").get_values().to_dict()
+        self.slope     = epig_ampl.getParameter('slope').to_dict()
+        self.intercept = epig_ampl.getParameter('intercept').to_dict()
         self.alpha_min = min(self.alpha[k] for k in self.segs)
         self.alpha_max = max(self.alpha[k] for k in self.segs)
-
-        self.y_lb = {}
-        self.y_ub = {}
-        for (i, j) in self.arcs:
-            self.y_lb[(i, j)] = self.omega * self.L[(i, j)] / (self.R_max**1.852 * self.d_max**4.87)
-            self.y_ub[(i, j)] = self.omega * self.L[(i, j)] / (self.R_min**1.852 * self.d_min**4.87)
- 
-        # self.ampl.eval("display y;")
-        # self.all_duals = {}
-        # for con_name, con in self.ampl.get_constraints():
-        #     self.all_duals[con_name] = con.getValues()
-
-        self.seg_index = {}
-        # descending alpha breakpoints
-        alpha_vals = sorted(set(self.alpha.values()), reverse=True)
-        tol = 1e-8
-        for (u, v) in self.y.keys():
-            y_val = self.y[(u, v)]
-            self.seg_index[(u, v)] = self.find_seg(y_val)
-
-        # print(self.seg_index)
-
-        # cost = self.true_cost(self.y, self.seg_index)
-        # print(cost)
-
-        # Neighbourhood parameters
-        self.iteration = 1
-        self.l_points: list = []
-        self.q_points: list = []
-        self.z_star = 0.0
-        self.l_star = self.l
-        self.q_star = self.q
-        self.h_star = self.h
-
-        # abs_cost = sorted(self.y[i, j] for (i, j) in self.arcs)
-        # m = len(abs_cost)
-        # self.Delta = self.alpha_y * abs_cost[m // 2]
-
-        self.local_iteration = 1
+    
+        self.y_lb = {(i, j): self.omega * self.L[i, j] / (self.R_max**1.852 * self.d_max**4.87)
+                     for (i, j) in self.arcs}
+        self.y_ub = {(i, j): self.omega * self.L[i, j] / (self.R_min**1.852 * self.d_min**4.87)
+                     for (i, j) in self.arcs}
+    
+        # Rebuild seg_index from (possibly updated) self.y
+        self.seg_index = {(u, v): self.find_seg(val) for (u, v), val in self.y.items()}
+    
+        # Reset neighbourhood state for reduced-model phase
+        self.iteration            = 1
+        self.l_points:       list = []
+        self.q_points:       list = []
+        self.z_star               = 0.0
+        self.l_star               = self.l
+        self.q_star               = self.q
+        self.h_star               = self.h
+        self.local_iteration      = 1
         self.do_local_improvement = False
-        self.local_improvement = False
-        self.do_arc_reversal = True
-        self.total_run = 10
+        self.local_improvement    = False
+        self.do_arc_reversal      = True
+        self.total_run            = 10
         self.visited_arc_reduced: list = []
-
-        self.fail_streak = 0
+        self.fail_streak          = 0
+    
         self._print_iteration_header(self.local_iteration)
-        # self.initialize_local_search_model_reduced()
-        # self.local_solution_improvement_reduced_fast(self.y, self.z, self.q, self.h)
-
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 5 – Active-segment index reduction heuristic
+        # ══════════════════════════════════════════════════════════════════════
         print("\n------------------ Active Segment Index Reduction Based Heuristic ------------------")
+    
         best_global = {
-            "q": self.q.copy(), "h": self.h.copy(),
-            "y": self.y.copy(), "z": self.z.copy(),
-            "seg": self.seg_index.copy(), "cost": self.best_cost
+            "q": self.q, "h": self.h,
+            "y": self.y, "z": self.z,
+            "seg": self.seg_index, "cost": self.current_cost,
         }
-        # print("alpha_min:", self.alpha_min, "alpha_max:", self.alpha_max)
-        # print("y_sol:", y_sol)
-        # for (i,j), val in y_sol.items():
-        #     term1 = sum(10.67 * self.l[i,j,k]/(self.R[k]**1.852 * self.d[k]**4.87) for k in self.pipes) 
-        #     term2 = self.L[i,j]*val
-        #     print(term1, term2)
-            # print(val)
-
-        # print("Initial seg_index:", self.seg_index)
-        self.iteration = 1
+    
+        self.iteration    = 1
         self.visited_arc: list = []
-        best_global["q"],best_global["h"],best_global["y"],best_global["z"] = self.segment_cut_heuristic()
-        # print("y_sol:", best_global["y"])
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-
+        (best_global["q"], best_global["h"],
+         best_global["y"], best_global["z"]) = self.segment_cut_heuristic()
+    
+        # Clamp y1/y2 into [alpha_min, alpha_max] after heuristic
+        # to prevent recover model infeasibility (values can drift at boundaries)
+        lo, hi = self.alpha_min, self.alpha_max
+        if self.data_number == 13:
+            self.y1 = {k: max(lo, min(hi, v)) for k, v in self.y1.items()}
+            self.y2 = {k: max(lo, min(hi, v)) for k, v in self.y2.items()}
+        elif self.data_number == 24:
+            self.y1 = {k: max(lo, min(hi, v)) for k, v in self.y1.items()}
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 6 – Recover l from y
+        # ══════════════════════════════════════════════════════════════════════
         print("\n-------------------- Solving Recover Model ---------------------")
-
-        if self.data_number==13:
-            rec_ampl, rec_result, l_trial, l_trial1, l_trial2, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
-            q_trial1 = self.q1
-            q_trial2 = self.q2
-        elif self.data_number==24:
-            rec_ampl, rec_result, l_trial, l_trial1, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
-            q_trial1 = self.q1
-            q_trial2 = self.q2
+    
+        if self.data_number == 13:
+            rec_ampl, rec_result, l_trial, l_trial1, l_trial2, recovered_cost, t_rec = \
+                self.solve_recover_model1(best_global["y"])
+            q_trial1, q_trial2 = self.q1, self.q2
+        elif self.data_number == 24:
+            rec_ampl, rec_result, l_trial, l_trial1, recovered_cost, t_rec = \
+                self.solve_recover_model1(best_global["y"])
+            q_trial1, q_trial2 = self.q1, self.q2
             l_trial2 = None
         else:
-            l_trial1 = None
-            l_trial2 = None
-            q_trial1 = None
-            q_trial2 = None
-            rec_ampl, rec_result, l_trial, recovered_cost, t_rec = self.solve_recover_model1(best_global["y"])
-
-        print("recovered_cost:",recovered_cost)
-        if recovered_cost <= self.current_cost:
-            self.current_cost = recovered_cost
-            self.l = l_trial
-            if self.data_number in [9,24]:
-                self.l1 = l_trial1
-            if self.data_number==13:
-                self.l1 = l_trial1
-                self.l2 = l_trial2
-
+            rec_ampl, rec_result, l_trial, recovered_cost, t_rec = \
+                self.solve_recover_model1(best_global["y"])
+            l_trial1 = l_trial2 = q_trial1 = q_trial2 = None
+    
+        # print(f"recovered_cost: {recovered_cost}")
+    
+        # if recovered_cost <= self.current_cost:
+        #     self.current_cost = recovered_cost
+        #     self.l = l_trial
+        #     if self.data_number in {9, 13, 24}:
+        #         self.l1 = l_trial1
+        #     if self.data_number == 13:
+        #         self.l2 = l_trial2
+    
+        # ══════════════════════════════════════════════════════════════════════
+        # Step 7 – Re-solve original NLP warm-started from recovered l
+        # ══════════════════════════════════════════════════════════════════════
         print("\n-------------------- Solving Original Model with Initialize ---------------------")
-        orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = self.solve_original_with_init(l_trial, l_trial1, l_trial2, self.q, q_trial1, q_trial2, self.h)
+
+        orig_ampl, orig_result, q_new, h_new, l_new, final_cost, t_orig = \
+            self.solve_original_with_init(
+                l_trial, l_trial1, l_trial2,
+                self.q, q_trial1, q_trial2, self.h
+            )
 
         print(f"Final cost after recovery: {final_cost:,.6f}")
-        # print(f"current cost:", self.current_cost)
         self.number_of_nlp += 1
 
         if final_cost <= self.current_cost:
             self.current_cost = final_cost
+            # self.best_solution_hitting_time =  time.time() - self.start_time
             self.l = l_new
             self.q = q_new
             self.h = h_new
-            if self.data_number in [9,24]:
+            if self.data_number in {9, 24}:
                 self.q1 = orig_ampl.get_variable('q1').get_values().to_dict()
                 self.q2 = orig_ampl.get_variable('q2').get_values().to_dict()
                 self.l1 = orig_ampl.get_variable('l1').get_values().to_dict()
-            if self.data_number==4:
+            if self.data_number == 4:
                 self.q1 = orig_ampl.get_variable('q1').get_values().to_dict()
                 self.q2 = orig_ampl.get_variable('q2').get_values().to_dict()
-            if self.data_number==13:
+            if self.data_number == 13:
                 self.q1 = orig_ampl.get_variable('q1').get_values().to_dict()
                 self.q2 = orig_ampl.get_variable('q2').get_values().to_dict()
                 self.l1 = orig_ampl.get_variable('l1').get_values().to_dict()
                 self.l2 = orig_ampl.get_variable('l2').get_values().to_dict()
 
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-        # ── Convergence Plot ──────────────────────────────────────────────────
-        # plt.figure()
-        # iters_org = list(self.Z_original.keys())
-        # objs_org = list(self.Z_original.values())
-        # plt.scatter(iters_org, objs_org, marker="^", s=30, label="Original NLP objective")
+        # ══════════════════════════════════════════════════════════════════════
+        # Final report
+        # ══════════════════════════════════════════════════════════════════════
+        self.final_result()
+    
+        # print("\n" + "=" * 80)
+        # print("Final Best Results")
+        # print("=" * 80)
+        # print(f"Water Network:            {self.data_list[self.data_number - 1]}")
         #
-        # iters_best = list(self.Z_best.keys())
-        # objs_best = [self.Z_best[i] for i in iters_best]
-        # plt.scatter(iters_best, objs_best, color="red", marker="*", s=80, label="Best objective found")
+        # self.constraint_violations(self.q, self.h, self.l, self.eps)
         #
-        # for i, z in zip(iters_best, objs_best):
-        #     plt.annotate(
-        #         str(i), (i, z),
-        #         textcoords="offset points", xytext=(0, 6),
-        #         ha="center", fontsize=8,
-        #     )
-        #
-        # plt.xlabel("Iteration")
-        # plt.ylabel("Objective value")
-        # plt.grid(True)
-        # plt.legend()
-        # plt.tight_layout()
-        # plt.close()
+        # print(f"Final best objective:       {self.current_cost}")
+        # print(f"NLP problems solved:        {self.number_of_nlp}")
+        # print(f"Total iterations:           {self.iteration}")
+        # print(f"Best solution hitting time: {self.best_solution_hitting_time:.2f} s")
+        # print(f"Solver time:                {self.solver_time:.2f} s")
+        # print(f"Total elapsed time:         {self.elapsed_time:.2f} s")
+        # print("=" * 80)
 
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------#
-        # ── Final Report ──────────────────────────────────────────────────────
+    def final_result(self):
+        self.elapsed_time = time.time() - self.start_time
         print("\n" + "=" * 80)
         print("Final Best Results")
         print("=" * 80)
-        print(f"Water Network:            {self.data_list[self.data_number-1]}")
-
-        self.elapsed_time = time.time() - self.start_time
-
+        print(f"Water Network:            {self.data_list[self.data_number - 1]}")
+    
         self.constraint_violations(self.q, self.h, self.l, self.eps)
-
-        print(f"Final best objective:     {self.current_cost}")
-        print(f"NLP problems solved:      {self.number_of_nlp}")
-        print(f"Total iterations:         {self.iteration}")
-        print(f"Solver time:              {self.solver_time:.2f} s")
-        print(f"Total elapsed time:       {self.elapsed_time:.2f} s")
+    
+        print(f"Final best objective:       {self.current_cost}")
+        print(f"NLP problems solved:        {self.number_of_nlp}")
+        print(f"Total iterations:           {self.iteration}")
+        print(f"Best solution hitting time: {self.best_solution_hitting_time:.2f} s")
+        print(f"Solver time:                {self.solver_time:.2f} s")
+        print(f"Total elapsed time:         {self.elapsed_time:.2f} s")
         print("=" * 80)
-        #-------------------------------------------------------------------------------------------------------#
-        #-------------------------------------------------------------------------------------------------------i#
+
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Entry Point
