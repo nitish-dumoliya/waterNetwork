@@ -189,10 +189,10 @@ class WaterNetworkOptimizer:
         self.alpha_expand = 1.2
         self.alpha_q = self.alpha_q_min
 
-        self.eta_l_min = 0.5
-        self.eta_h_min = 0.5
-        self.eta_l_expand = 1.5
-        self.eta_h_expand = 1.5
+        self.eta_l_min = 0.2
+        self.eta_h_min = 0.2
+        self.eta_l_expand = 1.2
+        self.eta_h_expand = 1.2
         self.eta_l = self.eta_l_min
         self.eta_h = self.eta_h_min
 
@@ -3299,7 +3299,7 @@ class WaterNetworkOptimizer:
     # ================================================================
     # INITIALIZE REDUCED LOCAL SEARCH MODEL
     # ================================================================
-    def initialize_local_search_model_reduced(self):
+    def initialize_local_search_model_reduced_old(self):
         self.local_ampl = AMPL()
         self.local_ampl.read(
             {3: "trn_epigraph_model.mod", 4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod", 9:"bakryun_epigraph_model.mod", 13:"farhadgerd_epigraph_model.mod", 24:"kl_epigraph_model.mod"}.get(
@@ -4022,29 +4022,283 @@ class WaterNetworkOptimizer:
             else:
                 self.local_solution_improvement_reduced_fast(y, z, q, h)
 
+    # def _start_local_improvement_after_seg_index_red(self, y, z, q, h):
+    #     """Reset neighbourhood parameters and launch local improvement after an arc reversal."""
+    #     # print("---" * 28)
+    #     # print("------- Adaptive Variable Neighborhood Search Heuristic --------")
+    #     self.alpha_q = self.alpha_q_min
+    #     self.alpha_y = self.alpha_y_min
+    #     self.eta_z = self.eta_z_min
+    #     self.eta_h = self.eta_h_min
+    #
+    #     # abs_cost = sorted(y[i, j] for (i, j) in self.arcs)
+    #     # m = len(abs_cost)
+    #     # self.Delta = self.alpha_y * abs_cost[m // 2]
+    #
+    #     self.local_iteration = 1
+    #     self.do_local_improvement = False
+    #     self.local_improvement = False
+    #     self.do_arc_reversal = True
+    #     self.total_run = 5
+    #     self.visited_arc_reduced: list = []
+    #
+    #     self._print_iteration_header(self.local_iteration)
+    #     self.initialize_local_search_model_reduced()
+    #     self.local_solution_improvement_reduced_fast(y, z, q, h)
+
     def _start_local_improvement_after_seg_index_red(self, y, z, q, h):
         """Reset neighbourhood parameters and launch local improvement after an arc reversal."""
-        # print("---" * 28)
-        # print("------- Adaptive Variable Neighborhood Search Heuristic --------")
-        self.alpha_q = self.alpha_q_min
-        self.alpha_y = self.alpha_y_min
-        self.eta_z = self.eta_z_min
-        self.eta_h = self.eta_h_min
-
-        # abs_cost = sorted(y[i, j] for (i, j) in self.arcs)
-        # m = len(abs_cost)
-        # self.Delta = self.alpha_y * abs_cost[m // 2]
-
+        # ------------------------------------------------------------
+        # Adaptive-VNS bookkeeping: each variable type now carries its
+        # own (prev, curr) annulus pair, exactly mirroring eta_l/eta_h/
+        # alpha_q in the Phase-2 methodology. `_prev` starts at 0 so the
+        # very first draw is r ~ U(0, x_min)  (eq. r_first / eta_init).
+        # ------------------------------------------------------------
+        self.alpha_q_prev, self.alpha_q = 0.0, self.alpha_q_min
+        self.alpha_y_prev, self.alpha_y = 0.0, self.alpha_y_min
+        self.eta_z_prev,   self.eta_z   = 0.0, self.eta_z_min
+        self.eta_h_prev,   self.eta_h   = 0.0, self.eta_h_min
+    
+        self.fail_streak = 0
         self.local_iteration = 1
         self.do_local_improvement = False
         self.local_improvement = False
         self.do_arc_reversal = True
         self.total_run = 5
         self.visited_arc_reduced: list = []
-
+    
         self._print_iteration_header(self.local_iteration)
         self.initialize_local_search_model_reduced()
         self.local_solution_improvement_reduced_fast(y, z, q, h)
+    
+    
+    def initialize_local_search_model_reduced(self):
+        self.local_ampl = AMPL()
+        self.local_ampl.read(
+            {3: "trn_epigraph_model.mod", 4: "newyork_epigraph_model.mod", 7: "blacksburg_epigraph_model.mod",
+             9: "bakryun_epigraph_model.mod", 13: "farhadgerd_epigraph_model.mod", 24: "kl_epigraph_model.mod"}.get(
+                self.data_number, "exact_reduced_wdn.mod"
+            )
+        )
+        self.local_ampl.read_data(self.data_file)
+        self.local_ampl.option["solver"] = "ipopt"
+        self.local_ampl.set_option(
+            "ipopt_options",
+            f"outlev = 1 "
+            f"bound_push = {self.bound_push} bound_frac = {self.bound_frac} "
+            f"warm_start_init_point = yes "
+            f"warm_start_bound_push        = 1e-9 "
+            f"warm_start_mult_bound_push   = 1e-9 "
+            f"warm_start_bound_frac        = 1e-9 "
+            f"warm_start_slack_bound_frac  = 1e-9 "
+            f"warm_start_slack_bound_push  = 1e-9 "
+            f"obj_scaling_factor = {self.scaling} "
+        )
+        self.local_ampl.option["presolve_eps"] = "1.86e-7"
+    
+    
+    def local_solution_improvement_reduced_fast(self, y, z, q, h):
+        ampl = self.local_ampl
+        max_local_nlp = getattr(self, "max_local_nlp", 200)
+    
+        while True:
+            if time.time() - self.start_time >= TIME_LIMIT:
+                print("---" * 28)
+                print("Time limit reached.")
+                print("---" * 28)
+                TIME_LIMIT_REACHED = True
+                self.final_result()
+                sys.exit()
+    
+            improved = False
+    
+            # ========================================================
+            # ARC VARIABLES
+            # No more rho_curr/rho_prev fraction: each r is drawn
+            # directly from the variable's own disjoint annulus
+            # [x_prev, x], eliminating the old double-expansion
+            # (rho_curr grows AND alpha/eta grows independently).
+            # ========================================================
+            for (i, j) in self.arcs:
+                if self.data_number == 13:
+                    if (i, j) in self.parallel_arcs:
+                        rq = random.uniform(self.alpha_q_prev, self.alpha_q)
+                        delta_q = random.choice([-1, 1]) * rq * abs(self.q1[(i, j)])
+                        ampl.var["q1"][i, j] = (self.q1[(i, j)] + delta_q)
+                        delta_q = random.choice([-1, 1]) * rq * abs(self.q2[(i, j)])
+                        ampl.var["q2"][i, j] = (self.q2[(i, j)] + delta_q)
+    
+                        ry = random.uniform(self.alpha_y_prev, self.alpha_y)
+                        delta_y = random.choice([-1, 1]) * ry * self.y1[i, j]
+                        ycand = self.y1[(i, j)] + delta_y
+                        ycand = max(self.alpha_min, min(self.alpha_max, ycand))
+                        ampl.var["y1"][i, j] = ycand
+                        delta_y = random.choice([-1, 1]) * ry * self.y2[i, j]
+                        ycand = self.y2[(i, j)] + delta_y
+                        ycand = max(self.alpha_min, min(self.alpha_max, ycand))
+                        ampl.var["y2"][i, j] = ycand
+    
+                        rz = random.uniform(self.eta_z_prev, self.eta_z)
+                        delta_z = random.choice([-1, 1]) * rz * self.z1[(i, j)]
+                        ampl.var["z1"][i, j] = (self.z1[(i, j)] + delta_z)
+                        delta_z = random.choice([-1, 1]) * rz * self.z2[(i, j)]
+                        ampl.var["z2"][i, j] = (self.z2[(i, j)] + delta_z)
+                    else:
+                        rq = random.uniform(self.alpha_q_prev, self.alpha_q)
+                        delta_q = random.choice([-1, 1]) * rq * abs(q[(i, j)])
+                        ampl.var["q"][i, j] = (q[(i, j)] + delta_q)
+    
+                        ry = random.uniform(self.alpha_y_prev, self.alpha_y)
+                        delta_y = random.choice([-1, 1]) * ry * y[i, j]
+                        ycand = y[(i, j)] + delta_y
+                        ycand = max(self.alpha_min, min(self.alpha_max, ycand))
+                        ampl.var["y"][i, j] = ycand
+    
+                        rz = random.uniform(self.eta_z_prev, self.eta_z)
+                        delta_z = random.choice([-1, 1]) * rz * z[(i, j)]
+                        ampl.var["z"][i, j] = (z[(i, j)] + delta_z)
+                else:
+                    rq = random.uniform(self.alpha_q_prev, self.alpha_q)
+                    delta_q = random.choice([-1, 1]) * rq * abs(q[(i, j)])
+                    ampl.var["q"][i, j] = (q[(i, j)] + delta_q)
+    
+                    ry = random.uniform(self.alpha_y_prev, self.alpha_y)
+                    delta_y = random.choice([-1, 1]) * ry * y[i, j]
+                    ycand = y[(i, j)] + delta_y
+                    ycand = max(self.alpha_min, min(self.alpha_max, ycand))
+                    ampl.var["y"][i, j] = ycand
+    
+                    rz = random.uniform(self.eta_z_prev, self.eta_z)
+                    delta_z = random.choice([-1, 1]) * rz * z[(i, j)]
+                    ampl.var["z"][i, j] = (z[(i, j)] + delta_z)
+    
+            # ========================================================
+            # NODE VARIABLES (heads)
+            # ========================================================
+            for i in self.nodes:
+                if i in self.source:
+                    ampl.var["h"][i] = h[i]
+                else:
+                    rh = random.uniform(self.eta_h_prev, self.eta_h)
+                    delta_h = random.choice([-1, 1]) * rh * h[i]
+                    ampl.var["h"][i] = (h[i] + delta_h)
+    
+            # Transfer dual values to warm-start the NLP
+            current_duals = {name: con.get_values() for name, con in ampl.get_constraints()}
+            for name, dual_values in self.all_duals.items():
+                if name in current_duals:
+                    ampl.get_constraint(name).set_values(dual_values)
+    
+            # ========================================================
+            # SOLVE NLP
+            # ========================================================
+            with self.suppress_output():
+                ampl.solve()
+            self.number_of_nlp += 1
+            solve_time = ampl.get_value("_solve_elapsed_time")
+            self.solver_time += solve_time
+    
+            # ========================================================
+            # SOLVER STATUS
+            # ========================================================
+            if ampl.solve_result != "solved":
+                print("solve_result:", ampl.solve_result)
+                # treat a failed solve like an unsuccessful trial:
+                # expand every annulus (eq. eta_grow) and keep going
+                self.alpha_q_prev, self.alpha_q = self.alpha_q, self.alpha_q * self.alpha_expand
+                self.alpha_y_prev, self.alpha_y = self.alpha_y, self.alpha_y * self.alpha_expand
+                self.eta_z_prev,   self.eta_z   = self.eta_z,   self.eta_z * self.alpha_expand
+                self.eta_h_prev,   self.eta_h   = self.eta_h,   self.eta_h * self.eta_h_expand
+                self.fail_streak += 1
+                continue
+    
+            # ========================================================
+            # RETRIEVE SOLUTION
+            # ========================================================
+            q_star = ampl.getVariable("q").getValues().to_dict()
+            h_star = ampl.getVariable("h").getValues().to_dict()
+            y_star = ampl.getVariable("y").getValues().to_dict()
+            z_star_dict = ampl.getVariable("z").getValues().to_dict()
+            z_star = ampl.getObjective("total_cost").value()
+            self.Z_original[self.number_of_nlp] = z_star
+    
+            # ========================================================
+            # IMPROVEMENT CHECK
+            # ========================================================
+            is_improved = (z_star < self.current_cost - 1e-4)
+            self._log_nlp_row(
+                nlp_num=self.number_of_nlp,
+                old_cost=self.current_cost,
+                new_cost=z_star,
+                solve_time=solve_time,
+                solve_result=ampl.solve_result,
+                improved=is_improved,
+            )
+    
+            if is_improved:
+                improved = True
+                self.current_cost = z_star
+                self.Z_best[self.number_of_nlp] = self.current_cost
+                self.q = copy.deepcopy(q_star)
+                self.h = copy.deepcopy(h_star)
+                self.y = copy.deepcopy(y_star)
+                self.z = copy.deepcopy(z_star_dict)
+                self.network_graph = self.generate_random_acyclic_from_solution(self.q)
+                print("-" * 70)
+                print("Improved local solution found.")
+                print(f"New cost: {self.current_cost:,.6f}")
+                print("-" * 70)
+    
+            # ========================================================
+            # IMPROVEMENT CASE: intensify — reset every annulus to
+            # [0, x_min]  (eq. eta_reset)
+            # ========================================================
+            if improved:
+                self.local_iteration += 1
+                self.alpha_q_prev, self.alpha_q = 0.0, self.alpha_q_min
+                self.alpha_y_prev, self.alpha_y = 0.0, self.alpha_y_min
+                self.eta_z_prev,   self.eta_z   = 0.0, self.eta_z_min
+                self.eta_h_prev,   self.eta_h   = 0.0, self.eta_h_min
+                self.fail_streak = 0
+                self.Terminate = False
+                self._print_iteration_header(self.local_iteration)
+    
+                q = self.q
+                h = self.h
+                y = self.y
+                z = self.z
+                self.ampl = ampl
+                self.best_solution_hitting_time = time.time() - self.start_time
+                self.all_duals = {name: con.getValues() for name, con in self.ampl.get_constraints()}
+    
+            # ========================================================
+            # FAILURE CASE: diversify — each annulus becomes
+            # [x_curr, gamma * x_curr]  (eq. eta_grow), strictly
+            # disjoint from the region just explored
+            # ========================================================
+            else:
+                self.alpha_q_prev, self.alpha_q = self.alpha_q, self.alpha_q * self.alpha_expand
+                self.alpha_y_prev, self.alpha_y = self.alpha_y, self.alpha_y * self.alpha_expand
+                self.eta_z_prev,   self.eta_z   = self.eta_z,   self.eta_z * self.alpha_expand
+                self.eta_h_prev,   self.eta_h   = self.eta_h,   self.eta_h * self.eta_h_expand
+                self.fail_streak += 1
+    
+                # Trust-region termination: stop once the *current*
+                # alpha_y annulus alone would push every arc's y value
+                # outside [alpha_min, alpha_max] regardless of sign.
+                self.Terminate = all(
+                    (self.y[(i, j)] + self.alpha_y * self.y[(i, j)] >= self.alpha_max)
+                    and (self.y[(i, j)] - self.alpha_y * self.y[(i, j)] <= self.alpha_min)
+                    for (i, j) in self.arcs
+                )
+                should_exit = self.Terminate or self.fail_streak >= self.total_run
+                if should_exit:
+                    print("-" * 70)
+                    print("Reduced local search exits.")
+                    print("-" * 70)
+                    self.fail_streak = 0
+                    return
+
 
     def iterate_acyclic_flows(self):
         arc_max_dia = {}
@@ -6971,7 +7225,7 @@ class WaterNetworkOptimizer:
         self.do_local_improvement = False
         self.local_improvement    = False
         self.do_arc_reversal      = True
-        self.total_run            = 5
+        self.total_run            = 10
     
         self._print_iteration_header(self.local_iteration)
         self.local_solution_improvement_heuristic_new()
@@ -6990,7 +7244,7 @@ class WaterNetworkOptimizer:
         self.is_improved_in_arc_reversal = False
         self.do_diameter_reduction       = False
         self.reversed_arcs:         list = []
-        # self.iterate_acyclic_flows()
+        self.iterate_acyclic_flows()
     
         # ══════════════════════════════════════════════════════════════════════
         # Step 4 – Piecewise-linear (epigraph) exact reduced model
@@ -7080,8 +7334,8 @@ class WaterNetworkOptimizer:
     
         self.iteration    = 1
         self.visited_arc: list = []
-        # (best_global["q"], best_global["h"],
-        #  best_global["y"], best_global["z"]) = self.segment_cut_heuristic()
+        (best_global["q"], best_global["h"],
+         best_global["y"], best_global["z"]) = self.segment_cut_heuristic()
     
         # Clamp y1/y2 into [alpha_min, alpha_max] after heuristic
         # to prevent recover model infeasibility (values can drift at boundaries)
