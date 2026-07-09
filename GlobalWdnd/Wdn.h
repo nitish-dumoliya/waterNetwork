@@ -6,7 +6,9 @@
 
 /**
  * \file Wdn.h
- * \brief The Wdn class for solving Water Distribution Network Design Problem instances using ampl (.dat) format.
+ * \brief The Wdn class for solving Water Distribution Network Design Problem
+ *        instances using ampl (.dat) format, with an Arc-Reversal +
+ *        Neighborhood-Search primal heuristic.
  * \author Nitish Kumar Dumoliya, IIT Bombay
  */
 
@@ -28,14 +30,17 @@
 
 #include <string>
 #include <map>
+#include <set>
+#include <vector>
 #include <unordered_set>
 #include <tuple>
 
 
 namespace Minotaur {
 /**
- * The Wdn class sets up methods for solving an Water Distribution network Design Problem instance to
- * global optimality
+ * The Wdn class sets up methods for solving a Water Distribution Network Design
+ * Problem instance to global optimality, and includes a primal heuristic
+ * (arc reversal + adaptive neighborhood search) to produce good upper bounds.
  */
 class Wdn 
 {
@@ -155,22 +160,91 @@ private:
   std::map<int, Pipe> pipes_;                // pipe ID -> Pipe
   std::unordered_set<int> sources_;          // node IDs that are sources
 
+
+  // ---- Model parameters (mirror the AMPL params; filled by initParams_) ----
+  std::map<std::pair<int,int>, double> L_;      // L[i,j]   arc length
+  std::map<int, double>                D_;      // D[i]     nodal demand
+  std::map<int, double>                C_;      // C[k]     pipe cost
+  std::map<int, double>                P_;      // P[i]     required pressure head
+  std::map<int, double>                R_;      // R[k]     pipe roughness
+  std::map<int, double>                E_;      // E[i]     node elevation
+  std::map<int, double>                d_;      // d[k]     pipe diameter
+  std::map<std::pair<int,int>, double> alpha_;  // alpha[i,j]
+  std::map<std::pair<int,int>, double> eps_;    // eps[i,j]
+  std::map<std::pair<int,int>, double> maxK_;   // MaxK[i,j]
+  
+  double Dmin_, Dmax_;   // over non-source nodes
+  double dmin_, dmax_;   // over pipes
+  double Rmin_, Rmax_;   // over pipes
+  // (Q_max already exists as Qmax_)
+  
+  void initParams_();    // populate all of the above
+  bool updateIncumbent_(EnginePtr e);   // adopt e's solution if it improves
+
   // Decision variables
   std::map<int, VariablePtr> hvar_;                  // head at node i
   std::map<std::pair<int, int>, VariablePtr> qvar_;  // flow on arc (i,j)
   std::map<std::tuple<int, int, int>, VariablePtr>
       lvar_;  // pipe selection l[i,j,k]
 
+  // ===== Heuristic state ==================================================
+  // Head-loss (con2) constraint handle per arc -- needed for dual lookup.
+  std::map<std::pair<int, int>, ConstraintPtr> con2_;
+
+  // Incumbent solution values (kept in sync with the best point found).
+  std::map<std::pair<int, int>, double> qval_;        // q[i,j]
+  std::map<int, double> hval_;                        // h[i]
+  std::map<std::tuple<int, int, int>, double> lval_;  // l[i,j,k]
+
+  double currentCost_;   // best (lowest) objective found so far
+  double startTime_;     // wall-clock start of the heuristic
+  double bestHitTime_;   // time at which the best solution was found
+  double timeLimit_;     // heuristic time budget (seconds)
+  int    numberOfNlp_;   // count of NLP solves
+  int    maxFailStreak_; // consecutive non-improving trials before giving up
+
+  // Adaptive VNS radii (defaults mirror the Python __init__).
+  double etaLMin_;    // min pipe-length perturbation radius
+  double etaHMin_;    // min head perturbation radius
+  double alphaQMin_;  // min flow perturbation factor
+  double etaLExpand_; // growth factor for etaL on failure
+  double etaHExpand_; // growth factor for etaH on failure
+  double alphaExpand_;// growth factor for alphaQ on failure
+
+  // Arcs excluded from reversal / already tried.
+  std::set<std::pair<int, int> > fixArcSet_;
+  std::set<std::pair<int, int> > visitedArcReverse_;
+  // ========================================================================
+
   // Internal methods for building the model
   void addObjective();
   void addConstraints();
   void setInitialOptions_();
-  
+  // void writeIpoptOpt_();   // emit ipopt.opt with the solver options
+  double checkConstraintViolations_();   // max violation of the true constraints
+
   PresolverPtr presolve_(HandlerVector &handlers); 
   int getEngine_(Engine **e);
   void writeSol(EnvPtr env, VarVector *orig_v,
             PresolverPtr pres, SolutionPtr sol, SolveStatus status,
             MINOTAUR_AMPL::AMPLInterface* iface);
+
+  // ===== Heuristic methods ================================================
+  /// Copy the engine's primal solution into qval_/hval_/lval_.
+  void readSolution_(EnginePtr e);
+  /// Push the incumbent maps in as the NLP initial (warm-start) point.
+  void setInitialPoint_();
+  /// Solve p_ at current bounds/init point; return objective (or +inf).
+  double solveNLP_(EnginePtr e);
+  /// Median of |q| over arcs with non-trivial flow.
+  double medianAbsFlow_();
+  /// Arc-reversal neighborhood (port of iterate_acyclic_flows).
+  void arcReversal_(EnginePtr e);
+  /// Adaptive neighborhood search (port of local_solution_improvement_*).
+  void neighborhoodSearch_(EnginePtr e);
+  /// Top-level heuristic driver; call after the first NLP solve.
+  int runHeuristic_(EnginePtr e);
+  // ========================================================================
 
 };
 }  // namespace Minotaur

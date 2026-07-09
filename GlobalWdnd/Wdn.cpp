@@ -7,8 +7,9 @@
 /**
  * \file Wdn.cpp
  * \brief The Wdn class for solving Water Distribution Network Design Problem
- * instances using ampl (.dat) format.
- * \author Ashutosh Mahajan, IIT Bombay
+ * instances using ampl (.dat) format, with an arc-reversal + neighborhood-
+ * search primal heuristic.
+ * \author Nitish Kumar Dumoliya, IIT Bombay
  */
 
 #include "Wdn.h"
@@ -69,25 +70,41 @@
 #include <string>
 #include <time.h>
 #include <sys/time.h>
+#include <algorithm>
+#include <random>
+#include <vector>
 
 
 using namespace Minotaur;
 
 const std::string Wdn::me_ = "Wdn: ";
 
+namespace {
+const double kFlowEps    = 1e-4;   // treat |q| below this as ~zero flow
+const double kImproveTol = 1e-4;   // required objective drop to accept a move
+}
+
 Wdn::Wdn(EnvPtr env)
-  : objSense_(1.0),
+  : Qmax_(0.0),
+    objSense_(1.0),
     status_(NotStarted),
-    sol_(NULL)
+    sol_(NULL),
+    currentCost_(std::numeric_limits<double>::infinity()),
+    startTime_(0.0),
+    bestHitTime_(0.0),
+    timeLimit_(600.0),
+    numberOfNlp_(0),
+    maxFailStreak_(5),
+    etaLMin_(0.2),
+    etaHMin_(0.2),
+    alphaQMin_(0.2),
+    etaLExpand_(1.2),
+    etaHExpand_(1.2),
+    alphaExpand_(1.2)
 {
   env_ = env;
   iface_ = 0;
-  // p_ = p;
-  // p_ = (ProblemPtr) new Problem(env_);
-  // e_ = ((OsiLPEnginePtr) new OsiLPEngine(env_));
-  // e_ = ((IpoptEnginePtr) new IpoptEngine(env_));
-  // e_ = ((FilterSQPEnginePtr) new FilterSQPEngine(env_));
-  // e_ = getNLPEngine_();
+  ownIface_ = true;
 }
 
 Wdn::~Wdn()
@@ -258,8 +275,6 @@ double Wdn::maxElevation()
       maxElevation_ = std::max(maxElevation_, it->second.elev);
     }
   }
-  // std::cout << me_ << "Calculated maximum elevation from the elevation of
-  // sources = " << maxElevation_ << std::endl;
   return maxElevation_;
 }
 
@@ -281,6 +296,7 @@ Problem *Wdn::buildModel(ProblemPtr p)
   double maxE = maxElevation();
   // Decision variables h[i]
   p_ = p;
+  initParams_();          // <-- populate L_, D_, C_, R_, E_, d_, eps_, maxK_, scalars
 
   for (NodeIter it = nodes_.begin(); it != nodes_.end(); ++it) {
     Node &node = it->second;
@@ -289,7 +305,7 @@ Problem *Wdn::buildModel(ProblemPtr p)
     if (sources_.find(node.id) != sources_.end()) {
       h = p_->newVariable(node.elev, node.elev, Continuous, vname, VarOrig);
     } else {
-      h = p_->newVariable(node.elev + node.pressureMin, maxE, Continuous,
+      h = p_->newVariable(node.elev + node.pressureMin, INFINITY, Continuous,
                           vname, VarOrig);
     }
     hvar_[node.id] = h;
@@ -299,10 +315,9 @@ Problem *Wdn::buildModel(ProblemPtr p)
 
   // Decision variables q[i,j]
   for (ArcIter it = arcs_.begin(); it != arcs_.end(); ++it) {
-    // std::pair<int, int> key = it->first;
     Arc &a = it->second;
     VariablePtr q =
-        p_->newVariable(-Qmax, Qmax, Continuous,
+        p_->newVariable(-Qmax_, Qmax_, Continuous,
                         "q_" + std::to_string(a.startNode) + "_" +
                             std::to_string(a.endNode),
                         VarOrig);
@@ -316,7 +331,6 @@ Problem *Wdn::buildModel(ProblemPtr p)
     Arc &a = it->second;
     for (PipeIter pit = pipes_.begin(); pit != pipes_.end(); ++pit) {
       int pid = pit->first;
-      // Pipe &p = pit->second;
       std::string vname = "l_" + std::to_string(a.startNode) + "_" +
                           std::to_string(a.endNode) + "_" +
                           std::to_string(pid);
@@ -332,9 +346,9 @@ Problem *Wdn::buildModel(ProblemPtr p)
   // Constraints
   addConstraints();
 
-  // if (options->findBool("display_problem")->getValue()) {
-  //   p_->write(env_->getLogger()->msgStream(LogNone), 9);
-  // }
+  if (options->findBool("display_problem")->getValue()) {
+    p_->write(env_->getLogger()->msgStream(LogNone), 9);
+  }
   return p_;
 }
 
@@ -344,56 +358,35 @@ void Wdn::addObjective()
    * Objective function:
    *
    *   minimize total_cost =
-   *       ∑_{(i,j) ∈ arcs} ∑_{k ∈ pipes} l[i,j,k] * C[k] * length(i,j)
+   *       ∑_{(i,j) ∈ arcs} ∑_{k ∈ pipes} l[i,j,k] * C[k]
    *
    * where:
-   *   - l[i,j,k] is a length of pipe diameter k is installed on arc (i,j)
-   *   - C[k] is the cost per unit length of pipe diameter k
-   *   - length(i,j) is the length of arc (i,j)
-   *
-   * This ensures that the chosen pipe design minimizes the total
-   * installation cost.
+   *   - l[i,j,k] is the length of pipe diameter k installed on arc (i,j)
+   *   - C[k]     is the cost per unit length of pipe diameter k
    */
-  ObjectivePtr obj_;
   LinearFunctionPtr lf = new LinearFunction();
 
   for (ArcIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+    Arc &a = it->second;
     for (PipeIter pIter = pipes_.begin(); pIter != pipes_.end(); ++pIter) {
-      Arc &a = it->second;
       int pid = pIter->first;
-      Pipe &p = pIter->second;
       VariablePtr l = lvar_[{a.startNode, a.endNode, pid}];
-      lf->addTerm(l, p.cost * a.length);
+      lf->addTerm(l, C_[pid]);          // coefficient = C[k]
     }
   }
 
   FunctionPtr f = (FunctionPtr) new Function(lf);
-  obj_ = p_->newObjective(f, 0.0, Minimize, "total_cost");
-  std::cout << me_
-            << "Objective function added to the problem.\n";
+  ObjectivePtr obj = p_->newObjective(f, 0.0, Minimize, "total_cost");
+  std::cout << me_ << "Objective function added to the problem.\n";
 }
 
 void Wdn::addConstraints()
 {
   /*
    * Constraints:
-   *
-   * 1. Flow balance constraint at nodes:
-   *      ∑_{j: (i,j) ∈ arcs} q[i,j] - ∑_{j: (j,i) ∈ arcs} q[j,i] = demand[i]
-   *
-   *    Ensures conservation of flow: inflow - outflow = demand.
-   *
-   * 2. Head-loss (Hazen-Williams equation) constraint for each arcs:
-   *      h[i] - h[j] = K * q[i,j]*|q[i,j]|^0.852
-   *
-   *    Where:
-   *       K = ∑_{k ∈ pipes} l[i,j,k] 10.67 * l[i,j,k] / (C[k]^1.852 * d[k]^4.87)
-   *
-   * 3. Total length Constraint for each arcs:
-   *       ∑_{k ∈ pipes} l[i,j,k] = L[i,j],   ∀ (i,j) ∈ Arcs
-   *
-   *     Ensure that for each arc (i,j), the sum of the selected pipe lengths
-   *     across all pipe types equals the physical length of the arc.
+   *   1. Flow balance at nodes
+   *   2. Head-loss (Hazen-Williams) per arc  [smoothed / con2]
+   *   3. Total length per arc
    */
 
   // 1. Flow balance
@@ -416,97 +409,84 @@ void Wdn::addConstraints()
   }
   std::cout << me_ << "Flow conservation constraints added to the problem for " << nodes_.size() << " nodes. \n";
 
-  // 2. Original Head-loss constraints (Hazen-Williams)
+  // 2. Original Head-loss constraints (Hazen-Williams) -- currently disabled.
   for (ArcIter arcIter = arcs_.begin(); arcIter != arcs_.end(); ++arcIter)
   {
       Arc& a = arcIter->second;
       CGraph* nlf = new CGraph();
 
-      // --- Node variables (heads and flow) ---
-      CNode* c_q   = nlf->newNode(qvar_[{a.startNode, a.endNode}]);  // Flow q[i,j]
-      // --- Flow-dependent term: q * |q|^0.852 ---
-      CNode* c_absq = nlf->newNode(OpAbs, c_q, NULL);      // |q|
-      CNode* c_exp  = nlf->newNode(0.852);                 // exponent 0.852
-      CNode* c_pow  = nlf->newNode(OpPowK, c_absq, c_exp); // |q|^0.852
-      CNode* c_flow = nlf->newNode(OpMult, c_q, c_pow);    // q * |q|^0.852
-      // --- Pipe resistance sum: Σ l[i,j,k] * coeff(k) --- //
+      CNode* c_q   = nlf->newNode(qvar_[{a.startNode, a.endNode}]);
+      CNode* c_absq = nlf->newNode(OpAbs, c_q, NULL);
+      CNode* c_exp  = nlf->newNode(0.852);
+      CNode* c_pow  = nlf->newNode(OpPowK, c_absq, c_exp);
+      CNode* c_flow = nlf->newNode(OpMult, c_q, c_pow);
       std::vector<CNode *> pipeTerms;
       for (PipeIter pipeIter = pipes_.begin(); pipeIter != pipes_.end(); ++pipeIter) {
           Pipe &pid = pipeIter->second;
-          CNode* c_l = nlf->newNode(lvar_[{a.startNode, a.endNode, pid.id}]); // Decision variable l[i,j,k] 
+          CNode* c_l = nlf->newNode(lvar_[{a.startNode, a.endNode, pid.id}]);
           double coeff = 10.67 / (std::pow(pid.roughness, 1.852) * std::pow(pid.diameter, 4.87));
-          CNode *c_coeff = nlf->newNode(coeff); // Hydraulic resistance coefficient: K = 10.67 / (R^1.852 * D^4.87)
-          // Term = l[i,j,k] * coeff
-          CNode *c_term = nlf->newNode(OpMult, c_l, c_coeff); // Term = l[i,j,k] * coeff
-          // c_pipeSum = nlf->newNode(OpPlus, c_pipeSum, c_term);
+          CNode *c_coeff = nlf->newNode(coeff);
+          CNode *c_term = nlf->newNode(OpMult, c_l, c_coeff);
           pipeTerms.push_back(c_term);
       }
-      // --- Sum using OpSumList --- //
-      CNode *c_rSum = nlf->newNode(Minotaur::OpSumList, pipeTerms.data(), pipeTerms.size());  // Σ l[i,j,k] * coeff(k)
+      CNode *c_rSum = nlf->newNode(Minotaur::OpSumList, pipeTerms.data(), pipeTerms.size());
       CNode* c_loss = nlf->newNode(OpMult, c_flow, c_rSum);
       nlf->setOut(c_loss);
       nlf->finalize();
 
       LinearFunctionPtr headDiff = new LinearFunction(); 
+      headDiff->addTerm(hvar_[a.startNode], 1.0);
+      headDiff->addTerm(hvar_[a.endNode], -1.0);
 
-      headDiff->addTerm(hvar_[a.startNode], 1.0);  // h[i]
-      headDiff->addTerm(hvar_[a.endNode], -1.0);   // h[i] - h[j]
-
-      // h[i] - h[j] - (q * |q|^0.852)*(Σ l[i,j,k] * coeff(k))
       FunctionPtr totalFunc = (FunctionPtr) new Function(headDiff, nlf); 
       std::string cname = "hl_" + std::to_string(a.startNode) + "_" + std::to_string(a.endNode);
       // p_->newConstraint(totalFunc, 0.0, 0.0, cname);
   }
 
-  // 2. Approximate Head-loss constraints (Approximate Hazen-Williams)
+  // 2. Approximate Head-loss constraints (Approximate Hazen-Williams) -- con2.
+  //    NOTE: we capture the ConstraintPtr per arc into con2_ so the heuristic
+  //    can read its dual for the arc-reversal sensitivity score.
   for (ArcIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
     int i = ait->second.startNode;
     int j = ait->second.endNode;
-    float eps = 1e-6;
+    float eps = eps_[ait->first];
     CGraph *nlf = new CGraph();
-    // --- Node variables (heads and flow) --- //
-    CNode *node1 = nlf->newNode(hvar_[i]);       // Head at node i
-    CNode *node2 = nlf->newNode(hvar_[j]);       // Head at node j
-    CNode *node3 = nlf->newNode(qvar_[{i, j}]);  // Flow q[i,j]
-    // --- Flow-dependent term: (q^3 * (q^2 + eps)^0.426)/(q^2 + 0.426*eps) --- //
-    CNode *node4 = nlf->newNode(0.426);                   // constant 0.426
-    CNode *node5 = nlf->newNode(2);                       // constant 2
-    CNode *node6 = nlf->newNode(3);                       // constant 3
-    CNode *node7 = nlf->newNode(eps);                     // epsilon  
-    CNode *node8 = nlf->newNode(eps * 0.426);             // epsilon*0.426
-    CNode *node9 = nlf->newNode(OpPowK, node3, node5);    // q^2
-    CNode *node10 = nlf->newNode(OpPlus, node9, node7);   // (q^2 + eps)
-    CNode *node11 = nlf->newNode(OpPowK, node10, node4);  // (q^2 + eps)^0.426
-    CNode *node12 = nlf->newNode(OpPowK, node3, node6);   // q^3
-    CNode *node13 = nlf->newNode(OpMult, node12, node11); // q^3 * (q^2 + eps)^0.426
-    CNode *node14 = nlf->newNode(OpPlus, node9, node8);   // (q^2 + 0.426*eps)
-    CNode *node15 = nlf->newNode(OpDiv, node13, node14);  // (q^3 * (q^2 + eps)^0.426)/(q^2 + 0.426*eps)
-    // --- Pipe resistance sum: Σ l[i,j,k] * coeff(k) --- //
+    CNode *node1 = nlf->newNode(hvar_[i]);
+    CNode *node2 = nlf->newNode(hvar_[j]);
+    CNode *node3 = nlf->newNode(qvar_[{i, j}]);
+    CNode *node4 = nlf->newNode(0.426);
+    CNode *node5 = nlf->newNode(2);
+    CNode *node6 = nlf->newNode(3);
+    CNode *node7 = nlf->newNode(eps);
+    CNode *node8 = nlf->newNode(eps * 0.426);
+    CNode *node9 = nlf->newNode(OpPowK, node3, node5);
+    CNode *node10 = nlf->newNode(OpPlus, node9, node7);
+    CNode *node11 = nlf->newNode(OpPowK, node10, node4);
+    CNode *node12 = nlf->newNode(OpPowK, node3, node6);
+    CNode *node13 = nlf->newNode(OpMult, node12, node11);
+    CNode *node14 = nlf->newNode(OpPlus, node9, node8);
+    CNode *node15 = nlf->newNode(OpDiv, node13, node14);
     std::vector<CNode *> pipeTerms;
     for (PipeIter pit = pipes_.begin(); pit != pipes_.end(); ++pit) {
       int k = pit->first;
       Pipe &pipe = pit->second; 
-      CNode *node16 = nlf->newNode(lvar_[{i, j, k}]);   // Decision variable l[i,j,k] 
+      CNode *node16 = nlf->newNode(lvar_[{i, j, k}]);
       double coeff = 10.67 / (std::pow(pipe.roughness, 1.852) * std::pow(pipe.diameter, 4.87));
-      CNode *node17 = nlf->newNode(coeff); // Hydraulic resistance coefficient: K = 10.67 / (R^1.852 * D^4.87)
-      CNode *node18 = nlf->newNode(OpMult, node16, node17);   // Term = l[i,j,k] * coeff
+      CNode *node17 = nlf->newNode(coeff);
+      CNode *node18 = nlf->newNode(OpMult, node16, node17);
       pipeTerms.push_back(node18);
     }
-    // --- Sum using OpSumList --- //
     CNode *c_pipeSum = nullptr;
     c_pipeSum = nlf->newNode(Minotaur::OpSumList, pipeTerms.data(), pipeTerms.size());
-    // --- Head-loss equation --- //
-    CNode *c_diff = nlf->newNode(OpMinus, node1, node2);  // h_i - h_j
-    CNode *c_loss = nlf->newNode(OpMult, node15, c_pipeSum);  // (q^3 * (q^2 + eps)^0.426)/(q^2 + 0.426*eps) * Σ l[i,j,k] * coeff(k)
-    CNode *c_final = nlf->newNode(OpMinus, c_diff, c_loss);  // (h_i - h_j) - (q^3 * (q^2 + eps)^0.426)/(q^2 + 0.426*eps) * Σ l[i,j,k] * coeff(k)
+    CNode *c_diff = nlf->newNode(OpMinus, node1, node2);
+    CNode *c_loss = nlf->newNode(OpMult, node15, c_pipeSum);
+    CNode *c_final = nlf->newNode(OpMinus, c_diff, c_loss);
 
-    // --- Finalize and add constraint --- //
     nlf->setOut(c_final);
     nlf->finalize();
     FunctionPtr f = (FunctionPtr) new Function(nlf);
     std::string cname = "con2_hl_" + std::to_string(i) + "_" + std::to_string(j);
-    p_->newConstraint(f, 0.0, 0.0, cname);
-    // std::cout << me_ << "Constraint added for for arc(" <<i << "," << j << ")\n";
+    con2_[{i, j}] = p_->newConstraint(f, 0.0, 0.0, cname);   // <-- store handle
   }
   std::cout << me_ << "Head loss constraints added to the problem for " << arcs_.size() << " arcs.\n";  
 
@@ -525,32 +505,213 @@ void Wdn::addConstraints()
     p_->newConstraint(f, a.length, a.length, cname);
   }
   std::cout << me_ << "Total length constraints added to the problem for " << arcs_.size() << " arcs. \n";
-
-  // 4. Fix head at source nodes
-  // for (SourceIter sIter = sources_.begin(); sIter != sources_.end();
-  //      ++sIter) {
-  //   Node &srcNode = nodes_.at(*sIter);
-  //   LinearFunctionPtr lf = new LinearFunction();
-  //   lf->addTerm(hvar_[*sIter], 1.0);
-  //   FunctionPtr f = (FunctionPtr) new Function(lf);
-  //   std::string cname = "con4_headFix_" + std::to_string(*sIter);
-  //   p_->newConstraint(f, srcNode.elev, srcNode.elev, cname);
-  // }
 } 
 
 double Wdn::getWallTime()
 {
   struct timeval time;
   if (gettimeofday(&time, NULL)) {
-    //  Handle error
     return 0;
   }
-  return (double)time.tv_sec + (double)time.tv_usec * .000001;
+  return (double)time.tv_sec + (double)time.tv_usec * 0.000001;
+}
+
+
+void Wdn::initParams_()
+{
+  // Per-node params: E[i], D[i], P[i]
+  for (NodeConstIter it = nodes_.begin(); it != nodes_.end(); ++it) {
+    int i = it->second.id;
+    E_[i] = it->second.elev;
+    D_[i] = it->second.demand;
+    P_[i] = it->second.pressureMin;   // required pressure head
+  }
+
+  // Per-arc params: L[i,j]
+  for (ArcConstIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+    L_[it->first] = it->second.length;
+  }
+
+  // Per-pipe params: d[k], C[k], R[k]
+  for (PipeConstIter it = pipes_.begin(); it != pipes_.end(); ++it) {
+    int k = it->second.id;
+    d_[k] = it->second.diameter;
+    C_[k] = it->second.cost;
+    R_[k] = it->second.roughness;
+  }
+
+  // Scalar reductions over non-source nodes: D_min, D_max
+  Dmin_ =  std::numeric_limits<double>::infinity();
+  Dmax_ = -std::numeric_limits<double>::infinity();
+  for (NodeConstIter it = nodes_.begin(); it != nodes_.end(); ++it) {
+    if (sources_.count(it->second.id)) continue;
+    Dmin_ = std::min(Dmin_, it->second.demand);
+    Dmax_ = std::max(Dmax_, it->second.demand);
+  }
+
+  // Scalar reductions over pipes: d_min, d_max, R_min, R_max
+  dmin_ = Rmin_ =  std::numeric_limits<double>::infinity();
+  dmax_ = Rmax_ = -std::numeric_limits<double>::infinity();
+  for (PipeConstIter it = pipes_.begin(); it != pipes_.end(); ++it) {
+    dmin_ = std::min(dmin_, it->second.diameter);
+    dmax_ = std::max(dmax_, it->second.diameter);
+    Rmin_ = std::min(Rmin_, it->second.roughness);
+    Rmax_ = std::max(Rmax_, it->second.roughness);
+  }
+
+  // Q_max (scalar): sum of demands over non-source nodes
+  Qmax_ = calculateQmax();
+
+  // Per-arc MaxK and eps
+  const double omega = 10.67;   // set to your omega if different
+  const double denom = std::pow(Rmin_, 1.852) * std::pow(dmin_, 4.87);
+  for (ArcConstIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+    double mk = omega * it->second.length / denom;   // MaxK[i,j]
+    // maxK_[it->first] = mk;
+    eps_[it->first]  = 0.0535 * std::pow(1e-3 / mk, 0.54);   // eps[i,j]
+  }
+}
+
+// Adopt the engine's current solution as the incumbent if it is usable and
+// strictly better than the best cost so far. Returns true if the incumbent
+// was updated.
+bool Wdn::updateIncumbent_(EnginePtr e)
+{
+  EngineStatus st = e->solve();   // or track the return of solve()
+  if (st != ProvenLocalOptimal && st != ProvenOptimal) {
+    env_->getLogger()->msgStream(LogInfo)
+        << me_ << "solve not optimal (" << e->getStatusString()
+        << "); incumbent unchanged\n";
+    return false;
+  }
+
+  double cost = e->getSolutionValue();
+  if (cost >= currentCost_ - kImproveTol) {
+    return false;                 // no strict improvement
+  }
+
+  // Better point found: copy primal into qval_/hval_/lval_ and record it.
+  readSolution_(e);
+  currentCost_ = cost;
+  bestHitTime_ = getWallTime() - startTime_;
+
+  // Keep a SolutionPtr copy so getSol()/getUb()/writeSol see the incumbent.
+  ConstSolutionPtr cs = e->getSolution();
+  sol_ = (SolutionPtr) new Solution(cs);
+
+  env_->getLogger()->msgStream(LogInfo)
+      << me_ << "incumbent updated: cost = " << currentCost_
+      << "  time = " << bestHitTime_ << "s\n";
+  return true;
+}
+
+
+// Write the Ipopt options file that IpoptEngine's application reads on init.
+// void Wdn::writeIpoptOpt_()
+// {
+//   std::ofstream opt("ipopt.opt");
+//   if (!opt) {
+//     env_->getLogger()->errStream()
+//         << me_ << "could not write ipopt.opt\n";
+//     return;
+//   }
+//   opt << "mu_init 1e-5\n"
+//       << "bound_push 0.1\n"
+//       << "bound_frac 0.1\n"
+//       << "linear_solver ma57\n"
+//       << "ma57_pivot_order 2\n"
+//       << "ma57_pivtol 1e-8\n"
+//       << "ma57_pivtolmax 1e-4\n"
+//       << "ma57_automatic_scaling yes\n"
+//       << "ma57_pre_alloc 5\n"
+//       << "mu_strategy adaptive\n"
+//       << "alpha_for_y_tol 1e-6\n"
+//       << "bound_relax_factor 0\n"
+//       << "corrector_type affine\n"
+//       << "skip_corr_if_neg_curv no\n"
+//       << "hessian_approximation exact\n"
+//       << "nlp_scaling_method gradient-based\n"
+//       << "max_iter 2000\n"
+//       << "print_user_options yes\n";   // echoes resolved options so you can verify
+//   opt.close();
+//   env_->getLogger()->msgStream(LogInfo)
+//       << me_ << "wrote ipopt.opt\n";
+// }
+
+// Evaluate the incumbent (qval_/hval_/lval_) against the TRUE constraints
+// (exact Hazen-Williams, eps = 0). Prints a per-type report and returns the
+// maximum absolute violation. A small value => the incumbent is a valid UB.
+double Wdn::checkConstraintViolations_()
+{
+  double maxFlow = 0.0, maxHl = 0.0, maxLen = 0.0, maxBnd = 0.0;
+
+  // --- 1. Flow balance: (inflow - outflow) - demand == 0  at non-source ---
+  for (NodeConstIter nit = nodes_.begin(); nit != nodes_.end(); ++nit) {
+    int n = nit->second.id;
+    if (sources_.count(n)) continue;
+    double bal = 0.0;
+    for (ArcConstIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
+      int i = ait->second.startNode, j = ait->second.endNode;
+      double q = qval_[ait->first];
+      if (j == n) bal += q;    // inflow
+      if (i == n) bal -= q;    // outflow
+    }
+    maxFlow = std::max(maxFlow, std::fabs(bal - D_[n]));
+  }
+
+  // --- 2. True head-loss:  (h_i - h_j) - q*|q|^0.852 * sum_k coeff_k l == 0 --
+  for (ArcConstIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
+    int i = ait->second.startNode, j = ait->second.endNode;
+    double q = qval_[ait->first];
+    double rSum = 0.0;
+    for (PipeConstIter pit = pipes_.begin(); pit != pipes_.end(); ++pit) {
+      int k = pit->first;
+      double coeff = 10.67 / (std::pow(R_[k], 1.852) * std::pow(d_[k], 4.87));
+      rSum += coeff * lval_[{i, j, k}];
+    }
+    // double hl = q * std::pow(std::fabs(q), 0.852);          // exact, eps = 0
+    double hl = std::pow(q,3) * std::pow(std::pow(q,2) + std::pow(eps_[ait->first],2), 0.426) /(std::pow(q,2) + 0.426*std::pow(q,2));          // exact, eps = 0
+    double resid = (hval_[i] - hval_[j]) - hl * rSum;
+    maxHl = std::max(maxHl, std::fabs(resid));
+  }
+
+  // --- 3. Total length:  sum_k l[i,j,k] - L[i,j] == 0 ---------------------
+  for (ArcConstIter ait = arcs_.begin(); ait != arcs_.end(); ++ait) {
+    int i = ait->second.startNode, j = ait->second.endNode;
+    double sumL = 0.0;
+    for (PipeConstIter pit = pipes_.begin(); pit != pipes_.end(); ++pit)
+      sumL += lval_[{i, j, pit->first}];
+    maxLen = std::max(maxLen, std::fabs(sumL - L_[{i, j}]));
+  }
+
+  // --- 4. Bound violations (pressure floor, non-negative lengths) ---------
+  for (NodeConstIter nit = nodes_.begin(); nit != nodes_.end(); ++nit) {
+    int n = nit->second.id;
+    if (sources_.count(n)) continue;
+    double floor = nit->second.elev + nit->second.pressureMin;   // E_i + P_i
+    maxBnd = std::max(maxBnd, std::max(0.0, floor - hval_[n]));   // h_i >= floor
+  }
+  for (LVarConstIter lit = lvar_.begin(); lit != lvar_.end(); ++lit)
+    maxBnd = std::max(maxBnd, std::max(0.0, -lval_[lit->first]));  // l >= 0
+
+  double maxAll = std::max(std::max(maxFlow, maxHl), std::max(maxLen, maxBnd));
+
+  std::ios_base::fmtflags f(std::cout.flags());
+  std::cout << std::scientific << std::setprecision(3)
+            << me_ << "constraint violations (final solution):\n"
+            << "    flow balance : " << maxFlow << "\n"
+            << "    head loss    : " << maxHl   << "\n"
+            << "    total length : " << maxLen  << "\n"
+            << "    bounds       : " << maxBnd  << "\n"
+            << "    MAX          : " << maxAll  << "\n";
+  std::cout.flags(f);
+  return maxAll;
 }
 
 int Wdn::solve(ProblemPtr p)
 {
   double walltime_start = getWallTime();
+  // writeIpoptOpt_();          // <-- emit options before the engine is created
 
   EnginePtr engine = 0;
   PresolverPtr pres;
@@ -580,16 +741,6 @@ int Wdn::solve(ProblemPtr p)
     env_->getLogger()->msgStream(LogInfo)
         << me_ << "Finished constraint classification\n";
   }
-
-  // if (false == options->findBool("use_native_cgraph")->getValue()) {
-  //
-  //   JacobianPtr jac = new MINOTAUR_AMPL::AMPLJacobian(iface_);
-  //   p_->setJacobian(jac);
-  //   HessianOfLagPtr hess = new MINOTAUR_AMPL::AMPLHessian(iface_);
-  //   p_->setHessian(hess);
-  //   p_->setInitialPoint(iface_->getInitialPoint(),
-  //                       p_->getNumVars() - iface_->getNumDefs());
-  // }
 
   if (p_->getObjective() &&
       p_->getObjective()->getObjectiveType() == Maximize) {
@@ -628,7 +779,32 @@ int Wdn::solve(ProblemPtr p)
 
   p_->setNativeDer();
   engine->load(p_);
+
+  startTime_   = getWallTime();
+  currentCost_ = std::numeric_limits<double>::infinity();
+
   engine->solve();
+  updateIncumbent_(engine);      // <-- adopt the first solution as incumbent
+
+  displaySolution(engine);
+
+  // ---- Primal heuristic: arc reversal + neighborhood search --------------
+  runHeuristic_(engine);
+
+  {
+  double viol = checkConstraintViolations_();
+  const double feasTol = 1e-4;
+  if (viol > feasTol) {
+    env_->getLogger()->msgStream(LogInfo)
+        << me_ << "WARNING: final solution violates true constraints by "
+        << viol << " (> " << feasTol << "); UB may not be valid\n";
+  } else {
+    env_->getLogger()->msgStream(LogInfo)
+        << me_ << "final solution is feasible for the true model; "
+        << "cost = " << currentCost_ << " is a valid upper bound\n";
+  }
+  }
+
   displaySolution(engine);
 
 CLEANUP:
@@ -647,32 +823,25 @@ CLEANUP:
   return 0;
 }
 
-void Wdn::displaySolution(EnginePtr e)
+
+void Wdn::displaySolution(EnginePtr /*e*/)
 {
-  std::cout << "Status: " << e->getStatusString() << std::endl;
-  std::cout << "Objective value = " << e->getSolutionValue() << std::endl;
+  std::ios_base::fmtflags f(std::cout.flags());
+  std::streamsize p = std::cout.precision();
 
-  // for (HVarConstIter hvar_iter = hvar_.cbegin(); hvar_iter != hvar_.cend();
-  // ++hvar_iter)
-  //   std::cout << hvar_iter->second->getName() << " = " <<
-  //   e->getSolution()->getPrimal()[hvar_iter->second->getIndex()] <<
-  //   std::endl;
-  //
-  // for (QVarConstIter qvar_iter = qvar_.cbegin(); qvar_iter != qvar_.cend();
-  // ++qvar_iter){
-  //   std::cout<< qvar_iter->second->getName() << " = " <<
-  //   e->getSolution()->getPrimal()[qvar_iter->second->getIndex()] <<
-  //   std::endl;
-  // }
-  // for (LVarConstIter lvar_iter = lvar_.cbegin(); lvar_iter != lvar_.cend();
-  // ++lvar_iter) {
-  //   std::cout << lvar_iter->second->getName() << " = " <<
-  //   e->getSolution()->getPrimal()[lvar_iter->second->getIndex()] <<
-  //   std::endl;
-  // }
+  std::cout << "Objective value = "
+            << std::fixed << std::setprecision(4) << currentCost_ << std::endl;
 
-  // return 0.0;
+  std::cout.flags(f);
+  std::cout.precision(p);   // restore cout's original formatting
 }
+
+// void Wdn::displaySolution(EnginePtr e)
+// {
+//   // std::cout << "Status: " << e->getStatusString() << std::endl;
+//   std::cout << "Objective value = " << currentCost_ << std::endl;
+//   // std::cout << "Objective value = " << e->getSolutionValue() << std::endl;
+// }
 
 SolveStatus Wdn::getStatus()
 {
@@ -713,7 +882,6 @@ PresolverPtr Wdn::presolve_(HandlerVector &handlers)
       handlers.push_back(nlhand);
     }
 
-    // write the names.
     env_->getLogger()->msgStream(LogExtraInfo)
         << me_ << "handlers used in presolve:" << std::endl;
     for (HandlerIterator h = handlers.begin(); h != handlers.end(); ++h) {
@@ -808,3 +976,239 @@ int Wdn::showInfo()
          "problems\n";
   return 0;
 }
+
+
+
+// =============================================================================
+//                         PRIMAL HEURISTIC
+//   Arc reversal (iterate_acyclic_flows) + adaptive variable neighborhood search
+// =============================================================================
+
+void Wdn::readSolution_(EnginePtr e)
+{
+  ConstSolutionPtr s = e->getSolution();
+  if (!s) return;                       // no solution to read
+
+  const double *x = s->getPrimal();
+  if (!x) return;                       // primal not available
+
+  for (QVarConstIter it = qvar_.begin(); it != qvar_.end(); ++it)
+    qval_[it->first] = x[it->second->getIndex()];
+  for (HVarConstIter it = hvar_.begin(); it != hvar_.end(); ++it)
+    hval_[it->first] = x[it->second->getIndex()];
+  for (LVarConstIter it = lvar_.begin(); it != lvar_.end(); ++it)
+    lval_[it->first] = x[it->second->getIndex()];
+}
+
+void Wdn::setInitialPoint_()
+{
+  std::vector<double> x0(p_->getNumVars(), 0.0);
+  for (QVarConstIter it = qvar_.begin(); it != qvar_.end(); ++it)
+    x0[it->second->getIndex()] = qval_[it->first];
+  for (HVarConstIter it = hvar_.begin(); it != hvar_.end(); ++it)
+    x0[it->second->getIndex()] = hval_[it->first];
+  for (LVarConstIter it = lvar_.begin(); it != lvar_.end(); ++it)
+    x0[it->second->getIndex()] = lval_[it->first];
+  p_->setInitialPoint(&x0[0]);
+}
+
+double Wdn::solveNLP_(EnginePtr e)
+{
+  // Re-read bounds + initial point after any modification, then solve.
+  e->load(p_);
+  EngineStatus st = e->solve();
+  ++numberOfNlp_;
+  if (st != ProvenLocalOptimal && st != ProvenOptimal) {
+    return std::numeric_limits<double>::infinity();
+  }
+  return e->getSolutionValue();
+}
+
+double Wdn::medianAbsFlow_()
+{
+  std::vector<double> af;
+  for (ArcConstIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+    double v = std::fabs(qval_[it->first]);
+    if (v > 1e-6) af.push_back(v);
+  }
+  if (af.empty()) return 0.0;
+  std::sort(af.begin(), af.end());
+  return af[af.size() / 2];
+}
+
+void Wdn::arcReversal_(EnginePtr e)
+{
+  // Refresh the incumbent solve so the duals below match the incumbent point.
+  setInitialPoint_();
+  double base = solveNLP_(e);
+  if (base < currentCost_ - kImproveTol) {
+    readSolution_(e);
+    currentCost_ = base;
+  }
+
+  // 1. In-degree of each node under the current flow orientation.
+  std::map<int, int> indeg;
+  for (ArcConstIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+    int i = it->second.startNode, j = it->second.endNode;
+    int dest = (qval_[it->first] >= 0.0) ? j : i;
+    ++indeg[dest];
+  }
+
+  // 2. Candidate arcs: destination in-degree >= 2, not fixed, not visited.
+  std::vector<std::pair<int, int> > cand;
+  for (ArcConstIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+    int i = it->second.startNode, j = it->second.endNode;
+    int dest = (qval_[it->first] >= 0.0) ? j : i;
+    if (indeg[dest] < 2) continue;
+    if (fixArcSet_.count(it->first)) continue;
+    if (visitedArcReverse_.count(it->first)) continue;
+    cand.push_back(it->first);
+  }
+
+  // 3. Sensitivity score using con2 duals: sen(i,j) = -dual(i,j)*|h[i]-h[j]|.
+  ConstSolutionPtr s = e->getSolution();
+  const double *dcon = s->getDualOfCons();
+  std::map<std::pair<int, int>, double> sen;
+  for (size_t a = 0; a < cand.size(); ++a) {
+    std::pair<int, int> arc = cand[a];
+    int i = arc.first, j = arc.second;
+    double dual = 0.0;
+    std::map<std::pair<int, int>, ConstraintPtr>::iterator cit = con2_.find(arc);
+    if (dcon && cit != con2_.end())
+      dual = dcon[cit->second->getIndex()];
+    sen[arc] = -dual * std::fabs(hval_[i] - hval_[j]);
+  }
+
+  // 4. Rank candidates by |sensitivity|, descending.
+  std::sort(cand.begin(), cand.end(),
+            [&](const std::pair<int, int> &a, const std::pair<int, int> &b) {
+              return std::fabs(sen[a]) > std::fabs(sen[b]);
+            });
+
+  env_->getLogger()->msgStream(LogInfo)
+      << me_ << "arc-reversal: " << cand.size() << " candidate arcs\n";
+
+  // 5. Try each candidate: flip its q-bound, re-solve, accept if improved.
+  for (size_t a = 0; a < cand.size(); ++a) {
+    if (getWallTime() - startTime_ >= timeLimit_) {
+      env_->getLogger()->msgStream(LogInfo) << me_ << "time limit reached\n";
+      return;
+    }
+    std::pair<int, int> arc = cand[a];
+    visitedArcReverse_.insert(arc);
+
+    VariablePtr qv = qvar_[arc];
+    double oldLb = qv->getLb();
+    double oldUb = qv->getUb();
+    double qcur  = qval_[arc];
+
+    // Force reversal by tightening one bound to zero (restored afterwards).
+    if (qcur >= 0.0) p_->changeBound(qv, oldLb, 0.0);  // force q <= 0
+    else             p_->changeBound(qv, 0.0, oldUb);  // force q >= 0
+
+    setInitialPoint_();
+    double trialCost = solveNLP_(e);
+
+    // Read the reversed solution BEFORE restoring bounds (getIndex unaffected).
+    bool improved = (trialCost < currentCost_ - kImproveTol);
+    if (improved) {
+      readSolution_(e);
+      currentCost_ = trialCost;
+      bestHitTime_ = getWallTime() - startTime_;
+    }
+
+    // Restore original bounds; an accepted incumbent already has the new sign.
+    p_->changeBound(qv, oldLb, oldUb);
+
+    if (improved) {
+      env_->getLogger()->msgStream(LogInfo)
+          << me_ << "  reversed (" << arc.first << "," << arc.second
+          << ")  new cost = " << currentCost_ << "\n";
+      neighborhoodSearch_(e);   // intensify around the improved incumbent
+      arcReversal_(e);          // restart from the new incumbent
+      return;
+    }
+  }
+}
+
+void Wdn::neighborhoodSearch_(EnginePtr e)
+{
+  static std::mt19937 rng(12345);
+  std::uniform_real_distribution<double> U(-1.0, 1.0);
+
+  double etaL = etaLMin_, etaH = etaHMin_, alphaQ = alphaQMin_;
+  int failStreak = 0;
+
+  while (true) {
+    if (getWallTime() - startTime_ >= timeLimit_) return;
+
+    double median = medianAbsFlow_();
+    double Delta = alphaQ * median;
+
+    // Build a perturbed warm start from the incumbent WITHOUT corrupting the
+    // incumbent maps (only readSolution_ on acceptance overwrites them).
+    std::vector<double> x0(p_->getNumVars(), 0.0);
+    for (LVarConstIter it = lvar_.begin(); it != lvar_.end(); ++it)
+      x0[it->second->getIndex()] =
+          std::max(0.0, lval_[it->first] * (1.0 + etaL * U(rng)));
+    for (HVarConstIter it = hvar_.begin(); it != hvar_.end(); ++it)
+      x0[it->second->getIndex()] = hval_[it->first] * (1.0 + etaH * U(rng));
+    for (QVarConstIter it = qvar_.begin(); it != qvar_.end(); ++it)
+      x0[it->second->getIndex()] = qval_[it->first] + Delta * U(rng);
+    p_->setInitialPoint(&x0[0]);
+
+    double trialCost = solveNLP_(e);
+    bool improved = (trialCost < currentCost_ - kImproveTol);
+
+    if (improved) {
+      readSolution_(e);
+      currentCost_ = trialCost;
+      bestHitTime_ = getWallTime() - startTime_;
+      env_->getLogger()->msgStream(LogInfo)
+          << me_ << "  local improvement, cost = " << currentCost_ << "\n";
+      etaL = etaLMin_; etaH = etaHMin_; alphaQ = alphaQMin_;  // intensify
+      failStreak = 0;
+    } else {
+      etaL *= etaLExpand_; etaH *= etaHExpand_; alphaQ *= alphaExpand_; // diversify
+      ++failStreak;
+
+      // Terminate when perturbation can no longer push any flow past Qmax,
+      // or the fail streak is exhausted.
+      bool exhausted = true;
+      for (ArcConstIter it = arcs_.begin(); it != arcs_.end(); ++it) {
+        if (std::fabs(qval_[it->first]) + Delta <= Qmax_) {
+          exhausted = false;
+          break;
+        }
+      }
+      if (exhausted || failStreak >= maxFailStreak_) {
+        env_->getLogger()->msgStream(LogInfo)
+            << me_ << "  local search exits\n";
+        return;
+      }
+    }
+  }
+}
+
+int Wdn::runHeuristic_(EnginePtr e)
+{
+  // startTime_   = getWallTime();
+  numberOfNlp_ = 0;
+  Qmax_        = calculateQmax();
+
+  // Incumbent = the first NLP already solved by solve().
+  readSolution_(e);
+  // currentCost_ = e->getSolutionValue();
+  env_->getLogger()->msgStream(LogInfo)
+      << me_ << "heuristic start, initial cost = " << currentCost_ << "\n";
+
+  neighborhoodSearch_(e);   // improve the starting point
+  arcReversal_(e);          // explore flow-direction neighborhood (recurses)
+
+  env_->getLogger()->msgStream(LogInfo)
+      << me_ << "heuristic done. best cost = " << currentCost_
+      << "  NLPs = " << numberOfNlp_
+      << "  best-hit time = " << bestHitTime_ << "s\n";
+  return 0;
+}
+
