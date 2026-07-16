@@ -1,0 +1,52 @@
+* shamir_demo.gmsdat -- 2-node, 1-arc demo (GAMS format)
+
+Set nodes / 1, 2 /;
+Set Source(nodes) / 1 /;
+Set pipes / 1*3 /;
+
+alias(nodes, N, M);
+
+Set arcs(N,M) /
+    1.2
+/;
+
+Parameter elevation(nodes) /
+    1    210
+    2    150
+/;
+
+Parameter D(nodes) /
+    1   -0.05
+    2    0.05
+/;
+
+Parameter P(nodes) /
+    1    0
+    2   30
+/;
+
+Parameter L(N,M) /
+    1.2   1000
+/;
+
+Parameter vmax(N,M) /
+    1.2   2.0
+/;
+
+Parameter dia(pipes) /
+    1    0.1016
+    2    0.2032
+    3    0.3048
+/;
+
+Parameter C(pipes) /
+    1    11
+    2    23
+    3    50
+/;
+
+Parameter R(pipes) /
+    1    130
+    2    130
+    3    130
+/;
