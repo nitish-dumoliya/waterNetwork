@@ -55,12 +55,12 @@ Balance(nodes)$(not Source(nodes))..
 * ---- Head-loss: uncomment one formulation ----
 
 * (1) Original Hazen-Williams via signPower (DNLP):
-*HydraulicHead_Flow(N,M)$(arcs(N,M))..
-*    h(N) - h(M) =E=
-*        signPower(q(N,M), 1.852)
-*        * sum(pipes,
-*            omega * length(N,M,pipes)
-*            / ( R(pipes)**1.852 * dia(pipes)**4.87 ));
+HydraulicHead_Flow(N,M)$(arcs(N,M))..
+    h(N) - h(M) =E=
+        signPower(q(N,M), 1.852)
+        * sum(pipes,
+            omega * length(N,M,pipes)
+            / ( R(pipes)**1.852 * dia(pipes)**4.87 ));
 
 * (2) Original HW explicit form (DNLP):
 *HydraulicHead_Flow(N,M)$(arcs(N,M))..
@@ -79,22 +79,15 @@ Balance(nodes)$(not Source(nodes))..
 *            / ( R(pipes)**1.852 * dia(pipes)**4.87 ));
 
 * (4) Smooth Approximation 2: f2 = K*q^3*(q^2+eps^2)^0.426/(q^2+0.426*eps^2) (NLP):
-HydraulicHead_Flow(N,M)$(arcs(N,M))..
-    h(N) - h(M) =E=
-        q(N,M)**3
-        * ( q(N,M)**2 + epsi(N,M)**2 )**0.426
-        / ( q(N,M)**2 + 0.426 * epsi(N,M)**2 )
-        * sum(pipes,
-            omega * length(N,M,pipes)
-            / ( R(pipes)**1.852 * dia(pipes)**4.87 ));
-
 *HydraulicHead_Flow(N,M)$(arcs(N,M))..
 *    h(N) - h(M) =E=
-*        ( q(N,M)**3 * ( q(N,M)**2 + eps(N,M)**2 )**0.426
-*          / ( q(N,M)**2 + 0.426 * eps(N,M)**2 ) )
+*        q(N,M)**3
+*        * ( q(N,M)**2 + epsi(N,M)**2 )**0.426
+*        / ( q(N,M)**2 + 0.426 * epsi(N,M)**2 )
 *        * sum(pipes,
 *            omega * length(N,M,pipes)
 *            / ( R(pipes)**1.852 * dia(pipes)**4.87 ));
+
 
 length_limit(N,M)$(arcs(N,M))..
     sum(pipes, length(N,M,pipes)) =E= L(N,M);
@@ -105,8 +98,8 @@ elevation_constraint(Source)..
 * ============================================================
 * Load Data
 * ============================================================
-*$include d2_small.gmsdat
-$include d1_bessa.gmsdat
+$include d2_small.gmsdat
+*$include d1_shamir.gmsdat
 
 * ============================================================
 * Derived Parameters (computed after data is loaded)
@@ -133,7 +126,7 @@ MaxK(N,M)$(arcs(N,M)) = omega * L(N,M) / ( R_min**1.852 * d_min**4.87 );
 * Absolute error for smooth approximation 1:
 *epsi(N,M)$(arcs(N,M)) = ( 1e-5 / (0.36061 * MaxK(N,M)) )**0.54;
 
-* Absolute error for smooth approximation 1:
+* Absolute error for smooth approximation 2:
 epsi(N,M)$(arcs(N,M)) = ( 1e-2 / (0.07508 * MaxK(N,M)) )**0.54;
 
 Parameter Q_max;
@@ -150,15 +143,15 @@ length.lo(N,M,pipes) =  0;
 length.up(N,M,pipes) =  L(N,M);
 
 * Better initial point
-q.l(arcs(N,M))  = Q_max / card(arcs);
-h.l(nodes)      = elevation(nodes) + P(nodes) + 10;
-length.l(N,M,pipes) = L(N,M) / card(pipes);
+*q.l(arcs(N,M))  = Q_max / card(arcs);
+*h.l(nodes)      = elevation(nodes) + P(nodes) + 10;
+*length.l(N,M,pipes) = L(N,M) / card(pipes);
 
 * ============================================================
 * Solve
 * ============================================================
 model gms_water_nlp / all /;
-Option solver   = baron;
+Option solver   = knitro;
 Option solprint = off;
 option subsystems;
 
@@ -166,7 +159,7 @@ option subsystems;
 * Use NLP  for formulations 3, 4  (smooth approximations)
 gms_water_nlp.optfile = 1;
 
-solve gms_water_nlp using NLP min total_cost;
+solve gms_water_nlp using DNLP min total_cost;
 
 * ============================================================
 * Display Results
