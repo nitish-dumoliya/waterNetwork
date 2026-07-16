@@ -5,6 +5,10 @@ import gurobipy_pandas as gppd
 gppd.set_interactive()
 import numpy as np
 import sys
+
+print(gp.gurobi.version())   # needs (13, x, x) or higher
+
+
 def build_model(data):
 
     nodes  = data.nodes
@@ -111,12 +115,12 @@ def build_model(data):
     # Original Hazen–Williams
     # =========================
 
-    for (i, j) in arcs:
-        K_ij = gp.quicksum(
-            omega * l[i, j, k] / (R[k]**1.852 * d[k]**4.87)
-            for k in pipes
-        )
-        constrs[i,j] = gppd.add_constrs(m, h[i] - h[j], GRB.EQUAL, (q[i, j] * q_abs[i, j]**0.852 * K_ij).apply(nlfunc.log))
+    # for (i, j) in arcs:
+    #     K_ij = gp.quicksum(
+    #         omega * l[i, j, k] / (R[k]**1.852 * d[k]**4.87)
+    #         for k in pipes
+    #     )
+    #     constrs[i,j] = gppd.add_constrs(m, h[i] - h[j], GRB.EQUAL, (q[i, j] * q_abs[i, j]**0.852 * K_ij).apply(nlfunc.log))
         # ORIGINAL CONSTRAINT (NOT SUPPORTED)
         # m.addConstr(
         #     h[i] - h[j]
@@ -124,12 +128,37 @@ def build_model(data):
         #     (q[i, j] * q_abs[i, j]**0.852 * K_ij).apply(nlfunc.log),
         #     name=f"HW_original_{i}_{j}"
         # )
+
+    # auxiliary variables: one per arc
+    phi = m.addVars(arcs, lb=-GRB.INFINITY, name="phi")     # sign(q)*|q|^1.852
+    
+    # nonlinear constraint: phi[i,j] = signpow(q[i,j], 1.852)
+    for (i, j) in arcs:
+        m.addGenConstrNL(
+            phi[i, j],
+            nlfunc.signpow(q[i, j], 1.852),
+            name=f"hw_shape_{i}_{j}"
+        )
+    
+    # head-loss constraint: h[i] - h[j] = K_ij * phi[i,j]
+    # K_ij is linear in l, phi is a variable -> product is bilinear -> NonConvex=2
+    for (i, j) in arcs:
+        K_ij = gp.quicksum(
+            omega * l[i, j, k] / (R[k]**1.852 * d[k]**4.87)
+            for k in pipes
+        )
+        m.addConstr(
+            h[i] - h[j] == K_ij * phi[i, j],
+            name=f"headloss_{i}_{j}"
+        )
+    
+    # m.Params.NonConvex = 2
     return m
 
 if __name__ == "__main__":
-    from data import d1
+    from data import d2
     # from model import build_model
-    data = d1
+    data = d2
     m = build_model(data)
 
     m.Params.NonConvex = 2
