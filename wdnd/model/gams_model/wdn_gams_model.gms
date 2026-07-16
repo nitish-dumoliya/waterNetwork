@@ -98,8 +98,9 @@ elevation_constraint(Source)..
 * ============================================================
 * Load Data
 * ============================================================
-$include d2_small.gmsdat
-*$include d1_shamir.gmsdat
+$include d1_bessa.gmsdat
+*$include d2_shamir.gmsdat
+*$include d3_small.gmsdat
 
 * ============================================================
 * Derived Parameters (computed after data is loaded)
