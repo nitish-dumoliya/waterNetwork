@@ -44,6 +44,10 @@ HydraulicHead_Flow(N,M)$(arcs(N,M))..
     h(N) - h(M) =E= signPower(q(N,M),1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes))**4.87) ));
 
 *HydraulicHead_Flow(N,M)$(arcs(N,M))..
+*    h(N) - h(M) =E= q(N,M)* ((abs(q(N,M)) )**0.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes))**4.87) ));
+
+
+*HydraulicHead_Flow(N,M)$(arcs(N,M))..
 *    h(N) - h(M) =E= sign(q(N,M)) * ((abs(q(N,M)) )**1.852)*(0.001**1.852) * sum(pipes, (omega * length(N,M,pipes)) / ((R(pipes)**1.852) * ((dia(pipes)/1000)**4.87) ));
 
 *HydraulicHead_Flow(N,M)$(arcs(N,M))..
@@ -56,6 +60,7 @@ elevation_constraint(Source)..
     h(Source) =E= elevation(Source);
 
 $include d1_bessa.gmsdat
+*$include d2_small.gmsdat
 
 Parameter Q_max;
 Q_max = sum(nodes$(not Source(nodes)), D(nodes));
@@ -71,7 +76,7 @@ length.lo(N,M,pipes) =  0;
 
 model gms_water_nlp / all /;
 
-Option solver = baron;
+Option solver = ipopt;
 
 Option solprint = off ;
 
